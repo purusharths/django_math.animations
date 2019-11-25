@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,
+            shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Style sheets -->
+        <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css'%}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static
+            'web-files/img/favicon.ico'%}">
+        <link
+            href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap"
+            rel="stylesheet">
+        <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap"
+            rel="stylesheet">
+
+    </head>
+    <title>FOSSEE Animations | {% block title %}{% endblock %}</title>
+    <body>
+
+        <!-- Header -->
+        {% include 'partials/_header.html' %}
+
+        {% block content %}{% endblock %}
+
+        <!-- footer -->
+        {% include 'partials/_footer.html' %}
+
+        <!-- Script archive -->
+        <script type="text/javascript" src="{% static
+            'web-files/javascript/bootstrap.bundle.min.js' %}"></script>
+        <script type="text/javascript" src="{% static
+            'web-files/javascript/jquery.min.js' %}"></script>
+        <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script type="text/javascript">
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+        <style>
+        .serif {
+            font-family: "Lora", serif;
+        }</style>
+    </body>
+</html>
