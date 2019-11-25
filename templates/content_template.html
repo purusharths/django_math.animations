@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ {% include 'head.html' %}
+ <title>FOSSEE Animations | Real Analysis</title>
+<script type="text/javascript">
+  window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+  {% include 'header.html' %}
+
+  <!-- Page Content -->
+ <div class="container serif text-wrap">
+
+    <div class="card my-5 py-4 border border-white">
+      <div class="card-body">
+	<!--<h1 class="serif">Real Analysis</h1>-->
+        <p class=" m-0">Look up for a subtopic: <input type="text"/>
+           <a class="btn btn-primary" href="#">Search</a></p>
+  <!--<small class="float-right"> <a href="/">Home</a> > Real Analysis</small> -->
+      </div>
+    </div>
+
+
+
+{{ full_text | safe }}
+
+
+
+</div><!-- row -->
+
+
+
+<br/>
+<br/>
+<hr/>
+</div><!-- /.container -->
+  
+  {% include 'footer.html' %}
+
+</body>
+
+</html>
