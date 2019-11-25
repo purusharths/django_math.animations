@@ -1,2 +1,5 @@
 #VS code
 .vscode/
+.idea/
+venv/*
+
