@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'fossee_math_pages',
+    'fossee_math_pages.apps.FosseeMathPagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,6 +122,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'FOSSEE_math/static')
+]
 
 LOGIN_URL = '/login/'
 
