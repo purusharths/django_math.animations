@@ -2,77 +2,78 @@
 <html lang="en">
 
 <head>
-  {% include 'head.html' %}
+    {% include 'head.html' %}
 
-  <title>FOSSEE Animations | Math</title>
-  <!-- Custom styles for this template -->
+    <title>FOSSEE Animations | Math</title>
+    <!-- Custom styles for this template -->
 
 
 </head>
 
 <body>
-  {% include 'header.html' %}
+{% include 'header.html' %}
 
-  <!-- Page Content -->
- <div class="container">
+<!-- Page Content -->
+<div class="container">
 
     <!-- Heading Row -->
     <div class="row align-items-center my-5">
 
-      <!-- /.col-lg-8 -->
-      <div class="col-lg-5">
-        <h1 class="font-weight-light serif">FOSSEE Animations | Math</h1>
-        <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
-      </div>
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-5">
+            <h1 class="font-weight-light serif">FOSSEE Animations | Math</h1>
+            <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
+        </div>
 
-      <div class="col-lg-7">
-{#        <img class="img-fluid rounded mb-4 mb-lg-0" src="{{ url_for('static', filename='web-files/img/logo.png') }}" alt="">#}
-      </div>      
-      <!-- /.col-md-4 -->
+        <div class="col-lg-7">
+            {#        <img class="img-fluid rounded mb-4 mb-lg-0" src="{{ url_for('static', filename='web-files/img/logo.png') }}" alt="">#}
+        </div>
+        <!-- /.col-md-4 -->
     </div>
     <!-- /.row -->
 
     <!-- Call to Action Well -->
     <div class="card my-5 py-4 border border-white">
-      <div class="card-body">
-	<h2 class="serif">Search by Topic:</h2>
-        <p class=" m-0 serif">Look up for a subtopic: <input type="text"/>        <a class="btn btn-primary btn-sm" href="#">Search</a></p>
+        <div class="card-body">
+            <h2 class="serif">Search by Topic:</h2>
+            <p class=" m-0 serif">Look up for a subtopic: <input type="text"/> <a class="btn btn-primary btn-sm"
+                                                                                  href="#">Search</a></p>
 
-      </div>
+        </div>
     </div>
 
     <!-- Content Row -->
-<h1 id="Topics" class="serif">Topics</h1>
-<hr>
-<div class="row ">
-{% for topic in topics %}
-	<div class="card mb-3 col-md-12">
-	  <div class="row no-gutters">
-	    <div class="col-md-2">
-{#	      <img src="{{ url_for('static', filename='web-files/img') }}/{{ topic['image'] }}" class="card-img" alt="">#}
-	    </div>
-	    <div class="col-md-10">
-	      <div class="card-body">
-{#		      <h5 class="card-title serif"><b><a href="/{{ topic['route'] }}"> {{ topic['name'] }} </a></b></h5>#}
-{#		      <span class="card-text serif"><i> {{ topic['quote'] }} </i></span>#}
-{#		      <p class="card-text"><small class="text-muted"> - {{ topic['author'] }} </small></p>#}
-	      </div>
-	    </div>
-	  </div>
-	</div>
-{% endfor %}
+    <h1 id="Topics" class="serif">Topics</h1>
+    <hr>
+    <div class="row ">
+        {% for topic in topics %}
+            <div class="card mb-3 col-md-12">
+                <div class="row no-gutters">
+                    <div class="col-md-2">
+                        {#	      <img src="{{ url_for('static', filename='web-files/img') }}/{{ topic['image'] }}" class="card-img" alt="">#}
+                    </div>
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            {#		      <h5 class="card-title serif"><b><a href="/{{ topic['route'] }}"> {{ topic['name'] }} </a></b></h5>#}
+                            {#		      <span class="card-text serif"><i> {{ topic['quote'] }} </i></span>#}
+                            {#		      <p class="card-text"><small class="text-muted"> - {{ topic['author'] }} </small></p>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 
-</div><!-- row -->
-<br/>
-<br/>
-<hr/>
+    </div><!-- row -->
+    <br/>
+    <br/>
+    <hr/>
 </div><!-- /.container -->
-  
 
-  <!-- Footer -->
+
+<!-- Footer -->
 {% include 'footer.html' %}
 
-  <!-- Bootstrap core JavaScript -->
+<!-- Bootstrap core JavaScript -->
 
 </body>
 
