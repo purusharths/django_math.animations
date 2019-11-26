@@ -34,6 +34,12 @@ def topics(request):
 def is_superuser(user):
     return user.is_superuser
 
+def dashboard_admin(request):
+    return render(request,"fossee_math_pages/dashboard_admin.html")
+
+def dashboard_intern(request):
+    return render(request,"fossee_math_pages/dashboard_intern.html")
+
 
 def login(request):
     try:

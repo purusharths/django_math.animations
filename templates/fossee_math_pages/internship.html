@@ -1,27 +1,27 @@
 {% extends 'base.html' %}{% block title %}Real Analysis{% endblock %}{% block content %}
-    
-<!-- Page Content -->
-<div class="container serif text-wrap">
 
-    <div class="card my-5 py-4 border border-white">
-        <div class="card-body">
-            <!--<h1 class="serif">Real Analysis</h1>-->
-            <p class=" m-0">Look up for a subtopic: <input type="text"/>
-                <a class="btn btn-primary" href="#">Search</a></p>
-            <!--<small class="float-right"> <a href="/">Home</a> > Real Analysis</small> -->
+    <!-- Page Content -->
+    <div class="container serif text-wrap">
+
+        <div class="card my-5 py-4 border border-white">
+            <div class="card-body">
+                <!--<h1 class="serif">Real Analysis</h1>-->
+                <p class=" m-0">Look up for a subtopic: <input type="text"/>
+                    <a class="btn btn-primary" href="#">Search</a></p>
+                <!--<small class="float-right"> <a href="/">Home</a> > Real Analysis</small> -->
+            </div>
         </div>
-    </div>
 
 
-    <img src="{% static 'web-files/img/internship.png' %}"/>
+        <img src="{{ ROOT_URL }}/static/web-files/img/internship.png"/>
 
 
-</div><!-- row -->
+    </div><!-- row -->
 
 
-<br/>
-<br/>
-<hr/>
-</div><!-- /.container -->
+    <br/>
+    <br/>
+    <hr/>
+    </div><!-- /.container -->
 
-{% end block %}
+{% endblock %}

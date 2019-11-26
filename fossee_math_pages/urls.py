@@ -5,12 +5,15 @@ from fossee_math_pages import views
 from django.urls import path
 
 urlpatterns = [
-    url(r'^login/$', views.login, name='login'),
-    path(r'', views.index, name='index'),
-    path(r'', views.index, name='pagenotfound'),
-    path(r'', views.index, name='content_emplate'),
-    path(r'', views.index, name='internship'),
-    path(r'', views.index, name='real_number_line'),
-    path(r'', views.index, name='realanalysis'),
+    path('', views.index, name='index'),
+    path('login/', views.login, name='login'),
+    path('internship/', views.internship, name='internship'),
     path('topics/', views.topics, name='topics'),
+    path('dashboard_admin/',views.dashboard_admin,name='dashboard_admin'),
+    path('dashboard_intern/',views.dashboard_intern,name='dashboard_intern'),
+
+    path('', views.index, name='real_number_line'),
+    path('', views.index, name='realanalysis'),
+    path('', views.index, name='pagenotfound'),
+    path('', views.index, name='content_emplate'),
 ]
