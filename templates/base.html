@@ -9,9 +9,8 @@
         <meta name="author" content="">
 
         <!-- Style sheets -->
-        <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css'%}">
-        <link rel="shortcut icon" type="image/x-icon" href="{% static
-            'web-files/img/favicon.ico'%}">
+        <link rel="stylesheet" href="{{ URL_ROOT }}/static/css/fontawesome-all.min.css">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ URL_ROOT }}/static/web-files/img/favicon.ico">
         <link
             href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap"
             rel="stylesheet">
@@ -35,10 +34,8 @@
         {% include 'partials/_footer.html' %}
 
         <!-- Script archive -->
-        <script type="text/javascript" src="{% static
-            'web-files/javascript/bootstrap.bundle.min.js' %}"></script>
-        <script type="text/javascript" src="{% static
-            'web-files/javascript/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery.min.js"></script>
         <script id="MathJax-script" async
             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script id="MathJax-script" async
