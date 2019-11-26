@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Math{% endblock %}
-{% block content %}
-    <div class="container-fluid jumbotron" align="justify" style="margin-top:20px; background-color: #e7edee;">
-        <center>
-            <h1>DASHBOARD ADMIN</h1>
-            <hr>
-            <div class="container" style="font-family: 'Lato', sans-serif;">
 
-            </div>
-            <br>
-        </center>
+
+
+{% block content %}
+
+<div>
+    <!-- Sidenav -->
+    {% include 'partials/_sidenav-admin.html' %}
+</div>
+<div class="main">
+    <center>
+        <h1>DASHBOARD ADMIN</h1>
+        <hr>
+
         <br>
-    </div>
+    </center>
+    <br>
+</div>
+
 {% endblock %}
