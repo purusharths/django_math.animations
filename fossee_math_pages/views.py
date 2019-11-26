@@ -3,7 +3,7 @@ from .forms import (UserLoginForm, )
 from .models import (profile, User, )
 from os import listdir, path, sep, makedirs, remove
 from datetime import datetime, date
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 
 
@@ -34,35 +34,39 @@ def topics(request):
 def is_superuser(user):
     return user.is_superuser
 
+
 def dashboard_admin(request):
-    return render(request,"fossee_math_pages/dashboard_admin.html")
+    return render(request, "fossee_math_pages/dashboard_admin.html")
+
 
 def dashboard_intern(request):
-    return render(request,"fossee_math_pages/dashboard_intern.html")
+    return render(request, "fossee_math_pages/dashboard_intern.html")
 
 
-def login(request):
-    try:
-        # user = request.user
-        # if is_superuser(user):
-        #     return redirect('/admin')
-        # if user.is_authenticated():
-        #     if user.groups.filter(name='reviewer').count() > 0:
-        #         return render(request, "../templates/login.html")
-        #     return render(request, "../templates/login.html")
+def user_login(request):
+    user = request.user
+    if is_superuser(user):
+        return redirect('/admin')
 
-        if request.method == "POST":
-            form = UserLoginForm(request.POST)
-            # if form.is_valid():
-            #     user = form.cleaned_data
-            #     login(request, user)
-            #     if user.groups.filter(name='reviewer').count() > 0:
-            #         return render(request, "../templates/login.html")
-            #     return render(request, "../templates/login.html")
-            # else:
-            #     return render(request, "../templates/login.html")
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data
+            login(request, user)
+            usr_type = profile.objects.get(id=user.id)
+            if usr_type.role == 'intern':
+                return render(request, 'fossee_math_pages/dashboard_intern.html')
+            elif usr_type.role == 'staff':
+                return render(request, 'fossee_math_pages/dashboard_admin.html')
+            else:
+                return render(request, 'fossee_math_pages/login.html', {"form": form})
         else:
-            return render(request, "../templates/fossee_math_pages/login.html")
+            return render(request, 'fossee_math_pages/login.html', {"form": form})
+    else:
+        form = UserLoginForm()
+        return render(request, "fossee_math_pages/login.html", {"form": form})
 
-    except:
-        return render(request, "../templates/fossee_math_pages/login.html")
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')

@@ -5,21 +5,25 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.files import File
 
+position_choices = (
+    ("intern", "intern"),
+    ("staff", "staff"),
+)
 
 class profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    no_of_days = models.IntegerField(default=0)
+    start_date = models.DateField(auto_now=True)
     is_email_verified = models.BooleanField(default=False)
-    is_intern = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+    role=models.CharField(max_length=255,choices=position_choices,default='intern')
     activation_key = models.CharField(max_length=255, blank=True, null=True)
     key_expiry_time = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return u"id: {0}| {1} {2} | {3} ".format(
+        return u"id: {0} | {1} | {2} | {3} | {4}".format(
             self.user.id,
             self.user.first_name,
             self.user.last_name,
-            self.user.email
+            self.user.email,
+            self.role
         )
 
