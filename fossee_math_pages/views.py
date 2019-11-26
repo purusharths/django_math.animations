@@ -48,7 +48,7 @@ def login(request):
             # else:
             #     return render(request, "../templates/login.html")
         else:
-            return render(request,"../templates/login.html")
+            return render(request, "../templates/fossee_math_pages/login.html")
 
     except:
-        return render(request, "../templates/login.html")
+        return render(request, "../templates/fossee_math_pages/login.html")
