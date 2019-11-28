@@ -1,43 +1,32 @@
-{% extends 'base.html' %}
-{% block title %}Math{% endblock %}
-{% block content %}
+{% extends 'base.html' %} {% block title %}Admin Dashboard{% endblock %} {% block content %}
 <div class="container" style="padding-top: 5%;">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab"
-                href="#home"
-                role="tab" aria-controls="home" aria-selected="true">Home</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="add-tab" data-toggle="tab"
-                href="#add"
-                role="tab" aria-controls="add" aria-selected="false">Add
+            <a class="nav-link" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="false">Add
                 Intern</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="manage-tab" data-toggle="tab"
-                href="#manage"
-                role="tab" aria-controls="manage" aria-selected="false">Manage
+            <a class="nav-link" id="manage-tab" data-toggle="tab" href="#manage" role="tab" aria-controls="manage" aria-selected="false">Manage
                 Intern</a>
         </li>
         <li class="nav-item">
-                <a class="nav-link" id="approve-tab" data-toggle="tab"
-                    href="#approve"
-                    role="tab" aria-controls="manage" aria-selected="false">Approve Content
+            <a class="nav-link" id="approve-tab" data-toggle="tab" href="#approve" role="tab" aria-controls="manage" aria-selected="false">Approve Content
                     </a>
-            </li>
+        </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="container" style="padding-top: 3%;">
         <div class="tab-content">
-            <div class="tab-pane active" id="home" role="tabpanel"
-                aria-labelledby="home-tab">
+            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="row">
                     <div class="col">
                         <label>Number of interns active: </label>
                     </div>
-                    
+
                     <div class="col">
                         <label><h3></h3></label>
                     </div>
@@ -59,9 +48,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="add" role="tabpanel"
-                aria-labelledby="add-tab">
-                <form autocomplete="off" method="POST" action="">
+            <div class="tab-pane" id="add" role="tabpanel" aria-labelledby="add-tab">
+                <!-- <form autocomplete="off" method="POST" action="">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col">
@@ -105,14 +93,13 @@
                         <input type="submit" class="form-control btn
                             btn-success" value="Submit">
                     </div>
-                </form>
+                </form> -->
+
             </div>
-            <div class="tab-pane" id="manage" role="tabpanel"
-                aria-labelledby="manage-tab">
+            <div class="tab-pane" id="manage" role="tabpanel" aria-labelledby="manage-tab">
                 3
             </div>
-            <div class="tab-pane" id="approve" role="tabpanel"
-                aria-labelledby="approve-tab">
+            <div class="tab-pane" id="approve" role="tabpanel" aria-labelledby="approve-tab">
                 4
             </div>
         </div>

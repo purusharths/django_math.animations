@@ -5,7 +5,7 @@ from os import listdir, path, sep, makedirs, remove
 from datetime import datetime, date
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-
+from django.http import HttpResponse
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -70,3 +70,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+def add_intern(request):
+    return HttpResponse('')
