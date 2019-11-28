@@ -26,4 +26,3 @@ class profile(models.Model):
             self.user.email,
             self.role
         )
-

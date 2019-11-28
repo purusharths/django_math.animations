@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import (UserLoginForm, )
+from .forms import (UserLoginForm, Read_File)
 from .models import (profile, User, )
 from os import listdir, path, sep, makedirs, remove
 from datetime import datetime, date
@@ -35,14 +35,6 @@ def is_superuser(user):
     return user.is_superuser
 
 
-def dashboard_admin(request):
-    return render(request, "fossee_math_pages/dashboard_admin.html")
-
-
-def dashboard_intern(request):
-    return render(request, "fossee_math_pages/dashboard_intern.html")
-
-
 def user_login(request):
     user = request.user
     if is_superuser(user):
@@ -57,7 +49,7 @@ def user_login(request):
             if usr_type.role == 'intern':
                 return render(request, 'fossee_math_pages/dashboard_intern.html')
             elif usr_type.role == 'staff':
-                return render(request, 'fossee_math_pages/dashboard_admin.html')
+                return render(request, 'fossee_math_pages/dashboard_admin.html',{'upload':upload})
             else:
                 return render(request, 'fossee_math_pages/login.html', {"form": form})
         else:
@@ -70,3 +62,4 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
