@@ -26,3 +26,7 @@ class UserLoginForm(forms.Form):
         if not user:
             raise forms.ValidationError("Invalid username/password")
         return user
+
+class AddInternForm(forms.Form):
+    file = forms.FileField()
+    topic = forms.CharField()
