@@ -134,3 +134,5 @@ MEDIA_URL = '/data/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "fossee_math", 'data')
 
 LOG_FOLDER = os.path.join(BASE_DIR, "fossee_math", "logs")
+
+LOGOUT_REDIRECT_URL = "/"
