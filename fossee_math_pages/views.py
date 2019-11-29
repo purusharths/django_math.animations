@@ -10,26 +10,11 @@ from django.shortcuts import render, redirect
 def index(request):
     return render(request, "fossee_math_pages/index.html")
 
-
-def pagenotfound(request):
-    return render(request, "fossee_math_pages/404.html")
-
-
 def internship(request):
     return render(request, "fossee_math_pages/internship.html")
 
-
-def real_number_line(request):
-    return render(request, "fossee_math_pages/real_number_line.html")
-
-
-def realanalysis(request):
-    return render(request, "fossee_math_pages/realanalysis.html")
-
-
 def topics(request):
     return render(request, "fossee_math_pages/topics.html")
-
 
 def is_superuser(user):
     return user.is_superuser
@@ -82,3 +67,19 @@ def user_logout(request):
 
 #     form = AddInternForm()
 #     return render(request, 'fossee_math_pages/dashboard_admin.html', {'form': form})
+
+
+def manage_intern(request):
+    return render(request,'fossee_math_pages/manage_intern.html')
+
+def aprove_contents(request):
+    return render(request,'fossee_math_pages/aprove_contents.html')
+
+def add_details(request):
+    return render(request,'fossee_math_pages/intern_add_data.html')
+
+def view_details(request):
+    return render(request,'fossee_math_pages/intern_view_data.html')
+
+def topic_details(request):
+    return render(request,'fossee_math_pages/view_topic_details.html')
