@@ -76,13 +76,13 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
-def InternForm(request):
-    if request.method == 'POST':
-        form = AddInternForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            topic = form.cleaned_data['topic']
+# def InternForm(request):
+#     if request.method == 'POST':
+#         form = AddInternForm(request.POST)
+#         if form.is_valid():
+#             name = form.cleaned_data['name']
+#             email = form.cleaned_data['email']
+#             topic = form.cleaned_data['topic']
 
-    form = AddInternForm()
-    return render(request, 'fossee_math_pages/dashboard_admin.html', {'form': form})
+#     form = AddInternForm()
+#     return render(request, 'fossee_math_pages/dashboard_admin.html', {'form': form})
