@@ -6,7 +6,6 @@ from django.utils.timezone import now
 from .forms import (UserLoginForm, add_data, AddForm, )
 from .models import (profile, data, )
 
-
 def index(request):
     return render(request, "fossee_math_pages/index.html")
 
@@ -64,8 +63,14 @@ def user_logout(request):
 
 
 def add_intern(request):
-    # if request.method == 'POST':
-    #     form = AddForm(request.POST)
+    if request.POST:
+        if 'upload_file' in request.POST:
+            print(1)
+        elif 'submit' in request.POST:
+            print(2)
+
+         
+
     form = AddForm()
     return render(request, 'fossee_math_pages/add_intern.html', {'form': form})
 
