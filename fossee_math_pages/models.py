@@ -7,11 +7,12 @@ position_choices = (
     ("staff", "staff"),
 )
 
+
 class profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now=True)
     is_email_verified = models.BooleanField(default=False)
-    role=models.CharField(max_length=255,choices=position_choices,default='intern')
+    role = models.CharField(max_length=255, choices=position_choices, default='intern')
     activation_key = models.CharField(max_length=255, blank=True, null=True)
     key_expiry_time = models.DateTimeField(blank=True, null=True)
 
@@ -24,8 +25,9 @@ class profile(models.Model):
             self.role
         )
 
+
 class data(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    subtopic=models.CharField(max_length=255,blank=False);
-    content=FroalaField()
-    post_date=models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subtopic = models.CharField(max_length=255, blank=False);
+    content = FroalaField()
+    post_date = models.DateField()

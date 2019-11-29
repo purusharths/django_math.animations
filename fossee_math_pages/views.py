@@ -1,8 +1,10 @@
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
-from .forms import (UserLoginForm,add_data,)
-from .models import (profile, data,)
+
+from .forms import (UserLoginForm, add_data, AddForm, )
+from .models import (profile, data, )
 
 
 def index(request):
@@ -21,11 +23,12 @@ def is_superuser(user):
     return user.is_superuser
 
 
+@login_required
 def dashboard(request):
     user = request.user
     role = profile.objects.get(user_id=user.id)
     if role.role == 'staff' or role.role == 'intern':
-        InternForm()
+        # InternForm()
         return render(request, "fossee_math_pages/dashboard.html")
     else:
         return redirect('logout')
@@ -59,9 +62,10 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
+
 def add_intern(request):
     if request.method == 'POST':
-          form = AddForm(request.POST)
+        form = AddForm(request.POST)
     form = AddForm()
     return render(request, 'fossee_math_pages/add_intern.html', {'form': form})
 
@@ -74,28 +78,42 @@ def aprove_contents(request):
     return render(request, 'fossee_math_pages/aprove_contents.html')
 
 
+@login_required
 def add_details(request):
     form = add_data
     if request.method == 'POST':
         form = add_data(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = request.user.id
-            post.subtopic
-            post.content
+            post.user_id = request.user.id
             post.post_date = now()
             post.save()
             form = add_data
-    return render(request, 'fossee_math_pages/intern_add_data.html',{'form':form})
+            return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})
+    return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})
 
 
+@login_required
 def view_details(request):
-    return render(request, 'fossee_math_pages/intern_view_data.html')
+    try:
+        resources = data.objects.filter(user_id=request.user.id)
+        return render(request, 'fossee_math_pages/intern_view_data.html', {'resources': resources})
+    except:
+        return render(request, 'fossee_math_pages/intern_view_data.html')
 
 
-def topic_details(request):
-    return render(request, 'fossee_math_pages/view_topic_details.html')
+@login_required
+def edit_details(request):
+    try:
+        resources = data.objects.filter(user_id=request.user.id)
+        return render(request, 'fossee_math_pages/intern_edit_data.html', {'resources': resources})
+    except:
+        return render(request, 'fossee_math_pages/intern_edit_data.html')
 
 
 def add_intern(request):
     return render(request, 'fossee_math_pages/add_intern.html')
+
+
+def topic_details(request):
+    return render(request, 'fossee_math_pages/view_topic_details.html')
