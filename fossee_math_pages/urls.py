@@ -13,18 +13,9 @@ urlpatterns = [
     path('topics/', views.topics, name='topics'),
     path('topic_details/',views.topic_details,name='topic_details'),
     path('dashboard/',views.dashboard,name='dashboard'),
-<<<<<<< HEAD
-    path('add_intern/', views.add_intern, name='add_intern'),
-
-    path('', views.index, name='real_number_line'),
-    path('', views.index, name='realanalysis'),
-    path('', views.index, name='pagenotfound'),
-    path('', views.index, name='content_emplate'),
-    # path('', views.InternForm),
-=======
     path('manage_intern/',views.manage_intern,name='manage_intern'),
     path('aprove_contents/',views.aprove_contents,name='aprove_contents'),
     path('add_details/',views.add_details,name='add_details'),
     path('view_details/',views.view_details,name='view_details'),
->>>>>>> 3481a84c5d36113b3a74817f2fc91d921ba2643e
+    path('add_intern/',views.add_intern,name='add_intern'),
 ]
