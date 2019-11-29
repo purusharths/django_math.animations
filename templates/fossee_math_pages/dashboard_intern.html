@@ -1,107 +1,96 @@
-{% extends 'base.html' %}
-{% block title %}Math{% endblock %}
-{% block content %}
-    <div class="container" style="padding-top: 5%;">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab"
-                   href="#home"
-                   role="tab" aria-controls="home" aria-selected="true">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="add-tab" data-toggle="tab"
-                   href="#add"
-                   role="tab" aria-controls="add" aria-selected="false">Add
+{% extends 'base.html' %} {% block title %}Math{% endblock %} {% block content %}
+<div class="container" style="padding-top: 5%;">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="false">Add
                     Subtopic and Notes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="manage-tab" data-toggle="tab"
-                   href="#manage"
-                   role="tab" aria-controls="manage" aria-selected="false">View Your work</a>
-            </li>
-        </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="manage-tab" data-toggle="tab" href="#manage" role="tab" aria-controls="manage" aria-selected="false">View Your work</a>
+        </li>
+    </ul>
 
-        <!-- Tab panes -->
-        <div class="container" style="padding-top: 3%;">
-            <div class="tab-content">
-                <div class="tab-pane active" id="home" role="tabpanel"
-                     aria-labelledby="home-tab">
-                    <div class="table">
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                No. of Days From Joined :
-                            </div>
-                            <div class="colM">
-
-                            </div>
+    <!-- Tab panes -->
+    <div class="container" style="padding-top: 3%;">
+        <div class="tab-content">
+            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="table">
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            No. of Days From Joined :
                         </div>
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                Your Topic :
-                            </div>
-                            <div class="colM">
+                        <div class="colM">
 
-                            </div>
                         </div>
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                No. of Submissions :
-                            </div>
-                            <div class="colM">
+                    </div>
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            Your Topic :
+                        </div>
+                        <div class="colM">
 
-                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            No. of Submissions :
+                        </div>
+                        <div class="colM">
+
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="add" role="tabpanel"
-                     aria-labelledby="add-tab">
-                    <div class="table">
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                Your Topic :
-                            </div>
-                            <div class="colM">
-
-                            </div>
+            </div>
+            <div class="tab-pane" id="add" role="tabpanel" aria-labelledby="add-tab">
+                <div class="table">
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            Your Topic :
                         </div>
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                Sub Topic :
-                            </div>
-                            <div class="colM">
+                        <div class="colM">
 
-                            </div>
-                        </div>
-                        <div class="row" style="padding-top: 1%">
-                            --input machanism--
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane" id="manage" role="tabpanel"
-                     aria-labelledby="manage-tab">
-                    <div class="table">
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                                Your Topic :
-                            </div>
-                            <div class="colM">
-
-                            </div>
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            Sub Topic :
                         </div>
-                        <div class="row" style="padding-top: 1%">
-                            <div class="colM">
-                               --subtopic loop--
-                            </div>
-                            <div class="colM">
+                        <div class="colM">
 
-                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 1%">
+                        --input machanism--
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="manage" role="tabpanel" aria-labelledby="manage-tab">
+                <div class="table">
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            Your Topic :
+                        </div>
+                        <div class="colM">
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 1%">
+                        <div class="colM">
+                            --subtopic loop--
+                        </div>
+                        <div class="colM">
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    </div>
+</div>
 
 {% endblock %}

@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from .forms import (UserLoginForm, )
+from .forms import UserLoginForm, AddInternForm
 from .models import (profile, User, )
 from os import listdir, path, sep, makedirs, remove
 from datetime import datetime, date
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -44,7 +43,7 @@ def dashboard(request):
         return render(request, "fossee_math_pages/dashboard_intern.html")
     else:
         return redirect('logout')
-
+    
 
 def user_login(request):
     user = request.user
@@ -62,7 +61,8 @@ def user_login(request):
             if usr_type.role == 'intern':
                 return render(request, 'fossee_math_pages/dashboard_intern.html')
             elif usr_type.role == 'staff':
-                return render(request, 'fossee_math_pages/dashboard_admin.html')
+                form = AddInternForm()
+                return render(request, 'fossee_math_pages/dashboard_admin.html',{'form':form})
             else:
                 return render(request, 'fossee_math_pages/login.html', {"form": form})
         else:
@@ -76,3 +76,13 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
+def InternForm(request):
+    if request.method == 'POST':
+        form = AddInternForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            topic = form.cleaned_data['topic']
+
+    form = AddInternForm()
+    return render(request, 'fossee_math_pages/dashboard_admin.html', {'form': form})
