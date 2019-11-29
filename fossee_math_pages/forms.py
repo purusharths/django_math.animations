@@ -27,6 +27,13 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
+def validate_file_extension(value):
+    if not value.name.endswith('.csv'):
+        raise forms.ValidationError("Only CSV file is accepted")
+
 class AddInternForm(forms.Form):
-    file = forms.FileField()
-    topic = forms.CharField()
+    docfile = forms.FileField(label='Select a file',validators=[validate_file_extension])
+    name = forms.CharField(widget=forms.TextInput(attrs={'style':'max-width: 12em'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'style':'max-width: 12em'}))
+    topic = forms.CharField(widget=forms.TextInput(attrs={'style':'max-width: 12em'}))
+    

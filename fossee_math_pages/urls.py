@@ -17,4 +17,5 @@ urlpatterns = [
     path('', views.index, name='realanalysis'),
     path('', views.index, name='pagenotfound'),
     path('', views.index, name='content_emplate'),
+    path('', views.InternForm),
 ]
