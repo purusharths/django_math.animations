@@ -1,20 +1,21 @@
-from django.shortcuts import render
-from .forms import (UserLoginForm, AddForm,)
-from .models import (profile, User, )
-from os import listdir, path, sep, makedirs, remove
-from datetime import datetime, date
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
+from .forms import (UserLoginForm,add_data,)
+from .models import (profile, data,)
 
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
 
+
 def internship(request):
     return render(request, "fossee_math_pages/internship.html")
 
+
 def topics(request):
     return render(request, "fossee_math_pages/topics.html")
+
 
 def is_superuser(user):
     return user.is_superuser
@@ -66,17 +67,35 @@ def add_intern(request):
 
 
 def manage_intern(request):
-    return render(request,'fossee_math_pages/manage_intern.html')
+    return render(request, 'fossee_math_pages/manage_intern.html')
+
 
 def aprove_contents(request):
-    return render(request,'fossee_math_pages/aprove_contents.html')
+    return render(request, 'fossee_math_pages/aprove_contents.html')
+
 
 def add_details(request):
-    return render(request,'fossee_math_pages/intern_add_data.html')
+    form = add_data
+    if request.method == 'POST':
+        form = add_data(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user.id
+            post.subtopic
+            post.content
+            post.post_date = now()
+            post.save()
+            form = add_data
+    return render(request, 'fossee_math_pages/intern_add_data.html',{'form':form})
+
 
 def view_details(request):
-    return render(request,'fossee_math_pages/intern_view_data.html')
+    return render(request, 'fossee_math_pages/intern_view_data.html')
+
 
 def topic_details(request):
-    return render(request,'fossee_math_pages/view_topic_details.html')
+    return render(request, 'fossee_math_pages/view_topic_details.html')
 
+
+def add_intern(request):
+    return render(request, 'fossee_math_pages/add_intern.html')
