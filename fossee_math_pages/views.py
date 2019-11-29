@@ -84,6 +84,5 @@ def view_details(request):
 def topic_details(request):
     return render(request,'fossee_math_pages/view_topic_details.html')
 
-
 def add_intern(request):
     return render(request,'fossee_math_pages/add_intern.html')
