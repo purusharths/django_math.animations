@@ -1,9 +1,7 @@
 {% load static %}
 <!-- if staff -->
 
-{% if user.is_authenticated %}
-
- {% if request.user.profile.role is 'staff' %}
+{% if user.is_authenticated %}{% if request.user.profile.role == 'staff' %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
@@ -23,7 +21,7 @@
         </ul>
     </div>
 </nav>
-     {% else %}
+{% else %}
 <!-- else -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -40,6 +38,6 @@
         </ul>
     </div>
 </nav>
-         {% endif %}
+{% endif %}
 <!-- end if -->
 {% endif %}
