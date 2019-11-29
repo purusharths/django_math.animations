@@ -39,9 +39,9 @@ def dashboard(request):
     role=profile.objects.get(user_id=user.id)
     if role.role=='staff':
         form = AddInternForm()
-        return render(request, 'fossee_math_pages/dashboard_admin.html',{'form':form})
+        return render(request, 'fossee_math_pages/dashboard.html',{'form':form})
     elif role.role=='intern':
-        return render(request, "fossee_math_pages/dashboard_intern.html")
+        return render(request, "fossee_math_pages/dashboard.html")
     else:
         return redirect('logout')
 
@@ -60,9 +60,9 @@ def user_login(request):
 
             usr_type = profile.objects.get(id=user.id)
             if usr_type.role == 'intern':
-                return render(request, 'fossee_math_pages/dashboard_intern.html')
+                return render(request, 'fossee_math_pages/dashboard.html')
             elif usr_type.role == 'staff':
-                return render(request, 'fossee_math_pages/dashboard_admin.html')
+                return render(request, 'fossee_math_pages/dashboard.html')
             else:
                 return render(request, 'fossee_math_pages/login.html', {"form": form})
         else:
