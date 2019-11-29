@@ -64,8 +64,8 @@ def user_logout(request):
 
 
 def add_intern(request):
-    if request.method == 'POST':
-        form = AddForm(request.POST)
+    # if request.method == 'POST':
+    #     form = AddForm(request.POST)
     form = AddForm()
     return render(request, 'fossee_math_pages/add_intern.html', {'form': form})
 
@@ -109,10 +109,6 @@ def edit_details(request):
         return render(request, 'fossee_math_pages/intern_edit_data.html', {'resources': resources})
     except:
         return render(request, 'fossee_math_pages/intern_edit_data.html')
-
-
-def add_intern(request):
-    return render(request, 'fossee_math_pages/add_intern.html')
 
 
 def topic_details(request):
