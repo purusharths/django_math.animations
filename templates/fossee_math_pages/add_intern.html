@@ -12,15 +12,22 @@
     }
 </script>
 <div class="container" style="padding-top: 5%; padding-bottom: 5%;">
-    <form method="POST">
-        {% csrf_token %}
-        <input type="file" name="upload" id="file" onchange="checkfile(this);" />
-        <input type="submit" value="Upload File" class="btn btn-info">
-    </form>
+    <div class="container custom-file">
+        <form method="POST" id="formOne">
+            {% csrf_token %}
+            <div class="row">
+                <input class="form-group float-left" type="file" name="csv_file" id="csv_file" onchange="checkfile(this);" />
+                <input type="submit" value="Upload File" class="btn btn-info" name="upload_file">
+            </div>
+        </form>
+    </div>
+
     <div class="container" style="padding-top: 3%;">
-        <form method="POST" name="putdata">
+        <hr>
+        <form method="POST" name="putdata" class="form-group" id="formTwo">
+
             {% csrf_token %} {{ form|crispy }}
-            <input class="btn btn-success" type="submit" name="" id="" value="OK">
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
         </form>
     </div>
 
