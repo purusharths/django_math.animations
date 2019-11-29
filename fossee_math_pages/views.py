@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import UserLoginForm, AddInternForm
+from .forms import UserLoginForm
 from .models import (profile, User, )
 from os import listdir, path, sep, makedirs, remove
 from datetime import datetime, date
