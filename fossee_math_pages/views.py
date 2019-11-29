@@ -34,17 +34,6 @@ def is_superuser(user):
     return user.is_superuser
 
 
-def dashboard(request):
-    user=request.user
-    role=profile.objects.get(user_id=user.id)
-    if role.role=='staff':
-        return render(request, "fossee_math_pages/dashboard_admin.html")
-    elif role.role=='intern':
-        return render(request, "fossee_math_pages/dashboard_intern.html")
-    else:
-        return redirect('logout')
-    
-
 def user_login(request):
     user = request.user
 

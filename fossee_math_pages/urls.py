@@ -11,7 +11,6 @@ urlpatterns = [
     path('logout/',views.user_logout,name='logout'),
     path('internship/', views.internship, name='internship'),
     path('topics/', views.topics, name='topics'),
-    path('dashboard/',views.dashboard,name='dashboard'),
 
     path('', views.index, name='real_number_line'),
     path('', views.index, name='realanalysis'),
