@@ -26,11 +26,11 @@
                 {% if user.is_authenticated %}
                     {% if request.user.profile.role is 'staff' %}
                         <li class="nav-item">
-                            <p class="nav-link text-white" >{{ user.email }}</p>
+                            <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <p class="nav-link text-white" >{{ user.email }}</p>
+                            <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">

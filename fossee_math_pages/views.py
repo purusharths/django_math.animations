@@ -34,6 +34,18 @@ def is_superuser(user):
     return user.is_superuser
 
 
+def dashboard(request):
+    user=request.user
+    role=profile.objects.get(user_id=user.id)
+    if role.role=='staff':
+        form = AddInternForm()
+        return render(request, 'fossee_math_pages/dashboard_admin.html',{'form':form})
+    elif role.role=='intern':
+        return render(request, "fossee_math_pages/dashboard_intern.html")
+    else:
+        return redirect('logout')
+
+
 def user_login(request):
     user = request.user
 
@@ -50,8 +62,7 @@ def user_login(request):
             if usr_type.role == 'intern':
                 return render(request, 'fossee_math_pages/dashboard_intern.html')
             elif usr_type.role == 'staff':
-                form = AddInternForm()
-                return render(request, 'fossee_math_pages/dashboard_admin.html',{'form':form})
+                return render(request, 'fossee_math_pages/dashboard_admin.html')
             else:
                 return render(request, 'fossee_math_pages/login.html', {"form": form})
         else:
