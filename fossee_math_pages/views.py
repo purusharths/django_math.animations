@@ -6,6 +6,7 @@ from datetime import datetime, date
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 
+
 def index(request):
     return render(request, "fossee_math_pages/index.html")
 
@@ -35,12 +36,9 @@ def is_superuser(user):
 
 
 def dashboard(request):
-    user=request.user
-    role=profile.objects.get(user_id=user.id)
-    if role.role=='staff':
-        form = AddInternForm()
-        return render(request, 'fossee_math_pages/dashboard.html',{'form':form})
-    elif role.role=='intern':
+    user = request.user
+    role = profile.objects.get(user_id=user.id)
+    if role.role == 'staff' or role.role == 'intern':
         return render(request, "fossee_math_pages/dashboard.html")
     else:
         return redirect('logout')
@@ -58,10 +56,8 @@ def user_login(request):
             if is_superuser(user):
                 return redirect('/admin')
 
-            usr_type = profile.objects.get(id=user.id)
-            if usr_type.role == 'intern':
-                return render(request, 'fossee_math_pages/dashboard.html')
-            elif usr_type.role == 'staff':
+            usr_type = profile.objects.get(user_id=user.id)
+            if usr_type.role == 'intern' or usr_type.role == 'staff':
                 return render(request, 'fossee_math_pages/dashboard.html')
             else:
                 return render(request, 'fossee_math_pages/login.html', {"form": form})
