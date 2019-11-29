@@ -23,41 +23,45 @@
 
 <body>
 
-    <!-- Header -->
-    {% include 'partials/_header.html' %}
+<!-- Header -->
+{% include 'partials/_header.html' %}
 
-    <!-- Navbar -->
-    {% include 'partials/_navbar.html' %} {% block content %}{% endblock %}
+<!-- Navbar -->
+{% include 'partials/_navbar.html' %}
 
-    <!-- footer -->
-    {% include 'partials/_footer.html' %}
+{% block content %}
 
-    <!-- Script archive -->
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery.min.js"></script>
+{% endblock %}
 
-    <!-- Bootstrap Script -->
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery-3.3.1.slim.min.js"></script>
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/popper.min.js"></script>
+<!-- footer -->
+{% include 'partials/_footer.html' %}
 
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script type="text/javascript">
-        window.MathJax = {
-            tex: {
-                inlineMath: [
-                    ['$', '$'],
-                    ['\\(', '\\)']
-                ]
-            }
-        };
-    </script>
-    <style>
-        .serif {
-            font-family: "Lora", serif;
+<!-- Script archive -->
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery.min.js"></script>
+
+<!-- Bootstrap Script -->
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery-3.3.1.slim.min.js"></script>
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/popper.min.js"></script>
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript">
+    window.MathJax = {
+        tex: {
+            inlineMath: [
+                ['$', '$'],
+                ['\\(', '\\)']
+            ]
         }
-    </style>
+    };
+</script>
+<style>
+    .serif {
+        font-family: "Lora", serif;
+    }
+</style>
 </body>
 
 </html>
