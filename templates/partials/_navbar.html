@@ -9,13 +9,13 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">Home<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Add Intern</a>
+                    <a class="nav-link" href="{% url 'manage_intern' %}">Add Intern</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Manage Intern</a>
+                    <a class="nav-link" href="{% url 'manage_intern' %}">Manage Intern</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Approve Content</a>
+                    <a class="nav-link" href="{% url 'aprove_contents' %}">Approve Content</a>
                 </li>
 
             </ul>
@@ -30,10 +30,10 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">Home<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Add Subtopic & Notes</a>
+                    <a class="nav-link" href="{% url 'add_details' %}">Add Subtopic & Notes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My Work</a>
+                    <a class="nav-link" href="{% url 'view_details' %}">My Work</a>
                 </li>
             </ul>
         </div>
