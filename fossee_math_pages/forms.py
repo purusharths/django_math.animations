@@ -4,6 +4,8 @@ from .models import (profile, )
 from string import punctuation, digits
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+import os
+from django.core.exceptions import ValidationError
 
 position_choices = (
     ("intern", "intern"),
@@ -27,11 +29,9 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
-def validate_file_extension(value):
-    if not value.name.endswith('.csv'):
-        raise forms.ValidationError("Only CSV file is accepted")
-
 class AddForm(forms.Form):
-    docfile = forms.FileField(label='Select a file',validators=[validate_file_extension])
+    name = forms.CharField()
+    email = forms.EmailField()
+    topic = forms.CharField()
     
     
