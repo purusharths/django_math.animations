@@ -1,9 +1,8 @@
 from django import forms
 from django.utils import timezone
-from .models import (profile, )
-from string import punctuation, digits
-from django.contrib.auth.models import User
+from .models import (profile, data)
 from django.contrib.auth import authenticate
+from froala_editor.widgets import FroalaEditor
 
 position_choices = (
     ("intern", "intern"),
@@ -34,4 +33,11 @@ def validate_file_extension(value):
 class AddForm(forms.Form):
     docfile = forms.FileField(label='Select a file',validators=[validate_file_extension])
     
-    
+
+
+class add_data(forms.ModelForm):
+    content=forms.CharField(widget=FroalaEditor)
+
+    class Meta:
+        model = data
+        fields = ('subtopic', 'content')
