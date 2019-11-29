@@ -9,7 +9,7 @@
                 <a class="nav-link" href="{% url 'dashboard' %}">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Add Intern</a>
+                <a class="nav-link" href="{% url 'add_intern' %}">Add Intern</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Manage Intern</a>
@@ -21,7 +21,7 @@
         </ul>
     </div>
 </nav>
-{% else %}
+{% elif request.user.profile.role == 'intern' %}
 <!-- else -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -38,6 +38,10 @@
         </ul>
     </div>
 </nav>
+{% else %}
+<div>
+
+</div>
 {% endif %}
 <!-- end if -->
 {% endif %}
