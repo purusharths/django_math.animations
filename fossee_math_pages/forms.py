@@ -1,11 +1,13 @@
 from django import forms
 from django.utils import timezone
-from .models import (profile, )
-from string import punctuation, digits
-from django.contrib.auth.models import User
+from .models import (profile, data)
 from django.contrib.auth import authenticate
+<<<<<<< HEAD
 import os
 from django.core.exceptions import ValidationError
+=======
+from froala_editor.widgets import FroalaEditor
+>>>>>>> 3efea81381b6f4ec2725fd8eeecc4503fdd3c907
 
 position_choices = (
     ("intern", "intern"),
@@ -35,3 +37,11 @@ class AddForm(forms.Form):
     topic = forms.CharField()
     
     
+
+
+class add_data(forms.ModelForm):
+    content=forms.CharField(widget=FroalaEditor)
+
+    class Meta:
+        model = data
+        fields = ('subtopic', 'content')
