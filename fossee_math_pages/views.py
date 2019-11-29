@@ -37,7 +37,7 @@ def is_superuser(user):
 
 def dashboard(request):
     user=request.user
-    role=profile.objects.get(id=user.id)
+    role=profile.objects.get(user_id=user.id)
     if role.role=='staff':
         return render(request, "fossee_math_pages/dashboard_admin.html")
     elif role.role=='intern':
