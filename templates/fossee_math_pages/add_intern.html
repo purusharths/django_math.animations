@@ -1,13 +1,10 @@
-{% extends 'base.html' %}{% block title %}Math{% endblock %}{% block content %}
-<div class="container">
-    <div>
-        <h2>Add Intern</h2>
-    </div>
-    <div class="row">
-        <form method="POST">
+{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %}
+
+    <form method="POST">
             {% csrf_token %} {{ form|crispy }}y
             <button type="submit" class="btn btn-info">Upload File</button>
         </form>
-    </div>
 
-</div>
+
+{% endblock %}
+
