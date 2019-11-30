@@ -1,10 +1,12 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
 from .forms import (UserLoginForm, add_data, AddForm, )
 from .models import (profile, data, )
+
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -63,16 +65,33 @@ def user_logout(request):
 
 
 def add_intern(request):
-    if request.POST:
-        if 'upload_file' in request.POST:
-            print(1)
-        elif 'submit' in request.POST:
-            print(2)
+    data = {}
+    if "GET" == request.method:
+        return render(request, "fossee_math_pages/add_intern.html", data)
+    # if not GET, then proceed
+    try:
+        csv_file = request.FILES["csv_file"]
+        # if not csv_file.name.endswith('.csv'):
+        #     return render(request, "fossee_math_pages/add_intern.html", data)
+        # # if file is too large, return
+        # if csv_file.multiple_chunks():
+        #     return render(request, "fossee_math_pages/add_intern.html", data)
 
-         
+        print("hello")
+        file_data = csv_file.read().decode("utf-8")
 
-    form = AddForm()
-    return render(request, 'fossee_math_pages/add_intern.html', {'form': form})
+        lines = file_data.split("\n")
+        # loop over the lines and save them in db. If error , store as string and then display
+        for line in lines:
+            fields = line.split(",")
+            data_dict = {"name": fields[0], "email": fields[1], "topic": fields[2]}
+            try:
+                print(data_dict)
+            except Exception as e:
+                pass
+
+    except Exception as e:
+        return render(request, 'fossee_math_pages/add_intern.html')
 
 
 def manage_intern(request):
