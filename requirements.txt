@@ -6,6 +6,6 @@ idna==2.8
 Pillow==6.2.0
 pytz==2018.9
 requests==2.21.0
-urllib3==1.25.7
+urllib3>=1.21.1
 django-froala-editor
 django-crispy-forms
