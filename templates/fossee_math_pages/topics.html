@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Math Topics{% endblock %}
+{% block content %}
+
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Call to Action Well -->
+        <div class="card my-5 py-4 border border-white">
+            <div class="card-body">
+                <div class="row">
+                    <div class="colM">
+                        <h3 class="serif">Search by Topic / SubTopic:</h3>
+                    </div>
+                    <div class="colM">
+                        <input type="text"/>
+                        <a class="btn btn-primary btn-sm"
+                           href="#">Search</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row -->
+        <h1 id="Topics" class="serif">Topics</h1>
+        <hr>
+        <div class="row">
+            {% for topic in topics %}
+                <div class="card mb-3 col-md-12">
+                    <div class="row no-gutters">
+                        <div class="col-md-2">
+                            <img src="{{ tpic.image.url }}" class="card-img" alt="">
+                        </div>
+                        <div class="col-md-10">
+                            <div class="card-body">
+                                <h5 class="card-title serif"><b><a href="/{{
+                                        topic.route.url }}"> {{ topic.name }} </a></b></h5>
+                                <span class="card-text serif"><i> {{ topic.quote }} </i></span>
+                                <p class="card-text"><small class="text-muted"> - {{
+                                        topic.author }} </small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div><!-- /.container -->
+{% endblock %}

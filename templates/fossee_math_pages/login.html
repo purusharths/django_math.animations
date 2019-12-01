@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Math{% endblock %}
+{% block content %}
+<br><br><br><br>
+    <div class="container-fluid jumbotron" align="justify" style="margin-top:20px; background-color: #e7edee;">
+        <center>
+            <h1>Login</h1>
+            <hr>
+            <div class="container" style="font-family: 'Lato', sans-serif;">
+                <form method="post">
+                    {% csrf_token %}
+                    <table class="table table-bordered" style="margin-left: 150px;">
+                        {{ form.as_table }}
+                    </table>
+                    <button class="btn btn-success btn-sm" type="submit"
+                            style="background-color:#e45700;color:white; border:0px">Login
+                    </button>
+                </form>
+            </div>
+        </center>
+        <br>
+    </div>
+    <br><br><br><br>
+{% endblock %}
