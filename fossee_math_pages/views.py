@@ -107,7 +107,7 @@ def add_details(request):
     form = add_data
     if request.method == 'POST':
         form = add_data(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid(): 
             post = form.save(commit=False)
             post.user_id = request.user.id
             post.post_date = now()
