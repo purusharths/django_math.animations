@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+ <br><hr>
+    <div class="container">
+
+        <div id="content" hidden>
+            {% for i in resources.iterator %}
+                {{ i.content }}
+
+            {% endfor %}
+        </div>
+
+        <div id="content-body">
+
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            var html = $("#content").text()
+            html.replace("&lt;", "<")
+            html.replace("&gt;", ">")
+
+            $("#content-body").html(html)
+        })
+    </script>
+    <hr>
+    <br>
+{% endblock %}
