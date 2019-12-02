@@ -143,3 +143,4 @@ FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier', 'code_view'
                          'quote', 'save', 'table',
                          'url', 'video')
 FROALA_INCLUDE_JQUERY = False
+
