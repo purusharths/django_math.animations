@@ -10,5 +10,4 @@ class AddInternAdmin(admin.ModelAdmin):
     list_display = ('id', 'Name')
     search_fields = ('Name', 'Topic')
     list_per_page = 20
-    
 admin.site.register(AddIntern, AddInternAdmin)
