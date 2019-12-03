@@ -125,6 +125,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'FOSSEE_math/static')
 ]
 
+FROALA_UPLOAD_PATH = "fossee_math/uploads/froala_editor/"
+
+FROALA_IMAGE_UPLOAD_PATH = 'fossee_math/uploads/froala_editor/images/'
+
+FROALA_FILE_UPLOAD_PATH = 'fossee_math/uploads/froala_editor/files/'
+
+
 LOGIN_URL = '/login/'
 
 MEDIA_URL = '/data/'
@@ -142,5 +149,4 @@ FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier', 'code_view'
                          'line_breaker', 'link', 'html', 'lists', 'paragraph_format', 'paragraph_style', 'quick_insert',
                          'quote', 'save', 'table',
                          'url', 'video')
-FROALA_INCLUDE_JQUERY = False
-
+FROALA_INCLUDE_JQUERY = True
