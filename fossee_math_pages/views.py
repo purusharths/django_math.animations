@@ -7,6 +7,7 @@ from django.utils.timezone import now
 from .forms import (UserLoginForm, add_data, AddForm, )
 from .models import (profile, data, )
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -120,8 +121,14 @@ def add_details(request):
 @login_required
 def view_details(request):
     try:
-        resources = data.objects.filter(user_id=request.user.id)
-        return render(request, 'fossee_math_pages/intern_view_data.html', {'resources': resources})
+        resources = data.objects.filter(user_id=request.user.id).order_by('post_date')
+        paginator = Paginator(resources, 8)
+        page = request.GET.get('page')
+        paged_resources = paginator.get_page(page)
+        context = {
+            'resources' : paged_resources
+        }
+        return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_view_data.html')
 
