@@ -31,8 +31,3 @@ class data(models.Model):
     subtopic = models.CharField(max_length=255, blank=False);
     content = FroalaField()
     post_date = models.DateField()
-
-class AddIntern(models.Model):
-    Name = models.CharField(max_length=20)
-    Email = models.EmailField()
-    Topic = models.CharField(max_length=30)
