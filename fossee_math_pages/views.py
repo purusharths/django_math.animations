@@ -4,7 +4,7 @@ from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
-from .forms import (UserLoginForm, add_data, AddForm, )
+from .forms import (UserLoginForm, add_data, )
 from .models import (profile, data, )
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator

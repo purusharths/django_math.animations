@@ -30,11 +30,6 @@ class UserLoginForm(forms.Form):
         return user
 
 
-class AddForm(forms.Form):
-    name = forms.CharField()
-    email = forms.EmailField()
-    topic = forms.CharField()
-
 
 class add_data(forms.ModelForm):
     subtopic=forms.CharField

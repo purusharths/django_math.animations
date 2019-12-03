@@ -1,13 +1,12 @@
 from django.contrib import admin
-from .models import profile, AddIntern
+from .models import profile
 
 
 # Register your models here.
-admin.site.register(profile)
 
-class AddInternAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Name')
-    list_display = ('id', 'Name')
+class AddIntern(admin.ModelAdmin):
     search_fields = ('Name', 'Topic')
     list_per_page = 20
-admin.site.register(AddIntern, AddInternAdmin)
+
+
+admin.site.register(profile,AddIntern)
