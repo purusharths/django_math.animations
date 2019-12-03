@@ -126,7 +126,7 @@ def view_details(request):
         page = request.GET.get('page')
         paged_resources = paginator.get_page(page)
         context = {
-            'resources' : paged_resources
+            'resources' : resources
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
