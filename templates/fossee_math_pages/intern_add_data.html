@@ -1,20 +1,29 @@
-{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %}
-    {% load static %}
-    {{ form.media }}
-    <div class="container">
+{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %} {% load static %} {{ form.media }}
+<div class="container">
     <br>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_table }}
-            <br>
-            <input type="submit" class="btn btn-info" value="SUBMIT">
-        </form>
-    <br>
-    </div>
-    <script>
+    <form method="post">
+        {% csrf_token %} {{ form.as_table }}
+        <br>
+        <input type="submit" class="btn btn-info" value="SUBMIT">
+    </form>
+    <!-- Include Editor JS files. -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@3.0.0-beta.1//js/froala_editor.pkgd.min.js"></script>
 
-     $(document).ready(function () {
-            $("#logo").html(" ")
+    <!-- Initialize the editor. -->
+    <script>
+        new FroalaEditor('#edit', {
+            // Set the video upload URL.
+            videoUploadURL: 'videos',
+            videoUploadParams: {
+                id: 'my_editor'
+            },
         })
     </script>
+    <br>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#logo").html(" ")
+    })
+</script>
 {% endblock %}
