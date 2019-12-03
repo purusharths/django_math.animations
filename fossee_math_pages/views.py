@@ -107,7 +107,7 @@ def add_details(request):
     form = add_data
     if request.method == 'POST':
         form = add_data(request.POST, request.FILES)
-        if form.is_valid(): 
+        if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user.id
             post.post_date = now()
@@ -128,11 +128,7 @@ def view_details(request):
 
 @login_required
 def edit_details(request):
-    try:
-        resources = data.objects.filter(user_id=request.user.id)
-        return render(request, 'fossee_math_pages/intern_edit_data.html', {'resources': resources})
-    except:
-        return render(request, 'fossee_math_pages/intern_edit_data.html')
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
 
 
 def topic_details(request):
