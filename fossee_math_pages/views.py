@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages, auth
 import random
 from .forms import AddUserForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -83,9 +85,17 @@ def add_user(request):
             return redirect('add_user')
         else:
             password = random.randint(0,99999999)
+            passwordstr = str(password)
             user = User.objects.create_user(username=name, email=email, password=password)
             addusr = AddUser(name=name, email=email, topic=topic, phone=phone, role=role)
             addusr.save()
+            send_mail(
+                'FOSSEE ANIMATION MATH',
+                'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                'k.ashiju10@gmail.com',
+                [email, 'shiju.ka@mca.christuniversity.in'],
+                fail_silently=False,
+        )
             messages.success(request, 'User Added!')
             return redirect('add_user')
 
