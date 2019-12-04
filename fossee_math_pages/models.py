@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import auth
 from froala_editor.fields import FroalaField
+from phonenumber_field.modelfields import PhoneNumberField
 
 position_choices = (
     ("intern", "intern"),
@@ -32,8 +34,21 @@ class data(models.Model):
     content = FroalaField()
     post_date = models.DateField()
 
-class AddIntern(models.Model):
-    upload_file = models.FileField()
-    name = models.CharField(max_length=20)
-    email = models.EmailField()
-    topic = models.CharField(max_length=30)
+class AddUser(models.Model):
+    name = models.CharField(max_length=20, blank = False, null= False)
+    email = models.EmailField(blank = False)
+    topic = models.CharField(max_length=30, blank = False, null = False)
+    phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
+    INTERN = 'INTERN'
+    STAFF = 'STAFF'
+    ROLE_TYPE = (
+        (INTERN, 'Intern'),
+        (STAFF, 'Staff'),
+        
+    )
+    role = models.CharField(max_length=20,
+                                      choices=ROLE_TYPE,
+                                       default=INTERN)
+
+
+    

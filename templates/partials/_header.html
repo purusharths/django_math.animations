@@ -3,8 +3,7 @@
     <div class="container">
         <img src="https://animations.fossee.in/static/img/logo_main.png" width="150">
         <a class="navbar-brand text-white serif" href="/"> &nbsp;&nbsp; <i><b>Mathematics</b></i></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse serif" id="navbarResponsive">
@@ -23,37 +22,41 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'internship' %}">Internship</a>
                 </li>
-                {% if user.is_authenticated %}{% if request.user.profile.role == 'staff' %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'manage_intern' %}">Manage</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'aprove_contents' %}">Approve Content</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'add_details' %}">Add Notes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'view_details' %}">My Work</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'edit_details' %}">Edit</a>
-                        </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
-                    </li>
+                {% if user.is_authenticated %} {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'add_user' %}">Add User</a>
+                </li>
+                {% endif %} {% if request.user.profile.role == 'staff' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'manage_intern' %}">Manage</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'aprove_contents' %}">Approve Content</a>
+                </li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'add_details' %}">Add Notes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'view_details' %}">My Work</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'edit_details' %}">Edit</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+                </li>
                 {% endif %}
             </ul>
         </div>

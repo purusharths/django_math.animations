@@ -5,9 +5,13 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
 from .forms import (UserLoginForm, add_data, )
-from .models import (profile, data, )
+from .models import (profile, data, AddUser)
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.contrib.auth.models import User
+from django.contrib import messages, auth
+import random
+from .forms import AddUserForm
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -65,34 +69,27 @@ def user_logout(request):
     return redirect('index')
 
 
-def add_intern(request):
-    data = {}
-    if "GET" == request.method:
-        return render(request, "fossee_math_pages/add_intern.html", data)
-    # if not GET, then proceed
-    try:
-        csv_file = request.FILES["csv_file"]
-        # if not csv_file.name.endswith('.csv'):
-        #     return render(request, "fossee_math_pages/add_intern.html", data)
-        # # if file is too large, return
-        # if csv_file.multiple_chunks():
-        #     return render(request, "fossee_math_pages/add_intern.html", data)
+def add_user(request):
+    temp = AddUserForm()
+    if request.method == 'POST':
+        #register user
+        name = request.POST['name']
+        email = request.POST['email']
+        topic = request.POST['topic']
+        phone = request.POST['phone']
+        role = request.POST['role']
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'That email is being used')
+            return redirect('add_user')
+        else:
+            password = random.randint(0,99999999)
+            user = User.objects.create_user(username=name, email=email, password=password)
+            addusr = AddUser(name=name, email=email, topic=topic, phone=phone, role=role)
+            addusr.save()
+            messages.success(request, 'User Added!')
+            return redirect('add_user')
 
-        print("hello")
-        file_data = csv_file.read().decode("utf-8")
-
-        lines = file_data.split("\n")
-        # loop over the lines and save them in db. If error , store as string and then display
-        for line in lines:
-            fields = line.split(",")
-            data_dict = {"name": fields[0], "email": fields[1], "topic": fields[2]}
-            try:
-                print(data_dict)
-            except Exception as e:
-                pass
-
-    except Exception as e:
-        return render(request, 'fossee_math_pages/add_intern.html')
+    return render(request, 'fossee_math_pages/add_user.html', {'form':temp})
 
 
 def manage_intern(request):
@@ -150,3 +147,12 @@ def edit_details(request):
 
 def topic_details(request):
     return render(request, 'fossee_math_pages/view_topic_details.html')
+
+class AddUserView(AddUser):
+    def create_user(self, request, *args, **kwargs):
+        name = self.name
+        email = self.email
+        password = random.randint(0,99999999)
+        user = User.objects.create_user(name, email , password)
+        user.save(using=self._db)
+        return user

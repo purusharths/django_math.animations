@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 import os
 from django.core.exceptions import ValidationError
 from froala_editor.widgets import FroalaEditor
+from .models import AddUser
 
 position_choices = (
     ("intern", "intern"),
@@ -38,3 +39,8 @@ class add_data(forms.ModelForm):
     class Meta:
         model = data
         fields = ('subtopic', 'content')
+
+class AddUserForm(forms.ModelForm):
+    class Meta:  
+        model = AddUser  
+        fields = "__all__" 

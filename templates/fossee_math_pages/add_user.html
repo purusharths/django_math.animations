@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Dashboard{% endblock %}{% block content %}
+</script>
+<div class="container" style="padding-top: 5%; padding-bottom: 5%;">
+    {% include 'partials/_alerts.html' %}
+    <div class="container" style="padding-top: 3%;">
+        <hr>
+        <form method="POST" name="putdata" class="form-group" id="formTwo">
+
+            {% csrf_token %} {{ form|crispy }}
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
