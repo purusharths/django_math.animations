@@ -92,8 +92,8 @@ def add_user(request):
             send_mail(
                 'FOSSEE ANIMATION MATH',
                 'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                'k.ashiju10@gmail.com',
-                [email, 'shiju.ka@mca.christuniversity.in'],
+                'fossee_math',
+                [email, 'fossee_math@gmail.com'],
                 fail_silently=False,
         )
             messages.success(request, 'User Added!')
