@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'phonenumber_field',
     'fossee_math_pages.apps.FosseeMathPagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
