@@ -151,3 +151,12 @@ FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier', 'code_view'
                          'quote', 'save', 'table',
                          'url', 'video')
 FROALA_INCLUDE_JQUERY = True
+
+
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER='shiju.ka@mca.christuniversity.in'
+EMAIL_HOST_PASSWORD='39676880'
+EMAIL_USE_TLS = True
