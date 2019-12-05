@@ -26,7 +26,10 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'add_user' %}">Add User</a>
                 </li>
-                {% endif %} {% if request.user.profile.role == 'staff' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'delete_user' %}">Delete User</a>
+                </li>
+                {% else %} {% if request.user.profile.role == 'staff' %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
                 </li>
@@ -49,7 +52,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'edit_details' %}">Edit</a>
                 </li>
-                {% endif %}
+                {% endif %} {% endif %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
                 </li>
