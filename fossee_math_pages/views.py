@@ -70,7 +70,7 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
-
+@login_required
 def add_user(request):
     temp = AddUserForm()
     if request.method == 'POST':
@@ -100,7 +100,9 @@ def add_user(request):
             return redirect('add_user')
 
     return render(request, 'fossee_math_pages/add_user.html', {'form':temp})
-
+@login_required
+def delete_user(request):
+    return render(request, 'fossee_math_pages/delete_user.html')
 
 def manage_intern(request):
     return render(request, 'fossee_math_pages/manage_intern.html')
@@ -108,6 +110,7 @@ def manage_intern(request):
 
 def aprove_contents(request):
     return render(request, 'fossee_math_pages/aprove_contents.html')
+
 
 
 @login_required

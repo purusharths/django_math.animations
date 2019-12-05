@@ -1,6 +1,5 @@
 {% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Dashboard{% endblock %}{% block content %}
 </script>
-{% if user.is_authenticated %} {% if user.is_staff %}
 <div class="container" style="padding-top: 5%; padding-bottom: 5%;">
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
@@ -13,4 +12,5 @@
     </div>
 
 </div>
-{% endif %} {% endif %} {% endblock %}
+
+{% endblock %}
