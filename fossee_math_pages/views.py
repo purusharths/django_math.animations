@@ -121,7 +121,6 @@ def add_details(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.user_id = request.user.id
-            post.post_date = now()
             post.save()
             form = add_data
             return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})

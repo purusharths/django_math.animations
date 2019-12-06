@@ -1,7 +1,6 @@
-from django.db import models
+from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
-from django.contrib import auth
-from froala_editor.fields import FroalaField
+from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 position_choices = (
@@ -29,26 +28,23 @@ class profile(models.Model):
 
 
 class data(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    subtopic = models.CharField(max_length=255, blank=False);
-    content = FroalaField()
-    post_date = models.DateField()
+    user=models.IntegerField(default=False)
+    subtopic=models.TextField(null=False)
+    content = RichTextField(config_name='awesome_ckeditor')
+
 
 class AddUser(models.Model):
-    name = models.CharField(max_length=20, blank = False, null= False)
-    email = models.EmailField(blank = False)
-    topic = models.CharField(max_length=30, blank = False, null = False)
+    name = models.CharField(max_length=20, blank=False, null=False)
+    email = models.EmailField(blank=False)
+    topic = models.CharField(max_length=30, blank=False, null=False)
     phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
     ROLE_TYPE = (
         (INTERN, 'Intern'),
         (STAFF, 'Staff'),
-        
+
     )
     role = models.CharField(max_length=20,
-                                      choices=ROLE_TYPE,
-                                       default=INTERN)
-
-
-    
+                            choices=ROLE_TYPE,
+                            default=INTERN)
