@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime
 
+
 def index(request):
     return render(request, "fossee_math_pages/index.html")
 
@@ -34,10 +35,7 @@ def is_superuser(user):
 
 @login_required
 def dashboard(request):
-    user = request.user
-    role = User.AddUser.objects.get(user_id=user.id)
-    if role.role == 'staff' or role.role == 'intern':
-        # InternForm()
+    if request.user:
         return render(request, "fossee_math_pages/dashboard.html")
     else:
         return redirect('logout')
@@ -53,7 +51,7 @@ def user_login(request):
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
-            return render(request,"fossee_math_pages/dashboard.html")                
+            return render(request, "fossee_math_pages/dashboard.html")
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
@@ -65,11 +63,12 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
+
 @login_required
 def add_user(request):
     temp = AddUserForm()
     if request.method == 'POST':
-        #register user
+        # register user
         name = request.POST['name']
         email = request.POST['email']
         topic = request.POST['topic']
@@ -80,19 +79,20 @@ def add_user(request):
             return redirect('add_user')
         else:
             try:
-                password = random.randint(0,99999999)
+                password = random.randint(0, 99999999)
                 passwordstr = str(password)
                 date = datetime.today().strftime('%Y-%m-%d')
                 user = User.objects.create_user(username=name, email=email, password=password)
                 u_id = User.objects.get(username=name)
-                addusr = AddUser(user_id = u_id.id, name=name, email=email, topic=topic, phone=phone, role=role, date=date, temp_password=password)
+                addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                 date=date, temp_password=password)
                 addusr.save()
                 send_mail(
                     'FOSSEE ANIMATION MATH',
                     'Thank you for registering with fossee_math. Your password is ' + passwordstr,
                     'fossee_math',
                     [email, 'fossee_math@gmail.com'],
-                    fail_silently=True,)
+                    fail_silently=True, )
             except:
                 usr = User.objects.get(username=name)
                 usr.delete()
@@ -101,7 +101,7 @@ def add_user(request):
             messages.success(request, 'User Added!')
             return redirect('add_user')
 
-    return render(request, 'fossee_math_pages/add_user.html', {'form':temp})
+    return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
 
 @login_required
@@ -109,13 +109,13 @@ def delete_user(request):
     temp = DeleteUserForm()
     return render(request, 'fossee_math_pages/delete_user.html')
 
+
 def manage_intern(request):
     return render(request, 'fossee_math_pages/manage_intern.html')
 
 
 def aprove_contents(request):
     return render(request, 'fossee_math_pages/aprove_contents.html')
-
 
 
 @login_required
@@ -140,7 +140,7 @@ def view_details(request):
         page = request.GET.get('page')
         paged_resources = paginator.get_page(page)
         context = {
-            'resources' : resources
+            'resources': resources
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
@@ -155,7 +155,7 @@ def edit_details(request):
         page = request.GET.get('page')
         paged_resources = paginator.get_page(page)
         context = {
-            'resources' : paged_resources
+            'resources': paged_resources
         }
         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
@@ -165,11 +165,12 @@ def edit_details(request):
 def topic_details(request):
     return render(request, 'fossee_math_pages/view_topic_details.html')
 
+
 class AddUserView(AddUser):
     def create_user(self, request, *args, **kwargs):
         name = self.name
         email = self.email
-        password = random.randint(0,99999999)
-        user = User.objects.create_user(name, email , password)
+        password = random.randint(0, 99999999)
+        user = User.objects.create_user(name, email, password)
         user.save(using=self._db)
         return user

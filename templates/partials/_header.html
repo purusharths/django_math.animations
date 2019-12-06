@@ -29,7 +29,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'delete_user' %}">Delete User</a>
                 </li>
-                {% else %} {% if request.user.AddUser.role == 'staff' %}
+                {% else %} {% if request.user.AddUser.role == 'STAFF' %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
                 </li>

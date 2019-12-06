@@ -28,7 +28,6 @@ class profile(models.Model):
 
 
 class data(models.Model):
-
     user=models.IntegerField(default=False)
     subtopic=models.TextField(null=False)
     content = RichTextField(config_name='awesome_ckeditor')
