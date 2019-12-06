@@ -28,15 +28,17 @@ class profile(models.Model):
 
 
 class data(models.Model):
+
     user=models.IntegerField(default=False)
     subtopic=models.TextField(null=False)
     content = RichTextField(config_name='awesome_ckeditor')
 
 
 class AddUser(models.Model):
-    name = models.CharField(max_length=20, blank=False, null=False)
-    email = models.EmailField(blank=False)
-    topic = models.CharField(max_length=30, blank=False, null=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=20, blank = False, null= False)
+    email = models.EmailField(blank = False)
+    topic = models.CharField(max_length=30, blank = False, null = False)
     phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
@@ -46,5 +48,11 @@ class AddUser(models.Model):
 
     )
     role = models.CharField(max_length=20,
-                            choices=ROLE_TYPE,
-                            default=INTERN)
+                                      choices=ROLE_TYPE,
+                                       default=INTERN)
+    date = models.CharField(max_length=30)
+    temp_password = models.CharField(max_length=10)
+    def __str__(self):
+        return self.name
+
+    

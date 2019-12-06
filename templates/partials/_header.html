@@ -22,14 +22,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'internship' %}">Internship</a>
                 </li>
-                {% if user.is_authenticated %} {% if user.is_staff %}
+                {% if user.is_authenticated %} {% if user.is_superuser %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'add_user' %}">Add User</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'delete_user' %}">Delete User</a>
                 </li>
-                {% else %} {% if request.user.profile.role == 'staff' %}
+                {% else %} {% if request.user.AddUser.role == 'staff' %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
                 </li>
