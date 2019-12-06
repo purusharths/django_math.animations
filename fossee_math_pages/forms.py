@@ -1,3 +1,4 @@
+from ckeditor.fields import RichTextFormField
 from django import forms
 from django.utils import timezone
 from .models import (profile, data, )
@@ -19,7 +20,7 @@ class UserLoginForm(forms.Form):
         super(UserLoginForm, self).clean()
         try:
             uname, pwd = self.cleaned_data["username"], \
-                          self.cleaned_data["password"]
+                         self.cleaned_data["password"]
             user = authenticate(username=uname, password=pwd)
         except Exception:
             raise forms.ValidationError \
@@ -30,17 +31,19 @@ class UserLoginForm(forms.Form):
 
 
 class add_data(forms.ModelForm):
+    content=RichTextFormField()
     class Meta:
-        model=data
-        fields=['subtopic','content']
+        model = data
+        fields=('content',)
 
 
 class AddUserForm(forms.ModelForm):
-    class Meta:  
-        model = AddUser  
-        fields = ('name', 'email', 'topic', 'phone', 'role',) 
+    class Meta:
+        model = AddUser
+        fields = ('name', 'email', 'topic', 'phone', 'role',)
+
 
 class DeleteUserForm(forms.ModelForm):
-    class Meta:  
-        model = AddUser  
-        fields = ('name', 'email',) 
+    class Meta:
+        model = AddUser
+        fields = ('name', 'email',)
