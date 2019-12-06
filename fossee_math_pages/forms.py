@@ -1,11 +1,6 @@
 from django import forms
-from django.utils import timezone
-from .models import (profile, data)
 from django.contrib.auth import authenticate
-import os
-from django.core.exceptions import ValidationError
-from froala_editor.widgets import FroalaEditor
-from .models import AddUser
+from .models import AddUser, data
 
 position_choices = (
     ("intern", "intern"),
@@ -31,16 +26,13 @@ class UserLoginForm(forms.Form):
         return user
 
 
-
 class add_data(forms.ModelForm):
-    subtopic=forms.CharField
-    content = forms.CharField(widget=FroalaEditor)
-
     class Meta:
-        model = data
-        fields = ('subtopic', 'content')
+        model=data
+        fields=['subtopic','content']
+
 
 class AddUserForm(forms.ModelForm):
-    class Meta:  
-        model = AddUser  
-        fields = "__all__" 
+    class Meta:
+        model = AddUser
+        fields = "__all__"
