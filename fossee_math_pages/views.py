@@ -79,24 +79,31 @@ def add_user(request):
             messages.error(request, 'That email is being used')
             return redirect('add_user')
         else:
-            password = random.randint(0,99999999)
-            passwordstr = str(password)
-            date = datetime.today().strftime('%Y-%m-%d')
-            user = User.objects.create_user(username=name, email=email, password=password)
-            u_id = User.objects.get(username=name)
-            addusr = AddUser(user_id = u_id.id, name=name, email=email, topic=topic, phone=phone, role=role, date=date, temp_password=password)
-            addusr.save()
-            send_mail(
-                'FOSSEE ANIMATION MATH',
-                'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                'fossee_math',
-                [email, 'fossee_math@gmail.com'],
-                fail_silently=False,
-        )
+            try:
+                password = random.randint(0,99999999)
+                passwordstr = str(password)
+                date = datetime.today().strftime('%Y-%m-%d')
+                user = User.objects.create_user(username=name, email=email, password=password)
+                u_id = User.objects.get(username=name)
+                addusr = AddUser(user_id = u_id.id, name=name, email=email, topic=topic, phone=phone, role=role, date=date, temp_password=password)
+                addusr.save()
+                send_mail(
+                    'FOSSEE ANIMATION MATH',
+                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                    'fossee_math',
+                    [email, 'fossee_math@gmail.com'],
+                    fail_silently=True,)
+            except:
+                usr = User.objects.get(username=name)
+                usr.delete()
+                messages.error(request, 'Some error occured !')
+                return redirect('add_user')
             messages.success(request, 'User Added!')
             return redirect('add_user')
 
     return render(request, 'fossee_math_pages/add_user.html', {'form':temp})
+
+
 @login_required
 def delete_user(request):
     temp = DeleteUserForm()
