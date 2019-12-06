@@ -11,9 +11,10 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 import random
-from .forms import AddUserForm
+from .forms import AddUserForm, DeleteUserForm
 from django.core.mail import send_mail
 from django.conf import settings
+from datetime import datetime
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -34,7 +35,7 @@ def is_superuser(user):
 @login_required
 def dashboard(request):
     user = request.user
-    role = profile.objects.get(user_id=user.id)
+    role = User.AddUser.objects.get(user_id=user.id)
     if role.role == 'staff' or role.role == 'intern':
         # InternForm()
         return render(request, "fossee_math_pages/dashboard.html")
@@ -44,23 +45,17 @@ def dashboard(request):
 
 def user_login(request):
     user = request.user
+    if is_superuser(user):
+        return redirect('/admin')
 
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
-
-            if is_superuser(user):
-                return redirect('/admin')
-
-            usr_type = profile.objects.get(user_id=user.id)
-            if usr_type.role == 'intern' or usr_type.role == 'staff':
-                return render(request, 'fossee_math_pages/dashboard.html')
-            else:
-                return render(request, 'fossee_math_pages/login.html', {"form": form})
+            return render(request,"fossee_math_pages/dashboard.html")                
         else:
-            return render(request, 'fossee_math_pages/login.html', {"form": form})
+            return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
@@ -86,8 +81,10 @@ def add_user(request):
         else:
             password = random.randint(0,99999999)
             passwordstr = str(password)
+            date = datetime.today().strftime('%Y-%m-%d')
             user = User.objects.create_user(username=name, email=email, password=password)
-            addusr = AddUser(name=name, email=email, topic=topic, phone=phone, role=role)
+            u_id = User.objects.get(username=name)
+            addusr = AddUser(user_id = u_id.id, name=name, email=email, topic=topic, phone=phone, role=role, date=date, temp_password=password)
             addusr.save()
             send_mail(
                 'FOSSEE ANIMATION MATH',
@@ -102,6 +99,7 @@ def add_user(request):
     return render(request, 'fossee_math_pages/add_user.html', {'form':temp})
 @login_required
 def delete_user(request):
+    temp = DeleteUserForm()
     return render(request, 'fossee_math_pages/delete_user.html')
 
 def manage_intern(request):
