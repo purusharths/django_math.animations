@@ -30,11 +30,12 @@ class profile(models.Model):
 
 class data(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    subtopic = models.CharField(max_length=255, blank=False);
+    subtopic = models.CharField(max_length=255, blank=False)
     content = FroalaField()
     post_date = models.DateField()
 
 class AddUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, blank = False, null= False)
     email = models.EmailField(blank = False)
     topic = models.CharField(max_length=30, blank = False, null = False)
@@ -49,6 +50,9 @@ class AddUser(models.Model):
     role = models.CharField(max_length=20,
                                       choices=ROLE_TYPE,
                                        default=INTERN)
-
+    date = models.CharField(max_length=30)
+    temp_password = models.CharField(max_length=10)
+    def __str__(self):
+        return self.name
 
     
