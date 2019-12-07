@@ -7,7 +7,11 @@ position_choices = (
     ("intern", "intern"),
     ("staff", "staff"),
 )
-
+status_choices= (
+    ("ACTIVE", "ACTIVE"),
+    ("INACTIVE", "INACTIVE"),
+    ("SUSPENDED", "SUSPENDED"),
+)
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
@@ -35,12 +39,16 @@ class add_data(forms.ModelForm):
 
 
 class AddUserForm(forms.ModelForm):
+    firstname = forms.CharField(max_length=20)
+    lastname = forms.CharField(max_length=20)
     class Meta:
         model = AddUser
-        fields = ('name', 'email', 'topic', 'phone', 'role',)
+        fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
 
 
 class DeleteUserForm(forms.ModelForm):
     class Meta:
         model = AddUser
         fields = ('name', 'email',)
+
+

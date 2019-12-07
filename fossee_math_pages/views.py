@@ -120,16 +120,18 @@ def delete_user(request):
 
 def manage_intern(request):
     users=User.objects.all()
-<<<<<<< HEAD
     details=AddUser.objects.all()
     context={
         'users':users,
         'details':details
     }
+    if request.method == 'POST':
+        # register user
+        u_id = request.POST['id']
+        option = request.POST['option_select']
+        AddUser.objects.filter(user_id=u_id).update(status=option)
+
     return render(request, 'fossee_math_pages/manage_intern.html',context)
-=======
-    return render(request, 'fossee_math_pages/manage_intern.html')
->>>>>>> 4192984d53e440124df5b727f8201d1d7042129b
 
 
 def aprove_contents(request):
