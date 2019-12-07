@@ -1,7 +1,33 @@
 {% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %}
-
-    <h1>Manage intern</h1>
-
+<br>
+    <div>
+   <table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">User Name</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for obj in users %}
+    <tr>
+    <td>{{ obj.username }}</td>
+      <td>{{ obj.first_name }}</td>
+      <td>{{ obj.last_name }}</td>
+      <td>{{ obj.email }}</td>
+    {% if details.user == obj.id %}
+{#   help#}
+    {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+    </div>
+    <br>
 {% endblock %}
 
     
