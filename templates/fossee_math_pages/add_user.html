@@ -5,7 +5,11 @@
         <hr>
         <form method="POST" name="putdata" class="form-group" id="formTwo">
 
-            {% csrf_token %} {{ form|crispy }}
+            <label>Firstname*</label>
+            <input class="form-control" type="text" name="firstname" id="firstname">
+            <label>Lastname*</label>
+            <input class="form-control" type="text" name="lastname" id="firstname"> {% csrf_token %} {{ form|crispy }}
+
             <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
         </form>
     </div>
