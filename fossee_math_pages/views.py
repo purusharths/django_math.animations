@@ -70,6 +70,8 @@ def add_user(request):
     if request.method == 'POST':
         # register user
         name = request.POST['name']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
         email = request.POST['email']
         topic = request.POST['topic']
         phone = request.POST['phone']
@@ -82,7 +84,7 @@ def add_user(request):
                 password = random.randint(0, 99999999)
                 passwordstr = str(password)
                 date = datetime.today().strftime('%Y-%m-%d')
-                user = User.objects.create_user(username=name, email=email, password=password)
+                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname, last_name=lastname)
                 u_id = User.objects.get(username=name)
                 if role=='INTERN':
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
@@ -117,6 +119,7 @@ def delete_user(request):
 
 
 def manage_intern(request):
+    users=User.objects.all()
     return render(request, 'fossee_math_pages/manage_intern.html')
 
 
