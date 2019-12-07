@@ -1,20 +1,18 @@
+import random
+from datetime import datetime
+
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.checks import messages
-from django.shortcuts import render, redirect
-from django.utils.timezone import now
-
-from .forms import (UserLoginForm, add_data, )
-from .models import ( data, AddUser)
-
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.models import User
-from django.contrib import messages, auth
-import random
-from .forms import AddUserForm, DeleteUserForm
+from django.core.checks import messages
 from django.core.mail import send_mail
-from django.conf import settings
-from datetime import datetime
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
+
+from .forms import AddUserForm
+from .forms import (UserLoginForm, add_data, )
+from .models import (data, AddUser)
 
 
 def index(request):
@@ -84,15 +82,16 @@ def add_user(request):
                 password = random.randint(0, 99999999)
                 passwordstr = str(password)
                 date = datetime.today().strftime('%Y-%m-%d')
-                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname, last_name=lastname)
-                u_id = User.objects.get(username=name)
-                if role=='INTERN':
+                user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+                                                last_name=lastname)
+                u_id = User.objects.get(username=email)
+                if role == 'INTERN':
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                 date=date, temp_password=password)
+                                     date=date, temp_password=password)
                     addusr.save()
                 else:
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                     date=date, temp_password=password,status='ACTIVE')
+                                     date=date, temp_password=password, status='ACTIVE')
                     addusr.save()
 
                 send_mail(
@@ -112,24 +111,14 @@ def add_user(request):
     return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
 
-@login_required
-def delete_user(request):
-    temp = DeleteUserForm()
-    return render(request, 'fossee_math_pages/delete_user.html')
-
-
 def manage_intern(request):
-    users=User.objects.all()
-<<<<<<< HEAD
-    details=AddUser.objects.all()
-    context={
-        'users':users,
-        'details':details
+    users = User.objects.all()
+    details = AddUser.objects.all()
+    context = {
+        'users': users,
+        'details': details
     }
-    return render(request, 'fossee_math_pages/manage_intern.html',context)
-=======
-    return render(request, 'fossee_math_pages/manage_intern.html')
->>>>>>> 4192984d53e440124df5b727f8201d1d7042129b
+    return render(request, 'fossee_math_pages/manage_intern.html', context)
 
 
 def aprove_contents(request):
@@ -155,8 +144,8 @@ def view_details(request):
     print("helo")
     try:
         resources = data.objects.filter(user=request.user.id)
-        context={
-            'resources':resources,
+        context = {
+            'resources': resources,
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
