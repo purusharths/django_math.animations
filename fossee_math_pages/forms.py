@@ -1,8 +1,5 @@
 from ckeditor.fields import RichTextFormField
 from django import forms
-from django.utils import timezone
-from .models import (profile, data, )
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from .models import AddUser, data
 
@@ -34,7 +31,7 @@ class add_data(forms.ModelForm):
     content=RichTextFormField()
     class Meta:
         model = data
-        fields=('content',)
+        fields=('subtopic','content',)
 
 
 class AddUserForm(forms.ModelForm):
