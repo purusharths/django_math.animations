@@ -2,36 +2,21 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from datetime import datetime
 
-position_choices = (
-    ("intern", "intern"),
-    ("staff", "staff"),
+status= (
+    ("ACTIVE", "ACTIVE"),
+    ("INACTIVE", "INACTIVE"),
+    ("SUSPENDED", "SUSPENDED"),
 )
 
 
-class profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    start_date = models.DateField(auto_now=True)
-    is_email_verified = models.BooleanField(default=False)
-    role = models.CharField(max_length=255, choices=position_choices, default='intern')
-    activation_key = models.CharField(max_length=255, blank=True, null=True)
-    key_expiry_time = models.DateTimeField(blank=True, null=True)
-
-    def __str__(self):
-        return u"id: {0} | {1} | {2} | {3} | {4}".format(
-            self.user.id,
-            self.user.first_name,
-            self.user.last_name,
-            self.user.email,
-            self.role
-        )
-
-
 class data(models.Model):
-    user=models.IntegerField(default=False)
-    subtopic=models.TextField(null=False)
-    content = RichTextField(config_name='awesome_ckeditor')
-
+    user=models.IntegerField(default=False,null=False)
+    subtopic=models.CharField(max_length=255,null=False)
+    text = RichTextField(config_name='awesome_ckeditor')
+    post_date=models.DateTimeField(default=datetime.now())
+    aproval_ststus=models.BooleanField(default=False)
 
 class AddUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -51,6 +36,7 @@ class AddUser(models.Model):
                                        default=INTERN)
     date = models.CharField(max_length=30)
     temp_password = models.CharField(max_length=10)
+    status=models.CharField(max_length=255,choices=status,default='INACTIVE')
     def __str__(self):
         return self.name
 

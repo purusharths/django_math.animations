@@ -2,6 +2,20 @@
 <br>
 <hr>
 <div class="container">
+
+  <div id="content" hidden>
+        {% for i in resources %}
+            {{ i.subtopic }}
+            <br>
+            {{ i.text }}
+            <br>
+        {% endfor %}
+    </div>
+
+    <div id="content-body">
+
+    </div>
+
 <nav aria-label="...">
     {% if resources.has_other_pages %}
     <ul class="pagination">
@@ -34,4 +48,15 @@
     {% endif %}
 </nav>
 <hr>
-<br> {% endblock %}
+<br>
+</div>
+    <script>
+    $(document).ready(function() {
+        var html = $("#content").text()
+        html.replace("&lt;", "<")
+        html.replace("&gt;", ">")
+
+        $("#content-body").html(html)
+    })
+</script>
+{% endblock %}

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
 from .forms import (UserLoginForm, add_data, )
-from .models import (profile, data, AddUser)
+from .models import ( data, AddUser)
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.models import User
@@ -84,9 +84,15 @@ def add_user(request):
                 date = datetime.today().strftime('%Y-%m-%d')
                 user = User.objects.create_user(username=name, email=email, password=password)
                 u_id = User.objects.get(username=name)
-                addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                if role=='INTERN':
+                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
                                  date=date, temp_password=password)
-                addusr.save()
+                    addusr.save()
+                else:
+                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                     date=date, temp_password=password,status='ACTIVE')
+                    addusr.save()
+
                 send_mail(
                     'FOSSEE ANIMATION MATH',
                     'Thank you for registering with fossee_math. Your password is ' + passwordstr,
@@ -125,7 +131,7 @@ def add_details(request):
         form = add_data(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user_id = request.user.id
+            post.user = request.user.id
             post.save()
             form = add_data
             return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})
@@ -134,13 +140,11 @@ def add_details(request):
 
 @login_required
 def view_details(request):
+    print("helo")
     try:
-        resources = data.objects.filter(user_id=request.user.id).order_by('-post_date')
-        paginator = Paginator(resources, 6)
-        page = request.GET.get('page')
-        paged_resources = paginator.get_page(page)
-        context = {
-            'resources': resources
+        resources = data.objects.filter(user=request.user.id)
+        context={
+            'resources':resources,
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
@@ -150,12 +154,12 @@ def view_details(request):
 @login_required
 def edit_details(request):
     try:
-        resources = data.objects.filter(user_id=request.user.id)
+        resources = data.objects.filter(user=request.user.id)
         paginator = Paginator(resources, 8)
         page = request.GET.get('page')
         paged_resources = paginator.get_page(page)
         context = {
-            'resources': paged_resources
+            'resources': paged_resources,
         }
         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
