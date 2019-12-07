@@ -117,7 +117,13 @@ def delete_user(request):
 
 
 def manage_intern(request):
-    return render(request, 'fossee_math_pages/manage_intern.html')
+    users=User.objects.all()
+    details=AddUser.objects.all()
+    context={
+        'users':users,
+        'details':details
+    }
+    return render(request, 'fossee_math_pages/manage_intern.html',context)
 
 
 def aprove_contents(request):
