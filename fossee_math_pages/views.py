@@ -1,11 +1,18 @@
+import random
+from datetime import datetime
+
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.checks import messages
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
-from django.utils.timezone import now
 
-from .forms import (UserLoginForm, add_data, AddForm, )
-from .models import (profile, data, )
+from .forms import AddUserForm
+from .forms import (UserLoginForm, add_data, )
+from .models import (data, AddUser)
 
 
 def index(request):
@@ -26,34 +33,54 @@ def is_superuser(user):
 
 @login_required
 def dashboard(request):
-    user = request.user
-    role = profile.objects.get(user_id=user.id)
-    if role.role == 'staff' or role.role == 'intern':
-        # InternForm()
-        return render(request, "fossee_math_pages/dashboard.html")
+    if request.user:
+        intern_count = 0
+        intern_count = AddUser.objects.filter(role='INTERN').count()
+        staff_count = AddUser.objects.filter(role='STAFF').count()
+
+        status_active = AddUser.objects.filter(status='ACTIVE').count()
+        status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+        status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+        context = {
+            'intern_count' : intern_count,
+            'staff_count' : staff_count,
+            'status_active' :status_active,
+            'status_inactive' : status_inactive,
+            'status_suspended' : status_suspended
+        }
+        return render(request, "fossee_math_pages/dashboard.html", context)
     else:
+
         return redirect('logout')
 
 
 def user_login(request):
     user = request.user
+    if is_superuser(user):
+        return redirect('/admin')
 
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
+            intern_count = 0
+            intern_count = AddUser.objects.filter(role='INTERN').count()
+            staff_count = AddUser.objects.filter(role='STAFF').count()
 
-            if is_superuser(user):
-                return redirect('/admin')
-
-            usr_type = profile.objects.get(user_id=user.id)
-            if usr_type.role == 'intern' or usr_type.role == 'staff':
-                return render(request, 'fossee_math_pages/dashboard.html')
-            else:
-                return render(request, 'fossee_math_pages/login.html', {"form": form})
+            status_active = AddUser.objects.filter(status='ACTIVE').count()
+            status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+            status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+            context = {
+                'intern_count': intern_count,
+                'staff_count': staff_count,
+                'status_active': status_active,
+                'status_inactive': status_inactive,
+                'status_suspended': status_suspended
+            }
+            return render(request, "fossee_math_pages/dashboard.html",context)
         else:
-            return render(request, 'fossee_math_pages/login.html', {"form": form})
+            return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
@@ -64,38 +91,69 @@ def user_logout(request):
     return redirect('index')
 
 
-def add_intern(request):
-    data = {}
-    if "GET" == request.method:
-        return render(request, "fossee_math_pages/add_intern.html", data)
-    # if not GET, then proceed
-    try:
-        csv_file = request.FILES["csv_file"]
-        # if not csv_file.name.endswith('.csv'):
-        #     return render(request, "fossee_math_pages/add_intern.html", data)
-        # # if file is too large, return
-        # if csv_file.multiple_chunks():
-        #     return render(request, "fossee_math_pages/add_intern.html", data)
-
-        print("hello")
-        file_data = csv_file.read().decode("utf-8")
-
-        lines = file_data.split("\n")
-        # loop over the lines and save them in db. If error , store as string and then display
-        for line in lines:
-            fields = line.split(",")
-            data_dict = {"name": fields[0], "email": fields[1], "topic": fields[2]}
+@login_required
+def add_user(request):
+    temp = AddUserForm()
+    if request.method == 'POST':
+        # register user
+        name = request.POST['name']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        topic = request.POST['topic']
+        phone = request.POST['phone']
+        role = request.POST['role']
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'That email is being used')
+            return redirect('add_user')
+        else:
             try:
-                print(data_dict)
-            except Exception as e:
-                pass
+                password = random.randint(0, 99999999)
+                passwordstr = str(password)
+                date = datetime.today().strftime('%Y-%m-%d')
+                user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+                                                last_name=lastname)
+                u_id = User.objects.get(username=email)
+                if role == 'INTERN':
+                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                     date=date, temp_password=password)
+                    addusr.save()
+                else:
+                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                     date=date, temp_password=password, status='ACTIVE')
+                    addusr.save()
 
-    except Exception as e:
-        return render(request, 'fossee_math_pages/add_intern.html')
+                send_mail(
+                    'FOSSEE ANIMATION MATH',
+                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                    'fossee_math',
+                    [email, 'fossee_math@gmail.com'],
+                    fail_silently=True, )
+            except:
+                usr = User.objects.get(username=name)
+                usr.delete()
+                messages.error(request, 'Some error occured !')
+                return redirect('add_user')
+            messages.success(request, 'User Added!')
+            return redirect('add_user')
+
+    return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
 
 def manage_intern(request):
-    return render(request, 'fossee_math_pages/manage_intern.html')
+    users=User.objects.all()
+    details=AddUser.objects.all()
+    context={
+        'users':users,
+        'details':details
+    }
+    if request.method == 'POST':
+        # register user
+        u_id = request.POST['id']
+        option = request.POST['option_select']
+        AddUser.objects.filter(user_id=u_id).update(status=option)
+
+    return render(request, 'fossee_math_pages/manage_intern.html',context)
 
 
 def aprove_contents(request):
@@ -107,10 +165,9 @@ def add_details(request):
     form = add_data
     if request.method == 'POST':
         form = add_data(request.POST, request.FILES)
-        if form.is_valid(): 
+        if form.is_valid():
             post = form.save(commit=False)
-            post.user_id = request.user.id
-            post.post_date = now()
+            post.user = request.user.id
             post.save()
             form = add_data
             return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})
@@ -120,8 +177,12 @@ def add_details(request):
 @login_required
 def view_details(request):
     try:
-        resources = data.objects.filter(user_id=request.user.id)
-        return render(request, 'fossee_math_pages/intern_view_data.html', {'resources': resources})
+        resources = data.objects.filter(user=request.user.id)
+        context = {
+            'resources': resources,
+            'br': '<br>',
+        }
+        return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_view_data.html')
 
@@ -129,11 +190,27 @@ def view_details(request):
 @login_required
 def edit_details(request):
     try:
-        resources = data.objects.filter(user_id=request.user.id)
-        return render(request, 'fossee_math_pages/intern_edit_data.html', {'resources': resources})
+        resources = data.objects.filter(user=request.user.id)
+        paginator = Paginator(resources, 8)
+        page = request.GET.get('page')
+        paged_resources = paginator.get_page(page)
+        context = {
+            'resources': paged_resources,
+        }
+        return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_edit_data.html')
 
 
 def topic_details(request):
     return render(request, 'fossee_math_pages/view_topic_details.html')
+
+
+class AddUserView(AddUser):
+    def create_user(self, request, *args, **kwargs):
+        name = self.name
+        email = self.email
+        password = random.randint(0, 99999999)
+        user = User.objects.create_user(name, email, password)
+        user.save(using=self._db)
+        return user

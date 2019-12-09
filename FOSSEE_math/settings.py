@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import tempfile
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -29,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'phonenumber_field',
     'fossee_math_pages.apps.FosseeMathPagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'froala_editor',
+    'ckeditor',
+    'ckeditor_uploader',
     'crispy_forms',
 ]
 
@@ -119,27 +123,33 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'FOSSEE_math/static')
+    os.path.join(BASE_DIR, 'static/')
 ]
 
-LOGIN_URL = '/login/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'ck_static')
+MEDIA_ROOT = os.path.join(tempfile.gettempdir(), 'ck_media')
 
-MEDIA_URL = '/data/'
+CKEDITOR_UPLOAD_PATH = "/uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_THUMBNAIL_SIZE = (300, 300)
+CKEDITOR_IMAGE_QUALITY = 40
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = True
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+    },
+}
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "fossee_math", 'data')
-
-LOG_FOLDER = os.path.join(BASE_DIR, "fossee_math", "logs")
-
-LOGOUT_REDIRECT_URL = "/"
-
-FRAOLA_EDITOR_THIRD_PARTY = ('image_aviary', 'spell_checker')
-FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier', 'code_view', 'colors', 'draggable', 'emoticons',
-                         'entities', 'file', 'font_family', 'font_size', 'fullscreen', 'image_manager', 'image',
-                         'inline_style',
-                         'line_breaker', 'link', 'html', 'lists', 'paragraph_format', 'paragraph_style', 'quick_insert',
-                         'quote', 'save', 'table',
-                         'url', 'video')
-FROALA_INCLUDE_JQUERY = False
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True
