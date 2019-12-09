@@ -34,8 +34,23 @@ def is_superuser(user):
 @login_required
 def dashboard(request):
     if request.user:
-        return render(request, "fossee_math_pages/dashboard.html")
+        intern_count = 0
+        intern_count = AddUser.objects.filter(role='INTERN').count()
+        staff_count = AddUser.objects.filter(role='STAFF').count()
+
+        status_active = AddUser.objects.filter(status='ACTIVE').count()
+        status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+        status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+        context = {
+            'intern_count' : intern_count,
+            'staff_count' : staff_count,
+            'status_active' :status_active,
+            'status_inactive' : status_inactive,
+            'status_suspended' : status_suspended
+        }
+        return render(request, "fossee_math_pages/dashboard.html", context)
     else:
+
         return redirect('logout')
 
 
@@ -112,13 +127,19 @@ def add_user(request):
 
 
 def manage_intern(request):
-    users = User.objects.all()
-    details = AddUser.objects.all()
-    context = {
-        'users': users,
-        'details': details
+    users=User.objects.all()
+    details=AddUser.objects.all()
+    context={
+        'users':users,
+        'details':details
     }
-    return render(request, 'fossee_math_pages/manage_intern.html', context)
+    if request.method == 'POST':
+        # register user
+        u_id = request.POST['id']
+        option = request.POST['option_select']
+        AddUser.objects.filter(user_id=u_id).update(status=option)
+
+    return render(request, 'fossee_math_pages/manage_intern.html',context)
 
 
 def aprove_contents(request):
