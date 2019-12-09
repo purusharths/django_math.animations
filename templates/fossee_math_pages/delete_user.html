@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
+{% extends 'base.html' %}{% load crispy_forms_tags %}{% block title %}Delete User{% endblock %}{% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
 <div class="container" style="padding-top: 5%; padding-bottom: 5%;">
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
