@@ -1,16 +1,17 @@
+from ckeditor.fields import RichTextFormField
 from django import forms
-from django.utils import timezone
-from .models import (profile, data)
 from django.contrib.auth import authenticate
-import os
-from django.core.exceptions import ValidationError
-from froala_editor.widgets import FroalaEditor
+from .models import AddUser, data
 
 position_choices = (
     ("intern", "intern"),
     ("staff", "staff"),
 )
-
+status_choices= (
+    ("ACTIVE", "ACTIVE"),
+    ("INACTIVE", "INACTIVE"),
+    ("SUSPENDED", "SUSPENDED"),
+)
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
@@ -19,9 +20,9 @@ class UserLoginForm(forms.Form):
     def clean(self):
         super(UserLoginForm, self).clean()
         try:
-            u_name, pwd = self.cleaned_data["username"], \
-                          self.cleaned_data["password"]
-            user = authenticate(username=u_name, password=pwd)
+            uname, pwd = self.cleaned_data["username"], \
+                         self.cleaned_data["password"]
+            user = authenticate(username=uname, password=pwd)
         except Exception:
             raise forms.ValidationError \
                 ("Username and/or Password is not entered")
@@ -30,16 +31,23 @@ class UserLoginForm(forms.Form):
         return user
 
 
-class AddForm(forms.Form):
-    name = forms.CharField()
-    email = forms.EmailField()
-    topic = forms.CharField()
-
-
 class add_data(forms.ModelForm):
-    subtopic=forms.CharField
-    content = forms.CharField(widget=FroalaEditor)
-
+    content=RichTextFormField()
     class Meta:
         model = data
-        fields = ('subtopic', 'content')
+        fields=('subtopic','content',)
+
+
+class AddUserForm(forms.ModelForm):
+    firstname = forms.CharField(max_length=20)
+    lastname = forms.CharField(max_length=20)
+    class Meta:
+        model = AddUser
+        fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
+
+
+
+class DeleteUserForm(forms.ModelForm):
+    class Meta:
+        model = AddUser
+        fields = ('name', 'email',)

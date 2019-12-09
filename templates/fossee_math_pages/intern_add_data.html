@@ -1,20 +1,13 @@
-{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %}
-    {% load static %}
-    {{ form.media }}
-    <div class="container">
+{% extends 'base.html' %}{% load staticfiles %} {% block title %}Add Intern Data{% endblock %}{% block content %} {% load static %} {{ form.media }}
+<div class="container">
     <br>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_table }}
-            <br>
-            <input type="submit" class="btn btn-info" value="SUBMIT">
-        </form>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/';</script>
+    <form method="post">
+        {% csrf_token %} {{ form.media }} {{ form.as_p }}
+        <p><input type="submit" value="post"></p>
+    </form>
     <br>
-    </div>
-    <script>
-
-     $(document).ready(function () {
-            $("#logo").html(" ")
-        })
-    </script>
+</div>
 {% endblock %}
