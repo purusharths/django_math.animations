@@ -1,14 +1,9 @@
-<<<<<<< HEAD
+
 {% extends 'base.html' %} {% block title %}Dashboard{% endblock %} {% block content %}
 
     <br>
     <hr>
     <div class="container">
-=======
-{% extends 'base.html' %} {% block title %}Edit Intern Data{% endblock %} {% block content %}
-<br>
-<hr>
-<div class="container">
 
     <div id="content" hidden>
         {% for i in resources %} {{ i.subtopic }}
@@ -16,14 +11,12 @@
         <br> {% endfor %}
     </div>
 
-    <div id="content-body">
->>>>>>> 9452d2bee91a1108211eb9161bf91d42c4f692b3
 
         <div class="row">
             <div class="col">
                 Select your subtopic : &nbsp;
 
-<<<<<<< HEAD
+
                 <form method="POST" class="form-row">
                     {% csrf_token %}
                     <div class="col">
@@ -44,7 +37,6 @@
     </div>
     <hr>
     <br>
-=======
     <nav aria-label="...">
         {% if resources.has_other_pages %}
         <ul class="pagination">
@@ -79,14 +71,13 @@
     <hr>
     <br>
 </div>
-<script>
-    $(document).ready(function() {
-        var html = $("#content").text()
-        html.replace("&lt;", "<")
-        html.replace("&gt;", ">")
-
-        $("#content-body").html(html)
-    })
-</script>
->>>>>>> 9452d2bee91a1108211eb9161bf91d42c4f692b3
+{#<script>#}
+{#    $(document).ready(function() {#}
+{#        var html = $("#content").text()#}
+{#        html.replace("&lt;", "<")#}
+{#        html.replace("&gt;", ">")#}
+{##}
+{#        $("#content-body").html(html)#}
+{#    })#}
+{#</script>#}
 {% endblock %}

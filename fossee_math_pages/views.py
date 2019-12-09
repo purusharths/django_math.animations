@@ -64,7 +64,21 @@ def user_login(request):
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
-            return render(request, "fossee_math_pages/dashboard.html")
+            intern_count = 0
+            intern_count = AddUser.objects.filter(role='INTERN').count()
+            staff_count = AddUser.objects.filter(role='STAFF').count()
+
+            status_active = AddUser.objects.filter(status='ACTIVE').count()
+            status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+            status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+            context = {
+                'intern_count': intern_count,
+                'staff_count': staff_count,
+                'status_active': status_active,
+                'status_inactive': status_inactive,
+                'status_suspended': status_suspended
+            }
+            return render(request, "fossee_math_pages/dashboard.html",context)
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
