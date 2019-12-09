@@ -1,13 +1,29 @@
+<<<<<<< HEAD
 {% extends 'base.html' %} {% block title %}Dashboard{% endblock %} {% block content %}
 
     <br>
     <hr>
     <div class="container">
+=======
+{% extends 'base.html' %} {% block title %}Edit Intern Data{% endblock %} {% block content %}
+<br>
+<hr>
+<div class="container">
+
+    <div id="content" hidden>
+        {% for i in resources %} {{ i.subtopic }}
+        <br> {{ i.text }}
+        <br> {% endfor %}
+    </div>
+
+    <div id="content-body">
+>>>>>>> 9452d2bee91a1108211eb9161bf91d42c4f692b3
 
         <div class="row">
             <div class="col">
                 Select your subtopic : &nbsp;
 
+<<<<<<< HEAD
                 <form method="POST" class="form-row">
                     {% csrf_token %}
                     <div class="col">
@@ -28,4 +44,49 @@
     </div>
     <hr>
     <br>
+=======
+    <nav aria-label="...">
+        {% if resources.has_other_pages %}
+        <ul class="pagination">
+            {% if resources.has_previous %}
+            <li class="page-item">
+                <a href="?page={{resources.previous_page_number}}" class="page-link">&laquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+            </li>
+            {% endif %} {% for i in resources.paginator.page_range %} {% if resources.number == i %}
+            <li class="li.page-item active">
+                <a class="page-link">{{i}}</a>
+            </li>
+
+            {% else %}
+            <li class="page-item">
+                <a href="?page={{i}}" class="page-link">{{i}}</a>
+            </li>
+            {% endif %} {% endfor %} {% if resources.has_next %}
+            <li class="page-item">
+                <a href="?page={{resources.next_page_number}}" class="page-link">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+            </li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+    <hr>
+    <br>
+</div>
+<script>
+    $(document).ready(function() {
+        var html = $("#content").text()
+        html.replace("&lt;", "<")
+        html.replace("&gt;", ">")
+
+        $("#content-body").html(html)
+    })
+</script>
+>>>>>>> 9452d2bee91a1108211eb9161bf91d42c4f692b3
 {% endblock %}
