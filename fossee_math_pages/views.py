@@ -141,11 +141,11 @@ def add_details(request):
 
 @login_required
 def view_details(request):
-    print("helo")
     try:
         resources = data.objects.filter(user=request.user.id)
         context = {
             'resources': resources,
+            'br': '<br>',
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
