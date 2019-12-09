@@ -19,5 +19,5 @@ urlpatterns = [
     path('add_details/',views.add_details,name='add_details'),
     path('view_details/',views.view_details,name='view_details'),
     path('edit_details/',views.edit_details,name='edit_details'),
-    path('add_intern/',views.add_intern,name='add_intern'),
+    path('add_user/',views.add_user,name='add_user'),
 ]

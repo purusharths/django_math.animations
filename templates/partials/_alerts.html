@@ -1,0 +1,21 @@
+{% if messages %} {% for message in messages %}
+<div id="message" class="container" style="color:rgb(0, 0, 0);">
+    <script type="text/javascript">
+        $(function() {
+            setTimeout(function() {
+                $('#message').delay(2000).fadeOut('slow');
+            }, 1000);
+        });
+    </script>
+    <div class="alert alert-{{ message.tags }} alert-dissmissable text-center" role="alert">
+        <button class="close" type="button" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+        <strong>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        Error:
+                    {% else %}
+                        {{ message.tags|title }}
+                    {% endif %}
+                </strong> {{ message }}
+    </div>
+</div>
+{% endfor %} {% endif %}
