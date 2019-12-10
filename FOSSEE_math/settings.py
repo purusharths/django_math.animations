@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.humanize',
     'phonenumber_field',
     'fossee_math_pages.apps.FosseeMathPagesConfig',
     'django.contrib.admin',
