@@ -1,14 +1,142 @@
-{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %}
-    {% if intern_count %}
-        <h1>DashBoard</h1>
-        <h3>Intern Count</h3>
-        <h2>{{ intern_count }}</h2>
-        <h3>Staff Count</h3>
-        <h2>{{ staff_count }}</h2>
-        <h3>Status Active</h3>
-        <h2>{{ status_active }}</h2>
-        <h3>Status InActive</h3>
-        <h2>{{ status_inactive }}</h2>
-        <h3>Status Suspended</h3>
-        <h2>{{ status_suspended }}</h2>
-    {% endif %} {% endif %} {% endblock %}
+{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %} {% if intern_count %}
+<style>
+    body {
+        background: #000000;
+        font-family: 'Raleway', sans-serif;
+    }
+    
+    .main-section {
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+        padding: 0px 5px;
+    }
+    
+    .dashbord {
+        width: 32%;
+        display: inline-block;
+        background-color: #34495E;
+        color: #fff;
+        margin-top: 50px;
+    }
+    
+    .icon-section i {
+        font-size: 30px;
+        padding: 10px;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        margin-top: -25px;
+        margin-bottom: 10px;
+        background-color: #34495E;
+    }
+    
+    .icon-section p {
+        margin: 0px;
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .detail-section {
+        background-color: #2F4254;
+        padding: 5px 0px;
+    }
+    
+    .dashbord .detail-section:hover {
+        background-color: #5a5a5a;
+        cursor: pointer;
+    }
+    
+    .detail-section a {
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .dashbord-green .icon-section,
+    .dashbord-green .icon-section i {
+        background-color: #16A085;
+    }
+    
+    .dashbord-green .detail-section {
+        background-color: #149077;
+    }
+    
+    .dashbord-orange .icon-section,
+    .dashbord-orange .icon-section i {
+        background-color: #F39C12;
+    }
+    
+    .dashbord-orange .detail-section {
+        background-color: #DA8C10;
+    }
+    
+    .dashbord-blue .icon-section,
+    .dashbord-blue .icon-section i {
+        background-color: #2980B9;
+    }
+    
+    .dashbord-blue .detail-section {
+        background-color: #2573A6;
+    }
+    
+    .dashbord-red .icon-section,
+    .dashbord-red .icon-section i {
+        background-color: #E74C3C;
+    }
+    
+    .dashbord-red .detail-section {
+        background-color: #CF4436;
+    }
+    
+    .dashbord-skyblue .icon-section,
+    .dashbord-skyblue .icon-section i {
+        background-color: #8E44AD;
+    }
+    
+    .dashbord-skyblue .detail-section {
+        background-color: #803D9B;
+    }
+</style>
+<h1>DashBoard</h1>
+<div class="container">
+    <div class="main-section">
+        <div class="dashbord">
+            <div class="icon-section">
+                <i class="fa-users" aria-hidden="true"></i><br>
+                <small>Intern Count</srall>
+                <p>{{ intern_count }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-green">
+            <div class="icon-section">
+                <i class="fa fa-user-secret" aria-hidden="true"></i><br>
+                <small>Staff Count</small>
+                <p>{{ staff_count }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-orange">
+            <div class="icon-section">
+                <i class="fa fa-user-plus" aria-hidden="true"></i><br>
+                <small>Status Active</small>
+                <p>{{ status_active }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-blue">
+            <div class="icon-section">
+                <i class="fa fa-user-times" aria-hidden="true"></i><br>
+                <small>Status InActive</small>
+                <p>{{ status_inactive }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-red">
+            <div class="icon-section">
+                <i class="fa fa-times-circle-o" aria-hidden="true"></i><br>
+                <small>Status Suspended</small>
+                <p>{{ status_suspended }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %} {% else %}
+<!-- Intern dash code here -->
+{% endif %} {% endblock %}

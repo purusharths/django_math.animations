@@ -12,7 +12,15 @@ from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
 from .forms import (UserLoginForm, add_data, )
-from .models import (data, AddUser)
+from .models import ( data, AddUser)
+
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.contrib.auth.models import User
+from django.contrib import messages, auth
+import random
+from .forms import AddUserForm, DeleteUserForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def index(request):
@@ -35,6 +43,7 @@ def is_superuser(user):
 def dashboard(request):
     if request.user:
         intern_count = 0
+        Users = AddUser.objects.order_by('-date')
         intern_count = AddUser.objects.filter(role='INTERN').count()
         staff_count = AddUser.objects.filter(role='STAFF').count()
 
@@ -42,11 +51,13 @@ def dashboard(request):
         status_inactive = AddUser.objects.filter(role='INACTIVE').count()
         status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
         context = {
-            'intern_count': intern_count,
-            'staff_count': staff_count,
-            'status_active': status_active,
-            'status_inactive': status_inactive,
-            'status_suspended': status_suspended
+
+            'intern_count' : intern_count,
+            'staff_count' : staff_count,
+            'status_active' :status_active,
+            'status_inactive' : status_inactive,
+            'status_suspended' : status_suspended,
+            'user' : Users
         }
         return render(request, "fossee_math_pages/dashboard.html", context)
     else:
@@ -110,17 +121,15 @@ def add_user(request):
             try:
                 password = random.randint(0, 99999999)
                 passwordstr = str(password)
-                date = datetime.today().strftime('%Y-%m-%d')
-                user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
-                u_id = User.objects.get(username=email)
-                if role == 'INTERN':
+                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname, last_name=lastname)
+                u_id = User.objects.get(username=name)
+                if role=='INTERN':
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                     date=date, temp_password=password)
+                                temp_password=password)
                     addusr.save()
                 else:
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                     date=date, temp_password=password, status='ACTIVE')
+                                    temp_password=password,status='ACTIVE')
                     addusr.save()
 
                 send_mail(
