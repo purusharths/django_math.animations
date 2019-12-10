@@ -1,13 +1,14 @@
-{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %} {% if intern_count %}
-<h1>DashBoard</h1>
-<h3>Intern Count</h3>
-<h2>{{ intern_count }}</h2>
-<h3>Staff Count</h3>
-<h2>{{ staff_count }}</h2>
-<h3>Status Active</h3>
-<h2>{{ status_active }}</h2>
-<h3>Status InActive</h3>
-<h2>{{ status_inactive }}</h2>
-<h3>Status Suspended</h3>
-<h2>{{ status_suspended }}</h2>
-{% endif %} {% endif %} {% endblock %}
+{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %}
+    {% if intern_count %}
+        <h1>DashBoard</h1>
+        <h3>Intern Count</h3>
+        <h2>{{ intern_count }}</h2>
+        <h3>Staff Count</h3>
+        <h2>{{ staff_count }}</h2>
+        <h3>Status Active</h3>
+        <h2>{{ status_active }}</h2>
+        <h3>Status InActive</h3>
+        <h2>{{ status_inactive }}</h2>
+        <h3>Status Suspended</h3>
+        <h2>{{ status_suspended }}</h2>
+    {% endif %} {% endif %} {% endblock %}

@@ -1,27 +1,24 @@
-
 {% extends 'base.html' %} {% load staticfiles %}{% block title %}Dashboard{% endblock %} {% block content %}
 
-<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/';</script>
     <br>
     <hr>
     <div class="container">
 
-    <div id="content" hidden>
-        {% for i in resources %} {{ i.subtopic }}
-        <br> {% endfor %}
-    </div>
+        <div id="content" hidden>
+            {% for i in resources %} {{ i.subtopic }}
+                <br> {% endfor %}
+        </div>
 
         <div class="row">
             <div class="col">
                 Select your subtopic : &nbsp;
-
-
-                <form method="POST" class="form-row" id="selection">
+                <form method="POST" class="form-row" name="form_type" value="selection">
                     {% csrf_token %}
                     <div class="col">
-                        <select class="form-control" name="option" >
+                        <select class="form-control" name="option">
                             {% for i in resources %}
                                 <option value="{{ i.id }}">{{ i.subtopic }}</option>
                             {% endfor %}
@@ -36,25 +33,25 @@
         </div>
         <br>
 
-    <hr>
-            <div class="row">
-            <form method="POST" id="edit_data">
-        {% csrf_token %} {{ form.media }} {{ form_edit.as_p }}
-        <p><input type="submit" value="post"></p>
-    </form>
+        <hr>
+        <div class="row">
+            <form method="POST" name="form_type" value="edit_data">
+                {% csrf_token %} {{ form.media }} {{ form_edit.as_p }}
+                <p><input type="submit" value="post"></p>
+            </form>
         </div>
     </div>
     <br>
     <hr>
     <br>
-</div>
-{#<script>#}
-{#    $(document).ready(function() {#}
-{#        var html = $("#content").text()#}
-{#        html.replace("&lt;", "<")#}
-{#        html.replace("&gt;", ">")#}
-{##}
-{#        $("#content-body").html(html)#}
-{#    })#}
-{#</script>#}
+    </div>
+    {#<script>#}
+    {#    $(document).ready(function() {#}
+    {#        var html = $("#content").text()#}
+    {#        html.replace("&lt;", "<")#}
+    {#        html.replace("&gt;", ">")#}
+    {##}
+    {#        $("#content-body").html(html)#}
+    {#    })#}
+    {#</script>#}
 {% endblock %}
