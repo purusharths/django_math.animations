@@ -46,9 +46,8 @@ class AddUserForm(forms.ModelForm):
         fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
 
 
+
 class DeleteUserForm(forms.ModelForm):
     class Meta:
         model = AddUser
         fields = ('name', 'email',)
-
-

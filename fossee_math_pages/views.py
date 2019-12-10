@@ -1,9 +1,16 @@
+import random
+from datetime import datetime
+
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.checks import messages
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
-from django.utils.timezone import now
 
+from .forms import AddUserForm
 from .forms import (UserLoginForm, add_data, )
 from .models import ( data, AddUser)
 
@@ -67,7 +74,21 @@ def user_login(request):
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
-            return render(request, "fossee_math_pages/dashboard.html")
+            intern_count = 0
+            intern_count = AddUser.objects.filter(role='INTERN').count()
+            staff_count = AddUser.objects.filter(role='STAFF').count()
+
+            status_active = AddUser.objects.filter(status='ACTIVE').count()
+            status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+            status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+            context = {
+                'intern_count': intern_count,
+                'staff_count': staff_count,
+                'status_active': status_active,
+                'status_inactive': status_inactive,
+                'status_suspended': status_suspended
+            }
+            return render(request, "fossee_math_pages/dashboard.html",context)
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
@@ -127,12 +148,6 @@ def add_user(request):
     return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
 
-@login_required
-def delete_user(request):
-    temp = DeleteUserForm()
-    return render(request, 'fossee_math_pages/delete_user.html')
-
-
 def manage_intern(request):
     users=User.objects.all()
     details=AddUser.objects.all()
@@ -169,11 +184,11 @@ def add_details(request):
 
 @login_required
 def view_details(request):
-    print("helo")
     try:
         resources = data.objects.filter(user=request.user.id)
-        context={
-            'resources':resources,
+        context = {
+            'resources': resources,
+            'br': '<br>',
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
     except:
