@@ -177,31 +177,36 @@ def add_details(request):
 @login_required
 def view_details(request):
     try:
+        usr=request.user
+        details=AddUser.objects.get(user_id=usr.id)
         resources = data.objects.filter(user=request.user.id)
         context = {
             'resources': resources,
-            'br': '<br>',
+            'usr':details,
         }
-        return render(request, 'fossee_math_pages/intern_view_data.html', context)
+        return render(request, 'fossee_math_pages/intern_view_topic.html', context)
     except:
-        return render(request, 'fossee_math_pages/intern_view_data.html')
+        return render(request, 'fossee_math_pages/intern_view_topic.html')
 
 
 @login_required
 def edit_details(request):
     try:
         resources = data.objects.filter(user=request.user.id)
-        res=""
-        form=""
-        if request.method == 'POST':
-            if request.POST.get("form_type") == "selection":
-                print(request.POST['option'])
-                res = data.objects.get(id=5)
-                print(res)
+        res = ""
+        form = ""
+        if request.POST:
+            if request.POST['option'] is not None:
+                data_id = request.POST['option']
+                res = data.objects.get(id=data_id)
                 resource = data.objects.get(id=res.id)
+                print(resource)
                 form = add_data(instance=resource)
-            elif request.POST.get("form_type") == "edit_data":
-                form.save()
+
+        if request.POST:
+            if request.POST['data_edit']:
+                print("save")
+                # form.save()
 
         context = {
             'resources': resources,
