@@ -42,11 +42,11 @@ def dashboard(request):
         status_inactive = AddUser.objects.filter(role='INACTIVE').count()
         status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
         context = {
-            'intern_count' : intern_count,
-            'staff_count' : staff_count,
-            'status_active' :status_active,
-            'status_inactive' : status_inactive,
-            'status_suspended' : status_suspended
+            'intern_count': intern_count,
+            'staff_count': staff_count,
+            'status_active': status_active,
+            'status_inactive': status_inactive,
+            'status_suspended': status_suspended
         }
         return render(request, "fossee_math_pages/dashboard.html", context)
     else:
@@ -78,7 +78,7 @@ def user_login(request):
                 'status_inactive': status_inactive,
                 'status_suspended': status_suspended
             }
-            return render(request, "fossee_math_pages/dashboard.html",context)
+            return render(request, "fossee_math_pages/dashboard.html", context)
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
@@ -141,11 +141,11 @@ def add_user(request):
 
 
 def manage_intern(request):
-    users=User.objects.all()
-    details=AddUser.objects.all()
-    context={
-        'users':users,
-        'details':details
+    users = User.objects.all()
+    details = AddUser.objects.all()
+    context = {
+        'users': users,
+        'details': details
     }
     if request.method == 'POST':
         # register user
@@ -153,7 +153,7 @@ def manage_intern(request):
         option = request.POST['option_select']
         AddUser.objects.filter(user_id=u_id).update(status=option)
 
-    return render(request, 'fossee_math_pages/manage_intern.html',context)
+    return render(request, 'fossee_math_pages/manage_intern.html', context)
 
 
 def aprove_contents(request):
@@ -191,12 +191,24 @@ def view_details(request):
 def edit_details(request):
     try:
         resources = data.objects.filter(user=request.user.id)
-        paginator = Paginator(resources, 8)
-        page = request.GET.get('page')
-        paged_resources = paginator.get_page(page)
+        res=""
+        form=""
+        if request.method == 'POST':
+            if request.POST.get("form_type") == "selection":
+                print(request.POST['option'])
+                res = data.objects.get(id=5)
+                print(res)
+                resource = data.objects.get(id=res.id)
+                form = add_data(instance=resource)
+            elif request.POST.get("form_type") == "edit_data":
+                form.save()
+
         context = {
-            'resources': paged_resources,
+            'resources': resources,
+            'modify': res,
+            'form_edit': form,
         }
+
         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_edit_data.html')
