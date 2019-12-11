@@ -48,7 +48,7 @@ def dashboard(request):
         status_active = AddUser.objects.filter(status='ACTIVE').count()
         status_inactive = AddUser.objects.filter(status='INACTIVE').count()
         status_suspended = AddUser.objects.filter(status='SUSPENDED').count()
-        date_joined = AddUser.objects.order_by('-date_joined')
+        date_joined = AddUser.objects.order_by('date_joined')
         print("Time--------------------------------------" ,date_joined)
         context = {
 
