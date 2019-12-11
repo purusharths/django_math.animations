@@ -20,9 +20,9 @@ class data(models.Model):
 
 class AddUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20, blank = False, null= False)
+    name = models.CharField(max_length=255, blank = False, null= False)
     email = models.EmailField(blank = False)
-    topic = models.CharField(max_length=30, blank = False, null = False)
+    topic = models.CharField(max_length=255, blank = True, null = True)
     phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
