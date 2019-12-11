@@ -43,20 +43,21 @@ def is_superuser(user):
 def dashboard(request):
     if request.user:
         intern_count = 0
-        Users = AddUser.objects.order_by('-date')
+        
         intern_count = AddUser.objects.filter(role='INTERN').count()
         staff_count = AddUser.objects.filter(role='STAFF').count()
 
         status_active = AddUser.objects.filter(status='ACTIVE').count()
-        status_inactive = AddUser.objects.filter(role='INACTIVE').count()
-        status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+        status_inactive = AddUser.objects.filter(status='INACTIVE').count()
+        status_suspended = AddUser.objects.filter(status='SUSPENDED').count()
+        date_joined = AddUser.objects.order_by('-date_joined')
         context = {
             'intern_count' : intern_count,
             'staff_count' : staff_count,
             'status_active' :status_active,
             'status_inactive' : status_inactive,
             'status_suspended' : status_suspended,
-            'user' : Users
+            'date_joined' : date_joined
         }
         return render(request, "fossee_math_pages/dashboard.html", context)
     else:
