@@ -1,0 +1,39 @@
+{% extends 'base.html' %}{% block title %}Intern View Topic {% endblock %}{% block content %}
+<section id="bc" class="mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item active"> Intern View Topic</li>
+            </ol>
+        </nav>
+</section>
+<br>
+<hr>
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <h2> Topic : {{ usr.topic }}</h2>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in resources %}
+            <tr>
+                <th scope="row"> {{ i.subtopic }}</th>
+                <th>
+                    <button>View</button>
+                </th>
+                <th>
+                    <button>Edit</button>
+                </th>
+                <th>--status--</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<hr>
+<br> {% endblock %}

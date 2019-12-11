@@ -1,47 +1,60 @@
 {% extends 'base.html' %} {% block title %}Topics{% endblock %} {% block content %}
-
-
-<!-- Page Content -->
-<div class="container">
-
-    <!-- Call to Action Well -->
-    <div class="card my-5 py-4 border border-white">
-        <div class="card-body">
-            <div class="row">
-                <div class="colM">
-                    <h3 class="serif">Search by Topic / SubTopic:</h3>
-                </div>
-                <div class="colM">
-                    <input type="text" />
-                    <a class="btn btn-primary btn-sm" href="#">Search</a></p>
-                </div>
-            </div>
-        </div>
+<section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item active"> Topics</li>
+            </ol>
+        </nav>
     </div>
+</section>
 
-    <!-- Content Row -->
-    <h1 id="Topics" class="serif">Topics</h1>
-    <hr>
-    <div class="row">
-        {% for topic in topics %}
-        <div class="card mb-3 col-md-12">
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="{{ tpic.image.url }}" class="card-img" alt="">
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title serif"><b><a href="/{{
-                                        topic.route.url }}"> {{ topic.name }} </a></b></h5>
-                        <span class="card-text serif"><i> {{ topic.quote }} </i></span>
-                        <p class="card-text"><small class="text-muted"> - {{
-                                        topic.author }} </small></p>
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Call to Action Well -->
+        <div class="card my-5 py-4 border border-white">
+            <div class="card-body">
+                <div class="row">
+                    <div class="colM">
+                        <h3 class="serif">Search by Topic / SubTopic:</h3>
+                    </div>
+                    <div class="colM">
+                        <input type="text"/>
+                        <a class="btn btn-primary btn-sm" href="#">Search</a></p>
                     </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <!-- Content Row -->
+        <hr>
+        <div class="row">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <h2> Topic : </h2>
+                </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <th></th>
+                        <th scope="row"> i.subtopic</th>
+                        <th>
+                            <button>View</button>
+                        </th>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
     </div>
-</div>
-<!-- /.container -->
+    <!-- /.container -->
 {% endblock %}
