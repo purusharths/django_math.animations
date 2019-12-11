@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
-from django.utils import timezone
+from django.utils.timezone import now
 status= (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
@@ -34,7 +34,7 @@ class AddUser(models.Model):
     role = models.CharField(max_length=20,
                                       choices=ROLE_TYPE,
                                        default=INTERN)
-    date_joined = models.DateTimeField(default=timezone.now(), blank=True)
+    joined_date = models.DateTimeField(default=now, editable=False)
     temp_password = models.CharField(max_length=10)
     status=models.CharField(max_length=255,choices=status,default='INACTIVE')
     def __str__(self):
