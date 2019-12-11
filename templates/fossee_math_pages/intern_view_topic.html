@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% block title %}Intern View Topic {% endblock %}{% block content %}
+
+    <br>
+    <hr>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <h2> Topic : {{ usr.topic }}</h2>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in resources %}
+                <tr>
+                    <th scope="row"> {{ i.subtopic }}</th>
+                    <th>
+                        <button>View</button>
+                    </th>
+                    <th>
+                        <button>Edit</button>
+                    </th>
+                    <th>--status--</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <br>
+{% endblock %}
