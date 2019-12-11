@@ -103,10 +103,10 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{% url 'index' %}">
-                        <i class="fa fa-home"></i> Index</a>
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-                <li class="breadcrumb-item active"> DashBoard</li>
+                <li class="breadcrumb-item active"> Dashboard</li>
             </ol>
         </nav>
     </div>
@@ -115,7 +115,7 @@
 <div class="container">
     <div class="main-section">
         <div class="dashbord">
-            <div class="icon-section">
+            <div class="icon-section" style="margin-top:-9px">
                 <i class="fa-users" aria-hidden="true"></i><br>
                 <small>Intern Count</srall>
                             <p>{{ intern_count }}</p>
@@ -154,7 +154,7 @@
 {% endif %} {% if request.user.adduser.role == 'INTERN' %}
 <!-- Intern section -->
 <div class="container">
-    <div class="main-section">
+    <div class="main-section" hboard>
         <div class="dashbord">
             <div class="icon-section">
                 <i class="fa fa-calendar" aria-hidden="true"></i><br>
