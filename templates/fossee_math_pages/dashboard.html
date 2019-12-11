@@ -111,7 +111,6 @@
         </nav>
     </div>
 </section>
-<h1>DashBoard</h1>
 {% if user.is_superuser %}
 <div class="container">
     <div class="main-section">
@@ -159,9 +158,9 @@
         <div class="dashbord">
             <div class="icon-section">
                 <i class="fa fa-calendar" aria-hidden="true"></i><br>
-                <small>Since</small> {% if context %}
-                <p>{{ context.date_joined | timesince }}</p>
-                {% endif %}
+                <small>Since</small>
+                <p>{{ date_joined | timesince }}</p>
+
             </div>
         </div>
         <div class="dashbord dashbord-green">
