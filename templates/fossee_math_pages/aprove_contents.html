@@ -17,14 +17,19 @@
             <th scope="col">Submition Date</th>
             <th scope="col">Topic</th>
             <th scope="col">Subtopic</th>
-              <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td></td>
-             <td></td> <td></td> <td></td> <td><button>View</button></td>
-        </tr>
+        {% for i in data %}
+            <tr>
+                <td>{{ i.user_id }}</td>
+                <td>{{ i.post_date }}</td>
+                <td>{{ i.user_id }}</td>
+                <td>{{ i.subtopic }}</td>
+                <td><a href="{% url 'view_data' i.id %}" class="btn btn-success">View</a></td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 

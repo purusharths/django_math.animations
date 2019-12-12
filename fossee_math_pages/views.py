@@ -171,7 +171,13 @@ def manage_intern(request):
 
 
 def aprove_contents(request):
-    return render(request, 'fossee_math_pages/aprove_contents.html')
+    data_aproval=data.objects.filter(aproval_ststus='PENDING')
+    inters=AddUser.objects.filter(role='INTERNS')
+    context={
+        'data':data_aproval,
+        'interns':inters,
+    }
+    return render(request, 'fossee_math_pages/aprove_contents.html',context)
 
 
 @login_required
@@ -182,6 +188,7 @@ def add_details(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user.id
+            post.aproval_ststus='PENDING'
             post.save()
             form = add_data
             return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})

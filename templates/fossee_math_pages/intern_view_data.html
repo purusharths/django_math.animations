@@ -9,10 +9,16 @@
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'view_details' %}">
-                        <i style="color:black"></i> My works</a>
+                    {% if request.user.adduser.role == 'INTERN' %}
+                        <a style="color:black" href="{% url 'view_details' %}">
+                            <i style="color:black"></i> My works</a>
+                    {% endif %}
+                    {% if request.user.adduser.role == 'STAFF' %}
+                        <a style="color:black" href="{% url 'aprove_contents' %}">
+                            <i style="color:black"></i> Submissions</a>
+                    {% endif %}
                 </li>
-                <li class="breadcrumb-item active"> View : {{ topic.subtopic }}</li>
+                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
             </ol>
         </nav>
     </section>
