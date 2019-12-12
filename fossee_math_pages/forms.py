@@ -46,6 +46,9 @@ class AddUserForm(forms.ModelForm):
 
     class Meta:
         model = AddUser
+        labels = {
+            "name" : "Username"
+        }
         fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
 
 
