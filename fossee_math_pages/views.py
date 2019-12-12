@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
-from .forms import (UserLoginForm, add_data, )
+from .forms import (UserLoginForm, add_data, data,)
 from .models import ( data, AddUser)
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -49,6 +49,8 @@ def dashboard(request):
         status_inactive = AddUser.objects.filter(status='INACTIVE').count()
         status_suspended = AddUser.objects.filter(status='SUSPENDED').count()
         date_joined = User.objects.order_by('-date_joined')
+        total_proposals = data.objects.all().count()
+        proposal_status = data.objects.filter(aproval_ststus=True).count()
         context = {
 
             'intern_count' : intern_count,
@@ -56,7 +58,9 @@ def dashboard(request):
             'status_active' :status_active,
             'status_inactive' : status_inactive,
             'status_suspended' : status_suspended,
-            'date_joined' : date_joined
+            'date_joined' : date_joined,
+            'total_proposals' : total_proposals,
+            'proposal_status' : proposal_status
         }
 
         return render(request, "fossee_math_pages/dashboard.html", context)
