@@ -18,6 +18,7 @@ urlpatterns = [
     path('manage_intern/',views.manage_intern,name='manage_intern'),
     path('add_details/',views.add_details,name='add_details'),
     path('view_details/',views.view_details,name='view_details'),
-    path('edit_details/',views.edit_details,name='edit_details'),
+    path('view_data/<int:view_id>',views.view_data,name="view_data"),
+    path('edit_data/',views.edit_data,name='edit_data'),
     path('add_user/',views.add_user,name='add_user'),
 ]

@@ -24,10 +24,10 @@
             <tr>
                 <th scope="row"> {{ i.subtopic }}</th>
                 <th>
-                    <button>View</button>
+                    <a href="{% url 'view_data' i.id %}" class="btn btn-success">View</a>
                 </th>
                 <th>
-                    <button>Edit</button>
+                    <a href="{% url 'edit_data' %}" class="btn btn-success">Edit</a>
                 </th>
                 <th>--status--</th>
             </tr>
