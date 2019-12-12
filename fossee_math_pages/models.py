@@ -12,9 +12,10 @@ status= (
 
 
 class data(models.Model):
+    # config_name = 'awesome_ckeditor'
     user=models.IntegerField(default=False,null=False)
     subtopic=models.CharField(max_length=255,null=False)
-    text = RichTextField(config_name='awesome_ckeditor')
+    text = RichTextField(blank=True,null=True)
     post_date=models.DateTimeField(default=datetime.now())
     aproval_ststus=models.BooleanField(default=False)
 

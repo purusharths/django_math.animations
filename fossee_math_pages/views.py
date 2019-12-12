@@ -204,33 +204,24 @@ def view_details(request):
 
 
 @login_required
-def edit_details(request):
+def view_data(request,view_id):
+    print("hai")
     try:
-        resources = data.objects.filter(user=request.user.id)
-        res = ""
-        form = ""
-        if request.POST:
-            if request.POST['option'] is not None:
-                data_id = request.POST['option']
-                res = data.objects.get(id=data_id)
-                resource = data.objects.get(id=res.id)
-                print(resource)
-                form = add_data(instance=resource)
-
-        if request.POST:
-            if request.POST['data_edit']:
-                print("save")
-                # form.save()
-
-        context = {
-            'resources': resources,
-            'modify': res,
-            'form_edit': form,
+        topic = data.objects.get(id = view_id)
+        context ={
+            'topic' : topic
         }
+        print(topic.text)
+        return render(request, 'fossee_math_pages/intern_view_data.html',context)
 
-        return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
-        return render(request, 'fossee_math_pages/intern_edit_data.html')
+        return render(request,'fossee_math_pages/intern_view_topic.html')
+    return render(request,'fossee_math_pages/intern_view_data.html')
+
+
+@login_required
+def edit_data(request):
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
 
 
 def topic_details(request):
