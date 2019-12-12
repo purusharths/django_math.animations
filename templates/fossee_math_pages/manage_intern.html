@@ -13,17 +13,17 @@
 </section>
 <div>
     {% include 'partials/_alerts.html' %}
-    <div class="container">
-        {% for obj in details %}
-        <div class="row">
+<div class="container">
+    {% for obj in details %}
+        <div class="row table table-dark">
             <div class="col">
                 User Name
             </div>
             <div class="col">
-                Phone
+                Email
             </div>
             <div class="col">
-                Email
+                Phone
             </div>
             <div class="col">
                 Status
@@ -49,7 +49,7 @@
                 {{ obj.status }}
             </div>
             <form method="POST" name="manageform" class="form-group" id="manageform"></form>
-            <div class="col">
+            <div class="col-lg-1">
                 {% csrf_token %}
                 <input name="id" value='{{ obj.user_id}}' type="hidden">
                 <select id="option_select" name="option_select">
@@ -64,6 +64,6 @@
             </form>
         </div>
         {% endfor %}
-    </div>
+</div>
 </div>
 <br> {% endblock %}
