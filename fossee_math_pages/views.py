@@ -150,11 +150,12 @@ def add_user(request):
 
 
 def manage_intern(request):
+    details = AddUser.objects.filter(role='INTERN')
     users = User.objects.all()
-    details = AddUser.objects.all()
+    print("hai")
     context = {
         'users': users,
-        'details': details
+        'details': details,
     }
     if request.method == 'POST':
         # register user
