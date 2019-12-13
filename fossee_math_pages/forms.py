@@ -47,7 +47,7 @@ class edit_data(forms.ModelForm):
 
     class Meta:
         model = data
-        fields = ('subtopic', 'text',)
+        fields = ('text',)
 
 class AddUserForm(forms.ModelForm):
     firstname = forms.CharField(max_length=20)
