@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -7,20 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.core.mail import send_mail
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
+<<<<<<< HEAD
 from .forms import (UserLoginForm, add_data, data, edit_data)
+=======
+from .forms import (UserLoginForm, add_data, )
+>>>>>>> b2f8c8160764fa57850a5d2a5b562860f2a1259a
 from .models import (data, AddUser)
-
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.contrib.auth.models import User
-from django.contrib import messages, auth
-import random
-from .forms import AddUserForm, DeleteUserForm
-from django.core.mail import send_mail
-from django.conf import settings
 
 
 def index(request):
@@ -32,7 +26,16 @@ def internship(request):
 
 
 def topics(request):
-    return render(request, "fossee_math_pages/topics.html")
+    try:
+        details = AddUser.objects.filter(role='INTERN')
+        resources = data.objects.all()
+        context = {
+            'resources': resources,
+            'usr': details,
+        }
+        return render(request, 'fossee_math_pages/topics.html', context)
+    except:
+        return render(request, "fossee_math_pages/topics.html")
 
 
 def is_superuser(user):
@@ -42,25 +45,34 @@ def is_superuser(user):
 @login_required
 def dashboard(request):
     if request.user:
+        current_user = request.user
         intern_count = AddUser.objects.filter(role='INTERN').count()
         staff_count = AddUser.objects.filter(role='STAFF').count()
-
+        # for admin
         status_active = AddUser.objects.filter(status='ACTIVE').count()
         status_inactive = AddUser.objects.filter(status='INACTIVE').count()
         status_suspended = AddUser.objects.filter(status='SUSPENDED').count()
-        date_joined = User.objects.order_by('-date_joined')
+        # for intern 
+        date_joined = User.objects.filter(id=current_user.id)
+        total_proposals_intern = data.objects.filter(id=current_user.id).count()
+        proposal_status_intern = data.objects.filter(id=current_user.id,aproval_ststus=True).count()
+        # for staff
         total_proposals = data.objects.all().count()
-        proposal_status = data.objects.filter(aproval_ststus=True).count()
+        proposal_status_true = data.objects.filter(aproval_ststus=True).count()
+        proposal_status_false = data.objects.filter(aproval_ststus=False).count()
         context = {
 
-            'intern_count': intern_count,
-            'staff_count': staff_count,
-            'status_active': status_active,
-            'status_inactive': status_inactive,
-            'status_suspended': status_suspended,
-            'date_joined': date_joined,
-            'total_proposals': total_proposals,
-            'proposal_status': proposal_status
+            'intern_count' : intern_count,
+            'staff_count' : staff_count,
+            'status_active' :status_active,
+            'status_inactive' : status_inactive,
+            'status_suspended' : status_suspended,
+            'date_joined' : date_joined,
+            'total_proposals_intern' : total_proposals_intern,
+            'proposal_status_intern' : proposal_status_intern,
+            'total_proposals' : total_proposals,
+            'proposal_status_true' : proposal_status_true,
+            'proposal_status_false' : proposal_status_false
         }
 
         return render(request, "fossee_math_pages/dashboard.html", context)
@@ -214,7 +226,6 @@ def view_details(request):
 
 @login_required
 def view_data(request, view_id):
-    print("hai")
     try:
         topic = data.objects.get(id=view_id)
         context = {
@@ -224,8 +235,19 @@ def view_data(request, view_id):
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
 
     except:
-        return render(request, 'fossee_math_pages/intern_view_topic.html')
-    return render(request, 'fossee_math_pages/intern_view_data.html')
+        return render(request, 'fossee_math_pages/intern_view_data.html')
+
+
+def viewdata(request, view_id):
+    try:
+        topic = data.objects.get(id=view_id)
+        context = {
+            'topic': topic
+        }
+        print(topic.text)
+        return render(request, 'fossee_math_pages/data.html', context)
+    except:
+        return render(request, 'fossee_math_pages/data.html')
 
 
 @login_required
@@ -243,9 +265,6 @@ def edit_data(request,edit_id):
             form = add_data
             return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
     return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
-
-def topic_details(request):
-    return render(request, 'fossee_math_pages/view_topic_details.html')
 
 
 class AddUserView(AddUser):

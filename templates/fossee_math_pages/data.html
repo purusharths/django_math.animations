@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block title %}View Intern Data{% endblock %} {% block content %}
+
+
+    <section id="bc" class="mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    {% if request.user.adduser.role == 'INTERN' %}
+                        <a style="color:black" href="{% url 'view_details' %}">
+                            <i style="color:black"></i> My works</a>
+                    {% endif %}
+                    {% if request.user.adduser.role == 'STAFF' %}
+                        <a style="color:black" href="{% url 'aprove_contents' %}">
+                            <i style="color:black"></i> Submissions</a>
+                        {% else %}
+                         <a style="color:black" href="{% url 'topics' %}">
+                            <i style="color:black"></i> Search</a>
+                    {% endif %}
+
+                </li>
+                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <h2>  {{ topic.subtopic }} </h2>
+        </div>
+        <div id="topic">{{ topic.text }}
+        </div>
+        <div class="row float-right">
+            Date : {{ topic.post_date }}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <script>
+        $(document).ready(function () {
+            var content = $('#topic').text()
+            $("#topic").html(content)
+        })
+    </script>
+
+{% endblock %}
