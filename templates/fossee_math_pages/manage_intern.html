@@ -1,21 +1,21 @@
 {% extends 'base.html' %}{% block title %}Manage Intern{% endblock %}{% block content %}
 
-    <section id="bc" class="mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
-                </li>
-                <li class="breadcrumb-item active"> Manage Interns</li>
-            </ol>
-        </nav>
-    </section>
+<section id="bc" class="mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item active"> Manage Interns</li>
+        </ol>
+    </nav>
+</section>
 
-    {% include 'partials/_alerts.html' %}
+{% include 'partials/_alerts.html' %}
 
-    <table class="table">
-        <thead class="thead-dark">
+<table class="table">
+    <thead class="thead-dark">
         <tr>
             <th scope="col">User Name</th>
             <th scope="col">Email</th>
@@ -23,32 +23,31 @@
             <th scope="col">Status</th>
             <th scope="col">Set Status</th>
         </tr>
-        </thead>
-        {% for obj in details %}
-            <tbody>
-            <tr>
-                <td>  {{ obj.name }}</td>
-                <td>{{ obj.email }}</td>
-                <td>{{ obj.phone }}</td>
-                <td>{{ obj.status }}</td>
-                <td colspan="2">
-                    <form method="POST" name="manageform" id="manageform"></form>
-                    <div class="col-lg">
-                        {% csrf_token %}
-                        <input name="id" value='{{ obj.user_id }}' type="hidden">
-                        <select id="option_select" name="option_select">
+    </thead>
+    {% for obj in details %}
+    <tbody>
+        <tr>
+            <td> {{ obj.name }}</td>
+            <td>{{ obj.email }}</td>
+            <td>{{ obj.phone }}</td>
+            <td>{{ obj.status }}</td>
+            <td colspan="2">
+                <form method="POST" name="manageform" id="manageform"></form>
+                <div class="col-lg">
+                    {% csrf_token %}
+                    <input name="id" value='{{ obj.user_id }}' type="hidden">
+                    <select id="option_select" name="option_select">
                             <option name="active" value="ACTIVE">ACTIVE</option>
                             <option name="inactive" value="INACTIVE">INACTIVE</option>
                             <option name="suspended" value="SUSPENDED">SUSPENDED</option>
                         </select>
-                        <input class="btn btn-success" type="submit" name="submit" id="submit" value="OK">
-                    </div>
-                    </form>
-                </td>
-            </tr>
+                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="OK">
+                </div>
+                </form>
+            </td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <br>
-{% endblock %}
+<br> {% endblock %}

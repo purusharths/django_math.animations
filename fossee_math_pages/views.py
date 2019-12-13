@@ -180,11 +180,11 @@ def manage_intern(request):
 
 
 def aprove_contents(request):
-    data_aproval = data.objects.filter(aproval_ststus='PENDING')
+    data_aproval = data.objects.filter(aproval_ststus='PENDING').order_by('-user_id')
     inters = AddUser.objects.filter(role='INTERNS')
     context = {
         'data': data_aproval,
-        'interns': inters,
+        'inters': inters,
     }
     return render(request, 'fossee_math_pages/aprove_contents.html', context)
 

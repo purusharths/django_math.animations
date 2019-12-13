@@ -20,7 +20,7 @@ dataAprovalStatus = (
 
 class data(models.Model):
     # config_name = 'awesome_ckeditor'
-    user_id = models.IntegerField(default=False, null=False)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic = models.CharField(max_length=255, null=False)
     text = RichTextField(blank=True, null=True)
     post_date = models.DateTimeField(default=datetime.now())
