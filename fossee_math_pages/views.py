@@ -4,15 +4,11 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.checks import messages
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
 from .forms import AddUserForm
-<<<<<<< HEAD
 from .forms import (UserLoginForm, add_data, data, edit_data)
-=======
->>>>>>> d5db659db41475bb4ac5ed9b60ea512e7a7781a7
 from .forms import (UserLoginForm, add_data, )
 from .models import (data, AddUser)
 
@@ -183,6 +179,7 @@ def manage_intern(request):
     return render(request, 'fossee_math_pages/manage_intern.html', context)
 
 
+@login_required
 def aprove_contents(request):
     data_aproval = data.objects.filter(aproval_ststus='PENDING').order_by('-user_id')
     inters = AddUser.objects.filter(role='INTERNS')
@@ -196,11 +193,12 @@ def aprove_contents(request):
 @login_required
 def add_details(request):
     form = add_data
+    user=User.objects.get(pk=request.user.id)
     if request.method == 'POST':
         form = add_data(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user_id = request.user.id
+            post.user_id = user
             post.aproval_ststus = 'PENDING'
             post.save()
             form = add_data
@@ -250,7 +248,6 @@ def viewdata(request, view_id):
 
 
 @login_required
-<<<<<<< HEAD
 def edit_data(request,edit_id):
     print(edit_id)
     post = get_object_or_404(data,id = edit_id)
@@ -271,11 +268,7 @@ def edit_data(request,edit_id):
                 form = add_data
                 return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
     return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form,'context':context})
-=======
-def edit_data(request):
-    return render(request, 'fossee_math_pages/intern_edit_data.html')
 
->>>>>>> d5db659db41475bb4ac5ed9b60ea512e7a7781a7
 
 
 class AddUserView(AddUser):
