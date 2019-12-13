@@ -9,11 +9,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
-<<<<<<< HEAD
-from .forms import (UserLoginForm, add_data, data, edit_data)
-=======
 from .forms import (UserLoginForm, add_data, )
->>>>>>> b2f8c8160764fa57850a5d2a5b562860f2a1259a
 from .models import (data, AddUser)
 
 
@@ -218,7 +214,6 @@ def view_details(request):
             'resources': resources,
             'usr': details,
         }
-
         return render(request, 'fossee_math_pages/intern_view_topic.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_view_topic.html')
@@ -251,20 +246,9 @@ def viewdata(request, view_id):
 
 
 @login_required
-def edit_data(request,edit_id):
-    form = edit_data
-    print("hello")
-    form = add_data
-    if request.method == 'POST':
-        form = add_data(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user_id = request.user.id
-            post.aproval_ststus = 'PENDING'
-            post.save()
-            form = add_data
-            return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
-    return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+def edit_data(request):
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
+
 
 
 class AddUserView(AddUser):
