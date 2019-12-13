@@ -33,11 +33,11 @@ class UserLoginForm(forms.Form):
 
 
 class add_data(forms.ModelForm):
-    content = RichTextFormField()
+    text = RichTextFormField()
 
     class Meta:
         model = data
-        fields = ('subtopic', 'content',)
+        fields = ('subtopic', 'text',)
 
 
 class AddUserForm(forms.ModelForm):

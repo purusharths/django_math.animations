@@ -4,19 +4,26 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
 from django.utils.timezone import now
+
 status= (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
     ("SUSPENDED", "SUSPENDED"),
 )
 
+dataAprovalStatus=(
+    ("PENDING","PENDING"),
+    ("APROVED","APROVED"),
+    ("REVIEW","REVIEW"),
+)
 
 class data(models.Model):
-    user=models.IntegerField(default=False,null=False)
+    # config_name = 'awesome_ckeditor'
+    user_id=models.IntegerField(default=False,null=False)
     subtopic=models.CharField(max_length=255,null=False)
-    text = RichTextField(config_name='awesome_ckeditor')
+    text = RichTextField(blank=True,null=True)
     post_date=models.DateTimeField(default=datetime.now())
-    aproval_ststus=models.BooleanField(default=False)
+    aproval_ststus=models.CharField(max_length=255,choices=dataAprovalStatus)
 
 class AddUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

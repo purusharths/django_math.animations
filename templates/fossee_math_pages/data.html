@@ -16,7 +16,11 @@
                     {% if request.user.adduser.role == 'STAFF' %}
                         <a style="color:black" href="{% url 'aprove_contents' %}">
                             <i style="color:black"></i> Submissions</a>
+                        {% else %}
+                         <a style="color:black" href="{% url 'topics' %}">
+                            <i style="color:black"></i> Search</a>
                     {% endif %}
+
                 </li>
                 <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
             </ol>
@@ -25,7 +29,7 @@
     <hr>
     <div class="container">
         <div class="row">
-            <h3>  {{ topic.subtopic }} </h3>
+            <h2>  {{ topic.subtopic }} </h2>
         </div>
         <div id="topic">{{ topic.text }}
         </div>

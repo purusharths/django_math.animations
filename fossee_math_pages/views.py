@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -7,20 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.core.mail import send_mail
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
-from .forms import (UserLoginForm, add_data, data,)
-from .models import ( data, AddUser)
-
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.contrib.auth.models import User
-from django.contrib import messages, auth
-import random
-from .forms import AddUserForm, DeleteUserForm
-from django.core.mail import send_mail
-from django.conf import settings
+from .forms import (UserLoginForm, add_data, )
+from .models import (data, AddUser)
 
 
 def index(request):
@@ -32,7 +22,16 @@ def internship(request):
 
 
 def topics(request):
-    return render(request, "fossee_math_pages/topics.html")
+    try:
+        details = AddUser.objects.filter(role='INTERN')
+        resources = data.objects.all()
+        context = {
+            'resources': resources,
+            'usr': details,
+        }
+        return render(request, 'fossee_math_pages/topics.html', context)
+    except:
+        return render(request, "fossee_math_pages/topics.html")
 
 
 def is_superuser(user):
@@ -134,15 +133,16 @@ def add_user(request):
             try:
                 password = random.randint(0, 99999999)
                 passwordstr = str(password)
-                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname, last_name=lastname)
+                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
+                                                last_name=lastname)
                 u_id = User.objects.get(username=name)
-                if role=='INTERN':
+                if role == 'INTERN':
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                temp_password=password)
+                                     temp_password=password)
                     addusr.save()
                 else:
                     addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                    temp_password=password,status='ACTIVE')
+                                     temp_password=password, status='ACTIVE')
                     addusr.save()
 
                 send_mail(
@@ -180,7 +180,13 @@ def manage_intern(request):
 
 
 def aprove_contents(request):
-    return render(request, 'fossee_math_pages/aprove_contents.html')
+    data_aproval = data.objects.filter(aproval_ststus='PENDING')
+    inters = AddUser.objects.filter(role='INTERNS')
+    context = {
+        'data': data_aproval,
+        'interns': inters,
+    }
+    return render(request, 'fossee_math_pages/aprove_contents.html', context)
 
 
 @login_required
@@ -190,7 +196,8 @@ def add_details(request):
         form = add_data(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = request.user.id
+            post.user_id = request.user.id
+            post.aproval_ststus = 'PENDING'
             post.save()
             form = add_data
             return render(request, 'fossee_math_pages/intern_add_data.html', {'form': form})
@@ -200,12 +207,12 @@ def add_details(request):
 @login_required
 def view_details(request):
     try:
-        usr=request.user
-        details=AddUser.objects.get(user_id=usr.id)
-        resources = data.objects.filter(user=request.user.id)
+        usr = request.user
+        details = AddUser.objects.get(user_id=usr.id)
+        resources = data.objects.filter(user_id=usr.id)
         context = {
             'resources': resources,
-            'usr':details,
+            'usr': details,
         }
         return render(request, 'fossee_math_pages/intern_view_topic.html', context)
     except:
@@ -213,37 +220,35 @@ def view_details(request):
 
 
 @login_required
-def edit_details(request):
+def view_data(request, view_id):
     try:
-        resources = data.objects.filter(user=request.user.id)
-        res = ""
-        form = ""
-        if request.POST:
-            if request.POST['option'] is not None:
-                data_id = request.POST['option']
-                res = data.objects.get(id=data_id)
-                resource = data.objects.get(id=res.id)
-                print(resource)
-                form = add_data(instance=resource)
-
-        if request.POST:
-            if request.POST['data_edit']:
-                print("save")
-                # form.save()
-
+        topic = data.objects.get(id=view_id)
         context = {
-            'resources': resources,
-            'modify': res,
-            'form_edit': form,
+            'topic': topic
         }
+        print(topic.text)
+        return render(request, 'fossee_math_pages/intern_view_data.html', context)
 
-        return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     except:
-        return render(request, 'fossee_math_pages/intern_edit_data.html')
+        return render(request, 'fossee_math_pages/intern_view_data.html')
 
 
-def topic_details(request):
-    return render(request, 'fossee_math_pages/view_topic_details.html')
+def viewdata(request, view_id):
+    try:
+        topic = data.objects.get(id=view_id)
+        context = {
+            'topic': topic
+        }
+        print(topic.text)
+        return render(request, 'fossee_math_pages/data.html', context)
+    except:
+        return render(request, 'fossee_math_pages/data.html')
+
+
+@login_required
+def edit_data(request):
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
+
 
 
 class AddUserView(AddUser):
