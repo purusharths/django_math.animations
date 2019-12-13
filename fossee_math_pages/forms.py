@@ -43,11 +43,11 @@ class add_data(forms.ModelForm):
 # Edit data
 
 class edit_data(forms.ModelForm):
-    text = RichTextFormField();
+    text = RichTextFormField()
 
     class Meta:
         model = data
-        fields = ('subtopic','text',)
+        fields = ('subtopic', 'text',)
 
 class AddUserForm(forms.ModelForm):
     firstname = forms.CharField(max_length=20)
