@@ -42,15 +42,21 @@ def is_superuser(user):
 @login_required
 def dashboard(request):
     if request.user:
+        current_user = request.user
         intern_count = AddUser.objects.filter(role='INTERN').count()
         staff_count = AddUser.objects.filter(role='STAFF').count()
-
+        # for admin
         status_active = AddUser.objects.filter(status='ACTIVE').count()
         status_inactive = AddUser.objects.filter(status='INACTIVE').count()
         status_suspended = AddUser.objects.filter(status='SUSPENDED').count()
-        date_joined = User.objects.order_by('-date_joined')
+        # for intern 
+        date_joined = User.objects.filter(id=current_user.id)
+        total_proposals_intern = data.objects.filter(id=current_user.id).count()
+        proposal_status_intern = data.objects.filter(id=current_user.id,aproval_ststus=True).count()
+        # for staff
         total_proposals = data.objects.all().count()
-        proposal_status = data.objects.filter(aproval_ststus=True).count()
+        proposal_status_true = data.objects.filter(aproval_ststus=True).count()
+        proposal_status_false = data.objects.filter(aproval_ststus=False).count()
         context = {
 
             'intern_count' : intern_count,
@@ -59,8 +65,11 @@ def dashboard(request):
             'status_inactive' : status_inactive,
             'status_suspended' : status_suspended,
             'date_joined' : date_joined,
+            'total_proposals_intern' : total_proposals_intern,
+            'proposal_status_intern' : proposal_status_intern,
             'total_proposals' : total_proposals,
-            'proposal_status' : proposal_status
+            'proposal_status_true' : proposal_status_true,
+            'proposal_status_false' : proposal_status_false
         }
 
         return render(request, "fossee_math_pages/dashboard.html", context)

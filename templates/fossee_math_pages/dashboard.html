@@ -169,18 +169,46 @@
 
             </div>
         </div>
-        <div class="dashbord dashbord-green">
+        <div class="dashbord dashbord-orange">
             <div class="icon-section">
                 <i class="fa fa-file" aria-hidden="true"></i><br>
                 <small>Total Proposals</small>
-                <p>{{ total_proposals }}</p>
+                <p>{{ total_proposals_intern }}</p>
             </div>
         </div>
-        <div class="dashbord dashbord-orange">
+        <div class="dashbord dashbord-green">
             <div class="icon-section">
                 <i class="fa fa-file-alt" aria-hidden="true"></i><br>
                 <small>Accepted Proposals</small>
-                <p>{{ proposal_status }}</p>
+                <p>{{ proposal_status_intern }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %} {% if request.user.adduser.role == 'STAFF' %}
+<!-- Staff section -->
+<div class="container">
+    <div class="main-section">
+        <div class="dashbord">
+            <div class="icon-section">
+                <i class="fa fa-copy" aria-hidden="true"></i><br>
+                <small>Total Proposals</small>
+                <p>{{ total_proposals }}</p>
+
+            </div>
+        </div>
+        <div class="dashbord dashbord-red">
+            <div class="icon-section">
+                <i class="fa fa-times" aria-hidden="true"></i><br>
+                <small>Unaccepted Proposals</small>
+                <p>{{ proposal_status_false }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-green">
+            <div class="icon-section">
+                <i class="fa fa-check" aria-hidden="true"></i><br>
+                <small>Accepted Proposals</small>
+                <p>{{ proposal_status_true }}</p>
             </div>
         </div>
     </div>
