@@ -9,7 +9,10 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
 from .forms import AddUserForm
+<<<<<<< HEAD
 from .forms import (UserLoginForm, add_data, data, edit_data)
+=======
+>>>>>>> d5db659db41475bb4ac5ed9b60ea512e7a7781a7
 from .forms import (UserLoginForm, add_data, )
 from .models import (data, AddUser)
 
@@ -181,11 +184,11 @@ def manage_intern(request):
 
 
 def aprove_contents(request):
-    data_aproval = data.objects.filter(aproval_ststus='PENDING')
+    data_aproval = data.objects.filter(aproval_ststus='PENDING').order_by('-user_id')
     inters = AddUser.objects.filter(role='INTERNS')
     context = {
         'data': data_aproval,
-        'interns': inters,
+        'inters': inters,
     }
     return render(request, 'fossee_math_pages/aprove_contents.html', context)
 
@@ -215,7 +218,6 @@ def view_details(request):
             'resources': resources,
             'usr': details,
         }
-
         return render(request, 'fossee_math_pages/intern_view_topic.html', context)
     except:
         return render(request, 'fossee_math_pages/intern_view_topic.html')
@@ -248,6 +250,7 @@ def viewdata(request, view_id):
 
 
 @login_required
+<<<<<<< HEAD
 def edit_data(request,edit_id):
     print(edit_id)
     post = get_object_or_404(data,id = edit_id)
@@ -268,6 +271,11 @@ def edit_data(request,edit_id):
                 form = add_data
                 return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
     return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form,'context':context})
+=======
+def edit_data(request):
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
+
+>>>>>>> d5db659db41475bb4ac5ed9b60ea512e7a7781a7
 
 
 class AddUserView(AddUser):
