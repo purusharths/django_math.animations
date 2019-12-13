@@ -1,5 +1,11 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Add Intern Data{% endblock %}{% block content %} {% load static %} {{ form.media }}
 
+
+{% extends 'base.html' %}{% load staticfiles %} {% block title %}Add Intern Data{% endblock %}{% block content %} {% load static %} {{ form.media }}
+<style>
+#id_subtopic{
+    display: none;
+}
+</style>
 <section id="bc" class="mt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -24,13 +30,16 @@
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
     <form method="post">
+        <h4>{{ context.subtop }}</h4>
         {% csrf_token %} {{ form.media }} {{ form.as_p }}
         <p><input type="submit" value="Edit"></p>
 
     </form>
     <br>
 </div>
-
+<script>
+$('label').prop("for","id_subtopic").hide()
+</script>
 
 
 

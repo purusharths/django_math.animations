@@ -7,13 +7,10 @@ from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
-
+from django.shortcuts import get_list_or_404, get_object_or_404
 from .forms import AddUserForm
-<<<<<<< HEAD
 from .forms import (UserLoginForm, add_data, data, edit_data)
-=======
 from .forms import (UserLoginForm, add_data, )
->>>>>>> b2f8c8160764fa57850a5d2a5b562860f2a1259a
 from .models import (data, AddUser)
 
 
@@ -252,19 +249,25 @@ def viewdata(request, view_id):
 
 @login_required
 def edit_data(request,edit_id):
-    form = edit_data
-    print("hello")
-    form = add_data
-    if request.method == 'POST':
-        form = add_data(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user_id = request.user.id
-            post.aproval_ststus = 'PENDING'
-            post.save()
-            form = add_data
-            return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
-    return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+    print(edit_id)
+    post = get_object_or_404(data,id = edit_id)
+    sub = data.objects.get(id = edit_id);
+    context ={
+        'subtop' :sub.subtopic,
+    }
+
+    if request.user:
+        form = add_data
+        print("hello")
+        form = add_data(instance=post)
+        if request.method == 'POST':
+            form = add_data(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.save()
+                form = add_data
+                return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+    return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form,'context':context})
 
 
 class AddUserView(AddUser):
