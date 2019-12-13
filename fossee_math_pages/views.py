@@ -220,7 +220,8 @@ def view_data(request,view_id):
 
 
 @login_required
-def edit_data(request):
+def edit_data(request,edit_id):
+    print(edit_id)
     return render(request, 'fossee_math_pages/intern_edit_data.html')
 
 
