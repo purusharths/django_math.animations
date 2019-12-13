@@ -9,11 +9,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
-<<<<<<< HEAD
-from .forms import (UserLoginForm, add_data, data, edit_data)
-=======
 from .forms import (UserLoginForm, add_data, )
->>>>>>> b2f8c8160764fa57850a5d2a5b562860f2a1259a
 from .models import (data, AddUser)
 
 
