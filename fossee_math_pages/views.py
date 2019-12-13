@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -7,20 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.core.mail import send_mail
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from .forms import AddUserForm
-from .forms import (UserLoginForm, add_data, data, )
+from .forms import (UserLoginForm, add_data, )
 from .models import (data, AddUser)
-
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.contrib.auth.models import User
-from django.contrib import messages, auth
-import random
-from .forms import AddUserForm, DeleteUserForm
-from django.core.mail import send_mail
-from django.conf import settings
 
 
 def index(request):
@@ -32,7 +22,16 @@ def internship(request):
 
 
 def topics(request):
-    return render(request, "fossee_math_pages/topics.html")
+    try:
+        details = AddUser.objects.filter(role='INTERN')
+        resources = data.objects.all()
+        context = {
+            'resources': resources,
+            'usr': details,
+        }
+        return render(request, 'fossee_math_pages/topics.html', context)
+    except:
+        return render(request, "fossee_math_pages/topics.html")
 
 
 def is_superuser(user):
@@ -213,7 +212,6 @@ def view_details(request):
 
 @login_required
 def view_data(request, view_id):
-    print("hai")
     try:
         topic = data.objects.get(id=view_id)
         context = {
@@ -223,17 +221,25 @@ def view_data(request, view_id):
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
 
     except:
-        return render(request, 'fossee_math_pages/intern_view_topic.html')
-    return render(request, 'fossee_math_pages/intern_view_data.html')
+        return render(request, 'fossee_math_pages/intern_view_data.html')
+
+
+def viewdata(request, view_id):
+    try:
+        topic = data.objects.get(id=view_id)
+        context = {
+            'topic': topic
+        }
+        print(topic.text)
+        return render(request, 'fossee_math_pages/data.html', context)
+    except:
+        return render(request, 'fossee_math_pages/data.html')
 
 
 @login_required
 def edit_data(request):
     return render(request, 'fossee_math_pages/intern_edit_data.html')
 
-
-def topic_details(request):
-    return render(request, 'fossee_math_pages/view_topic_details.html')
 
 
 class AddUserView(AddUser):
