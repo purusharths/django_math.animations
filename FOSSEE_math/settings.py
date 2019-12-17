@@ -136,7 +136,7 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'ck_static')
 MEDIA_ROOT = os.path.join(tempfile.gettempdir(), 'ck_media')
 
-CKEDITOR_UPLOAD_PATH = "/uploads/"
+CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_THUMBNAIL_SIZE = (300, 300)
 CKEDITOR_IMAGE_QUALITY = 40
