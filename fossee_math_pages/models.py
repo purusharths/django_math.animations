@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
@@ -22,7 +23,7 @@ class data(models.Model):
     # config_name = 'awesome_ckeditor'
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic = models.CharField(max_length=255, null=False)
-    text = RichTextField(blank=True, null=True)
+    text = RichTextUploadingField(blank=True, null=True)
     post_date = models.DateTimeField(default=datetime.now())
     aproval_ststus = models.CharField(max_length=255, choices=dataAprovalStatus)
 
