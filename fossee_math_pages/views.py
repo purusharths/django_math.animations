@@ -11,7 +11,8 @@ from .forms import AddUserForm
 from .forms import (UserLoginForm, add_data, data, edit_data)
 from .forms import (UserLoginForm, add_data, )
 from .models import (data, AddUser)
-
+import re
+from email_validator import validate_email, EmailNotValidError
 
 def index(request):
     return render(request, "fossee_math_pages/index.html")
@@ -126,38 +127,62 @@ def add_user(request):
         topic = request.POST['topic']
         phone = request.POST['phone']
         role = request.POST['role']
+        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'That email is being used')
             return redirect('add_user')
-        else:
-            try:
-                password = random.randint(0, 99999999)
-                passwordstr = str(password)
-                user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
-                u_id = User.objects.get(username=name)
-                if role == 'INTERN':
-                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                     temp_password=password)
-                    addusr.save()
-                else:
-                    addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-                                     temp_password=password, status='ACTIVE')
-                    addusr.save()
+        if name.isdigit():
+            messages.error(request, 'Username cannot have numbers')
+            return redirect('add_user')
+        if(regex.search(name) == True): 
+            messages.error(request, 'Username cannot have special characters')
+            return redirect('add_user')
+        if firstname.isdigit():
+            messages.error(request, 'Firstname cannot have numbers')
+            return redirect('add_user')
+        if(regex.search(firstname) == True): 
+            messages.error(request, 'Firstname cannot have special characters')
+            return redirect('add_user')
+        if lastname.isdigit():
+            messages.error(request, 'Lastname cannot have numbers')
+            return redirect('add_user')
+        if(regex.search(lastname) == True): 
+            messages.error(request, 'Lastname cannot have special characters')
+            return redirect('add_user')
+        try:
+            v = validate_email(email) 
+            val_email = v["email"] 
+        except EmailNotValidError as e:
+            messages.error(request, 'Invalid Email ID')
+            return redirect('add_user')
+        try:
+            password = random.randint(0, 99999999)
+            passwordstr = str(password)
+            user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
+                                                                        last_name=lastname)
+            u_id = User.objects.get(username=name)
+            if role == 'INTERN':
+                addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                                            temp_password=password)
+                addusr.save()
+            else:
+                addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
+                                                            temp_password=password, status='ACTIVE')
+                addusr.save()
 
                 send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
-            except:
-                usr = User.objects.get(username=name)
-                usr.delete()
-                messages.error(request, 'Some error occured !')
-                return redirect('add_user')
-            messages.success(request, 'User Added!')
+                        'FOSSEE ANIMATION MATH',
+                        'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                        'fossee_math',
+                        [email, 'fossee_math@gmail.com'],
+                        fail_silently=True, )
+        except:
+            usr = User.objects.get(username=name)
+            usr.delete()
+            messages.error(request, 'Some error occured !')
             return redirect('add_user')
+        messages.success(request, 'User Added!')
+        return redirect('add_user')
 
     return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
@@ -258,7 +283,6 @@ def edit_data(request,edit_id):
 
     if request.user:
         form = add_data
-        print("hello")
         form = add_data(instance=post)
         if request.method == 'POST':
             form = add_data(request.POST, request.FILES, instance=post)
