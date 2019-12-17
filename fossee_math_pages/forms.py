@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextFormField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
 from django.contrib.auth import authenticate
 from .models import AddUser, data
@@ -33,7 +34,7 @@ class UserLoginForm(forms.Form):
 
 
 class add_data(forms.ModelForm):
-    text = RichTextFormField()
+    text = RichTextUploadingField()
 
     class Meta:
         model = data
@@ -43,7 +44,7 @@ class add_data(forms.ModelForm):
 # Edit data
 
 class edit_data(forms.ModelForm):
-    text = RichTextFormField()
+    text = RichTextUploadingField()
 
     class Meta:
         model = data
