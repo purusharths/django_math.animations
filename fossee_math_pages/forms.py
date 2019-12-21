@@ -24,22 +24,22 @@ class AddUserForm(forms.Form):
         child_model = UserDetails
         exclude_child_fields = '__all__'
 
-# class UserLoginForm(forms.Form):
-#     username = forms.CharField(max_length=32, widget=forms.TextInput())
-#     password = forms.CharField(max_length=32, widget=forms.PasswordInput())
+class UserLoginForm(forms.Form):
+    username = forms.CharField(max_length=32, widget=forms.TextInput())
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput())
 
-#     def clean(self):
-#         super(UserLoginForm, self).clean()
-#         try:
-#             uname, pwd = self.cleaned_data["username"], \
-#                          self.cleaned_data["password"]
-#             user = authenticate(username=uname, password=pwd)
-#         except Exception:
-#             raise forms.ValidationError \
-#                 ("Username and/or Password is not entered")
-#         if not user:
-#             raise forms.ValidationError("Invalid username/password")
-#         return user
+    def clean(self):
+        super(UserLoginForm, self).clean()
+        try:
+            uname, pwd = self.cleaned_data["username"], \
+                         self.cleaned_data["password"]
+            user = authenticate(username=uname, password=pwd)
+        except Exception:
+            raise forms.ValidationError \
+                ("Username and/or Password is not entered")
+        if not user:
+            raise forms.ValidationError("Invalid username/password")
+        return user
 
 
 # class add_data(forms.ModelForm):
