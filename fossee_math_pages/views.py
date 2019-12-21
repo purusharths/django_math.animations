@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
-from .forms import AddUserForm
+from .forms import AddUserForm, UserLoginForm
 from .models import UserDetails
 import re
 from email_validator import validate_email, EmailNotValidError
@@ -76,36 +76,6 @@ from email_validator import validate_email, EmailNotValidError
 #         return redirect('logout')
 
 
-# def user_login(request):
-#     user = request.user
-#     if is_superuser(user):
-#         return redirect('/admin')
-
-#     if request.method == "POST":
-#         form = UserLoginForm(request.POST)
-#         if form.is_valid():
-#             user = form.cleaned_data
-#             login(request, user)
-#             intern_count = 0
-#             intern_count = AddUser.objects.filter(role='INTERN').count()
-#             staff_count = AddUser.objects.filter(role='STAFF').count()
-
-#             status_active = AddUser.objects.filter(status='ACTIVE').count()
-#             status_inactive = AddUser.objects.filter(role='INACTIVE').count()
-#             status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
-#             context = {
-#                 'intern_count': intern_count,
-#                 'staff_count': staff_count,
-#                 'status_active': status_active,
-#                 'status_inactive': status_inactive,
-#                 'status_suspended': status_suspended
-#             }
-#             return render(request, "fossee_math_pages/dashboard.html", context)
-#         else:
-#             return render(request, "fossee_math_pages/login.html", {"form": form})
-#     else:
-#         form = UserLoginForm()
-#         return render(request, "fossee_math_pages/login.html", {"form": form})
 
 
 # def user_logout(request):
@@ -303,65 +273,95 @@ from email_validator import validate_email, EmailNotValidError
 #         return user
 
 
-def admin_add_intern(request):
-    return render(request,'admin_add_intern.html')
+def admin_add_internship(request):
+    return render(request,'fossee_math_pages/admin_add_internship.html')
 
 def admin_add_user(request):
-    return render(request,'admin_add_user.html')
+    return render(request,'fossee_math_pages/admin_add_user.html')
 
-def admin_manage_intern(request):
-    return render(request,'admin_manage_intern.html')
+def admin_manage_internship(request):
+    return render(request,'fossee_math_pages/admin_manage_internship.html')
 
 def admin_view_intern(request):
-    return render(request,'admin_view_intern.html')
+    return render(request,'fossee_math_pages/admin_view_intern.html')
 
 def dashboard(request):
-    return render(request,'dashboard.html')
+    return render(request,'fossee_math_pages/dashboard.html')
 
 def home_topics(request):
-    return render(request,'home_topics.html')
+    return render(request,'fossee_math_pages/home_topics.html')
 
 def home_view_data(request):
-    return render(request,'home_view_data.html')
+    return render(request,'fossee_math_pages/home_view_data.html')
 
 def index(request):
-    return render(request,'index.html')
+    return render(request,'fossee_math_pages/index.html')
 
 def intern_add_data(request):
-    return render(request,'intern_add_data.html')
+    return render(request,'fossee_math_pages/intern_add_data.html')
+
+def intern_view_internship(request):
+    return render(request,'fossee_math_pages/intern_view_internship.html')
 
 def intern_edit_data(request):
-    return render(request,'intern_edit_data.html')
+    return render(request,'fossee_math_pages/intern_edit_data.html')
 
 def intern_view_data(request):
-    return render(request,'intern_view_data.html')
+    return render(request,'fossee_math_pages/intern_view_data.html')
 
 def intern_view_topic(request):
-    return render(request,'intern_view_topic.html')
+    return render(request,'fossee_math_pages/intern_view_topic.html')
 
 def internship(request):
-    return render(request,'internship.html')
+    return render(request,'fossee_math_pages/internship.html')
 
 def user_login(request):
-    return render(request,'login.html')
+    user = request.user
+
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data
+            login(request, user)
+            intern_count = 0
+            intern_count = AddUser.objects.filter(role='INTERN').count()
+            staff_count = AddUser.objects.filter(role='STAFF').count()
+
+            status_active = AddUser.objects.filter(status='ACTIVE').count()
+            status_inactive = AddUser.objects.filter(role='INACTIVE').count()
+            status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
+            context = {
+                'intern_count': intern_count,
+                'staff_count': staff_count,
+                'status_active': status_active,
+                'status_inactive': status_inactive,
+                'status_suspended': status_suspended
+            }
+            return render(request, "fossee_math_pages/dashboard.html", context)
+        else:
+            return render(request, "fossee_math_pages/login.html", {"form": form})
+    else:
+        form = UserLoginForm()
+        return render(request, "fossee_math_pages/login.html", {"form": form})
+
     
 def staff_add_subtopic(request):
-    return render(request,'staff_add_subtopic.html')
+    return render(request,'fossee_math_pages/staff_add_subtopic.html')
 
 def staff_add_topics(request):
-    return render(request,'staff_add_topics.html')
+    return render(request,'fossee_math_pages/staff_add_topics.html')
 
 def staff_aprove_contents(request):
-    return render(request,'staff_aprove_contents.html')
+    return render(request,'fossee_math_pages/staff_aprove_contents.html')
 
 def staff_manage_intern(request):
-    return render(request,'staff_manage_intern.html')
+    return render(request,'fossee_math_pages/staff_manage_intern.html')
 
 def staff_view_interns(request):
-    return render(request,'staff_view_interns.html')
+    return render(request,'fossee_math_pages/staff_view_interns.html')
 
 def staff_view_internship(request):
-    return render(request,'staff_view_internship.html')
+    return render(request,'fossee_math_pages/staff_view_internship.html')
     
 def staff_view_topic(request):
-    return render(request,'staff_view_topic.html')
+    return render(request,'fossee_math_pages/staff_view_topic.html')
