@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
-from .forms import AddUserForm, UserLoginForm
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm
 from .models import UserDetails
 import re
 from email_validator import validate_email, EmailNotValidError
@@ -81,76 +81,6 @@ from email_validator import validate_email, EmailNotValidError
 
 
 
-# @login_required
-# def add_user(request):
-#     temp = AddUserForm()
-#     if request.method == 'POST':
-#         # register user
-#         name = request.POST['name']
-#         firstname = request.POST['firstname']
-#         lastname = request.POST['lastname']
-#         email = request.POST['email']
-#         topic = request.POST['topic']
-#         phone = request.POST['phone']
-#         role = request.POST['role']
-#         regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
-#         if User.objects.filter(email=email).exists():
-#             messages.error(request, 'That email is being used')
-#             return redirect('add_user')
-#         if name.isdigit():
-#             messages.error(request, 'Username cannot have numbers')
-#             return redirect('add_user')
-#         if(regex.search(name) == True): 
-#             messages.error(request, 'Username cannot have special characters')
-#             return redirect('add_user')
-#         if firstname.isdigit():
-#             messages.error(request, 'Firstname cannot have numbers')
-#             return redirect('add_user')
-#         if(regex.search(firstname) == True): 
-#             messages.error(request, 'Firstname cannot have special characters')
-#             return redirect('add_user')
-#         if lastname.isdigit():
-#             messages.error(request, 'Lastname cannot have numbers')
-#             return redirect('add_user')
-#         if(regex.search(lastname) == True): 
-#             messages.error(request, 'Lastname cannot have special characters')
-#             return redirect('add_user')
-#         try:
-#             v = validate_email(email) 
-#             val_email = v["email"] 
-#         except EmailNotValidError as e:
-#             messages.error(request, 'Invalid Email ID')
-#             return redirect('add_user')
-#         try:
-#             password = random.randint(0, 99999999)
-#             passwordstr = str(password)
-#             user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
-#                                                                         last_name=lastname)
-#             u_id = User.objects.get(username=name)
-#             if role == 'INTERN':
-#                 addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-#                                                             temp_password=password)
-#                 addusr.save()
-#             else:
-#                 addusr = AddUser(user_id=u_id.id, name=name, email=email, topic=topic, phone=phone, role=role,
-#                                                             temp_password=password, status='ACTIVE')
-#                 addusr.save()
-
-#                 send_mail(
-#                         'FOSSEE ANIMATION MATH',
-#                         'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-#                         'fossee_math',
-#                         [email, 'fossee_math@gmail.com'],
-#                         fail_silently=True, )
-#         except:
-#             usr = User.objects.get(username=name)
-#             usr.delete()
-#             messages.error(request, 'Some error occured !')
-#             return redirect('add_user')
-#         messages.success(request, 'User Added!')
-#         return redirect('add_user')
-
-#     return render(request, 'fossee_math_pages/add_user.html', {'form': temp})
 
 
 # def manage_intern(request):
@@ -274,8 +204,78 @@ from email_validator import validate_email, EmailNotValidError
 def admin_add_internship(request):
     return render(request,'fossee_math_pages/admin_add_internship.html')
 
+@login_required
 def admin_add_user(request):
-    return render(request,'fossee_math_pages/admin_add_user.html')
+    form = AddUserForm1()
+    sub_form = AddUserForm2()
+    if request.method == 'POST':
+        # register user
+        name = request.POST['username']
+        firstname = request.POST['first_name']
+        lastname = request.POST['last_name']
+        email = request.POST['email']
+        user_role = request.POST['user_role']
+        user_phone = request.POST['user_role']
+        user_status = request.POST['user_status']
+
+        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'That email is being used')
+            return redirect('admin_add_user')
+        if firstname.isdigit():
+            messages.error(request, 'Firstname cannot have numbers')
+            return redirect('admin_add_user')
+        if(regex.search(firstname) == True): 
+            messages.error(request, 'Firstname cannot have special characters')
+            return redirect('admin_add_user')
+        if lastname.isdigit():
+            messages.error(request, 'Lastname cannot have numbers')
+            return redirect('admin_add_user')
+        if(regex.search(lastname) == True): 
+            messages.error(request, 'Lastname cannot have special characters')
+            return redirect('admin_add_user')
+        try:
+            v = validate_email(email) 
+            val_email = v["email"] 
+        except EmailNotValidError as e:
+            messages.error(request, 'Invalid Email ID')
+            return redirect('admin_add_user')
+        
+        try:
+            password = random.randint(0, 99999999)
+            passwordstr = str(password)
+            user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
+                                                                        last_name=lastname)
+            u_id = User.objects.get(username=name)
+           
+            if user_role == 'INTERN':
+                addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
+                                                            user_temp_password=password, user_status=user_status)
+                addusr.save()
+            else:
+                addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
+                                                            user_temp_password=password, user_status='ACTIVE')
+                addusr.save()
+
+                send_mail(
+                        'FOSSEE ANIMATION MATH',
+                        'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                        'fossee_math',
+                        [email, 'fossee_math@gmail.com'],
+                        fail_silently=True, )
+        except:
+            usr = User.objects.get(username=name)
+            usr.delete()
+            messages.error(request, 'Some error occured !')
+            return redirect('admin_add_user')
+        messages.success(request, 'User Added!')
+        return redirect('admin_add_user')
+    context = {
+        'form' : form,
+        'sub_form' :sub_form,
+    }
+    return render(request, 'fossee_math_pages/admin_add_user.html', context)
+
 
 def admin_manage_internship(request):
     return render(request,'fossee_math_pages/admin_manage_internship.html')
