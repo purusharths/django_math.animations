@@ -20,7 +20,7 @@ DATA_STATUS = (
 )
 
 class UserDetails(models.Model):
-    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    user_id = models.OneToOneField(User,on_delete=models.CASCADE)
     user_phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
@@ -32,8 +32,7 @@ class UserDetails(models.Model):
     user_role = models.CharField(max_length=20,
                             choices=ROLE_TYPE,
                             default=INTERN)
-    user_joined_date = models.DateTimeField(default=now, editable=False)
-    user_temp_password = models.CharField(max_length=10)
+    user_temp_password = models.CharField(max_length=10, blank=True)
     user_status = models.CharField(max_length=255, choices=STATUS, default='INACTIVE')
 
     def __str__(self):

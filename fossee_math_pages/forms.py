@@ -1,8 +1,10 @@
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth import authenticate
 from .models import UserDetails, User
+from django.contrib.auth.models import User
 
 STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -17,12 +19,15 @@ DATA_STATUS = (
     ("UNDER REVIEW", "UNDER REVIEW"),
 )
 
-class AddUserForm(forms.Form):
+class AddUserForm1(ModelForm):
     class Meta:
         model = User
-        fields = '__all__'
-        child_model = UserDetails
-        exclude_child_fields = '__all__'
+        fields = ['username','first_name', 'last_name', 'email']
+
+class AddUserForm2(ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = [ 'user_phone', 'user_role', 'user_status']
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
