@@ -247,7 +247,8 @@ def admin_add_user(request):
             user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
                                                                         last_name=lastname)
             u_id = User.objects.get(username=name)
-           
+            temp = UserDetails(user_id=u_id.id)
+            print("-----",temp)
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
                                                             user_temp_password=password, user_status=user_status)
@@ -257,12 +258,12 @@ def admin_add_user(request):
                                                             user_temp_password=password, user_status='ACTIVE')
                 addusr.save()
 
-                send_mail(
-                        'FOSSEE ANIMATION MATH',
-                        'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                        'fossee_math',
-                        [email, 'fossee_math@gmail.com'],
-                        fail_silently=True, )
+            send_mail(
+                    'FOSSEE ANIMATION MATH',
+                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                    'fossee_math',
+                    [email, 'fossee_math@gmail.com'],
+                    fail_silently=True, )
         except:
             usr = User.objects.get(username=name)
             usr.delete()
