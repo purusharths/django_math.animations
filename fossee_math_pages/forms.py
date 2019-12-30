@@ -3,7 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth import authenticate
-from .models import UserDetails, User
+from .models import UserDetails, User, Internship
 from django.contrib.auth.models import User
 
 STATUS = (
@@ -22,12 +22,17 @@ DATA_STATUS = (
 class AddUserForm1(ModelForm):
     class Meta:
         model = User
-        fields = ['username','first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email']
 
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
         fields = [ 'user_phone', 'user_role', 'user_status']
+
+class AddInternship(ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
@@ -45,6 +50,7 @@ class UserLoginForm(forms.Form):
         if not user:
             raise forms.ValidationError("Invalid username/password")
         return user
+
 
 
 # class add_data(forms.ModelForm):
