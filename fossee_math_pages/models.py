@@ -20,7 +20,7 @@ DATA_STATUS = (
 )
 
 class UserDetails(models.Model):
-    user_id = models.OneToOneField(User,on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
     user_phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'

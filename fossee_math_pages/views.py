@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm
-from .models import UserDetails
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship
+from .models import UserDetails, Internship
 import re
 from email_validator import validate_email, EmailNotValidError
 
@@ -210,7 +210,7 @@ def admin_add_user(request):
     sub_form = AddUserForm2()
     if request.method == 'POST':
         # register user
-        name = request.POST['username']
+        
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
         email = request.POST['email']
@@ -244,10 +244,10 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user = User.objects.create_user(username=name, email=email, password=password, first_name=firstname,
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
                                                                         last_name=lastname)
-            u_id = User.objects.get(username=name)
-            temp = UserDetails(user_id=u_id.id)
+            u_id = User.objects.get(username=email)
+            temp = UserDetails(user_id=u_id.pk)
             print("-----",temp)
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
@@ -265,7 +265,7 @@ def admin_add_user(request):
                     [email, 'fossee_math@gmail.com'],
                     fail_silently=True, )
         except:
-            usr = User.objects.get(username=name)
+            usr = User.objects.get(username=email)
             usr.delete()
             messages.error(request, 'Some error occured !')
             return redirect('admin_add_user')
@@ -311,8 +311,14 @@ def intern_view_data(request):
 def intern_view_topic(request):
     return render(request,'fossee_math_pages/intern_view_topic.html')
 
+@login_required
 def internship(request):
-    return render(request,'fossee_math_pages/internship.html')
+    form = AddInternship()
+    context = {
+        form : 'form'
+    }
+    print("hel")
+    return render(request,'fossee_math_pages/internship.html', context)
 
 def user_login(request):
     user = request.user
