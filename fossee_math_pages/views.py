@@ -215,7 +215,7 @@ def admin_add_user(request):
         lastname = request.POST['last_name']
         email = request.POST['email']
         user_role = request.POST['user_role']
-        user_phone = request.POST['user_role']
+        user_phone = request.POST['user_phone']
         user_status = request.POST['user_status']
 
         regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
@@ -246,11 +246,11 @@ def admin_add_user(request):
             passwordstr = str(password)
             user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
                                                                         last_name=lastname)
-            u_id = User.objects.get(username=email)
-            temp = UserDetails(user_id=u_id.pk)
-            print("-----",temp)
+            u_id = User.objects.get(email=email)
+            
+            print("\n-----+++++",u_id,"\n-------------+++++++++")
             if user_role == 'INTERN':
-                addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
+                addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
                                                             user_temp_password=password, user_status=user_status)
                 addusr.save()
             else:
