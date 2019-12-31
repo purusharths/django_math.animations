@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern
 from .models import UserDetails, Internship, Intern
 import re
 from email_validator import validate_email, EmailNotValidError
@@ -319,29 +319,35 @@ def admin_manage_internship(request):
     return render(request,'fossee_math_pages/admin_manage_internship.html',context)
 
 def admin_add_intern(request):
+    form = AddIntern()
     internships = Internship.objects.all()
     users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
     if request.method == 'POST':
-        intern_name = request.POST['user']
-        topic = request.POST['internship']
-
-        try:
-            data = Intern(user_id=intern_name, internship_id=topic)
-            data.save()
-            messages.success(request, 'Inter added')
+        intern_name = request.POST['user_id']
+        topic = request.POST['internship_id']
+        temp1 = User.objects.get(id=intern_name)
+        temp2 = Internship.objects.get(id=topic)
+        if Intern.objects.filter(user_id=intern_name).exists():
+            messages.error(request, 'That intern has an internship')
             return redirect('admin_add_intern')
-        except:
-            messages.error(request, 'Some error occured')
-            return redirect('admin_add_intern')
+        data = Intern(user_id=temp1, internship_id=temp2)
+        data.save()
+        messages.success(request, 'Intern added with internship')
+        return redirect('admin_add_intern')
+       
     context = {
         'internships' : internships,
         'users' : users,
+        'form' : form,
     }
     return render(request,'fossee_math_pages/admin_add_intern.html', context)
 
-def admin_view_intern(request):
-
-    return render(request,'fossee_math_pages/admin_view_intern.html')
+def admin_view_internship(request):
+    data = Intern.objects.all()
+    context = {
+        'data' : data
+    }
+    return render(request,'fossee_math_pages/admin_view_internship.html', context)
 
 
 

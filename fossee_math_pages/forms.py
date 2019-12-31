@@ -3,7 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth import authenticate
-from .models import UserDetails, User, Internship
+from .models import UserDetails, User, Internship, Intern
 from django.contrib.auth.models import User
 
 STATUS = (
@@ -39,6 +39,10 @@ class ManageInternship(ModelForm):
         model = Internship
         fields = ['internship_status']
 
+class AddIntern(ModelForm):
+    class Meta:
+        model = Intern
+        fields = '__all__'
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
     password = forms.CharField(max_length=32, widget=forms.PasswordInput())
