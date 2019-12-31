@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.shortcuts import get_list_or_404, get_object_or_404
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship
-from .models import UserDetails, Internship
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship
+from .models import UserDetails, Internship, Intern
 import re
 from email_validator import validate_email, EmailNotValidError
 
@@ -200,9 +200,28 @@ from email_validator import validate_email, EmailNotValidError
 #         user.save(using=self._db)
 #         return user
 
-
+@login_required
 def admin_add_internship(request):
-    return render(request,'fossee_math_pages/admin_add_internship.html')
+    form = AddInternship()
+    if request.method == 'POST': 
+        internship_topic = request.POST['internship_topic']
+        internship_thumbnail = request.POST['internship_thumbnail']
+        internship_status = request.POST['internship_status']
+        if Internship.objects.filter(internship_topic=internship_topic).exists():
+            messages.error(request, 'That internship already exist')
+            return redirect('admin_add_internship')
+        try:
+            data = Internship(internship_topic=internship_topic, internship_thumbnail=internship_thumbnail, internship_status=internship_status)
+            data.save()
+            messages.success(request, 'Internship added')
+            return redirect('admin_add_internship')
+        except:
+            messages.error(request, 'Some error occured')
+            return redirect('admin_add_internship')
+    context = {
+        'form' : form,
+    }
+    return render(request,'fossee_math_pages/admin_add_internship.html', context)
 
 @login_required
 def admin_add_user(request):
@@ -279,10 +298,52 @@ def admin_add_user(request):
 
 
 def admin_manage_internship(request):
-    return render(request,'fossee_math_pages/admin_manage_internship.html')
+    manage_internships = Internship.objects.order_by('-internship_start_date')
+    form = ManageInternship
+    if request.method == 'POST':
+        int_id = request.POST["id"]
+        obj = get_object_or_404(Internship, id=int_id)
+        form = ManageInternship(request.POST or None, instance=obj)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request,"Changed")
+            return redirect('admin_manage_internship') 
+        else:
+            messages.error(request,"Error")
+            return redirect('admin_manage_internship') 
+    context = {
+            'manage_internships': manage_internships,
+            'form' : form
+        }
+    return render(request,'fossee_math_pages/admin_manage_internship.html',context)
+
+def admin_add_intern(request):
+    internships = Internship.objects.all()
+    users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+    if request.method == 'POST':
+        intern_name = request.POST['user']
+        topic = request.POST['internship']
+
+        try:
+            data = Intern(user_id=intern_name, internship_id=topic)
+            data.save()
+            messages.success(request, 'Inter added')
+            return redirect('admin_add_intern')
+        except:
+            messages.error(request, 'Some error occured')
+            return redirect('admin_add_intern')
+    context = {
+        'internships' : internships,
+        'users' : users,
+    }
+    return render(request,'fossee_math_pages/admin_add_intern.html', context)
 
 def admin_view_intern(request):
+
     return render(request,'fossee_math_pages/admin_view_intern.html')
+
+
 
 def dashboard(request):
     return render(request,'fossee_math_pages/dashboard.html')
@@ -311,14 +372,8 @@ def intern_view_data(request):
 def intern_view_topic(request):
     return render(request,'fossee_math_pages/intern_view_topic.html')
 
-@login_required
 def internship(request):
-    form = AddInternship()
-    context = {
-        form : 'form'
-    }
-    print("hel")
-    return render(request,'fossee_math_pages/internship.html', context)
+    return render(request,'fossee_math_pages/internship.html')
 
 def user_login(request):
     user = request.user

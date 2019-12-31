@@ -16,7 +16,7 @@
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
         <hr>
-        <form method="POST" class="form-group">
+        <form method="POST" class="form-group" name="AddInternship">
 
             {% csrf_token %} {{ form|crispy }}
 

@@ -35,16 +35,17 @@ class UserDetails(models.Model):
     user_temp_password = models.CharField(max_length=10, blank=True)
     user_status = models.CharField(max_length=255, choices=STATUS, default='INACTIVE')
 
-    def __str__(self):
-        return self.user_id
+   
 
 class Internship(models.Model):
     internship_topic = models.CharField(max_length=255, null=False)
-    internship_thumbnail = models.ImageField(upload_to='uploads/thumbnails/', blank=False)
+    internship_thumbnail = models.ImageField(upload_to='thumbnails/', blank=False)
     internship_start_date = models.DateTimeField(default=datetime.now, blank=True)
     internship_status = models.CharField(max_length=20,
                                       choices=STATUS,
                                       default='INACTIVE')
+    def __str__(self):
+        return self.internship_topic                                
     
 class Topic(models.Model):
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
