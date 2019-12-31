@@ -16,21 +16,8 @@
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
         <hr>
-
-        <form method="POST" class="form-group" name="AddInternship">
-            <select name="user" id="user" class="form-control" aria-placeholder="Intern">
-                <option value="" disabled selected hidden>Choose Intern</option>
-                {% if users %} {% for user in users %}
-                <option value="{{ user.user_id }}">{{ user.user_id }}</option>
-                {% endfor %}{% endif %}
-            </select>
-            <br>
-            <select name="internship" id="internship" class="form-control">
-                    <option value="" disabled selected hidden>Choose Topic</option>
-                    {% if internships %} {% for internship in internships %} 
-                    <option value="{{ internship.internship_topic }}">{{ internship.internship_topic }}</option>
-                    {% endfor %}{% endif %}
-            </select> {% csrf_token %} {{ form|crispy }}
+        <form method="POST" class="form-group" name="AddIntern">
+            {% csrf_token %} {{ form|crispy }}
             <br>
             <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
         </form>
