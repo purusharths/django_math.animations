@@ -1,0 +1,41 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Add Internship{% endblock %}{% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
+
+<section id="bc" class="mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item active"> Add Internship</li>
+        </ol>
+    </nav>
+</section>
+
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <div class="container" style="padding-top: 3%;">
+        <hr>
+
+        <form method="POST" class="form-group" name="AddInternship">
+            <select name="user" id="user" class="form-control" aria-placeholder="Intern">
+                <option value="" disabled selected hidden>Choose Intern</option>
+                {% if users %} {% for user in users %}
+                <option value="{{ user.user_id }}">{{ user.user_id }}</option>
+                {% endfor %}{% endif %}
+            </select>
+            <br>
+            <select name="internship" id="internship" class="form-control">
+                    <option value="" disabled selected hidden>Choose Topic</option>
+                    {% if internships %} {% for internship in internships %} 
+                    <option value="{{ internship.internship_topic }}">{{ internship.internship_topic }}</option>
+                    {% endfor %}{% endif %}
+            </select> {% csrf_token %} {{ form|crispy }}
+            <br>
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+        </form>
+
+    </div>
+
+</div>
+{% endif %} {% endif %} {% endblock %}

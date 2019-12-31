@@ -30,13 +30,15 @@
                 {% if user.is_authenticated %} {% if user.is_superuser %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{% url 'dashboard' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.username }}    
+                        {{ user.email }}    
                         
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
                         <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
                         <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage Internship</a>
+                        <a class="dropdown-item" href="{% url 'admin_add_intern' %}">Add Intern</a>
+                        <a class="dropdown-item" href="{% url 'admin_view_intern' %}">View Intern</a>
                     </div>
                 </li>
                 {% else %} {% if request.user.adduser.role == 'STAFF' %}

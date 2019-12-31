@@ -31,8 +31,13 @@ class AddUserForm2(ModelForm):
 
 class AddInternship(ModelForm):
     class Meta:
-        model = User
-        fields = '__all__'
+        model = Internship
+        fields = ['internship_topic', 'internship_thumbnail', 'internship_status']
+
+class ManageInternship(ModelForm):
+    class Meta:
+        model = Internship
+        fields = ['internship_status']
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
