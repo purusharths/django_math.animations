@@ -29,11 +29,12 @@
                 </li>
                 {% if user.is_authenticated %} {% if user.is_superuser %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url 'dashboard' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ user.email }}    
                         
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard </a>
                         <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
                         <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
                         <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage Internship</a>
@@ -43,10 +44,11 @@
                 </li>
                 {% else %} {% if request.user.adduser.role == 'STAFF' %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url 'dashboard' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ user.email }}    
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                           <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard </a>
                         <a class="dropdown-item" href="{% url 'staff_add_topics' %}">Add Topic</a>
                         <a class="dropdown-item" href="{% url 'staff_add_subtopic' %}">Add Subtopic</a>
                         <a class="dropdown-item" href="{% url 'staff_view_intern' %}">View Inerns</a>
@@ -57,10 +59,11 @@
                 </li>
                 {% else %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url 'dashboard' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ user.email }}    
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                           <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard </a>
                         <a class="dropdown-item" href="{% url 'intern_add_data' %}">Add Data</a>
                         <a class="dropdown-item" href="{% url 'intern_view_data' %}">View Data</a>
                         <a class="dropdown-item" href="{% url 'intern_view_internship' %}">View Internship</a>

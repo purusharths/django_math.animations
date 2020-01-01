@@ -1,16 +1,18 @@
 import random
+import re
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.shortcuts import get_list_or_404, get_object_or_404
+from email_validator import validate_email, EmailNotValidError
+
 from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern
 from .models import UserDetails, Internship, Intern
-import re
-from email_validator import validate_email, EmailNotValidError
+
 
 # def index(request):
 #     return render(request, "fossee_math_pages/index.html")
@@ -74,13 +76,6 @@ from email_validator import validate_email, EmailNotValidError
 #     else:
 
 #         return redirect('logout')
-
-
-
-
-
-
-
 
 
 # def manage_intern(request):
@@ -190,7 +185,6 @@ from email_validator import validate_email, EmailNotValidError
 #     return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form,'context':context})
 
 
-
 # class AddUserView(AddUser):
 #     def create_user(self, request, *args, **kwargs):
 #         name = self.name
@@ -203,7 +197,7 @@ from email_validator import validate_email, EmailNotValidError
 @login_required
 def admin_add_internship(request):
     form = AddInternship()
-    if request.method == 'POST': 
+    if request.method == 'POST':
         internship_topic = request.POST['internship_topic']
         internship_thumbnail = request.POST['internship_thumbnail']
         internship_status = request.POST['internship_status']
@@ -211,7 +205,8 @@ def admin_add_internship(request):
             messages.error(request, 'That internship already exist')
             return redirect('admin_add_internship')
         try:
-            data = Internship(internship_topic=internship_topic, internship_thumbnail=internship_thumbnail, internship_status=internship_status)
+            data = Internship(internship_topic=internship_topic, internship_thumbnail=internship_thumbnail,
+                              internship_status=internship_status)
             data.save()
             messages.success(request, 'Internship added')
             return redirect('admin_add_internship')
@@ -219,9 +214,10 @@ def admin_add_internship(request):
             messages.error(request, 'Some error occured')
             return redirect('admin_add_internship')
     context = {
-        'form' : form,
+        'form': form,
     }
-    return render(request,'fossee_math_pages/admin_add_internship.html', context)
+    return render(request, 'fossee_math_pages/admin_add_internship.html', context)
+
 
 @login_required
 def admin_add_user(request):
@@ -229,7 +225,7 @@ def admin_add_user(request):
     sub_form = AddUserForm2()
     if request.method == 'POST':
         # register user
-        
+
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
         email = request.POST['email']
@@ -237,52 +233,52 @@ def admin_add_user(request):
         user_phone = request.POST['user_phone']
         user_status = request.POST['user_status']
 
-        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
+        regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
         if User.objects.filter(email=email).exists():
             messages.error(request, 'That email is being used')
             return redirect('admin_add_user')
         if firstname.isdigit():
             messages.error(request, 'Firstname cannot have numbers')
             return redirect('admin_add_user')
-        if(regex.search(firstname) == True): 
+        if (regex.search(firstname) == True):
             messages.error(request, 'Firstname cannot have special characters')
             return redirect('admin_add_user')
         if lastname.isdigit():
             messages.error(request, 'Lastname cannot have numbers')
             return redirect('admin_add_user')
-        if(regex.search(lastname) == True): 
+        if (regex.search(lastname) == True):
             messages.error(request, 'Lastname cannot have special characters')
             return redirect('admin_add_user')
         try:
-            v = validate_email(email) 
-            val_email = v["email"] 
+            v = validate_email(email)
+            val_email = v["email"]
         except EmailNotValidError as e:
             messages.error(request, 'Invalid Email ID')
             return redirect('admin_add_user')
-        
+
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
             user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
-                                                                        last_name=lastname)
+                                            last_name=lastname)
             u_id = User.objects.get(email=email)
-            
-            print("\n-----+++++",u_id,"\n-------------+++++++++")
+
+            print("\n-----+++++", u_id, "\n-------------+++++++++")
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                                            user_temp_password=password, user_status=user_status)
+                                     user_temp_password=password, user_status=user_status)
                 addusr.save()
             else:
                 addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
-                                                            user_temp_password=password, user_status='ACTIVE')
+                                     user_temp_password=password, user_status='ACTIVE')
                 addusr.save()
 
             send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
+                'FOSSEE ANIMATION MATH',
+                'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                'fossee_math',
+                [email, 'fossee_math@gmail.com'],
+                fail_silently=True, )
         except:
             usr = User.objects.get(username=email)
             usr.delete()
@@ -291,8 +287,8 @@ def admin_add_user(request):
         messages.success(request, 'User Added!')
         return redirect('admin_add_user')
     context = {
-        'form' : form,
-        'sub_form' :sub_form,
+        'form': form,
+        'sub_form': sub_form,
     }
     return render(request, 'fossee_math_pages/admin_add_user.html', context)
 
@@ -307,16 +303,17 @@ def admin_manage_internship(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.save()
-            messages.success(request,"Changed")
-            return redirect('admin_manage_internship') 
+            messages.success(request, "Changed")
+            return redirect('admin_manage_internship')
         else:
-            messages.error(request,"Error")
-            return redirect('admin_manage_internship') 
+            messages.error(request, "Error")
+            return redirect('admin_manage_internship')
     context = {
-            'manage_internships': manage_internships,
-            'form' : form
-        }
-    return render(request,'fossee_math_pages/admin_manage_internship.html',context)
+        'manage_internships': manage_internships,
+        'form': form
+    }
+    return render(request, 'fossee_math_pages/admin_manage_internship.html', context)
+
 
 def admin_add_intern(request):
     form = AddIntern()
@@ -334,52 +331,62 @@ def admin_add_intern(request):
         data.save()
         messages.success(request, 'Intern added with internship')
         return redirect('admin_add_intern')
-       
+
     context = {
-        'internships' : internships,
-        'users' : users,
-        'form' : form,
+        'internships': internships,
+        'users': users,
+        'form': form,
     }
-    return render(request,'fossee_math_pages/admin_add_intern.html', context)
+    return render(request, 'fossee_math_pages/admin_add_intern.html', context)
+
 
 def admin_view_internship(request):
     data = Intern.objects.all()
     context = {
-        'data' : data
+        'data': data
     }
-    return render(request,'fossee_math_pages/admin_view_internship.html', context)
-
+    return render(request, 'fossee_math_pages/admin_view_internship.html', context)
 
 
 def dashboard(request):
-    return render(request,'fossee_math_pages/dashboard.html')
+    return render(request, 'fossee_math_pages/dashboard.html')
+
 
 def home_topics(request):
-    return render(request,'fossee_math_pages/home_topics.html')
+    return render(request, 'fossee_math_pages/home_topics.html')
+
 
 def home_view_data(request):
-    return render(request,'fossee_math_pages/home_view_data.html')
+    return render(request, 'fossee_math_pages/home_view_data.html')
+
 
 def index(request):
-    return render(request,'fossee_math_pages/index.html')
+    return render(request, 'fossee_math_pages/index.html')
+
 
 def intern_add_data(request):
-    return render(request,'fossee_math_pages/intern_add_data.html')
+    return render(request, 'fossee_math_pages/intern_add_data.html')
+
 
 def intern_view_internship(request):
-    return render(request,'fossee_math_pages/intern_view_internship.html')
+    return render(request, 'fossee_math_pages/intern_view_internship.html')
+
 
 def intern_edit_data(request):
-    return render(request,'fossee_math_pages/intern_edit_data.html')
+    return render(request, 'fossee_math_pages/intern_edit_data.html')
+
 
 def intern_view_data(request):
-    return render(request,'fossee_math_pages/intern_view_data.html')
+    return render(request, 'fossee_math_pages/intern_view_data.html')
+
 
 def intern_view_topic(request):
-    return render(request,'fossee_math_pages/intern_view_topic.html')
+    return render(request, 'fossee_math_pages/intern_view_topic.html')
+
 
 def internship(request):
-    return render(request,'fossee_math_pages/internship.html')
+    return render(request, 'fossee_math_pages/internship.html')
+
 
 def user_login(request):
     user = request.user
@@ -410,27 +417,34 @@ def user_login(request):
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
 
-    
+
 def staff_add_subtopic(request):
-    return render(request,'fossee_math_pages/staff_add_subtopic.html')
+    return render(request, 'fossee_math_pages/staff_add_subtopic.html')
+
 
 def staff_add_topics(request):
-    return render(request,'fossee_math_pages/staff_add_topics.html')
+    return render(request, 'fossee_math_pages/staff_add_topics.html')
+
 
 def staff_aprove_contents(request):
-    return render(request,'fossee_math_pages/staff_aprove_contents.html')
+    return render(request, 'fossee_math_pages/staff_aprove_contents.html')
+
 
 def staff_manage_intern(request):
-    return render(request,'fossee_math_pages/staff_manage_intern.html')
+    return render(request, 'fossee_math_pages/staff_manage_intern.html')
+
 
 def staff_view_interns(request):
-    return render(request,'fossee_math_pages/staff_view_interns.html')
+    return render(request, 'fossee_math_pages/staff_view_interns.html')
+
 
 def staff_view_internship(request):
-    return render(request,'fossee_math_pages/staff_view_internship.html')
-    
+    return render(request, 'fossee_math_pages/staff_view_internship.html')
+
+
 def staff_view_topic(request):
-    return render(request,'fossee_math_pages/staff_view_topic.html')
+    return render(request, 'fossee_math_pages/staff_view_topic.html')
+
 
 def user_logout(request):
     logout(request)
