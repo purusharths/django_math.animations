@@ -22,6 +22,9 @@
                     <th>Topic</th>
                     <th>Current status</th>
                     <th>Change Status</th>
+                    <th></th>
+                    <th>Add Interns</th>
+                    <th>View Interns</th>
                 </tr>
             </thead>
             {% for manage_internship in manage_internships %}
@@ -29,11 +32,18 @@
                 <tr>
                     <td>{{ manage_internship.internship_topic }}</td>
                     <td>{{ manage_internship.internship_status }}</td>
-                    <td>
                         <form method="POST" class="form-group" name="AddInternship">
+                             <td>
                             <input type="hidden" value="{{ manage_internship.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
+                             </td>
+                            <td>
                             <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                            </td>
                         </form>
+                    <td>  <a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="{% url 'admin_view_internship' %}">View Intern</a>
                     </td>
                 </tr>
             </tbody>
@@ -41,6 +51,8 @@
         </table>
         {% endif %}
     </div>
-
+<script>
+    $('.requiredField').hide();
+</script>
 </div>
 {% endif %} {% endif %} {% endblock %}

@@ -231,7 +231,7 @@ def admin_add_user(request):
         email = request.POST['email']
         user_role = request.POST['user_role']
         user_phone = request.POST['user_phone']
-        user_status = request.POST['user_status']
+        user_status = 'INACTIVE'
 
         regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
         if User.objects.filter(email=email).exists():
@@ -240,13 +240,13 @@ def admin_add_user(request):
         if firstname.isdigit():
             messages.error(request, 'Firstname cannot have numbers')
             return redirect('admin_add_user')
-        if (regex.search(firstname) == True):
+        if regex.search(firstname):
             messages.error(request, 'Firstname cannot have special characters')
             return redirect('admin_add_user')
         if lastname.isdigit():
             messages.error(request, 'Lastname cannot have numbers')
             return redirect('admin_add_user')
-        if (regex.search(lastname) == True):
+        if regex.search(lastname):
             messages.error(request, 'Lastname cannot have special characters')
             return redirect('admin_add_user')
         try:
