@@ -1,10 +1,15 @@
-from ckeditor.fields import RichTextFormField
-from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
-from django.forms import ModelForm
+from django import forms
 from django.contrib.auth import authenticate
-from .models import UserDetails, User, Internship, Intern
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+
+from .models import UserDetails, Internship, Intern
+
+INTERN_STATUS = (
+    ("ACTIVE", "ACTIVE"),
+    ("INACTIVE", "INACTIVE"),
+)
 
 STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -19,30 +24,37 @@ DATA_STATUS = (
     ("UNDER REVIEW", "UNDER REVIEW"),
 )
 
+
 class AddUserForm1(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
+
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
-        fields = [ 'user_phone', 'user_role', 'user_status']
+        fields = ['user_phone', 'user_role', 'user_status']
+
 
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
         fields = ['internship_topic', 'internship_thumbnail', 'internship_status']
 
+
 class ManageInternship(ModelForm):
     class Meta:
         model = Internship
         fields = ['internship_status']
 
+
 class AddIntern(ModelForm):
     class Meta:
         model = Intern
         fields = '__all__'
+
+
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
     password = forms.CharField(max_length=32, widget=forms.PasswordInput())
@@ -59,8 +71,6 @@ class UserLoginForm(forms.Form):
         if not user:
             raise forms.ValidationError("Invalid username/password")
         return user
-
-
 
 # class add_data(forms.ModelForm):
 #     text = RichTextUploadingField()
@@ -95,5 +105,3 @@ class UserLoginForm(forms.Form):
 #     class Meta:
 #         model = AddUser
 #         fields = ('name', 'email',)
-
-
