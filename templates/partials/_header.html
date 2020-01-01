@@ -38,8 +38,6 @@
                         <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
                         <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
                         <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage Internship</a>
-                        <a class="dropdown-item" href="{% url 'admin_add_intern' %}">Add Intern</a>
-                        <a class="dropdown-item" href="{% url 'admin_view_internship' %}">View Intern</a>
                     </div>
                 </li>
                 {% else %} {% if request.user.adduser.role == 'STAFF' %}
