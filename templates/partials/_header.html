@@ -62,7 +62,7 @@
                     <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ user.username }}    
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-item" aria-labelledby="navbarDropdown">
                          <a class="dropdown-item" href="{% url 'dashboard' %}" >Dashboard</a>
                         <a class="dropdown-item" href="{% url 'intern_add_data' %}">Add Data</a>
                         <a class="dropdown-item" href="{% url 'intern_view_data' %}">View Data</a>
