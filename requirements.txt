@@ -12,3 +12,4 @@ django-phonenumber-field
 phonenumbers
 django-tinymce
 email_validator
+Django-tinymce
