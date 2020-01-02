@@ -15,14 +15,36 @@
 <div class="container">
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
-        <hr>
-        <form method="POST" class="form-group" name="AddIntern">
-            {% csrf_token %} {{ form|crispy }}
-            <br>
-            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-        </form>
+        <hr> {% if data %}
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Intern Name</th>
+                    <th>Internship</th>
+                </tr>
+            </thead>
+            {% for datas in data %}
+            <tbody>
+                <tr>
+                    <td>{{ datas.id }}</td>
+                    <td>{{ datas.user_id }}</td>
+                    <td>{{ datas.internship_id }}</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        <div class="container" style="padding-top: 3%;">
+            <hr>
+            <form method="POST" class="form-group" name="AddIntern">
+                {% csrf_token %} {{ form|crispy }}
+                <br>
+                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+            </form>
+
+        </div>
 
     </div>
-
-</div>
-{% endif %} {% endif %} {% endblock %}
+    {% endif %} {% endif %} {% endblock %}
