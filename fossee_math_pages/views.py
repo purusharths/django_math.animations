@@ -231,7 +231,8 @@ def admin_add_user(request):
         email = request.POST['email']
         user_role = request.POST['user_role']
         user_phone = request.POST['user_phone']
-        user_status = 'INACTIVE'
+        user_status_inactive = 'INACTIVE'
+        user_status_active = 'ACTIVE'
 
         regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
         if User.objects.filter(email=email).exists():
@@ -266,11 +267,12 @@ def admin_add_user(request):
             print("\n-----+++++", u_id, "\n-------------+++++++++")
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                     user_temp_password=password, user_status=user_status)
+                                     user_temp_password=password, user_status=user_status_inactive)
                 addusr.save()
-            else:
-                addusr = UserDetails(user_id=u_id.id, user_phone=user_phone, user_role=user_role,
-                                     user_temp_password=password, user_status='ACTIVE')
+            if user_role == 'STAFF':
+                print("hello")
+                addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
+                                     user_temp_password=password, user_status=user_status_active)
                 addusr.save()
 
             send_mail(
@@ -316,6 +318,7 @@ def admin_manage_internship(request):
 
 
 def admin_add_intern(request):
+    data = Intern.objects.all()
     form = AddIntern()
     internships = Internship.objects.all()
     users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
@@ -336,6 +339,7 @@ def admin_add_intern(request):
         'internships': internships,
         'users': users,
         'form': form,
+        'data': data,
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
