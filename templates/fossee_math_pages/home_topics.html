@@ -16,35 +16,36 @@
                     {% if request.user.adduser.role == 'STAFF' %}
                         <a style="color:black" href="{% url 'aprove_contents' %}">
                             <i style="color:black"></i> Submissions</a>
-                        {% else %}
-                         <a style="color:black" href="{% url 'topics' %}">
+                    {% else %}
+                        <a style="color:black" href="{% url 'home_topics' %}">
                             <i style="color:black"></i> Search</a>
                     {% endif %}
 
                 </li>
-                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
+                {#                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>#}
             </ol>
         </nav>
     </section>
     <hr>
     <div class="container">
-        <div class="row">
-            <h2>  {{ topic.subtopic }} </h2>
-        </div>
-        <div id="topic">{{ topic.text }}
-        </div>
-        <div class="row float-right">
-            Date : {{ topic.post_date }}
-        </div>
+    <div>
+        Search :
+    </div>
+    <hr>
+        <h1>Topics</h1>
+        <hr>
+        {% for i in internship %}
+            <h3>{{ i.internship_topic }}</h3>
+        {% endfor %}
     </div>
     <br>
     <hr>
     <br>
-    <script>
-        $(document).ready(function () {
-            var content = $('#topic').text()
-            $("#topic").html(content)
-        })
-    </script>
+    {#    <script>#}
+    {#        $(document).ready(function () {#}
+    {#            var content = $('#topic').text()#}
+    {#            $("#topic").html(content)#}
+    {#        })#}
+    {#    </script>#}
 
 {% endblock %}
