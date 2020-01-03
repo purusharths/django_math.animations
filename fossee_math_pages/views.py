@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_data
-from .models import UserDetails, Internship, Intern , Topic
+from .models import UserDetails, Internship, Intern, Topic
 
 
 # def index(request):
@@ -260,17 +260,17 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
-                                            last_name=lastname)
+            user=User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+                                     last_name=lastname)
             u_id = User.objects.get(email=email)
 
-            print("\n-----+++++", u_id, "\n-------------+++++++++")
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
                                      user_temp_password=password, user_status=user_status_inactive)
                 addusr.save()
             if user_role == 'STAFF':
-                print("hello")
+                user.is_staff = True
+                user.save()
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
                                      user_temp_password=password, user_status=user_status_active)
                 addusr.save()
@@ -371,23 +371,24 @@ def home_view_data(request):
 def index(request):
     return render(request, 'fossee_math_pages/index.html')
 
+
 @login_required
 def intern_add_data(request):
     form = add_data()
-    intern =Internship.objects.get(internship_status='ACTIVE')
-    i_topic=Topic.objects.filter(internship_id_id= intern.id)
+    intern = Internship.objects.get(internship_status='ACTIVE')
+    i_topic = Topic.objects.filter(internship_id_id=intern.id)
 
-    context ={
-        'form' : form,
+    context = {
+        'form': form,
         'intern': intern,
-        'i_topic' : i_topic,
+        'i_topic': i_topic,
     }
 
     if request.method == 'POST':
         topic = request.POST['topic']
         intern_id = intern.id
         u_id = request.user.id
-        data = Topic(topic_name = topic,internship_id_id = intern_id, user_id_id = u_id)
+        data = Topic(topic_name=topic, internship_id_id=intern_id, user_id_id=u_id)
         data.save()
         messages.success(request, 'Topic added with internship')
 
