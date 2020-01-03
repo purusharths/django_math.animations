@@ -18,8 +18,43 @@
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
     <form method="post">
-        {% csrf_token %} {{ form.media }} {{ form.as_p }}
-        <p><input type="submit" value="post"></p>
+        {% csrf_token %}
+
+    <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <div class="container" style="padding-top: 3%;">
+            <table class="table table-condensed">
+                <thead>
+                <tr><th>
+
+                     Internship : {{ intern.internship_topic }}
+
+                </th></tr>
+                </thead>
+            <tbody>
+            {% for i in i_topic %}
+            <tr>
+                <td>
+                    {{ i.topic_name }}
+
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                      <div class="row">
+                         <h3>Topic : </h3>{{ form.topic }}
+                         <input type="submit" class="btn btn-success" value="Add Topic">
+                      </div>
+
+                </td>
+            </tr>
+
+            </tbody>
+            </table>
+        </div>
+    </div>
+
     </form>
     <br>
 </div>
