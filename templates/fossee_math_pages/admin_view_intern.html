@@ -15,23 +15,32 @@
 <div class="container">
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
-        <hr> {% if data %}
+        <hr> {% if datas %}
         <table class="table table-condensed">
             <thead>
                 <tr>
-                    <th>Sl No</th>
                     <th>Intern Name</th>
                     <th>Internship</th>
                 </tr>
             </thead>
-            {% for datas in data %}
+            {% for datas in datas %}
             <tbody>
                 <tr>
-                    <td>{{ datas.id }}</td>
                     <td>{{ datas.user_id }}</td>
-                    <td>{{ datas.internship_id }}</td>
+                    <td>{{ datas.user_status }}</td>
+                    <td>
+                        <form method="POST" class="form-group" name="ManageIntern">
+
+                            <input type="hidden" value="{{ datas.user_id }}" name="user_id"> {% csrf_token %} {{ form|crispy }}
+
+                            <input class="btn btn-success" type="submit" name="submit" value="Submit">
+
+                        </form>
+                    </td>
                 </tr>
+
             </tbody>
+
             {% endfor %}
         </table>
         {% endif %}
