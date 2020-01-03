@@ -394,11 +394,6 @@ def intern_add_data(request):
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
 
-
-
-    return render(request, 'fossee_math_pages/intern_add_data.html',context)
-
-
 def intern_view_internship(request):
     return render(request, 'fossee_math_pages/intern_view_internship.html')
 
