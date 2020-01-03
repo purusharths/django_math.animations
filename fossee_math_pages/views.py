@@ -357,7 +357,11 @@ def dashboard(request):
 
 
 def home_topics(request):
-    return render(request, 'fossee_math_pages/home_topics.html')
+    interships = Internship.objects.filter(internship_status='COMPLETED')
+    context = {
+        'internship': interships,
+    }
+    return render(request, 'fossee_math_pages/home_topics.html', context)
 
 
 def home_view_data(request):
