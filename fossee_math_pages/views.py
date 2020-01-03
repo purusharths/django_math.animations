@@ -10,8 +10,13 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
+<<<<<<< HEAD
 from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, ManageIntern
 from .models import UserDetails, Internship, Intern
+=======
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_data
+from .models import UserDetails, Internship, Intern , Topic
+>>>>>>> 9fcca784c6417902a02e83620b32d33cd7f99e52
 
 
 # def index(request):
@@ -377,7 +382,11 @@ def dashboard(request):
 
 
 def home_topics(request):
-    return render(request, 'fossee_math_pages/home_topics.html')
+    interships = Internship.objects.filter(internship_status='COMPLETED')
+    context = {
+        'internship': interships,
+    }
+    return render(request, 'fossee_math_pages/home_topics.html', context)
 
 
 def home_view_data(request):
@@ -387,9 +396,27 @@ def home_view_data(request):
 def index(request):
     return render(request, 'fossee_math_pages/index.html')
 
-
+@login_required
 def intern_add_data(request):
-    return render(request, 'fossee_math_pages/intern_add_data.html')
+    form = add_data()
+    intern =Internship.objects.get(internship_status='ACTIVE')
+    i_topic=Topic.objects.filter(internship_id_id= intern.id)
+
+    context ={
+        'form' : form,
+        'intern': intern,
+        'i_topic' : i_topic,
+    }
+
+    if request.method == 'POST':
+        topic = request.POST['topic']
+        intern_id = intern.id
+        u_id = request.user.id
+        data = Topic(topic_name = topic,internship_id_id = intern_id, user_id_id = u_id)
+        data.save()
+        messages.success(request, 'Topic added with internship')
+
+    return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
 
 def intern_view_internship(request):

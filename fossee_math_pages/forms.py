@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern
+from .models import UserDetails, Internship, Intern ,Topic
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -76,12 +76,14 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
-# class add_data(forms.ModelForm):
-#     text = RichTextUploadingField()
+class add_data(forms.Form):
+    # class Meta:
+    #     model = Topic
+    #     fields = ['topic_name']
+    topic = forms.CharField(max_length=50,widget=forms.TextInput())
 
-#     class Meta:
-#         model = data
-#         fields = ('subtopic', 'text',)
+
+
 
 
 # # Edit data
