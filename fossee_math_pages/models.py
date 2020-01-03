@@ -31,7 +31,6 @@ class UserDetails(models.Model):
     ROLE_TYPE = (
         (INTERN, 'INTERN'),
         (STAFF, 'STAFF'),
-
     )
     user_role = models.CharField(max_length=20,
                                  choices=ROLE_TYPE,

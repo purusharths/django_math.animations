@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, ManageIntern
 from .models import UserDetails, Internship, Intern
 
 
@@ -225,9 +225,9 @@ def admin_add_user(request):
     sub_form = AddUserForm2()
     if request.method == 'POST':
         # register user
-
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
+        username = firstname +" "+ lastname
         email = request.POST['email']
         user_role = request.POST['user_role']
         user_phone = request.POST['user_phone']
@@ -237,6 +237,9 @@ def admin_add_user(request):
         regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
         if User.objects.filter(email=email).exists():
             messages.error(request, 'That email is being used')
+            return redirect('admin_add_user')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'That username is being used')
             return redirect('admin_add_user')
         if firstname.isdigit():
             messages.error(request, 'Firstname cannot have numbers')
@@ -260,9 +263,9 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+            user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                             last_name=lastname)
-            u_id = User.objects.get(email=email)
+            u_id = User.objects.get(username=username)
 
             print("\n-----+++++", u_id, "\n-------------+++++++++")
             if user_role == 'INTERN':
@@ -318,7 +321,7 @@ def admin_manage_internship(request):
 
 
 def admin_add_intern(request):
-    data = Intern.objects.all()
+    user = User.objects.all()
     form = AddIntern()
     internships = Internship.objects.all()
     users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
@@ -339,17 +342,34 @@ def admin_add_intern(request):
         'internships': internships,
         'users': users,
         'form': form,
-        'data': data,
+        
+        
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
 
-def admin_view_internship(request):
-    data = Intern.objects.all()
+def admin_view_intern(request):
+    datas = UserDetails.objects.filter(user_role="INTERN")
+    form = ManageIntern
+    # if request.method == 'POST':
+    #     user_id = request.POST["user_id"]
+    #     obj = get_object_or_404(UserDetails, pk=user_id)
+    #     form = ManageIntern(request.POST or None, instance=obj)
+
+    #     if form.is_valid():
+
+    #         obj = form.save(commit=False)
+    #         obj.save()
+    #         messages.success(request, "Changed")
+    #         return redirect('admin_view_intern')
+    #     else:
+    #         messages.error(request, "Error")
+    #         return redirect('admin_view_intern')
     context = {
-        'data': data
+        'datas': datas,
+        'form' : form,
     }
-    return render(request, 'fossee_math_pages/admin_view_internship.html', context)
+    return render(request, 'fossee_math_pages/admin_view_intern.html', context)
 
 
 def dashboard(request):
