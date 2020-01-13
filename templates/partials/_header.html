@@ -1,9 +1,15 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg" style="background-color:#222222">
+<style>
+    .navbar-toggler-icon {
+        color: white;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#222222">
     <div class="container">
         <img src="https://animations.fossee.in/static/img/logo_main.png" width="150">
         <a class="navbar-brand text-white serif" href="/"> &nbsp;&nbsp; <i><b>Mathematics</b></i></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse serif" id="navbarResponsive">
@@ -14,7 +20,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'topics' %}">Topics</a>
+                    <a class="nav-link text-white" href="{% url 'home_topics' %}">Topics</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="http://animations.fossee.in">About</a>
@@ -22,42 +28,64 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'internship' %}">Internship</a>
                 </li>
-                {% if user.is_authenticated %} {% if user.is_superuser %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'add_user' %}">Add User</a>
-                </li>
-                {% else %} {% if request.user.adduser.role == 'STAFF' %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'manage_intern' %}">Manage</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'aprove_contents' %}">Submissions</a>
-                </li>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ user.username }}
+
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
+                                <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
+                                <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage
+                                    Internship</a>
+                                {#                        <a class="dropdown-item" href="{% url 'admin_add_intern' %}">Add Intern</a>#}
+                                {#                        <a class="dropdown-item" href="{% url 'admin_view_internship' %}">View Intern</a>#}
+                            </div>
+                        </li>
+                        {% else %}{% if user.is_staff %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
+                                   role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ user.username }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                    <a class="dropdown-item" href="{% url 'staff_add_topics' %}">Manage Internship</a>
+                                    <a class="dropdown-item" href="{% url 'staff_manage_intern' %}">Manage Inerns</a>
+                                    <a class="dropdown-item" href="{% url 'staff_aprove_contents' %}">Approve
+                                        Contents</a>
+                                    <a class="dropdown-item" href="{% url 'staff_view_internship' %}">View
+                                        Internship</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
+                                   role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ user.username }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                    <a class="dropdown-item" href="{% url 'intern_add_data' %}">Add Data</a>
+                                    <a class="dropdown-item" href="{% url 'intern_view_data' %}">View Data</a>
+                                    <a class="dropdown-item" href="{% url 'intern_view_internship' %}">View
+                                        Internship</a>
+                                </div>
+                            </li>
+                        {% endif %}{% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'dashboard' %}">{{ user.email }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'add_details' %}">Add Notes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'view_details' %}">My Work</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'edit_details' %}">Edit</a>
-                </li>
-                {% endif %} {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
-                </li>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
