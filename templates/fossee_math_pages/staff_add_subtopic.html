@@ -10,7 +10,11 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Subtopics</li>
+                 <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_add_topics' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i>  {{ intern.internship_topic }} </a>
+                </li>
+                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - {{ i_topic.topic_name }} - Subtopics</li>
             </ol>
         </nav>
     </section>
@@ -23,27 +27,24 @@
                 <thead>
                 <tr>
                     <th>
-
-                        Internship : {{ intern.internship_topic }}
-
+                       {{ intern.internship_topic }} -  {{ i_topic.topic_name }}
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for i in i_topic %}
+      {% for i in subtopics %}
                     <tr>
                         <td>
-                            {{ i.topic_name }}
-
+                            {{ i.subtopic_name }}
                         </td>
                     </tr>
-                {% endfor %}
+      {% endfor %}
                 <tr>
                     <td>
                         <div class="row">
                             <form method="POST">
                                 {% csrf_token %}
-                                <label>New topic : </label>{{ form.topic }}
+                                <label>New Sub topic : </label>{{ form.subtopic }}
                                 <input type="submit" class="btn btn-success" value="Add">
                             </form>
                         </div>

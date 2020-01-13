@@ -9,10 +9,10 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,ManageIntern
-from .models import UserDetails, Internship, Intern, Topic
-from .models import UserDetails, Internship, Intern , Topic
 
+from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
+                    ManageIntern,add_subtopic)
+from .models import UserDetails, Internship, Intern, Topic,Subtopic
 
 
 # def index(request):
@@ -228,7 +228,7 @@ def admin_add_user(request):
         # register user
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
-        username = firstname +" "+ lastname
+        username = firstname + " " + lastname
         email = request.POST['email']
         user_role = request.POST['user_role']
         user_phone = request.POST['user_phone']
@@ -264,8 +264,8 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user=User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
-                                     last_name=lastname)
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+                                            last_name=lastname)
             u_id = User.objects.get(email=email)
 
             if user_role == 'INTERN':
@@ -343,8 +343,7 @@ def admin_add_intern(request):
         'internships': internships,
         'users': users,
         'form': form,
-        
-        
+
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
@@ -368,7 +367,7 @@ def admin_view_intern(request):
     #         return redirect('admin_view_intern')
     context = {
         'datas': datas,
-        'form' : form,
+        'form': form,
     }
     return render(request, 'fossee_math_pages/admin_view_intern.html', context)
 
@@ -448,20 +447,38 @@ def user_login(request):
         return render(request, "fossee_math_pages/login.html", {"form": form})
 
 
-def staff_add_subtopic(request):
-    return render(request, 'fossee_math_pages/staff_add_subtopic.html')
+@login_required
+def staff_add_subtopic(request,id):
+    form=add_subtopic()
+    intern = Internship.objects.get(internship_status='ACTIVE')
+    i_topic = Topic.objects.get(id=id)
+    subtopics=Subtopic.objects.filter(topic_id_id=id)
+
+    if request.method == 'POST':
+        subtopic=request.POST['subtopic']
+        topic_id=id
+        u_id = request.user.id
+        data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+        data.save()
+        messages.success(request, 'Topic added with internship')
+        intern = Internship.objects.get(internship_status='ACTIVE')
+        i_topic = Topic.objects.get(id=id)
+
+    context={
+        'form':form,
+        'intern': intern,
+        'i_topic': i_topic,
+        'subtopics':subtopics,
+    }
+    return render(request, 'fossee_math_pages/staff_add_subtopic.html',context)
 
 
+@login_required
 def staff_add_topics(request):
     form = add_topic()
     intern = Internship.objects.get(internship_status='ACTIVE')
     i_topic = Topic.objects.filter(internship_id_id=intern.id)
-
-    context = {
-        'form': form,
-        'intern': intern,
-        'i_topic': i_topic,
-    }
+    subtopics=Subtopic.objects.all()
 
     if request.method == 'POST':
         topic = request.POST['topic']
@@ -470,7 +487,16 @@ def staff_add_topics(request):
         data = Topic(topic_name=topic, internship_id_id=intern_id, user_id_id=u_id)
         data.save()
         messages.success(request, 'Topic added with internship')
-    return render(request, 'fossee_math_pages/staff_add_topics.html',context)
+        intern = Internship.objects.get(internship_status='ACTIVE')
+        i_topic = Topic.objects.filter(internship_id_id=intern.id)
+
+    context = {
+        'form': form,
+        'intern': intern,
+        'i_topic': i_topic,
+        'subtopics':subtopics,
+    }
+    return render(request, 'fossee_math_pages/staff_add_topics.html', context)
 
 
 def staff_aprove_contents(request):
