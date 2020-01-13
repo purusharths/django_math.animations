@@ -7,6 +7,10 @@
                 <a style="color:black" href="{% url 'index' %}">
                     <i class="fa fa-home" style="color:black"></i> Index</a>
             </li>
+             <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
             <li class="breadcrumb-item active"> Add Internship</li>
         </ol>
     </nav>
@@ -15,6 +19,7 @@
 <div class="container">
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
+        <h2>   Add Intership</h2>
         <hr>
         <form method="POST" class="form-group" name="AddInternship">
 
