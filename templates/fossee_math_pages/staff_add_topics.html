@@ -6,49 +6,51 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-                <li class="breadcrumb-item active"> Topics</li>
+                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Topics</li>
             </ol>
         </nav>
     </section>
 
     <!-- Page Content -->
-    <div class="container">
+  <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <div class="container" style="padding-top: 3%;">
+            <table class="table table-condensed">
+                <thead>
+                <tr><th>
 
-        <!-- Call to Action Well -->
-        <div class="card-body">
-            <div class="row">
-                <div class="colM">
-                    <h3 class="serif">Search by Topic / SubTopic:</h3>
-                </div>
-                <div class="colM">
-                    <input type="text"/>
-                    <a class="btn btn-primary btn-sm" href="#">Search</a></p>
-                </div>
-            </div>
-        </div>
+                     Internship : {{ intern.internship_topic }}
 
-        <!-- Content Row -->
-        <hr>
-        <table class="table">
+                </th></tr>
+                </thead>
             <tbody>
-            {% for i in usr %}
-                <tr>
-                    {{ i.topic }}
-                </tr>
-                {% for j in resources %}
-                    {% if i.user_id == j.user_id %}
-                        <tr>
-                            <th scope="row"> {{ j.subtopic }}</th>
-                            <th>
-                                 <a href="{% url 'viewdata' i.id %}" class="btn btn-success">View</a>
-                            </th>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
+            {% for i in i_topic %}
+            <tr>
+                <td>
+                    {{ i.topic_name }}
+                </td>
+            <td>
+                <a href="{% url 'staff_add_subtopic' %}>Add Subtopics</a>
+            </td>
+            </tr>
             {% endfor %}
-            </tbody>
-        </table>
+            <tr>
+                <td>
+                      <div class="row">
+                          <form method="POST">
+                                 {% csrf_token %}
+                              <label>New topic : </label>{{ form.topic }}
+                         <input type="submit" class="btn btn-success" value="Add">
+                              </form>
+                      </div>
 
+                </td>
+            </tr>
+
+            </tbody>
+            </table>
+        </div>
     </div>
+
     <!-- /.container -->
 {% endblock %}

@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
-from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_data,ManageIntern
+from .forms import AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,ManageIntern
 from .models import UserDetails, Internship, Intern, Topic
 from .models import UserDetails, Internship, Intern , Topic
 
@@ -395,25 +395,7 @@ def index(request):
 
 @login_required
 def intern_add_data(request):
-    form = add_data()
-    intern = Internship.objects.get(internship_status='ACTIVE')
-    i_topic = Topic.objects.filter(internship_id_id=intern.id)
-
-    context = {
-        'form': form,
-        'intern': intern,
-        'i_topic': i_topic,
-    }
-
-    if request.method == 'POST':
-        topic = request.POST['topic']
-        intern_id = intern.id
-        u_id = request.user.id
-        data = Topic(topic_name=topic, internship_id_id=intern_id, user_id_id=u_id)
-        data.save()
-        messages.success(request, 'Topic added with internship')
-
-    return render(request, 'fossee_math_pages/intern_add_data.html', context)
+    return render(request, 'fossee_math_pages/intern_add_data.html')
 
 
 def intern_view_internship(request):
@@ -471,7 +453,24 @@ def staff_add_subtopic(request):
 
 
 def staff_add_topics(request):
-    return render(request, 'fossee_math_pages/staff_add_topics.html')
+    form = add_topic()
+    intern = Internship.objects.get(internship_status='ACTIVE')
+    i_topic = Topic.objects.filter(internship_id_id=intern.id)
+
+    context = {
+        'form': form,
+        'intern': intern,
+        'i_topic': i_topic,
+    }
+
+    if request.method == 'POST':
+        topic = request.POST['topic']
+        intern_id = intern.id
+        u_id = request.user.id
+        data = Topic(topic_name=topic, internship_id_id=intern_id, user_id_id=u_id)
+        data.save()
+        messages.success(request, 'Topic added with internship')
+    return render(request, 'fossee_math_pages/staff_add_topics.html',context)
 
 
 def staff_aprove_contents(request):
