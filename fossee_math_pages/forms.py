@@ -1,17 +1,62 @@
-from ckeditor.fields import RichTextFormField
+from django import forms
 from django import forms
 from django.contrib.auth import authenticate
-from .models import AddUser, data
+from django.contrib.auth.models import User
+from django.forms import ModelForm
 
-position_choices = (
-    ("intern", "intern"),
-    ("staff", "staff"),
-)
-status_choices = (
+from .models import UserDetails, Internship, Intern ,Topic
+
+INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
-    ("SUSPENDED", "SUSPENDED"),
 )
+
+STATUS = (
+    ("ACTIVE", "ACTIVE"),
+    ("INACTIVE", "INACTIVE"),
+    ("COMPLETED", "COMPLETED"),
+)
+
+DATA_STATUS = (
+    ("ACCEPTED", "ACCEPTED"),
+    ("REJECTED", "REJECTED"),
+    ("WAITING", "WAITING"),
+    ("UNDER REVIEW", "UNDER REVIEW"),
+)
+
+
+class AddUserForm1(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+
+class AddUserForm2(ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = ['user_phone', 'user_role']
+
+
+class AddInternship(ModelForm):
+    class Meta:
+        model = Internship
+        fields = ['internship_topic', 'internship_thumbnail', 'internship_status']
+
+
+class ManageInternship(ModelForm):
+    class Meta:
+        model = Internship
+        fields = ['internship_status']
+
+class ManageIntern(ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = ['user_status']
+
+class AddIntern(ModelForm):
+    class Meta:
+        model = Intern
+        fields = '__all__'
 
 
 class UserLoginForm(forms.Form):
@@ -31,27 +76,38 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
-
-class add_data(forms.ModelForm):
-    content = RichTextFormField()
-
-    class Meta:
-        model = data
-        fields = ('subtopic', 'content',)
+class add_topic(forms.Form):
+    # class Meta:
+    #     model = Topic
+    #     fields = ['topic_name']
+    topic = forms.CharField(max_length=50,widget=forms.TextInput())
 
 
-class AddUserForm(forms.ModelForm):
-    firstname = forms.CharField(max_length=20)
-    lastname = forms.CharField(max_length=20)
-
-    class Meta:
-        model = AddUser
-        fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
 
 
-class DeleteUserForm(forms.ModelForm):
-    class Meta:
-        model = AddUser
-        fields = ('name', 'email',)
+
+# # Edit data
+
+# class edit_data(forms.ModelForm):
+#     text = RichTextUploadingField()
+
+#     class Meta:
+#         model = data
+#         fields = ('text',)
+
+# class AddUserForm(forms.ModelForm):
+#     firstname = forms.CharField(max_length=20)
+#     lastname = forms.CharField(max_length=20)
+
+#     class Meta:
+#         model = AddUser
+#         labels = {
+#             "name" : "Username"
+#         }
+#         fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
 
 
+# class DeleteUserForm(forms.ModelForm):
+#     class Meta:
+#         model = AddUser
+#         fields = ('name', 'email',)

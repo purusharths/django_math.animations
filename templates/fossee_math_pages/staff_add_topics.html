@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block title %}Topics{% endblock %} {% block content %}
+    <section id="bc" class="mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Topics</li>
+            </ol>
+        </nav>
+    </section>
+
+    <!-- Page Content -->
+  <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <div class="container" style="padding-top: 3%;">
+            <table class="table table-condensed">
+                <thead>
+                <tr><th>
+
+                     Internship : {{ intern.internship_topic }}
+
+                </th></tr>
+                </thead>
+            <tbody>
+            {% for i in i_topic %}
+            <tr>
+                <td>
+                    {{ i.topic_name }}
+                </td>
+            <td>
+                <a href="{% url 'staff_add_subtopic' %}>Add Subtopics</a>
+            </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                      <div class="row">
+                          <form method="POST">
+                                 {% csrf_token %}
+                              <label>New topic : </label>{{ form.topic }}
+                         <input type="submit" class="btn btn-success" value="Add">
+                              </form>
+                      </div>
+
+                </td>
+            </tr>
+
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- /.container -->
+{% endblock %}
