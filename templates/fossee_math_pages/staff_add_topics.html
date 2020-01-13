@@ -35,13 +35,26 @@
                             {{ i.topic_name }}
                         </td>
                         <td>
-                            <a href="{% url 'staff_add_subtopic' %}">Add Subtopics</a>
+                            <a href="{% url 'staff_add_subtopic' i.id %}">Add / View Subtopics</a>
                         </td>
                     </tr>
+
+{#                    {% for st in subtopics %}#}
+{#                        {% if st.id == i.id %}#}
+{#                            <tr>#}
+{#                                <td>#}
+{#                                    {{ st.subtopic_name }}#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+
                 {% endfor %}
                 <tr>
                     <td>
-                        <form method=" POST">
+                        <form method="POST" class="form-group" name="AddTopic">
                             {% csrf_token %}
                             <label>New topic : &nbsp;</label>{{ form.topic }}
                             <input type="submit" class="btn btn-success" value="Add">
