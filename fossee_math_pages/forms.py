@@ -76,7 +76,7 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
-class add_data(forms.Form):
+class add_topic(forms.Form):
     # class Meta:
     #     model = Topic
     #     fields = ['topic_name']
