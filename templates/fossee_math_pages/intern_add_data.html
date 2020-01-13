@@ -18,8 +18,12 @@
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
     <form method="post">
-        {% csrf_token %} {{ form.media }} {{ form.as_p }}
-        <p><input type="submit" value="post"></p>
+        {% csrf_token %}
+
+    <div class="container">
+
+    </div>
+
     </form>
     <br>
 </div>

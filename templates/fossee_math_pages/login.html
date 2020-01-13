@@ -1,13 +1,25 @@
 {% extends 'base.html' %} {% block title %}Login{% endblock %} {% block content %}
-<br><br><br><br>
-<div class="container-fluid jumbotron" align="justify" style="margin-top:20px; background-color: #e7edee;">
+<section id="bc" class="mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item active"> Login</li>
+        </ol>
+    </nav>
+</section>
+<br>
+<div class="container" align="justify" style="margin-top:20px;">
+<br>
     <center>
         <h1>Login</h1>
         <hr>
         <div class="container" style="font-family: 'Lato', sans-serif;">
             <form method="post">
                 {% csrf_token %}
-                <table class="table table-bordered" style="margin-left: 150px;">
+                <table class="table table-borderless" style="margin-left: 150px;">
                     {{ form.as_table }}
                 </table>
                 <button class="btn btn-success btn-sm" type="submit" style="background-color:#e45700;color:white; border:0px">Login
@@ -16,5 +28,8 @@
         </div>
     </center>
     <br>
+<br>
 </div>
-<br><br><br><br> {% endblock %}
+<br><br><br>
+<br><br><br>
+{% endblock %}

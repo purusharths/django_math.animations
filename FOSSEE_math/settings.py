@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor',
-    'ckeditor_uploader',
+    'tinymce',
     'crispy_forms',
 ]
 
@@ -111,13 +110,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+LOGOUT_REDIRECT_URL = 'index'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -131,21 +132,19 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'ck_static')
-MEDIA_ROOT = os.path.join(tempfile.gettempdir(), 'ck_media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CKEDITOR_UPLOAD_PATH = "/uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
-CKEDITOR_THUMBNAIL_SIZE = (300, 300)
-CKEDITOR_IMAGE_QUALITY = 40
-CKEDITOR_BROWSE_SHOW_DIRS = True
-CKEDITOR_ALLOW_NONIMAGE_FILES = True
-CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-    },
+TINYMCE_JS_URL = os.path.join(MEDIA_URL, "tiny_mce/tiny_mce.js")
+TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, "/tiny_mce")
+
+
+#messages
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
 }
+
+
 
 # Email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

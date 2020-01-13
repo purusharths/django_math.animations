@@ -1,8 +1,9 @@
 {% extends 'base.html' %}{% load humanize %} {% block title %}Dashboard{% endblock %}{% block content %}
 <style>
     body {
-        background: #000000;
-        font-family: 'Raleway', sans-serif;
+            #background: #000000;
+        font-family: 'Raleway',
+        sans-serif;
         color: #fff;
     }
     
@@ -96,27 +97,31 @@
     .dashbord-skyblue .detail-section {
         background-color: #803D9B;
     }
+    
+    .footer {
+        bottom: 0;
+    }
 </style>
 {% if user.is_authenticated %}
 <section id="bc" class="mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
-                </li>
-                <li class="breadcrumb-item active"> Dashboard</li>
-            </ol>
-        </nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item active"> Dashboard</li>
+        </ol>
+    </nav>
 </section>
 {% if user.is_superuser %}
 <div class="container">
     <div class="main-section">
         <div class="dashbord">
             <div class="icon-section" style="margin-top:-9px">
-                <i class="fa-users" aria-hidden="true"></i><br>
-                <small>Intern Count</srall>
-                            <p>{{ intern_count }}</p>
+                <i class="fa fa-users" aria-hidden="true"></i><br>
+                <small>Intern Count</small>
+                                <p>{{ intern_count }}</p>
                         </div>
                     </div>
                     <div class="dashbord dashbord-green">
@@ -152,44 +157,59 @@
 {% endif %} {% if request.user.adduser.role == 'INTERN' %}
 <!-- Intern section -->
 <div class="container">
-    <div class="main-section" hboard>
+    <div class="main-section">
         <div class="dashbord">
             <div class="icon-section">
                 <i class="fa fa-calendar" aria-hidden="true"></i><br>
                 <small>Since</small>
-                <p>{{ date_joined | timesince }}</p>
+                <p>{% for user in date_joined %}{{ user.date_joined|timesince }}{% endfor %}</p>
 
-            </div>
-        </div>
-        <div class="dashbord dashbord-green">
-            <div class="icon-section">
-                <i class="fa fa-user-secret" aria-hidden="true"></i><br>
-                <small></small>
-                <p></p>
             </div>
         </div>
         <div class="dashbord dashbord-orange">
             <div class="icon-section">
-                <i class="fa fa-user-plus" aria-hidden="true"></i><br>
-                <small></small>
-                <p></p>
+                <i class="fa fa-file" aria-hidden="true"></i><br>
+                <small>Total Proposals</small>
+                <p>{{ total_proposals_intern }}</p>
             </div>
         </div>
-        <div class="dashbord dashbord-blue">
+        <div class="dashbord dashbord-green">
             <div class="icon-section">
-                <i class="fa fa-user-times" aria-hidden="true"></i><br>
-                <small></small>
-                <p></p>
-            </div>
-        </div>
-        <div class="dashbord dashbord-red">
-            <div class="icon-section">
-                <i class="fa fa-times-circle-o" aria-hidden="true"></i><br>
-                <small></small>
-                <p></p>
+                <i class="fa fa-file-alt" aria-hidden="true"></i><br>
+                <small>Accepted Proposals</small>
+                <p>{{ proposal_status_intern }}</p>
             </div>
         </div>
     </div>
 </div>
+{% endif %} {% if request.user.adduser.role == 'STAFF' %}
+<!-- Staff section -->
+<div class="container">
+    <div class="main-section">
+        <div class="dashbord">
+            <div class="icon-section">
+                <i class="fa fa-copy" aria-hidden="true"></i><br>
+                <small>Total Proposals</small>
+                <p>{{ total_proposals }}</p>
+
+            </div>
+        </div>
+        <div class="dashbord dashbord-red">
+            <div class="icon-section">
+                <i class="fa fa-times" aria-hidden="true"></i><br>
+                <small>Unaccepted Proposals</small>
+                <p>{{ proposal_status_false }}</p>
+            </div>
+        </div>
+        <div class="dashbord dashbord-green">
+            <div class="icon-section">
+                <i class="fa fa-check" aria-hidden="true"></i><br>
+                <small>Accepted Proposals</small>
+                <p>{{ proposal_status_true }}</p>
+            </div>
+        </div>
+    </div>
 </div>
-{% endif %} {% endif %}{% endblock %}
+{% endif %} {% endif %}
+<br>
+<br> {% endblock %}
