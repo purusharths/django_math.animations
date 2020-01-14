@@ -351,20 +351,19 @@ def admin_add_intern(request):
 def admin_view_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
     form = ManageIntern
-    # if request.method == 'POST':
-    #     user_id = request.POST["user_id"]
-    #     obj = get_object_or_404(UserDetails, pk=user_id)
-    #     form = ManageIntern(request.POST or None, instance=obj)
-
-    #     if form.is_valid():
-
-    #         obj = form.save(commit=False)
-    #         obj.save()
-    #         messages.success(request, "Changed")
-    #         return redirect('admin_view_intern')
-    #     else:
-    #         messages.error(request, "Error")
-    #         return redirect('admin_view_intern')
+    if request.method == 'POST':
+        int_id = request.POST["id"]
+        obj = get_object_or_404(UserDetails, id=int_id)
+        form = ManageIntern(request.POST or None, instance=obj)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request, "Changed")
+            return redirect('admin_view_intern')
+        else:
+            messages.error(request, "Error")
+            return redirect('admin_view_intern')
+    
     context = {
         'datas': datas,
         'form': form,
