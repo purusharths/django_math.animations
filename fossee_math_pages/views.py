@@ -11,8 +11,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern,add_subtopic)
-from .models import UserDetails, Internship, Intern, Topic,Subtopic
+                    ManageIntern, add_subtopic)
+from .models import UserDetails, Internship, Intern, Topic, Subtopic
 
 
 # def index(request):
@@ -448,15 +448,15 @@ def user_login(request):
 
 
 @login_required
-def staff_add_subtopic(request,id):
-    form=add_subtopic()
+def staff_add_subtopic(request, id):
+    form = add_subtopic()
     intern = Internship.objects.get(internship_status='ACTIVE')
     i_topic = Topic.objects.get(id=id)
-    subtopics=Subtopic.objects.filter(topic_id_id=id)
+    subtopics = Subtopic.objects.filter(topic_id_id=id)
 
     if request.method == 'POST':
-        subtopic=request.POST['subtopic']
-        topic_id=id
+        subtopic = request.POST['subtopic']
+        topic_id = id
         u_id = request.user.id
         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
         data.save()
@@ -464,13 +464,13 @@ def staff_add_subtopic(request,id):
         intern = Internship.objects.get(internship_status='ACTIVE')
         i_topic = Topic.objects.get(id=id)
 
-    context={
-        'form':form,
+    context = {
+        'form': form,
         'intern': intern,
         'i_topic': i_topic,
-        'subtopics':subtopics,
+        'subtopics': subtopics,
     }
-    return render(request, 'fossee_math_pages/staff_add_subtopic.html',context)
+    return render(request, 'fossee_math_pages/staff_add_subtopic.html', context)
 
 
 @login_required
@@ -478,7 +478,7 @@ def staff_add_topics(request):
     form = add_topic()
     intern = Internship.objects.get(internship_status='ACTIVE')
     i_topic = Topic.objects.filter(internship_id_id=intern.id)
-    subtopics=Subtopic.objects.all()
+    subtopics = Subtopic.objects.all()
 
     if request.method == 'POST':
         topic = request.POST['topic']
@@ -494,7 +494,7 @@ def staff_add_topics(request):
         'form': form,
         'intern': intern,
         'i_topic': i_topic,
-        'subtopics':subtopics,
+        'subtopics': subtopics,
     }
     return render(request, 'fossee_math_pages/staff_add_topics.html', context)
 
@@ -503,8 +503,19 @@ def staff_aprove_contents(request):
     return render(request, 'fossee_math_pages/staff_aprove_contents.html')
 
 
+@login_required
 def staff_manage_intern(request):
-    return render(request, 'fossee_math_pages/staff_manage_intern.html')
+    inters = User.objects.filter(is_staff=False, is_superuser=False)
+
+    context = {
+        'interns': inters
+    }
+    return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
+
+
+@login_required
+def staff_assign_topic(request):
+    return render(request, 'fossee_math_pages/staff_assign_topic.html')
 
 
 def staff_view_interns(request):
