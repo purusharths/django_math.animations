@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern ,Topic
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -48,14 +48,22 @@ class ManageInternship(ModelForm):
         model = Internship
         fields = ['internship_status']
 
+
 class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_status']
 
+
 class AddIntern(ModelForm):
     class Meta:
         model = Intern
+        fields = '__all__'
+
+
+class AssignTopic(ModelForm):
+    class Meta:
+        model = AssignedTopics
         fields = '__all__'
 
 
@@ -76,15 +84,16 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Invalid username/password")
         return user
 
+
 class add_topic(forms.Form):
     # class Meta:
     #     model = Topic
     #     fields = ['topic_name']
-    topic = forms.CharField(max_length=50,widget=forms.TextInput())
+    topic = forms.CharField(max_length=255, widget=forms.TextInput())
 
 
-
-
+class add_subtopic(forms.Form):
+    subtopic = forms.CharField(max_length=255, widget=forms.TextInput())
 
 # # Edit data
 

@@ -8,6 +8,10 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
+             <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
                 <li class="breadcrumb-item">
                     {% if request.user.adduser.role == 'INTERN' %}
                         <a style="color:black" href="{% url 'view_details' %}">
