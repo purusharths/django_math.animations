@@ -56,6 +56,9 @@ class Topic(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     topic_name = models.CharField(max_length=255, null=False)
 
+    def __str__(self):
+        return self.topic_name
+
 
 class Subtopic(models.Model):
     topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)

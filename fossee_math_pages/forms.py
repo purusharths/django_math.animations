@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, Topic,Subtopic
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -58,6 +58,12 @@ class ManageIntern(ModelForm):
 class AddIntern(ModelForm):
     class Meta:
         model = Intern
+        fields = '__all__'
+
+
+class AssignTopic(ModelForm):
+    class Meta:
+        model = AssignedTopics
         fields = '__all__'
 
 
