@@ -1,5 +1,4 @@
-{% extends 'base.html' %}{% block title %}View Topic Details{% endblock %}{% block content %}
-
+{% extends 'base.html' %} {% block title %}Topics{% endblock %} {% block content %}
     <section id="bc" class="mt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -11,13 +10,16 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                <li class="breadcrumb-item active"> View Internship Progress</li>
+                <li class="breadcrumb-item active"> Assign Topics </li>
             </ol>
         </nav>
     </section>
 
+    <!-- Page Content -->
     <div class="container">
-    Internship Name
+        {% include 'partials/_alerts.html' %}
+
     </div>
 
+    <!-- /.container -->
 {% endblock %}

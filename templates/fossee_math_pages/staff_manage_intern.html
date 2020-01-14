@@ -22,33 +22,16 @@
         <thead class="thead-dark">
         <tr>
             <th scope="col">User Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Status</th>
-            <th scope="col">Set Status</th>
+            <th scope="col">Topic</th>
+            <th scope="col">View Intern Details</th>
+            <th scope="col">View Intern Submissions</th>
         </tr>
         </thead>
-        {% for obj in details %}
+        {% for obj in interns %}
             <tbody>
             <tr>
-                <td> {{ obj.name }}</td>
-                <td>{{ obj.email }}</td>
-                <td>{{ obj.phone }}</td>
-                <td>{{ obj.status }}</td>
-                <td colspan="2">
-                    <form method="POST" name="manageform" id="manageform"></form>
-                    <div class="col-lg">
-                        {% csrf_token %}
-                        <input name="id" value='{{ obj.user_id }}' type="hidden">
-                        <select id="option_select" name="option_select">
-                            <option name="active" value="ACTIVE">ACTIVE</option>
-                            <option name="inactive" value="INACTIVE">INACTIVE</option>
-                            <option name="suspended" value="SUSPENDED">SUSPENDED</option>
-                        </select>
-                        <input class="btn btn-success" type="submit" name="submit" id="submit" value="OK">
-                    </div>
-                    </form>
-                </td>
+                <td> {{ obj.username }}</td>
+
             </tr>
         {% endfor %}
         </tbody>
