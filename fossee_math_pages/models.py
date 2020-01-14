@@ -91,3 +91,8 @@ class Chat(models.Model):
 class Intern(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
+
+
+class AssignedTopics(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
