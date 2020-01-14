@@ -7,7 +7,15 @@
                 <a style="color:black" href="{% url 'index' %}">
                     <i class="fa fa-home" style="color:black"></i> Index</a>
             </li>
-            <li class="breadcrumb-item active">Internships</li>
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'admin_manage_internship' %}">
+                    <i class="fa fa-tasks" style="color:black"></i> Manage Internship</a>
+            </li>
+            <li class="breadcrumb-item active">View Interns</li>
         </ol>
     </nav>
 </section>
@@ -21,6 +29,9 @@
                 <tr>
                     <th>Intern Name</th>
                     <th>Internship</th>
+                    <th></th>
+                    <th></th>
+                    <th>Set Status</th>
                 </tr>
             </thead>
             {% for datas in datas %}
@@ -30,11 +41,12 @@
                     <td>{{ datas.user_status }}</td>
                     <td>
                         <form method="POST" class="form-group" name="ManageIntern">
-
-                            <input type="hidden" value="{{ datas.user_id }}" name="user_id"> {% csrf_token %} {{ form|crispy }}
-
-                            <input class="btn btn-success" type="submit" name="submit" value="Submit">
-
+                            <td>
+                                <input type="hidden" value="{{ datas.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
+                            </td>
+                            <td>
+                                <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                            </td>
                         </form>
                     </td>
                 </tr>
@@ -46,6 +58,8 @@
         {% endif %}
 
     </div>
-
+    <script>
+        $('.requiredField').hide();
+    </script>
 </div>
 {% endif %} {% endif %} {% endblock %}

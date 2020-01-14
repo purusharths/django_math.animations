@@ -6,46 +6,53 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Subtopics</li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                 <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_add_topics' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i>  {{ intern.internship_topic }} </a>
+                </li>
+                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - {{ i_topic.topic_name }} - Subtopics</li>
             </ol>
         </nav>
     </section>
 
     <!-- Page Content -->
-  <div class="container">
+    <div class="container">
         {% include 'partials/_alerts.html' %}
         <div class="container" style="padding-top: 3%;">
             <table class="table table-condensed">
                 <thead>
-                <tr><th>
-
-                     Internship : {{ intern.internship_topic }}
-
-                </th></tr>
+                <tr>
+                    <th>
+                       {{ intern.internship_topic }} -  {{ i_topic.topic_name }}
+                    </th>
+                </tr>
                 </thead>
-            <tbody>
-            {% for i in i_topic %}
-            <tr>
-                <td>
-                    {{ i.topic_name }}
+                <tbody>
+      {% for i in subtopics %}
+                    <tr>
+                        <td>
+                            {{ i.subtopic_name }}
+                        </td>
+                    </tr>
+      {% endfor %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <label>New Sub topic : </label>{{ form.subtopic }}
+                                <input type="submit" class="btn btn-success" value="Add">
+                            </form>
+                        </div>
 
-                </td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td>
-                      <div class="row">
-                          <form method="POST">
-                                 {% csrf_token %}
-                              <label>New topic : </label>{{ form.topic }}
-                         <input type="submit" class="btn btn-success" value="Add">
-                              </form>
-                      </div>
+                    </td>
+                </tr>
 
-                </td>
-            </tr>
-
-            </tbody>
+                </tbody>
             </table>
         </div>
     </div>
