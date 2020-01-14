@@ -11,8 +11,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic)
-from .models import UserDetails, Internship, Intern, Topic, Subtopic
+                    ManageIntern, add_subtopic, AssignTopic)
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
 
 
 # def index(request):
@@ -363,7 +363,7 @@ def admin_view_intern(request):
         else:
             messages.error(request, "Error")
             return redirect('admin_view_intern')
-    
+
     context = {
         'datas': datas,
         'form': form,
@@ -424,20 +424,6 @@ def user_login(request):
         if form.is_valid():
             user = form.cleaned_data
             login(request, user)
-            # intern_count = 0
-            # intern_count = AddUser.objects.filter(role='INTERN').count()
-            # staff_count = AddUser.objects.filter(role='STAFF').count()
-
-            # status_active = AddUser.objects.filter(status='ACTIVE').count()
-            # status_inactive = AddUser.objects.filter(role='INACTIVE').count()
-            # status_suspended = AddUser.objects.filter(role='SUSPENDED').count()
-            # context = {
-            #     'intern_count': intern_count,
-            #     'staff_count': staff_count,
-            #     'status_active': status_active,
-            #     'status_inactive': status_inactive,
-            #     'status_suspended': status_suspended
-            # }
             return render(request, "fossee_math_pages/dashboard.html")
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
@@ -514,7 +500,33 @@ def staff_manage_intern(request):
 
 @login_required
 def staff_assign_topic(request):
-    return render(request, 'fossee_math_pages/staff_assign_topic.html')
+    form = AssignTopic()
+    inters = User.objects.filter(is_staff=False, is_superuser=False)
+    intern = Internship.objects.get(internship_status='ACTIVE')
+    i_topic = Topic.objects.all()
+    as_topic = AssignedTopics.objects.all()
+
+    if request.method == "POST":
+        intern_name = request.POST['user_id']
+        topic = request.POST['topic_id']
+        temp1 = User.objects.get(id=intern_name)
+        temp2 = Topic.objects.get(id=topic)
+        if AssignedTopics.objects.filter(user_id=intern_name).exists():
+            messages.error(request, 'That intern has an assigned topic')
+            return redirect('staff_assign_topic')
+        data = AssignedTopics(user_id=temp1, topic_id=temp2)
+        data.save()
+        messages.success(request, 'Intern assigned with topic')
+
+    context = {
+        'interns': inters,
+        'form': form,
+        'intern': intern,
+        'as_topic': as_topic,
+        'i_topic': i_topic,
+    }
+    return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
+
 
 def staff_view_interns(request):
     return render(request, 'fossee_math_pages/staff_view_interns.html')
