@@ -3,10 +3,14 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="{% url 'index' %}">
+                <a style="color: black" href="{% url 'index' %}">
                     <i class="fa fa-home"></i> Index</a>
             </li>
-            <li class="breadcrumb-item active"> Approve Contents</li>
+              <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active"> Approve Submissions</li>
         </ol>
     </nav>
 </section>
