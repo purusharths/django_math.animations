@@ -22,11 +22,11 @@
 
 <div class="container">
     {% include 'partials/_alerts.html' %} {% if user.is_authenticated %} {% if user.is_superuser %}
-    <hr> {% if interns%}
+    <hr> {% if interns %}
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th>Active Intern</th>
+                <th>Intern Name</th>
                 <th>Internship</th>
             </tr>
         </thead>
@@ -43,9 +43,6 @@
 
 
     <hr>
-    <div class="row">
-        <h3>Assign Internship</h3>
-    </div>
     <form method="POST" class="form-group" name="AddIntern">
         {% csrf_token %} {{ form|crispy }}
         <br>

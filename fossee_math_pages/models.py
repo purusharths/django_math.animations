@@ -48,9 +48,8 @@ class Internship(models.Model):
     internship_status = models.CharField(max_length=20,
                                          choices=STATUS,
                                          default='INACTIVE')
-
     def __str__(self):
-        return self.internship_topic
+        return str(self.internship_topic) if self.internship_topic else ''
 
 
 class Topic(models.Model):
@@ -80,6 +79,8 @@ class Data(models.Model):
     data_status = models.CharField(max_length=20,
                                    choices=DATA_STATUS,
                                    default='WAITING')
+    def __str__(self):
+        return str(self.subtopic_id) if self.subtopic_id else ''
 
 
 class DataVerification(models.Model):
@@ -87,20 +88,25 @@ class DataVerification(models.Model):
     dataverification_mentor = models.ForeignKey(User, on_delete=models.CASCADE)
     dataverification_verifier = models.CharField(max_length=255, blank=False)
     dataverification_date = models.DateTimeField(default=datetime.now, blank=True)
-
+    def __str__(self):
+        return str(self.data_id) if self.data_id else ''
 
 class Chat(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
     chat_message = models.TextField(blank=False)
     chat_date = models.DateTimeField(default=datetime.now, blank=True)
-
+    def __str__(self):
+        return str(self.user_id) if self.user_id else ''
 
 class Intern(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
-
+    def __str__(self):
+        return str(self.user_id) if self.user_id else ''
 
 class AssignedTopics(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.user_id) if self.user_id else ''
