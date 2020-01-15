@@ -37,7 +37,8 @@ class UserDetails(models.Model):
                                  default=INTERN)
     user_temp_password = models.CharField(max_length=10, blank=True)
     user_status = models.CharField(max_length=255, choices=INTERN_STATUS, default='INACTIVE')
-
+    def __str__(self):
+        return str(self.user_id) if self.user_id else ''
 
 class Internship(models.Model):
     internship_topic = models.CharField(max_length=255, null=False)
