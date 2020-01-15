@@ -13,7 +13,7 @@
 {% if user.is_superuser %}
 <div class="container">
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Add Users
         </div>
         <div class="card-body">
@@ -24,7 +24,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Add Internship
         </div>
         <div class="card-body">
@@ -35,7 +35,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Add Internship
         </div>
         <div class="card-body">
@@ -48,7 +48,7 @@
 {% elif user.is_staff %}
 <div class="container">
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Add Topic and Subtopic
         </div>
         <div class="card-body">
@@ -59,7 +59,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Assign Topics to Interns
         </div>
         <div class="card-body">
@@ -70,7 +70,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Manage Interns
         </div>
         <div class="card-body">
@@ -81,7 +81,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Approve Contents
         </div>
         <div class="card-body">
@@ -92,7 +92,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             View Internship
         </div>
         <div class="card-body">
@@ -103,9 +103,13 @@
     </div>
 </div>
 {% else %}
+<br>
+<hr>
+<br>
 <div class="container">
+
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             Your Work
         </div>
         <div class="card-body">
@@ -116,7 +120,7 @@
     </div>
     <br>
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+        <div class="card-header">
             View Internship
         </div>
         <div class="card-body">
@@ -128,4 +132,5 @@
 </div>
 {% endif %}{% endif %}
 <br>
+<hr>
 <br> {% endblock %}
