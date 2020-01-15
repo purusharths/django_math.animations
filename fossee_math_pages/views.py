@@ -323,13 +323,14 @@ def admin_manage_internship(request):
 
 def admin_add_intern(request):
     user = User.objects.all()
+    interns = Intern.objects.all() 
     form = AddIntern(user)
     internships = Internship.objects.all()
-    users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
     if request.method == 'POST':
         intern_name = request.POST['user_id']
+        print("\n------------",intern_name,"-------------\n")
         topic = request.POST['internship_id']
-        temp1 = UserDetails.objects.get(user_id=intern_name)
+        temp1 = User.objects.get(id=id)
         temp2 = Internship.objects.get(id=topic)
         if Intern.objects.filter(user_id=intern_name).exists():
             messages.error(request, 'That intern has an internship')
@@ -341,9 +342,8 @@ def admin_add_intern(request):
 
     context = {
         'internships': internships,
-        'users': users,
         'form': form,
-
+        'interns' : interns,
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
