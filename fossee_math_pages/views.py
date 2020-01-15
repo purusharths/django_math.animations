@@ -323,7 +323,7 @@ def admin_manage_internship(request):
 
 def admin_add_intern(request):
     user = User.objects.all()
-    form = AddIntern()
+    form = AddIntern(user)
     internships = Internship.objects.all()
     users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
     if request.method == 'POST':
@@ -519,7 +519,7 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     inters = User.objects.filter(is_staff=False, is_superuser=False)
-
+    
     context = {
         'interns': inters
     }
