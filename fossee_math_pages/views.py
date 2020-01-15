@@ -394,14 +394,29 @@ def index(request):
 @login_required
 def intern_add_data(request):
     form=data()
+    internship = Internship.objects.get(internship_status='ACTIVE')
+
+    if request.method == 'POST':
+        print("hello")
+
     context={
         'form':form,
+        'internship':internship,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html',context)
 
 
 def intern_view_internship(request):
-    return render(request, 'fossee_math_pages/intern_view_internship.html')
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    topics=Topic.objects.filter(internship_id=internship.pk)
+    subtopics=Subtopic.objects.all()
+
+    context={
+        'internship':internship,
+        'topics':topics,
+        'subtopics':subtopics,
+    }
+    return render(request, 'fossee_math_pages/intern_view_internship.html',context)
 
 
 def intern_edit_data(request):
@@ -413,7 +428,16 @@ def intern_view_data(request):
 
 
 def intern_view_topic(request):
-    return render(request, 'fossee_math_pages/intern_view_topic.html')
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
+    subtopic=Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
+
+    context={
+        'internship':internship,
+        'assigned':assigned_topic,
+        'subtopic':subtopic,
+    }
+    return render(request, 'fossee_math_pages/intern_view_topic.html',context)
 
 
 def internship(request):
