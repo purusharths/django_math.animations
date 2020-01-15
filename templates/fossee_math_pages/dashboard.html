@@ -105,24 +105,13 @@
 {% else %}
 <div class="container">
     <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
-            Add Data for Your Topic
+        <div class="card-header">
+            Your Work
         </div>
         <div class="card-body">
-            <h5 class="card-title">Add data to the topics</h5>
-            <p class="card-text">Add the data to the topics and click on submit to submit to the mentors.</p>
-            <a href="{% url 'intern_add_data' %}" class="btn btn-secondary">Add Data</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-header font-weight-bold" style="text-transform: uppercase">
-            View Your Work
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">View Your Progress</h5>
-            <p class="card-text">Lets you to see your progress and content aproval status. Once aproved to change contents contact the mentors.</p>
-            <a href="{% url 'intern_view_data' %}" class="btn btn-primary">View Your Work</a>
+            <h5 class="card-title">Add data and view your work</h5>
+            <p class="card-text">Add the data to the topics and click on submit to submit to the mentors. View your submissions</p>
+            <a href="{% url 'intern_view_topic' %}" class="btn btn-secondary">Add Data</a>
         </div>
     </div>
     <br>

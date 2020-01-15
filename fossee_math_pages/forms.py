@@ -73,7 +73,7 @@ class AssignTopic(ModelForm):
 class data(ModelForm):
     class Meta:
         model=Data
-        fields=['data_content']
+        fields=['data_content','data_reference']
 
 
 class UserLoginForm(forms.Form):

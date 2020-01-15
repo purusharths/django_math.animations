@@ -7,27 +7,41 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-             <li class="breadcrumb-item">
+                <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                <li class="breadcrumb-item">
-                    {% if request.user.adduser.role == 'INTERN' %}
-                        <a style="color:black" href="{% url 'view_details' %}">
-                            <i style="color:black"></i> My works</a>
-                    {% endif %}
-                    {% if request.user.adduser.role == 'STAFF' %}
-                        <a style="color:black" href="{% url 'aprove_contents' %}">
-                            <i style="color:black"></i> Submissions</a>
-                    {% endif %}
-                </li>
-                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
+
+                <li class="breadcrumb-item active">Internship - {{ internship.internship_topic }}</li>
             </ol>
         </nav>
     </section>
     <hr>
     <div class="container">
-<h2 class=""center>Intership details</h2>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Internship Name : {{ internship.internship_topic }}</th>
+            </tr>
+            </thead>
+            {% for i in topics %}
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Topic Name : {{ i.topic_name }}</th>
+                </tr>
+                </thead>
+                {% for j in subtopics %}
+                    {% if j.topic_id_id == i.id %}
+                <tbody>
+                <tr>
+                    <th scope="row">Subtopic : {{ j.subtopic_name }}</th>
+                </tr>
+                </tbody>
+                    {% endif %}
+                    {% endfor %}
+            {% endfor %}
+        </table>
     </div>
     <br>
     <hr>
