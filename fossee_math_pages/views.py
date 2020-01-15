@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic)
+                    ManageIntern, add_subtopic, AssignTopic,data)
 from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
 
 
@@ -264,9 +264,9 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+            user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                             last_name=lastname)
-            u_id = User.objects.get(email=email)
+            u_id = User.objects.get(username=username)
 
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
@@ -323,15 +323,20 @@ def admin_manage_internship(request):
 
 def admin_add_intern(request):
     user = User.objects.all()
-    form = AddIntern()
+    interns = Intern.objects.all() 
+    form = AddIntern(user)
     internships = Internship.objects.all()
-    users = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
     if request.method == 'POST':
         intern_name = request.POST['user_id']
         topic = request.POST['internship_id']
-        temp1 = User.objects.get(id=intern_name)
+        usr = UserDetails.objects.get(id=intern_name)
+        print(usr)
+
+        print("\n------------",intern_name,"-------------\n")
+        temp1 = User.objects.get(username=usr)
+        print("\n------------",temp1,"-------------\n")
         temp2 = Internship.objects.get(id=topic)
-        if Intern.objects.filter(user_id=intern_name).exists():
+        if Intern.objects.filter(user_id=temp1).exists():
             messages.error(request, 'That intern has an internship')
             return redirect('admin_add_intern')
         data = Intern(user_id=temp1, internship_id=temp2)
@@ -341,9 +346,8 @@ def admin_add_intern(request):
 
     context = {
         'internships': internships,
-        'users': users,
         'form': form,
-
+        'interns' : interns,
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
@@ -393,11 +397,30 @@ def index(request):
 
 @login_required
 def intern_add_data(request):
-    return render(request, 'fossee_math_pages/intern_add_data.html')
+    form=data()
+    internship = Internship.objects.get(internship_status='ACTIVE')
+
+    if request.method == 'POST':
+        print("hello")
+
+    context={
+        'form':form,
+        'internship':internship,
+    }
+    return render(request, 'fossee_math_pages/intern_add_data.html',context)
 
 
 def intern_view_internship(request):
-    return render(request, 'fossee_math_pages/intern_view_internship.html')
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    topics=Topic.objects.filter(internship_id=internship.pk)
+    subtopics=Subtopic.objects.all()
+
+    context={
+        'internship':internship,
+        'topics':topics,
+        'subtopics':subtopics,
+    }
+    return render(request, 'fossee_math_pages/intern_view_internship.html',context)
 
 
 def intern_edit_data(request):
@@ -409,7 +432,16 @@ def intern_view_data(request):
 
 
 def intern_view_topic(request):
-    return render(request, 'fossee_math_pages/intern_view_topic.html')
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
+    subtopic=Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
+
+    context={
+        'internship':internship,
+        'assigned':assigned_topic,
+        'subtopic':subtopic,
+    }
+    return render(request, 'fossee_math_pages/intern_view_topic.html',context)
 
 
 def internship(request):
@@ -491,7 +523,7 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     inters = User.objects.filter(is_staff=False, is_superuser=False)
-
+    
     context = {
         'interns': inters
     }

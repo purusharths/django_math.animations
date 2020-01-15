@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics,Data
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -58,13 +58,26 @@ class ManageIntern(ModelForm):
 class AddIntern(ModelForm):
     class Meta:
         model = Intern
-        fields = '__all__'
-
+        labels = {
+            'user_id' : 'Intern Name',
+            'internship_id' : 'Internship Name'
+        }
+        fields = ['user_id','internship_id']
+    def __init__(self, user, *args, **kwargs):
+        super(AddIntern, self).__init__(*args, **kwargs)
+        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+    
 
 class AssignTopic(ModelForm):
     class Meta:
         model = AssignedTopics
         fields = '__all__'
+
+
+class data(ModelForm):
+    class Meta:
+        model=Data
+        fields=['data_content','data_reference']
 
 
 class UserLoginForm(forms.Form):
