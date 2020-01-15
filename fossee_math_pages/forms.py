@@ -58,10 +58,14 @@ class ManageIntern(ModelForm):
 class AddIntern(ModelForm):
     class Meta:
         model = Intern
+        labels = {
+            'user_id' : 'Intern Name',
+            'internship_id' : 'Internship Name'
+        }
         fields = ['user_id','internship_id']
     def __init__(self, user, *args, **kwargs):
         super(AddIntern, self).__init__(*args, **kwargs)
-        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN")
+        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
 
 
 class AssignTopic(ModelForm):

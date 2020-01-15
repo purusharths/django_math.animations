@@ -22,7 +22,7 @@
 
 <div class="container">
     {% include 'partials/_alerts.html' %} {% if user.is_authenticated %} {% if user.is_superuser %}
-    <hr> {% if users %}
+    <hr> {% if interns%}
     <table class="table table-condensed">
         <thead>
             <tr>
@@ -30,11 +30,11 @@
                 <th>Internship</th>
             </tr>
         </thead>
-        {% for user in users %}
+        {% for interns in interns %}
         <tbody>
             <tr>
-                <td>{{ user.user_id }}</td>
-                <td>{{ user.internship_id }}</td>
+                <td>{{ interns.user_id }}</td>
+                <td>{{ interns.internship_id }}</td>
             </tr>
         </tbody>
         {% endfor %}
@@ -43,6 +43,9 @@
 
 
     <hr>
+    <div class="row">
+        <h3>Assign Internship</h3>
+    </div>
     <form method="POST" class="form-group" name="AddIntern">
         {% csrf_token %} {{ form|crispy }}
         <br>
