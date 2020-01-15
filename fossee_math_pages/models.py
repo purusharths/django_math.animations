@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -69,7 +70,7 @@ class Subtopic(models.Model):
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    data_content = models.TextField(null=False)
+    data_content = RichTextUploadingField()
     data_reference = models.TextField(blank=True)
     data_post_date = models.DateTimeField(default=datetime.now, blank=True)
     data_status = models.CharField(max_length=20,
