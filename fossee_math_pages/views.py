@@ -264,9 +264,9 @@ def admin_add_user(request):
         try:
             password = random.randint(0, 99999999)
             passwordstr = str(password)
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
+            user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                             last_name=lastname)
-            u_id = User.objects.get(email=email)
+            u_id = User.objects.get(username=username)
 
             if user_role == 'INTERN':
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
@@ -329,10 +329,14 @@ def admin_add_intern(request):
     if request.method == 'POST':
         intern_name = request.POST['user_id']
         topic = request.POST['internship_id']
-        print("\n------------",intern_name,topic,"-------------\n")
-        temp1 = User.objects.get(id=intern_name)
+        usr = UserDetails.objects.get(id=intern_name)
+        print(usr)
+
+        print("\n------------",intern_name,"-------------\n")
+        temp1 = User.objects.get(username=usr)
+        print("\n------------",temp1,"-------------\n")
         temp2 = Internship.objects.get(id=topic)
-        if Intern.objects.filter(user_id=intern_name).exists():
+        if Intern.objects.filter(user_id=temp1).exists():
             messages.error(request, 'That intern has an internship')
             return redirect('admin_add_intern')
         data = Intern(user_id=temp1, internship_id=temp2)
