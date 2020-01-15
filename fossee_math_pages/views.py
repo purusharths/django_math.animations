@@ -329,7 +329,7 @@ def admin_add_intern(request):
     if request.method == 'POST':
         intern_name = request.POST['user_id']
         topic = request.POST['internship_id']
-        temp1 = User.objects.get(id=intern_name)
+        temp1 = UserDetails.objects.get(user_id=intern_name)
         temp2 = Internship.objects.get(id=topic)
         if Intern.objects.filter(user_id=intern_name).exists():
             messages.error(request, 'That intern has an internship')
