@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics,Data
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -68,6 +68,12 @@ class AssignTopic(ModelForm):
     class Meta:
         model = AssignedTopics
         fields = '__all__'
+
+
+class data(ModelForm):
+    class Meta:
+        model=Data
+        fields=['data_content']
 
 
 class UserLoginForm(forms.Form):

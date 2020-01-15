@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic)
+                    ManageIntern, add_subtopic, AssignTopic,data)
 from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
 
 
@@ -393,7 +393,11 @@ def index(request):
 
 @login_required
 def intern_add_data(request):
-    return render(request, 'fossee_math_pages/intern_add_data.html')
+    form=data()
+    context={
+        'form':form,
+    }
+    return render(request, 'fossee_math_pages/intern_add_data.html',context)
 
 
 def intern_view_internship(request):
