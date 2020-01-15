@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tinymce',
+    'ckeditor',
+    'ckeditor_uploader',
     'crispy_forms',
 ]
 
@@ -134,8 +135,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-TINYMCE_JS_URL = os.path.join(MEDIA_URL, "tiny_mce/tiny_mce.js")
-TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, "/tiny_mce")
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 
 #messages
