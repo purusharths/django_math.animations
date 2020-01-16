@@ -40,9 +40,10 @@
             {% for i in subtopic %}
                 <tr>
                     <td>{{ i.subtopic_name }}</td>
-                    <td><a href="{% url  'intern_add_data' %}">Add Data</a></td>
+                    <td><a href="{% url  'intern_add_data' i.topic_id_id %}">Add Data</a></td>
                     <td><a href="{% url  'intern_view_data' %}">View Data</a></td>
                  <td><a href="{% url  'intern_view_data' %}">Edit Data</a></td>
+                <td>{{ i.topic_id_id }}</td>
                 </tr>
             {% endfor %}
 

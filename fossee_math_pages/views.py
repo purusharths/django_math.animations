@@ -12,7 +12,7 @@ from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic,data)
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
 
 
 # def index(request):
@@ -396,12 +396,19 @@ def index(request):
 
 
 @login_required
-def intern_add_data(request):
-    form=data()
+def intern_add_data(request, t_id):
+    form = data
     internship = Internship.objects.get(internship_status='ACTIVE')
-
+    # Subtopic id
+    print(t_id)
+    user = request.user
+    print(user.id)    # user id
     if request.method == 'POST':
-        print("hello")
+        content = request.POST['data_content']
+        reference = request.POST['data_reference']
+        status = "Waiting"
+        add_data = Data(data_content = content,data_reference = reference,data_status=status,subtopic_id_id=t_id,user_id_id=user.id)
+        add_data.save()
 
     context={
         'form':form,
