@@ -112,7 +112,7 @@ class UserLoginForm(forms.Form):
                     return user
             except ObjectDoesNotExist:
                 pass
-        return None
+        return user
 
 
 class add_topic(forms.Form):
