@@ -475,7 +475,7 @@ def user_login(request):
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
-            user = form.cleaned_data
+            user = form.authenticate_user()
             login(request, user)
             return render(request, "fossee_math_pages/dashboard.html")
         else:
