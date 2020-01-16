@@ -1,0 +1,62 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title %}View Users{% endblock %} {% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <div style="width: 60%;">
+            <br> {% if datas %}
+            <h4>All Users</h4>
+            <table class="table" style="text-align: center; width: 100%;">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" class="col-sm-3">User Name</th>
+                        <th scope="col" class="col-sm-4">Email</th>
+                        <th scope="col" class="col-sm-2">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in datas %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+                        <td class="col-sm-3">{{ data.user_id }}</td>
+                        <td class="col-sm-4">
+                            {{ data.user_id.email }}
+                        </td>
+                        <td class="col-sm-2">
+                            {{ data.user_role }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="container">
+                <p>
+                    No User Information is Available!
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        <div style="width: 40%; margin-left: 15%;">
+            <br>
+            <h4>Search</h4>
+            <form method="GET" action=".">
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <div class="input-group">
+                            <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Search User...." />
+                            <span class="input-group-append">
+                                    <div class="input-group-text bg-transparent">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br> {% endif %} {% endif %} {% endblock %}

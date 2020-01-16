@@ -298,7 +298,7 @@ def admin_add_user(request):
     }
     return render(request, 'fossee_math_pages/admin_add_user.html', context)
 
-
+@login_required
 def admin_manage_internship(request):
     manage_internships = Internship.objects.order_by('-internship_start_date')
     form = ManageInternship
@@ -320,7 +320,7 @@ def admin_manage_internship(request):
     }
     return render(request, 'fossee_math_pages/admin_manage_internship.html', context)
 
-
+@login_required
 def admin_add_intern(request):
     user = User.objects.all()
     interns = Intern.objects.all() 
@@ -351,7 +351,7 @@ def admin_add_intern(request):
     }
     return render(request, 'fossee_math_pages/admin_add_intern.html', context)
 
-
+@login_required
 def admin_view_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
     form = ManageIntern
@@ -374,7 +374,18 @@ def admin_view_intern(request):
     }
     return render(request, 'fossee_math_pages/admin_view_intern.html', context)
 
+@login_required
+def admin_view_users(request):
+    datas = UserDetails.objects.all()
+    user_contains_query = request.GET.get('title_contains')
+    if user_contains_query !='' and user_contains_query is not None:
+        datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
+    context = {
+        'datas' : datas,  
+    }
+    return render(request, 'fossee_math_pages/admin_view_users.html', context)
 
+@login_required
 def dashboard(request):
     return render(request, 'fossee_math_pages/dashboard.html')
 
