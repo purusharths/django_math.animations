@@ -386,7 +386,7 @@ def admin_view_users(request):
     if user_contains_query == "INTERN" or user_contains_query == "intern":
         datas = UserDetails.objects.filter(user_role="INTERN")
 
-    paginator = Paginator(datas, 15) # Show 25 contacts per page.
+    paginator = Paginator(datas, 5) # Show 25 contacts per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
