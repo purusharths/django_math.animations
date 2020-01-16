@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
+from django.core.paginator import Paginator
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic,data)
@@ -384,8 +385,13 @@ def admin_view_users(request):
         datas = UserDetails.objects.filter(user_role="STAFF")
     if user_contains_query == "INTERN" or user_contains_query == "intern":
         datas = UserDetails.objects.filter(user_role="INTERN")
+
+    paginator = Paginator(datas, 15) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        'datas' : datas,  
+        'datas' : page_obj,
     }
     return render(request, 'fossee_math_pages/admin_view_users.html', context)
 
