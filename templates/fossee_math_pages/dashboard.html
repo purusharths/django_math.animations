@@ -19,11 +19,11 @@
         <div class="card-body">
             <h5 class="card-title">Add Users to the internship</h5>
             <p class="card-text">Add the interns and staff to the system.</p>
-            <a href="{% url 'admin_add_user' %}" class="btn btn-primary">Add Users</a>
+            <a href="{% url 'admin_add_user' %}" class="btn btn-dark">Add Users</a>
         </div>
     </div>
     <br>
-     <div class="card">
+    <div class="card">
         <div class="card-header font-weight-bold" style="text-transform: uppercase">
             View Users
         </div>
@@ -53,6 +53,16 @@
             <h5 class="card-title">Manage internship </h5>
             <p class="card-text">Manage the internships in the system.</p>
             <a href="{% url 'admin_manage_internship' %}" class="btn btn-success">Manage Internship</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header font-weight-bold" style="text-transform: uppercase">
+            Intern Status
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"></h5>Change Intern Status</h5>
+            <p class="card-text">Activate/Deactivate Intern in the system.</p>
+            <a href="{% url 'admin_view_intern' %}" class="btn btn-warning">Change Intern Status</a>
         </div>
     </div>
 </div>
