@@ -376,6 +376,29 @@ def admin_view_intern(request):
     return render(request, 'fossee_math_pages/admin_view_intern.html', context)
 
 @login_required
+def admin_manage_intern(request):
+    datas = UserDetails.objects.filter(user_role="INTERN")
+    form = ManageIntern
+    if request.method == 'POST':
+        int_id = request.POST["id"]
+        obj = get_object_or_404(UserDetails, id=int_id)
+        form = ManageIntern(request.POST or None, instance=obj)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request, "Changed")
+            return redirect('admin_view_intern')
+        else:
+            messages.error(request, "Error")
+            return redirect('admin_view_intern')
+
+    context = {
+        'datas': datas,
+        'form': form,
+    }
+    return render(request, 'fossee_math_pages/admin_manage_intern.html', context)
+
+@login_required
 def admin_view_users(request):
     datas = UserDetails.objects.all()
     user_contains_query = request.GET.get('title_contains')

@@ -19,6 +19,7 @@ urlpatterns = [
     path('admin_view_intern/', views.admin_view_intern, name='admin_view_intern'),
     path('admin_add_intern/', views.admin_add_intern, name='admin_add_intern'),
     path('admin_view_users/', views.admin_view_users, name='admin_view_users'),
+    path('admin_manage_intern/',views.admin_manage_intern,name='admin_manage_intern'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('home_topics/', views.home_topics, name='home_topics'),
     path('home_view_data/', views.home_view_data, name='home_view_data'),
