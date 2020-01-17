@@ -62,8 +62,7 @@ ROOT_URLCONF = 'FOSSEE_math.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +124,6 @@ LOGOUT_REDIRECT_URL = 'index'
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -151,4 +149,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
-

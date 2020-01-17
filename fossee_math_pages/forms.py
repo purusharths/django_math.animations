@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -135,5 +135,3 @@ class add_topic(forms.Form):
 
 class add_subtopic(forms.Form):
     subtopic = forms.CharField(max_length=255, widget=forms.TextInput())
-
-
