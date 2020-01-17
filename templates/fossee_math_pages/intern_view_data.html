@@ -8,10 +8,12 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
+
              <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
+            <li class="breadcrumb-item active"> View Intern Data</li>
                 <li class="breadcrumb-item">
                     {% if request.user.adduser.role == 'INTERN' %}
                         <a style="color:black" href="{% url 'view_details' %}">
@@ -22,20 +24,77 @@
                             <i style="color:black"></i> Submissions</a>
                     {% endif %}
                 </li>
+
                 <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
             </ol>
         </nav>
     </section>
     <hr>
     <div class="container">
-        <div class="row">
-            <h3>  {{ topic.subtopic }} </h3>
-        </div>
-        <div id="topic">{{ topic.text }}
-        </div>
-        <div class="row float-right">
-            Date : {{ topic.post_date }}
-        </div>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th><h3>Internship Name : {{ internship.internship_topic }}</h3></th>
+                <th></th>
+                <th><h3>Topic Name : {{ assigned_topic.topic_id }}</h3></th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <thead class="thread-dark">
+             <tr>
+{#                <th><h3>Subtopic Name : {{ }}</h3></th>#}
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <thead>
+
+             <tr>
+                <th>Content</th>
+                <th>Reference</th>
+                <th>Post date</th>
+                <th>status</th>
+            </tr>
+
+        </thead>
+        <tbody>
+        {% comment %}{% for i in topic %}{% endcomment %}
+        <tr>
+            <td id="content_data">{{ topic.data_content }}
+
+            </td>
+            <td>{{ topic.data_reference }}
+
+            </td>
+            <td>{{ topic.data_post_date }}
+
+            </td>
+            <td>{{ topic.data_status }}
+
+            </td>
+        </tr>
+        <script>
+            $(document).ready(function () {
+                var data=$("#content_data").text()
+                $("#content_data").html(data)
+
+            })
+        </script>
+      {% comment %}  {% endfor %}{% endcomment %}
+        </tbody>
+
+    </table>
+{#        <div class="row">#}
+{#            <h3>  {{ topic.subtopic }} </h3>#}
+{#        </div>#}
+{#        <div id="topic">{{ topic.text }}#}
+{#        </div>#}
+{#        <div class="row float-right">#}
+{#            Date : {{ topic.post_date }}#}
+{#        </div>#}
     </div>
     <br>
     <hr>

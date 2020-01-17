@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic,data)
+                    ManageIntern, add_subtopic, AssignTopic,data,edit_data)
 from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
 
 
@@ -428,14 +428,78 @@ def intern_view_internship(request):
         'subtopics':subtopics,
     }
     return render(request, 'fossee_math_pages/intern_view_internship.html',context)
+# @login_required
+# def edit_data(request,edit_id):
+#     print(edit_id)
+#     post = get_object_or_404(data,id = edit_id)
+#     sub = data.objects.get(id = edit_id);
+#     context ={
+#         'subtop' :sub.subtopic,
+#     }
+
+#     if request.user:
+#         form = add_data
+#         form = add_data(instance=post)
+#         if request.method == 'POST':
+#             form = add_data(request.POST, request.FILES, instance=post)
+#             if form.is_valid():
+#                 post = form.save(commit=False)
+#                 post.save()
+#                 form = add_data
+#                 return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+#     return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form,'context':context})
+
+@login_required
+def intern_edit_data(request,e_id):
+
+    print(e_id)
+    post = get_object_or_404(Data, subtopic_id_id=e_id)
+    sub = Data.objects.get(subtopic_id_id=e_id)
+
+    # form = edit_data
+
+    if request.user:
+        form = data
+        form = data(instance=post)
+        context = {
+            'form': form,
+            'content': sub.data_content,
+            'reference': sub.data_reference
+        }
+        if request.method == 'POST':
+            form = data(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.save()
+                form = data
+                return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+
+        return render(request, 'fossee_math_pages/intern_edit_data.html',context)
 
 
-def intern_edit_data(request):
-    return render(request, 'fossee_math_pages/intern_edit_data.html')
+def intern_view_data(request,v_id):
+
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
+    # subtopic = Subtopic.objects.get(topic_id=assigned_topic.topic_id)
+    print(v_id)
+    try:
+        topic = Data.objects.get(subtopic_id=v_id)
+
+        context ={
+            'internship' : internship,
+            'assigned_topic' : assigned_topic,
+            # 'subtopic' : subtopic,
+            'topic' :topic
+        }
+        return render(request, 'fossee_math_pages/intern_view_data.html',context)
 
 
-def intern_view_data(request):
-    return render(request, 'fossee_math_pages/intern_view_data.html')
+    except:
+        return render(request, 'fossee_math_pages/intern_view_data.html')
+
+
+
 
 
 def intern_view_topic(request):
