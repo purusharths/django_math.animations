@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% block title %}View Topic Details{% endblock %}{% block content %}
+{% extends 'base.html' %} {% block title %}View Intern Data{% endblock %} {% block content %}
 
     <section id="bc" class="mt-3">
         <nav aria-label="breadcrumb">
@@ -11,13 +11,40 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                <li class="breadcrumb-item active"> View Internship Progress</li>
+
+                <li class="breadcrumb-item active">Internship - {{ internship.internship_topic }}</li>
             </ol>
         </nav>
     </section>
-
+    <hr>
     <div class="container">
-    Internship Name
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Internship Name : {{ internship.internship_topic }}</th>
+            </tr>
+            </thead>
+            {% for i in topics %}
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Topic Name : {{ i.topic_name }}</th>
+                </tr>
+                </thead>
+                {% for j in subtopics %}
+                    {% if j.topic_id_id == i.id %}
+                <tbody>
+                <tr>
+                    <th scope="row">Subtopic : {{ j.subtopic_name }}</th>
+                </tr>
+                </tbody>
+                    {% endif %}
+                    {% endfor %}
+            {% endfor %}
+        </table>
     </div>
+    <br>
+    <hr>
+    <br>
 
 {% endblock %}
