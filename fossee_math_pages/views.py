@@ -332,7 +332,6 @@ def admin_add_intern(request):
         topic = request.POST['internship_id']
         usr = UserDetails.objects.get(id=intern_name)
         print(usr)
-
         print("\n------------",intern_name,"-------------\n")
         temp1 = User.objects.get(username=usr)
         print("\n------------",temp1,"-------------\n")
@@ -609,7 +608,16 @@ def staff_view_interns(request):
 
 
 def staff_view_internship(request):
-    return render(request, 'fossee_math_pages/staff_view_internship.html')
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    topics=Topic.objects.filter(internship_id=internship.pk)
+    subtopics=Subtopic.objects.all()
+
+    context={
+        'internship':internship,
+        'topics':topics,
+        'subtopics':subtopics,
+    }
+    return render(request, 'fossee_math_pages/staff_view_internship.html',context)
 
 
 def staff_view_topic(request):
