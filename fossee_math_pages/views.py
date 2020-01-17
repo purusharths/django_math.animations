@@ -572,10 +572,28 @@ def staff_aprove_contents(request):
 
 @login_required
 def staff_manage_intern(request):
-    inters = User.objects.filter(is_staff=False, is_superuser=False)
-    
+    datas = UserDetails.objects.filter(user_role="INTERN")
+    internship=Internship.objects.get(internship_status='ACTIVE')
+    topic=Topic.objects.filter(internship_id=internship.pk)
+    form = ManageIntern
+    if request.method == 'POST':
+        int_id = request.POST["id"]
+        obj = get_object_or_404(UserDetails, id=int_id)
+        form = ManageIntern(request.POST or None, instance=obj)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request, "Changed")
+            return redirect('admin_view_intern')
+        else:
+            messages.error(request, "Error")
+            return redirect('admin_view_intern')
+
     context = {
-        'interns': inters
+        'datas': datas,
+        'form': form,
+        'internship':internship,
+        'topic':topic,
     }
     return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
 
