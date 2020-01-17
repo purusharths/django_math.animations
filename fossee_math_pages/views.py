@@ -326,7 +326,7 @@ def admin_add_intern(request):
     user = User.objects.all()
     interns = Intern.objects.all()
     form = AddIntern(user)
-    internships = Internship.objects.all()
+    internships = Internship.objects.filter(internship_status='ACTIVE')
     if request.method == 'POST':
         intern_name = request.POST['user_id']
         topic = request.POST['internship_id']

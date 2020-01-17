@@ -68,6 +68,7 @@ class AddIntern(ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(AddIntern, self).__init__(*args, **kwargs)
         self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+        self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
 
 
 class AssignTopic(ModelForm):
