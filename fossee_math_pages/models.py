@@ -121,3 +121,4 @@ class AssignedTopics(models.Model):
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
+
