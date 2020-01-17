@@ -13,19 +13,11 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                <li class="breadcrumb-item active"> View Intern Data</li>
-                <li class="breadcrumb-item">
-                    {% if request.user.adduser.role == 'INTERN' %}
-                        <a style="color:black" href="{% url 'view_details' %}">
-                            <i style="color:black"></i> My works</a>
-                    {% endif %}
-                    {% if request.user.adduser.role == 'STAFF' %}
-                        <a style="color:black" href="{% url 'aprove_contents' %}">
-                            <i style="color:black"></i> Submissions</a>
-                    {% endif %}
+                  <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'intern_view_topic' %}">
+                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}</a>
                 </li>
-
-                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>
+                <li class="breadcrumb-item active"> View Intern Data : {{ topic.subtopic }}</li>
             </ol>
         </nav>
     </section>
