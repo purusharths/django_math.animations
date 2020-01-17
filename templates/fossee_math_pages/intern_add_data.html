@@ -1,36 +1,44 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Add Intern Data{% endblock %}{% block content %} {% load static %} {{ form.media }}
-<section id="bc" class="mt-3">
+{% extends 'base.html' %}{% load staticfiles %} {% block title %}Add Intern Data{% endblock %}{% block content %}
+    {% load static %} {{ form.media }}
+    <section id="bc" class="mt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-                 <li class="breadcrumb-item">
+                <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
                 <li class="breadcrumb-item active"> Add Intern Data</li>
             </ol>
         </nav>
-</section>
-<div class="container">
-    <br>
-    <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-    <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
-    <script>
-        window.CKEDITOR_BASEPATH = '/static/ckeditor/';
-    </script>
+    </section>
+    <div class="container">
+        <br>
+        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
+        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+        <script>
+            window.CKEDITOR_BASEPATH = '/static/ckeditor/';
+        </script>
 
-    <h2>Internship :{{ internship.internship_topic }}</h2>
+        <h2>Internship :{{ internship.internship_topic }}</h2>
 
+<<<<<<< HEAD
     <form method="post">
         {% csrf_token %}
         {{ form.media }}
         {{form.as_p}}
+=======
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_table }}
+>>>>>>> 9b2cf67397da593fd14f47e41549293cd7c5ab8b
 
-        <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-    </form>
-    <br>
-</div>
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+        </form>
+        <br>
+    </div>
 {% endblock %}

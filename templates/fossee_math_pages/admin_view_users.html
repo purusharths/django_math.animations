@@ -1,0 +1,107 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title %}View Users{% endblock %} {% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
+<section id="bc" class="mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">View Users</li>
+        </ol>
+    </nav>
+</section>
+<div class="container">
+    <h4>Search</h4>
+    <form method="GET" action=".">
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Search (UserName, Intern, Staff)" />
+                    <span class="input-group-append" style="width: 10%;">
+                                    <div class="input-group-text bg-transparent">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </span>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+<div class="container">
+    <br> {% if datas %}
+    <h4>All Users</h4>
+    <table class="table" style="text-align: center; width: 100%;">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 5%;">#</th>
+                <th scope="col" style="width: 30%;">User Name</th>
+                <th scope="col" style="width: 20%;">Email</th>
+                <th scope="col" style="width: 10%;">Role</th>
+                <th scope="col" style="width: 30%;">Last Activity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas %}
+            <tr>
+                <td style="width: 5%;">
+                    {{ forloop.counter }}
+                </td>
+                <td style="width: 20%;">{{ data.user_id }}</td>
+                <td style="width: 20%;">
+                    {{ data.user_id.email }}
+                </td>
+                <td style="width: 10%;">
+                    {{ data.user_role }}
+                </td>
+                <td style="width: 15%;">
+                    {{ data.user_id.last_login }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="container">
+        <p>
+            No User Information is Available!
+        </p>
+    </div>
+    {% endif %}
+    <nav aria-label="...">
+        {% if datas.has_other_pages %}
+        <ul class="pagination">
+            {% if datas.has_previous %}
+            <li class="page-item">
+                <a href="?page={{datas.previous_page_number}}" class="page-link">&laquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+            </li>
+            {% endif %} {% for i in datas.paginator.page_range %} {% if datas.number == i %}
+            <li class="li.page-item active">
+                <a class="page-link">{{i}}</a>
+            </li>
+
+            {% else %}
+            <li class="page-item">
+                <a href="?page={{i}}" class="page-link">{{i}}</a>
+            </li>
+            {% endif %} {% endfor %} {% if datas.has_next %}
+            <li class="page-item">
+                <a href="?page={{datas.next_page_number}}" class="page-link">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+            </li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>
+<br> {% endif %} {% endif %} {% endblock %}
