@@ -71,7 +71,11 @@ class AddIntern(ModelForm):
 class AssignTopic(ModelForm):
     class Meta:
         model = AssignedTopics
-        fields = '__all__'
+        fields = ['user_id','topic_id']
+    def __init__(self, user, *args, **kwargs):
+        super(AssignTopic, self).__init__(*args, **kwargs)
+        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+
 
 
 class data(ModelForm):
