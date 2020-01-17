@@ -582,7 +582,8 @@ def staff_manage_intern(request):
 
 @login_required
 def staff_assign_topic(request):
-    form = AssignTopic()
+    user = User.objects.all()
+    form = AssignTopic(user)
     inters = User.objects.filter(is_staff=False, is_superuser=False)
     intern = Internship.objects.get(internship_status='ACTIVE')
     i_topic = Topic.objects.all()
