@@ -10,11 +10,13 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                 <li class="breadcrumb-item">
+                <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'staff_add_topics' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i>  {{ intern.internship_topic }} </a>
+                        <i class="fa fa-dashboard" style="color:black"></i> {{ intern.internship_topic }} </a>
                 </li>
-                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - {{ i_topic.topic_name }} - Subtopics</li>
+                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - {{ i_topic.topic_name }} -
+                    Subtopics
+                </li>
             </ol>
         </nav>
     </section>
@@ -27,18 +29,18 @@
                 <thead>
                 <tr>
                     <th>
-                       {{ intern.internship_topic }} -  {{ i_topic.topic_name }}
+                        {{ intern.internship_topic }} - {{ i_topic.topic_name }}
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-      {% for i in subtopics %}
+                {% for i in subtopics %}
                     <tr>
                         <td>
                             {{ i.subtopic_name }}
                         </td>
                     </tr>
-      {% endfor %}
+                {% endfor %}
                 <tr>
                     <td>
                         <div class="row">

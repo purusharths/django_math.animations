@@ -30,58 +30,58 @@
                     <a class="nav-link text-white" href="{% url 'internship' %}">Internship</a>
                 </li>
                 {% if user.is_authenticated %} {% if user.is_superuser %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.username }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                            <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
+                            <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
+                            <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage
+                                Internship</a>
+                        </div>
+                    </li>
+                    {% else %}{% if user.is_staff %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
+                               role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ user.username }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                                <a class="dropdown-item" href="{% url 'admin_add_user' %}">Add User</a>
-                                <a class="dropdown-item" href="{% url 'admin_add_internship' %}">Add Internship</a>
-                                <a class="dropdown-item" href="{% url 'admin_manage_internship' %}">Manage
+                                <a class="dropdown-item" href="{% url 'staff_add_topics' %}">Manage Internship</a>
+                                <a class="dropdown-item" href="{% url 'staff_manage_intern' %}">Manage Inerns</a>
+                                <a class="dropdown-item" href="{% url 'staff_aprove_contents' %}">Approve
+                                    Contents</a>
+                                <a class="dropdown-item" href="{% url 'staff_view_internship' %}">View
                                     Internship</a>
-                              </div>
+                            </div>
                         </li>
-                        {% else %}{% if user.is_staff %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
-                                   role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ user.username }}
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                                    <a class="dropdown-item" href="{% url 'staff_add_topics' %}">Manage Internship</a>
-                                    <a class="dropdown-item" href="{% url 'staff_manage_intern' %}">Manage Inerns</a>
-                                    <a class="dropdown-item" href="{% url 'staff_aprove_contents' %}">Approve
-                                        Contents</a>
-                                    <a class="dropdown-item" href="{% url 'staff_view_internship' %}">View
-                                        Internship</a>
-                                </div>
-                            </li>
-                        {% else %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
-                                   role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ user.username }}
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                                    <a class="dropdown-item" href="{% url 'intern_view_topic' %}">Add Data</a>
-                                    <a class="dropdown-item" href="{% url 'intern_view_internship' %}">View
-                                        Internship</a>
-                                </div>
-                            </li>
-                        {% endif %}{% endif %}
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" style="color: white;" id="navbarDropdown"
+                               role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                <a class="dropdown-item" href="{% url 'intern_view_topic' %}">Add Data</a>
+                                <a class="dropdown-item" href="{% url 'intern_view_internship' %}">View
+                                    Internship</a>
+                            </div>
+                        </li>
+                    {% endif %}{% endif %}
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
-                </li>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

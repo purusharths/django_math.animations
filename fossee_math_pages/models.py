@@ -1,9 +1,9 @@
 from datetime import datetime
 
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from ckeditor_uploader.fields import RichTextUploadingField
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -121,4 +121,3 @@ class AssignedTopics(models.Model):
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
-
