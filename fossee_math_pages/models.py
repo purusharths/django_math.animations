@@ -57,7 +57,7 @@ class Internship(models.Model):
 
 class Topic(models.Model):
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(UserDetails, on_delete=models.CASCADE)
     topic_name = models.CharField(max_length=255, null=False)
 
     def __str__(self):
