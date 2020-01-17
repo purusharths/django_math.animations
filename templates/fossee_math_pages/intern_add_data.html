@@ -27,7 +27,7 @@
     <form method="post">
         {% csrf_token %}
     {{ form.media }}
-    {{form.as_p}}
+    {{form.as_table}}
 
         <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
     </form>
