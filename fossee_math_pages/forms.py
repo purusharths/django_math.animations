@@ -2,9 +2,10 @@ from django import forms
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics,Data
+from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -59,25 +60,31 @@ class AddIntern(ModelForm):
     class Meta:
         model = Intern
         labels = {
-            'user_id' : 'Intern Name',
-            'internship_id' : 'Internship Name'
+            'user_id': 'Intern Name',
+            'internship_id': 'Internship Name'
         }
-        fields = ['user_id','internship_id']
+        fields = ['user_id', 'internship_id']
+
     def __init__(self, user, *args, **kwargs):
         super(AddIntern, self).__init__(*args, **kwargs)
         self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
-    
+        self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
+
 
 class AssignTopic(ModelForm):
     class Meta:
         model = AssignedTopics
-        fields = '__all__'
+        fields = ['user_id', 'topic_id']
+
+    def __init__(self, user, *args, **kwargs):
+        super(AssignTopic, self).__init__(*args, **kwargs)
+        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
 
 
 class data(ModelForm):
     class Meta:
-        model=Data
-        fields=['data_content','data_reference']
+        model = Data
+        fields = ['data_content', 'data_reference']
 
 class edit_data(ModelForm):
     class Meta:
@@ -86,20 +93,38 @@ class edit_data(ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(max_length=32, widget=forms.TextInput())
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput())
+    email = forms.CharField()
+    password = forms.CharField(
+        widget=forms.PasswordInput(render_value=False)
+    )
 
     def clean(self):
-        super(UserLoginForm, self).clean()
-        try:
-            uname, pwd = self.cleaned_data["username"], \
-                         self.cleaned_data["password"]
-            user = authenticate(username=uname, password=pwd)
-        except Exception:
-            raise forms.ValidationError \
-                ("Username and/or Password is not entered")
+        user = self.authenticate_via_email()
         if not user:
-            raise forms.ValidationError("Invalid username/password")
+            raise forms.ValidationError("Sorry, that login was invalid. Please try again.")
+        else:
+            self.user = user
+        return self.cleaned_data
+
+    def authenticate_user(self):
+        return authenticate(
+            username=self.user.username,
+            password=self.cleaned_data['password'])
+
+    def authenticate_via_email(self):
+        """
+            Authenticate user using email.
+            Returns user object if authenticated else None
+        """
+        email = self.cleaned_data['email']
+        if email:
+            try:
+                user = User.objects.get(email__iexact=email)
+                if user.check_password(self.cleaned_data['password']):
+                    return user
+            except ObjectDoesNotExist:
+                pass
+
         return user
 
 

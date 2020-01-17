@@ -1,21 +1,21 @@
 {% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% block content %}
-<section id="bc" class="mt-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a style="color: black" href="{% url 'index' %}">
-                    <i class="fa fa-home"></i> Index</a>
-            </li>
-              <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active"> Approve Submissions</li>
-        </ol>
-    </nav>
-</section>
-<table class="table">
-    <thead class="thead-dark">
+    <section id="bc" class="mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color: black" href="{% url 'index' %}">
+                        <i class="fa fa-home"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active"> Approve Submissions</li>
+            </ol>
+        </nav>
+    </section>
+    <table class="table">
+        <thead class="thead-dark">
         <tr>
             <th scope="col">User Name</th>
             <th scope="col">Submition Date</th>
@@ -23,19 +23,27 @@
             <th scope="col">Subtopic</th>
             <th scope="col"></th>
         </tr>
-    </thead>
-    <tbody>
-        {% for i in data %}
-        <tr>
-            <td>{{ i.user_id }}</td>
-            <td>{{ i.post_date }}</td>
-            <td>{{ i.user_id_id.inters.topic }}</td>
-            <td>{{ i.subtopic }}</td>
-            <td><a href="{% url 'view_data' i.id %}" class="btn btn-success">View</a></td>
-        </tr>
+        </thead>
+        <tbody>
+        {% for i in user %}
+            {% for j in interns %}
+                {% if i.pk == j.user_id_id %}
+                    <tr>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.post_date }}</td>
+
+
+                        <td>{{ l.topic_name }}</td>
+                      
+
+                        <td>{{ i.subtopic }}</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 
 {% endblock %}
