@@ -567,7 +567,22 @@ def staff_add_topics(request):
 
 
 def staff_aprove_contents(request):
-    return render(request, 'fossee_math_pages/staff_aprove_contents.html')
+    interns=UserDetails.objects.filter(user_role='INTERN')
+    user=User.objects.all()
+    internship=Internship.objects.all()
+    data=Data.objects.all()
+    assigned=AssignedTopics.objects.all()
+    topic=Topic.objects.all()
+
+    context={
+        'interns':interns,
+        'user':user,
+        'internship':internship,
+        'data':data,
+        'assigned':assigned,
+        'topic':topic,
+    }
+    return render(request, 'fossee_math_pages/staff_aprove_contents.html',context)
 
 
 @login_required
