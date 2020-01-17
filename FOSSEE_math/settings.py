@@ -151,12 +151,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
-<<<<<<< HEAD
 
-# AUTHENTICATION_BACKENDS = (
-#     'fossee_math_pages.backends.EmailBackend',
-# )
-
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-=======
->>>>>>> 9fe5ccf81470a991eeebbf26f206aaadf67ef633
