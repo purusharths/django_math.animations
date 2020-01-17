@@ -25,17 +25,10 @@
 
         <h2>Internship :{{ internship.internship_topic }}</h2>
 
-<<<<<<< HEAD
-    <form method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{form.as_p}}
-=======
         <form method="post">
             {% csrf_token %}
             {{ form.media }}
-            {{ form.as_table }}
->>>>>>> 9b2cf67397da593fd14f47e41549293cd7c5ab8b
+            {{ form.as_p }}
 
             <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
         </form>
