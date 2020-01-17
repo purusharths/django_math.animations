@@ -79,6 +79,11 @@ class data(ModelForm):
         model=Data
         fields=['data_content','data_reference']
 
+class edit_data(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_content','data_reference']
+
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=32, widget=forms.TextInput())
