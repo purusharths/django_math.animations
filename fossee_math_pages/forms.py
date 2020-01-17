@@ -86,10 +86,11 @@ class data(ModelForm):
         model = Data
         fields = ['data_content', 'data_reference']
 
+
 class edit_data(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content','data_reference']
+        fields = ['data_content', 'data_reference']
 
 
 class UserLoginForm(forms.Form):
@@ -129,37 +130,10 @@ class UserLoginForm(forms.Form):
 
 
 class add_topic(forms.Form):
-    # class Meta:
-    #     model = Topic
-    #     fields = ['topic_name']
     topic = forms.CharField(max_length=255, widget=forms.TextInput())
 
 
 class add_subtopic(forms.Form):
     subtopic = forms.CharField(max_length=255, widget=forms.TextInput())
 
-# # Edit data
 
-# class edit_data(forms.ModelForm):
-#     text = RichTextUploadingField()
-
-#     class Meta:
-#         model = data
-#         fields = ('text',)
-
-# class AddUserForm(forms.ModelForm):
-#     firstname = forms.CharField(max_length=20)
-#     lastname = forms.CharField(max_length=20)
-
-#     class Meta:
-#         model = AddUser
-#         labels = {
-#             "name" : "Username"
-#         }
-#         fields = ('firstname', 'lastname', 'name', 'email', 'topic', 'phone', 'role',)
-
-
-# class DeleteUserForm(forms.ModelForm):
-#     class Meta:
-#         model = AddUser
-#         fields = ('name', 'email',)
