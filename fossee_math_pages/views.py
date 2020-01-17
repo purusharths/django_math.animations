@@ -575,7 +575,10 @@ def staff_manage_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
     internship=Internship.objects.get(internship_status='ACTIVE')
     topic=Topic.objects.filter(internship_id=internship.pk)
-    form = ManageIntern
+
+    assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
+
+    form = ManageIntern()
     if request.method == 'POST':
         int_id = request.POST["id"]
         obj = get_object_or_404(UserDetails, id=int_id)
@@ -584,16 +587,17 @@ def staff_manage_intern(request):
             obj = form.save(commit=False)
             obj.save()
             messages.success(request, "Changed")
-            return redirect('admin_view_intern')
+            return redirect('staff_manage_intern')
         else:
             messages.error(request, "Error")
-            return redirect('admin_view_intern')
+            return redirect('staff_manage_intern')
 
     context = {
         'datas': datas,
         'form': form,
         'internship':internship,
         'topic':topic,
+        'assigned_topics' : assigned_topics,
     }
     return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
 
