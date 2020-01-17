@@ -22,12 +22,14 @@
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
 
-    <h2>: {{ internship.internship_topic }}</h2>
+    <h2>Internship :{{ internship.internship_topic }}</h2>
 
     <form method="post">
         {% csrf_token %}
+    {{ form.media }}
+    {{form.as_p}}
 
-    {{form}}
+        <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
     </form>
     <br>
 </div>
