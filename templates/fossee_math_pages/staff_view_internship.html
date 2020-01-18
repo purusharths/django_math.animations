@@ -33,13 +33,13 @@
                 </thead>
                 {% for j in subtopics %}
                     {% if j.topic_id_id == i.id %}
-                <tbody>
-                <tr>
-                    <th scope="row">Subtopic : {{ j.subtopic_name }}</th>
-                </tr>
-                </tbody>
+                        <tbody>
+                        <tr>
+                            <th scope="row">Subtopic : {{ j.subtopic_name }}</th>
+                        </tr>
+                        </tbody>
                     {% endif %}
-                    {% endfor %}
+                {% endfor %}
             {% endfor %}
         </table>
     </div>
