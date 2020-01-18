@@ -74,6 +74,10 @@ class AddIntern(ModelForm):
 class AssignTopic(ModelForm):
     class Meta:
         model = AssignedTopics
+        labels = {
+            'user_id': 'User',
+            'topic_d': 'Topic',
+        }
         fields = ['user_id', 'topic_id']
 
     def __init__(self, user, *args, **kwargs):

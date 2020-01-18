@@ -472,6 +472,7 @@ def staff_manage_intern(request):
     return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
 
 
+
 @login_required
 def staff_assign_topic(request):
     user = User.objects.all()
@@ -484,7 +485,9 @@ def staff_assign_topic(request):
     if request.method == "POST":
         intern_name = request.POST['user_id']
         topic = request.POST['topic_id']
-        temp1 = User.objects.get(id=intern_name)
+        usr=UserDetails.objects.get(id=intern_name)
+        print(usr)
+        temp1 = User.objects.get(id=usr.user_id_id)
         temp2 = Topic.objects.get(id=topic)
         if AssignedTopics.objects.filter(user_id=intern_name).exists():
             messages.error(request, 'That intern has an assigned topic')
