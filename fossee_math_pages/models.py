@@ -1,9 +1,9 @@
 from datetime import datetime
 
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from ckeditor_uploader.fields import RichTextUploadingField
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),

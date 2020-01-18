@@ -41,9 +41,8 @@
                 <tr>
                     <td>{{ i.subtopic_name }}</td>
                     <td><a href="{% url  'intern_add_data' i.topic_id_id %}">Add Data</a></td>
-                    <td><a href="{% url  'intern_view_data' %}">View Data</a></td>
-                 <td><a href="{% url  'intern_view_data' %}">Edit Data</a></td>
-{#                <td>{{ i.topic_id_id }}</td>#}
+                    <td><a href="{% url  'intern_view_data' i.topic_id_id %}">View Data</a></td>
+                    <td><a href="{% url  'intern_edit_data' i.topic_id_id %}">Edit Data</a></td>
                 </tr>
             {% endfor %}
 
