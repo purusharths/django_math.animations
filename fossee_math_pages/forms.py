@@ -124,7 +124,7 @@ class UserLoginForm(forms.Form):
                 if user.check_password(self.cleaned_data['password']):
                     return user
             except ObjectDoesNotExist:
-                pass
+                raise forms.ValidationError("Sorry, that login was invalid. Please try again.")
 
         return user
 
