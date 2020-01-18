@@ -533,3 +533,4 @@ def staff_view_topic(request):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
