@@ -499,11 +499,11 @@ def internship(request):
 
 
 def user_login(request):
+    user = None
     user = request.user
 
     if request.method == "POST":
         form = UserLoginForm(request.POST)
-
         if form.is_valid():
             try:
                 user = form.authenticate_user()
