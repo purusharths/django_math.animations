@@ -504,9 +504,19 @@ def user_login(request):
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
-            user = form.authenticate_user()
-            login(request, user)
-            return render(request, "fossee_math_pages/dashboard.html")
+            try:
+                user = form.authenticate_user()
+                login(request, user)
+                return render(request, "fossee_math_pages/dashboard.html")
+            except:
+                errormsg = "Invalid Email or Password"
+                form = UserLoginForm()
+                context = {
+                    'form' : form,
+                    'errormsg' : errormsg,
+                }
+                
+                return render(request, "fossee_math_pages/login.html", context)
         else:
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
