@@ -294,12 +294,50 @@ def intern_view_internship(request):
     return render(request, 'fossee_math_pages/intern_view_internship.html',context)
 
 
-def intern_edit_data(request):
-    return render(request, 'fossee_math_pages/intern_edit_data.html')
+@login_required
+def intern_edit_data(request,e_id):
+    post = get_object_or_404(Data, subtopic_id_id=e_id)
+    sub = Data.objects.get(subtopic_id_id=e_id)
+
+    if request.user:
+        form = data
+        form = data(instance=post)
+        context = {
+            'form': form,
+            'content': sub.data_content,
+            'reference': sub.data_reference
+        }
+
+        if request.method == 'POST':
+            form = data(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.save()
+                form = data
+                return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+
+        return render(request, 'fossee_math_pages/intern_edit_data.html',context)
 
 
-def intern_view_data(request):
-    return render(request, 'fossee_math_pages/intern_view_data.html')
+def intern_view_data(request,v_id):
+    internship = Internship.objects.get(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
+    # subtopic = Subtopic.objects.get(topic_id=assigned_topic.topic_id)
+    print(v_id)
+    try:
+        topic = Data.objects.get(subtopic_id=v_id)
+
+        context ={
+            'internship' : internship,
+            'assigned_topic' : assigned_topic,
+            # 'subtopic' : subtopic,
+            'topic' :topic
+        }
+        return render(request, 'fossee_math_pages/intern_view_data.html',context)
+
+    except:
+        return render(request, 'fossee_math_pages/intern_view_data.html')
+
 
 
 @login_required
