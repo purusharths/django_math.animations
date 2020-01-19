@@ -533,7 +533,7 @@ def staff_assign_topic(request):
     }
     return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
 
-
+@login_required
 def staff_view_interns(request):
     topics=AssignedTopics.objects.all()
 
