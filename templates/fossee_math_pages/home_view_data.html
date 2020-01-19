@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block title %}View Intern Data{% endblock %} {% block content %}
+
+
+    <section id="bc" class="mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'home_topics' %}">
+                        <i style="color:black"></i> Topics</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black">
+                        <i style="color:black"></i> Browse Topic : {{ details.internship_topic }} </a>
+                </li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
+    <hr>
+        <h3>{{ details.internship_topic }}</h3>
+        <hr>
+        {% for i in topics %}
+            <table>
+                <tbody>
+                <tr>
+                    <th scope="row"><h4>{{ i.topic_name }}</h4></th>
+                </tr>
+                {% for j in subtopics %}
+                    {% if j.topic_id_id == i.id %}
+                        <tr>
+                            <th><h5> <a href="{% url 'home_details' j.id %}" > {{ j.subtopic_name }} </a> </h5></th>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    </div>
+    <br>
+    <hr>
+    <br>
+{% endblock %}

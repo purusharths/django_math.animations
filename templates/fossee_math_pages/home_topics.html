@@ -9,20 +9,9 @@
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
                 <li class="breadcrumb-item">
-                    {% if request.user.adduser.role == 'INTERN' %}
-                        <a style="color:black" href="{% url 'view_details' %}">
-                            <i style="color:black"></i> My works</a>
-                    {% endif %}
-                    {% if request.user.adduser.role == 'STAFF' %}
-                        <a style="color:black" href="{% url 'aprove_contents' %}">
-                            <i style="color:black"></i> Submissions</a>
-                    {% else %}
-                        <a style="color:black" href="{% url 'home_topics' %}">
-                            <i style="color:black"></i> Search</a>
-                    {% endif %}
-
+                    <a style="color:black" href="{% url 'home_topics' %}">
+                        <i style="color:black"></i> Search</a>
                 </li>
-                {#                <li class="breadcrumb-item active">{{ topic.subtopic }}</li>#}
             </ol>
         </nav>
     </section>
@@ -35,7 +24,26 @@
         <h1>Topics</h1>
         <hr>
         {% for i in internship %}
-            <h3>{{ i.internship_topic }}</h3>
+            <div class="card">
+                <h5 class="card-header">{{ i.internship_topic }}</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <img src="{{ i.internship_thumbnail }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text">Add Quotes.</p>
+                                    <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
     </div>
     <br>

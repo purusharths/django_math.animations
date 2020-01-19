@@ -12,7 +12,7 @@ from email_validator import validate_email, EmailNotValidError
 from django.core.paginator import Paginator
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data,AproveContents)
+                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
 from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
 
 
@@ -256,8 +256,30 @@ def home_topics(request):
     return render(request, 'fossee_math_pages/home_topics.html', context)
 
 
-def home_view_data(request):
-    return render(request, 'fossee_math_pages/home_view_data.html')
+def home_view_data(request, id):
+    details = Internship.objects.get(id=id)
+    topics = Topic.objects.filter(internship_id_id=id)
+    subtopics = Subtopic.objects.all()
+    context = {
+        'details': details,
+        'topics': topics,
+        'subtopics': subtopics,
+    }
+    return render(request, 'fossee_math_pages/home_view_data.html', context)
+
+
+def home_details(request, id):
+    subtopic = Subtopic.objects.get(id=id)
+    try:
+        data = Data.objects.get(subtopic_id_id=subtopic.pk)
+    except Data.DoesNotExist:
+        data = None
+
+    context = {
+        'subtopic': subtopic,
+        'data': data,
+    }
+    return render(request, 'fossee_math_pages/home_details.html', context)
 
 
 def index(request):
@@ -276,16 +298,16 @@ def intern_add_data(request, t_id):
         reference = request.POST['data_reference']
         status = "WAITING"
 
-        if Data.objects.filter(subtopic_id_id = t_id).exists():
+        if Data.objects.filter(subtopic_id_id=t_id).exists():
             print("error")
             messages.error(request, "Data already exists")
             return redirect(intern_view_topic)
         else:
-            messages.success(request,"Data added successfully")
+            messages.success(request, "Data added successfully")
             add_data = Data(data_content=content, data_reference=reference, data_status=status, subtopic_id_id=t_id,
-                                user_id_id=user.id)
+                            user_id_id=user.id)
             add_data.save()
-            return  redirect(intern_view_topic)
+            return redirect(intern_view_topic)
 
     context = {
         'form': form,
@@ -454,13 +476,18 @@ def staff_aprove_contents(request):
     topic_f = Topic.objects.all()
     internship_f = Internship.objects.get(internship_status='ACTIVE')
     user_details = UserDetails.objects.filter(user_role='INTERN')
-
+    aproved = Data.objects.filter(data_status='ACCEPTED')
+    rejected = Data.objects.filter(data_status='REJECTED')
+    changes = Data.objects.filter(data_status='UNDER REVIEW')
     context = {
         'datas': data_f,
         'sub_f': sub_f,
         'topic_f': topic_f,
         'internship_f': internship_f,
         'user_details': user_details,
+        'aproved': aproved,
+        'rejected': rejected,
+        'changes': changes,
     }
 
     return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
@@ -559,7 +586,7 @@ def staff_view_internship(request):
 def staff_view_topic(request, s_id):
     print(s_id)
     data_info = Data.objects.get(id=s_id)
-    post = get_object_or_404(Data, id = s_id)
+    post = get_object_or_404(Data, id=s_id)
     interndhip_info = Internship.objects.get(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
     subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
@@ -586,18 +613,15 @@ def staff_view_topic(request, s_id):
                 interndhip_info = Internship.objects.get(internship_status='ACTIVE')
                 assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
                 subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
-                context={'form': form,
-                         'data_info':data_info,
-                         'internship_info': interndhip_info,
-                         'assigned_topic': assigned_topic,
-                         'subtopic': subtopic,
-                         }
-                return render(request, 'fossee_math_pages/staff_view_topic.html',context)
-
+                context = {'form': form,
+                           'data_info': data_info,
+                           'internship_info': interndhip_info,
+                           'assigned_topic': assigned_topic,
+                           'subtopic': subtopic,
+                           }
+                return render(request, 'fossee_math_pages/staff_view_topic.html', context)
 
         return render(request, 'fossee_math_pages/staff_view_topic.html', context)
-
-
 
 
 def user_logout(request):
