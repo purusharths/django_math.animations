@@ -31,7 +31,7 @@
             <td>{{ i.data_post_date }}</td>
             <td>{{ i.subtopic_id.topic_id }}</td>
             <td>{{ i.subtopic_id }}</td>
-            <td><a href="">Approve</a> </td>
+            <td><a href="{% url 'staff_view_topic' %}">Approve</a> </td>
         </tr>
         {% endfor %}
         </tbody>
