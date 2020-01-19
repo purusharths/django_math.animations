@@ -13,9 +13,10 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                  <li class="breadcrumb-item">
+                <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}</a>
+                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}
+                    </a>
                 </li>
                 <li class="breadcrumb-item active"> View Intern Data : {{ topic.subtopic }}</li>
             </ol>
@@ -27,47 +28,38 @@
             <thead class="thead-dark">
             <tr>
                 <th><h3>Internship Name : {{ internship.internship_topic }}</h3></th>
-                <th></th>
-                <th><h3>Topic Name : {{ assigned_topic.topic_id }}</h3></th>
-                <th></th>
             </tr>
-
             </thead>
-            <thead class="thread-dark">
+            <thead class="thread-light">
             <tr>
-                {#                <th><h3>Subtopic Name : {{ }}</h3></th>#}
-                <th></th>
-                <th></th>
-                <th></th>
+                <th><h4>Topic Name : {{ assigned_topic.topic_id }}</h4></th>
             </tr>
-
-            </thead>
-            <thead>
-
             <tr>
-                <th>Content</th>
-                <th>Reference</th>
-                <th>Post date</th>
-                <th>status</th>
+                <th><h5>Sub topic : {{ subtopic.subtopic_name }}</h5></th>
             </tr>
-
             </thead>
             <tbody>
-            {% comment %}{% for i in topic %}{% endcomment %}
+            <tr>
+                <th>Content</th>
+            </tr>
             <tr>
                 <td id="content_data">{{ topic.data_content }}
-
-                </td>
-                <td>{{ topic.data_reference }}
-
-                </td>
-                <td>{{ topic.data_post_date }}
-
-                </td>
-                <td>{{ topic.data_status }}
-
                 </td>
             </tr>
+            <tr>
+                <th>Reference</th>
+            </tr>
+            <tr>
+                <td>{{ topic.data_reference }}
+                </td>
+            </tr>
+            <tr>
+                <th>Post date : {{ topic.data_post_date }}</th>
+            </tr>
+            <tr>
+                <th>Status : {{ topic.data_status }}</th>
+            </tr>
+            </tbody>
             <script>
                 $(document).ready(function () {
                     var data = $("#content_data").text()
@@ -75,18 +67,9 @@
 
                 })
             </script>
-            {% comment %}  {% endfor %}{% endcomment %}
             </tbody>
 
         </table>
-        {#        <div class="row">#}
-        {#            <h3>  {{ topic.subtopic }} </h3>#}
-        {#        </div>#}
-        {#        <div id="topic">{{ topic.text }}#}
-        {#        </div>#}
-        {#        <div class="row float-right">#}
-        {#            Date : {{ topic.post_date }}#}
-        {#        </div>#}
     </div>
     <br>
     <hr>

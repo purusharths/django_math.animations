@@ -27,8 +27,6 @@
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
 
-        {#    <h2>Internship :{{ internship.internship_topic }}</h2>#}
-        <h4>Reference : {{ reference }}</h4>
         <form method="post">
             {% csrf_token %}
             {{ form.media }}
