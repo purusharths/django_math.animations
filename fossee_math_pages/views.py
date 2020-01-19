@@ -450,7 +450,22 @@ def staff_add_topics(request):
 
 
 def staff_aprove_contents(request):
-    return render(request, 'fossee_math_pages/staff_aprove_contents.html')
+
+    data_f = Data.objects.filter(data_status='Waiting')
+    sub_f = Subtopic.objects.all()
+    topic_f = Topic.objects.all()
+    internship_f = Internship.objects.get(internship_status='ACTIVE')
+    user_details = UserDetails.objects.filter(user_role='INTERN')
+
+    context={
+        'datas' : data_f,
+        'sub_f' :sub_f,
+        'topic_f' :topic_f,
+        'internship_f' : internship_f,
+        'user_details':user_details,
+    }
+
+    return render(request, 'fossee_math_pages/staff_aprove_contents.html',context)
 
 
 @login_required

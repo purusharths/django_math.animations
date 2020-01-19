@@ -25,6 +25,17 @@
         </tr>
         </thead>
         <tbody>
+        {% for i in datas %}
+        <tr>
+            <td>{{ i.user_id }}</td>
+            <td>{{ i.data_post_date }}</td>
+            <td>{{ i.subtopic_id.topic_id }}</td>
+            <td>{{ i.subtopic_id }}</td>
+            <td><a href="">Approve</a> </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tbody>
 
         </tbody>
     </table>
