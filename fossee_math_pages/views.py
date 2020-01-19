@@ -270,7 +270,7 @@ def intern_add_data(request, t_id):
     if request.method == 'POST':
         content = request.POST['data_content']
         reference = request.POST['data_reference']
-        status = "Waiting"
+        status = "WAITING"
         try:
             sub = Data.objects.get(user_id_id=user.id)
             sud_id = sub.subtopic_id_id
