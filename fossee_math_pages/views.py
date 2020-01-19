@@ -261,17 +261,26 @@ def index(request):
 @login_required
 def intern_add_data(request, t_id):
     form = data
+    user = request.user
+    print(user.id)
     internship = Internship.objects.get(internship_status='ACTIVE')
-    # Subtopic id
-    print(t_id)
+
     user = request.user
     print(user.id)    # user id
     if request.method == 'POST':
         content = request.POST['data_content']
         reference = request.POST['data_reference']
         status = "Waiting"
-        add_data = Data(data_content = content,data_reference = reference,data_status=status,subtopic_id_id=t_id,user_id_id=user.id)
-        add_data.save()
+        try:
+            sub = Data.objects.get(user_id_id=user.id)
+            sud_id = sub.subtopic_id_id
+            if sud_id == t_id:
+                print("error")
+                messages.error(request, "Data already exists")
+                return redirect(intern_view_topic)
+        except:
+            add_data = Data(data_content = content,data_reference = reference,data_status=status,subtopic_id_id=t_id,user_id_id=user.id)
+            add_data.save()
 
     context={
         'form':form,
