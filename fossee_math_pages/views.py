@@ -563,34 +563,6 @@ def staff_view_internship(request):
     }
     return render(request, 'fossee_math_pages/staff_view_internship.html', context)
 
-# def intern_edit_data(request, e_id):
-#     internship = Internship.objects.get(internship_status='ACTIVE')
-#     post = get_object_or_404(Data, subtopic_id_id=e_id)
-#     sub = Data.objects.get(subtopic_id_id=e_id)
-#     subtopic = Subtopic.objects.get(id=sub.subtopic_id_id)
-#
-#     if request.user:
-#         form = data
-#         form = data(instance=post)
-#         context = {
-#             'internship': internship,
-#             'form': form,
-#             'subtopic': subtopic,
-#             'content': sub.data_content,
-#             'reference': sub.data_reference,
-#         }
-#
-#         if request.method == 'POST':
-#             form = data(request.POST, request.FILES, instance=post)
-#             if form.is_valid():
-#                 post = form.save(commit=False)
-#                 post.save()
-#                 form = data
-#                 return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
-#
-#         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
-#
-
 
 @login_required
 def staff_view_topic(request, s_id):
@@ -599,7 +571,7 @@ def staff_view_topic(request, s_id):
     post = get_object_or_404(Data, id = s_id)
     interndhip_info = Internship.objects.get(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
-    subtopic = Subtopic.objects.get(topic_id_id=data_info.subtopic_id_id)
+    subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
     print(data_info.data_reference)
 
     if request.user:
@@ -619,7 +591,17 @@ def staff_view_topic(request, s_id):
                 post = form.save(commit=False)
                 post.save()
                 form = AproveContents
-                return render(request, 'fossee_math_pages/staff_view_topic.html', {'form': form},context)
+                data_info = Data.objects.get(id=s_id)
+                interndhip_info = Internship.objects.get(internship_status='ACTIVE')
+                assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
+                subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
+                context={'form': form,
+                         'data_info':data_info,
+                         'internship_info': interndhip_info,
+                         'assigned_topic': assigned_topic,
+                         'subtopic': subtopic,
+                         }
+                return render(request, 'fossee_math_pages/staff_view_topic.html',context)
 
 
         return render(request, 'fossee_math_pages/staff_view_topic.html', context)
