@@ -50,6 +50,12 @@ class ManageInternship(ModelForm):
         fields = ['internship_status']
 
 
+class AproveContents(ModelForm):
+    class Meta:
+        model=Data
+        fields=['data_status']
+
+
 class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
