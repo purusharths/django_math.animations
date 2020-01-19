@@ -21,7 +21,7 @@
     </section>
     <hr>
     <div class="container">
-    <hr>
+        <hr>
         <h3>{{ details.internship_topic }}</h3>
         <hr>
         {% for i in topics %}
@@ -33,7 +33,7 @@
                 {% for j in subtopics %}
                     {% if j.topic_id_id == i.id %}
                         <tr>
-                            <th><h5> <a href="{% url 'home_details' j.id %}" > {{ j.subtopic_name }} </a> </h5></th>
+                            <th><h5><a href="{% url 'home_details' j.id %}"> {{ j.subtopic_name }} </a></h5></th>
                         </tr>
                     {% endif %}
                 {% endfor %}

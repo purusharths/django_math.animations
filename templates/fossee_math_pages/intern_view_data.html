@@ -15,10 +15,12 @@
                 </li>
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ topic.subtopic_id.topic_id.internship_id }}
+                        <i class="fa fa-pencil" style="color:black"></i>Internship
+                        - {{ topic.subtopic_id.topic_id.internship_id }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active"> View Data : {{ topic.subtopic_id.topic_id }} - {{ topic.subtopic_id }}</li>
+                <li class="breadcrumb-item active"> View Data : {{ topic.subtopic_id.topic_id }}
+                    - {{ topic.subtopic_id }}</li>
             </ol>
         </nav>
     </section>

@@ -1,5 +1,4 @@
 from django import forms
-from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -52,8 +51,8 @@ class ManageInternship(ModelForm):
 
 class AproveContents(ModelForm):
     class Meta:
-        model=Data
-        fields=['data_status']
+        model = Data
+        fields = ['data_status']
 
 
 class ManageIntern(ModelForm):
