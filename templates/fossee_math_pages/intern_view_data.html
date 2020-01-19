@@ -15,10 +15,10 @@
                 </li>
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}
+                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ topic.subtopic_id.topic_id.internship_id }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active"> View Data : {{ subtopic.subtopic_name }}</li>
+                <li class="breadcrumb-item active"> View Data : {{ topic.subtopic_id.topic_id }} - {{ topic.subtopic_id }}</li>
             </ol>
         </nav>
     </section>
@@ -27,15 +27,15 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th><h3>Internship Name : {{ internship.internship_topic }}</h3></th>
+                <th><h3>Internship Name : {{ topic.subtopic_id.topic_id.internship_id }}</h3></th>
             </tr>
             </thead>
             <thead class="thread-light">
             <tr>
-                <th><h4>Topic Name : {{ assigned_topic.topic_id }}</h4></th>
+                <th><h4>Topic Name : {{ topic.subtopic_id.topic_id }}</h4></th>
             </tr>
             <tr>
-                <th><h5>Sub topic : {{ subtopic.subtopic_name }}</h5></th>
+                <th><h5>Sub topic : {{ topic.subtopic_id }}</h5></th>
             </tr>
             </thead>
             <tbody>

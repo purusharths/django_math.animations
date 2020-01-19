@@ -271,23 +271,21 @@ def intern_add_data(request, t_id):
     internship = Internship.objects.get(internship_status='ACTIVE')
     subtopic = Subtopic.objects.get(id=t_id)
 
-    user = request.user
-    print(user.id)  # user id
     if request.method == 'POST':
         content = request.POST['data_content']
         reference = request.POST['data_reference']
         status = "WAITING"
-        try:
-            sub = Data.objects.get(user_id_id=user.id)
-            sud_id = sub.subtopic_id_id
-            if sud_id == t_id:
-                print("error")
-                messages.error(request, "Data already exists")
-                return redirect(intern_view_topic)
-        except:
+
+        if Data.objects.filter(subtopic_id_id = t_id).exists():
+            print("error")
+            messages.error(request, "Data already exists")
+            return redirect(intern_view_topic)
+        else:
+            messages.success(request,"Data added successfully")
             add_data = Data(data_content=content, data_reference=reference, data_status=status, subtopic_id_id=t_id,
-                            user_id_id=user.id)
+                                user_id_id=user.id)
             add_data.save()
+            return  redirect(intern_view_topic)
 
     context = {
         'form': form,
@@ -342,16 +340,9 @@ def intern_edit_data(request, e_id):
 
 @login_required
 def intern_view_data(request, v_id):
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
-
     try:
-        topic = Data.objects.get(subtopic_id=v_id)
-        subtopic = Subtopic.objects.get(id=topic.subtopic_id_id)
+        topic = Data.objects.get(subtopic_id_id=v_id)
         context = {
-            'internship': internship,
-            'assigned_topic': assigned_topic,
-            'subtopic': subtopic,
             'topic': topic
         }
         return render(request, 'fossee_math_pages/intern_view_data.html', context)
