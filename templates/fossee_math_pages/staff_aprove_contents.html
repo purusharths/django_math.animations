@@ -1,4 +1,4 @@
-x{% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% block content %}
+{% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% block content %}
     <section id="bc" class="mt-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -24,6 +24,17 @@ x{% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% bloc
             <th scope="col"></th>
         </tr>
         </thead>
+        <tbody>
+        {% for i in datas %}
+        <tr>
+            <td>{{ i.user_id }}</td>
+            <td>{{ i.data_post_date }}</td>
+            <td>{{ i.subtopic_id.topic_id }}</td>
+            <td>{{ i.subtopic_id }}</td>
+            <td><a href="">Approve</a> </td>
+        </tr>
+        {% endfor %}
+        </tbody>
         <tbody>
 
         </tbody>
