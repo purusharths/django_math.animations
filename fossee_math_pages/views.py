@@ -262,8 +262,8 @@ def index(request):
 def intern_add_data(request, t_id):
     form = data
     user = request.user
-    print(user.id)
     internship = Internship.objects.get(internship_status='ACTIVE')
+    subtopic=Subtopic.objects.get(id=t_id)
 
     user = request.user
     print(user.id)    # user id
@@ -285,6 +285,7 @@ def intern_add_data(request, t_id):
     context={
         'form':form,
         'internship':internship,
+        'subtopic':subtopic,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html',context)
 
@@ -305,16 +306,20 @@ def intern_view_internship(request):
 
 @login_required
 def intern_edit_data(request,e_id):
+    internship = Internship.objects.get(internship_status='ACTIVE')
     post = get_object_or_404(Data, subtopic_id_id=e_id)
     sub = Data.objects.get(subtopic_id_id=e_id)
+    subtopic=Subtopic.objects.get(id=sub.subtopic_id_id)
 
     if request.user:
         form = data
         form = data(instance=post)
         context = {
+            'internship' : internship,
             'form': form,
+            'subtopic':subtopic,
             'content': sub.data_content,
-            'reference': sub.data_reference
+            'reference': sub.data_reference,
         }
 
         if request.method == 'POST':
