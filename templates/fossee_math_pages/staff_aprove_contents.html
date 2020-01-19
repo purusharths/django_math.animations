@@ -25,23 +25,7 @@ x{% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% bloc
         </tr>
         </thead>
         <tbody>
-        {% for i in user %}
-            {% for j in interns %}
-                {% if i.pk == j.user_id_id %}
-                    <tr>
-                        <td>{{ i.username }}</td>
-                        <td>{{ i.post_date }}</td>
 
-
-                        <td>{{ l.topic_name }}</td>
-
-
-                        <td>{{ i.subtopic }}</td>
-
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
         </tbody>
     </table>
 

@@ -331,15 +331,14 @@ def intern_edit_data(request,e_id):
 def intern_view_data(request,v_id):
     internship = Internship.objects.get(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
-    # subtopic = Subtopic.objects.get(topic_id=assigned_topic.topic_id)
-    print(v_id)
+
     try:
         topic = Data.objects.get(subtopic_id=v_id)
-
+        subtopic=Subtopic.objects.get(id=topic.subtopic_id_id)
         context ={
             'internship' : internship,
             'assigned_topic' : assigned_topic,
-            # 'subtopic' : subtopic,
+            'subtopic' : subtopic,
             'topic' :topic
         }
         return render(request, 'fossee_math_pages/intern_view_data.html',context)
