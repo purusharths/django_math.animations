@@ -11,9 +11,10 @@
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
-                  <li class="breadcrumb-item">
+                <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}</a>
+                        <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}
+                    </a>
                 </li>
                 <li class="breadcrumb-item active"> Add Data : {{ subtopic.subtopic_name }}</li>
             </ol>

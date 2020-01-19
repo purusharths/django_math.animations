@@ -37,13 +37,13 @@
                     </li>
                     {% else %}{% if user.is_staff %}
                         <li class="nav-item ">
-                           <a class="nav-link text-white" href="{% url 'dashboard' %}">
+                            <a class="nav-link text-white" href="{% url 'dashboard' %}">
                                 {{ user.username }}
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                         <a class="nav-link text-white" href="{% url 'dashboard' %}">
+                            <a class="nav-link text-white" href="{% url 'dashboard' %}">
                                 {{ user.username }}
                             </a>
                         </li>

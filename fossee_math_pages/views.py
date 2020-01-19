@@ -6,10 +6,10 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
-from django.core.paginator import Paginator
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
