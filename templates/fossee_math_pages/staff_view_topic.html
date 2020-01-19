@@ -27,7 +27,7 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th><h3>Internship Name : {{ internship.internship_topic }}</h3></th>
+                <th><h3>Internship Name : {{ internship_info.internship_topic }}</h3></th>
             </tr>
             </thead>
             <thead class="thread-light">
@@ -43,21 +43,21 @@
                 <th>Content</th>
             </tr>
             <tr>
-                <td id="content_data">{{ topic.data_content }}
+                <td id="content_data">{{ data_info.data_content }}
                 </td>
             </tr>
             <tr>
                 <th>Reference</th>
             </tr>
             <tr>
-                <td>{{ topic.data_reference }}
+                <td>{{ data_info.data_reference }}
                 </td>
             </tr>
             <tr>
-                <th>Post date : {{ topic.data_post_date }}</th>
+                <th>Post date : {{ data_info.data_post_date }}</th>
             </tr>
             <tr>
-                <th>Status : {{ topic.data_status }}</th>
+                <th>Status : {{ data_info.data_status }}</th>
             </tr>
             </tbody>
             <script>

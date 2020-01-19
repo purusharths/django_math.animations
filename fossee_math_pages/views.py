@@ -557,8 +557,20 @@ def staff_view_internship(request):
     return render(request, 'fossee_math_pages/staff_view_internship.html',context)
 
 
-def staff_view_topic(request):
-    return render(request, 'fossee_math_pages/staff_view_topic.html')
+def staff_view_topic(request,s_id):
+    print(s_id)
+    data_info = Data.objects.get(id=s_id)
+    interndhip_info = Internship.objects.get(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
+    subtopic = Subtopic.objects.get(topic_id_id=data_info.subtopic_id_id)
+    print(data_info.data_reference)
+    context ={
+        'data_info' : data_info,
+        'internship_info' : interndhip_info,
+        'assigned_topic' :assigned_topic,
+        'subtopic' : subtopic
+    }
+    return render(request, 'fossee_math_pages/staff_view_topic.html',context)
 
 
 def user_logout(request):
