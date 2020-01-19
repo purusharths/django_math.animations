@@ -451,7 +451,7 @@ def staff_add_topics(request):
 
 def staff_aprove_contents(request):
 
-    data_f = Data.objects.filter(data_status='Waiting')
+    data_f = Data.objects.filter(data_status='WAITING')
     sub_f = Subtopic.objects.all()
     topic_f = Topic.objects.all()
     internship_f = Internship.objects.get(internship_status='ACTIVE')
@@ -535,7 +535,12 @@ def staff_assign_topic(request):
 
 
 def staff_view_interns(request):
-    return render(request, 'fossee_math_pages/staff_view_interns.html')
+    topics=AssignedTopics.objects.all()
+
+    conxext={
+        'topics':topics,
+    }
+    return render(request, 'fossee_math_pages/staff_view_interns.html',conxext)
 
 
 @login_required
