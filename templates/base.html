@@ -14,52 +14,53 @@
     <link rel="stylesheet" href="{% static 'web-files/css/fontawesome-all.min.css' %}">
     <link rel="stylesheet" href="{% static 'web-files/css/style.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'web-files/img/favicon.ico' %}">
-<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap" rel="stylesheet">
     <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css" media="all" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css"
+          media="all" rel="stylesheet"/>
 
 </head>
 <title>FOSSEE Animations | {% block title %}{% endblock %}</title>
 
 <body>
 
-    <!-- Header -->
-    {% include 'partials/_header.html' %} {% block content %} {% endblock %}
+<!-- Header -->
+{% include 'partials/_header.html' %} {% block content %} {% endblock %}
 
-    <!-- footer -->
-    {% include 'partials/_footer.html' %}
+<!-- footer -->
+{% include 'partials/_footer.html' %}
 
-    <!-- Script archive -->
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
+<!-- Script archive -->
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
 
 
-    <!-- Bootstrap Script -->
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.min.js"></script>
-    {% comment %}
+<!-- Bootstrap Script -->
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.min.js"></script>
+{% comment %}
     <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery-3.3.1.slim.min.js"></script>{% endcomment %}
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/popper.min.js"></script>
+<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/popper.min.js"></script>
 
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script type="text/javascript">
-        window.MathJax = {
-            tex: {
-                inlineMath: [
-                    ['$', '$'],
-                    ['\\(', '\\)']
-                ]
-            }
-        };
-    </script>
-    <style>
-        .serif {
-            font-family: "Lora", serif;
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript">
+    window.MathJax = {
+        tex: {
+            inlineMath: [
+                ['$', '$'],
+                ['\\(', '\\)']
+            ]
         }
-    </style>
+    };
+</script>
+<style>
+    .serif {
+        font-family: "Lora", serif;
+    }
+</style>
 </body>
 
 </html>

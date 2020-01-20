@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Internships{% endblock %}{% block content %}
-    {% if user.is_authenticated %} {% if user.is_staff %}
+    {% if user.is_authenticated %} {% if user.is_superuser %}
 
         <section id="bc" class="mt-3">
             <nav aria-label="breadcrumb">
@@ -20,33 +20,26 @@
         <div class="container">
             {% include 'partials/_alerts.html' %}
             <div class="container" style="padding-top: 3%;">
-                <hr> {% if assigned_topics %}
+                <hr> {% if datas %}
                 <table class="table table-condensed">
                     <thead>
                     <tr>
                         <th>Intern Name</th>
-                        <th>Status</th>
                         <th>Internship</th>
-                        <th>Topic</th>
                         <th></th>
                         <th></th>
                         <th>Set Status</th>
                     </tr>
                     </thead>
-                    {% for assigned_topic in assigned_topics %}
+                    {% for datas in datas %}
                         <tbody>
                         <tr>
-                            <td>{{ assigned_topic.user_id }}</td>
-
-                            <td>{{ assigned_topic.topic_id.user_id.user_status }}</td>
-
-                            <td>{{ assigned_topic.topic_id.internship_id }}</td>
-
-                            <td>{{ assigned_topic.topic_id }}</td>
+                            <td>{{ datas.user_id }}</td>
+                            <td>{{ datas.user_status }}</td>
                             <td>
                                 <form method="POST" class="form-group" name="ManageIntern">
                             <td>
-                                <input type="hidden" value="{{ assigned_topic.user_id }}"
+                                <input type="hidden" value="{{ datas.id }}"
                                        name="id"> {% csrf_token %} {{ form|crispy }}
                             </td>
                             <td>
