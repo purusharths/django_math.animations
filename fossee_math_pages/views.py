@@ -401,7 +401,22 @@ def user_login(request):
             try:
                 user = form.authenticate_user()
                 login(request, user)
-                return render(request, "fossee_math_pages/dashboard.html")
+                if request.user.is_staff:
+                    return render(request, "fossee_math_pages/dashboard.html")
+                else:
+                    internship=Intern.objects.get(user_id=request.user.pk)
+                    internship_ststus=Internship.objects.get(id=internship.internship_id_id)
+                    if internship_ststus.internship_status == 'COMPLETED':
+                        form = UserLoginForm()
+                        context = {
+                            'form': form,
+                        }
+                        messages.error(request,"Internship completed")
+                        logout(request)
+                        return render(request, "fossee_math_pages/login.html", context)
+                    else:
+                      return render(request, "fossee_math_pages/dashboard.html")
+
             except:
 
                 form = UserLoginForm()
