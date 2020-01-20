@@ -8,19 +8,19 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
-
                 <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                    <a style="color:black" href="{% url 'home_topics' %}">
+                        <i style="color:black"></i> Topics</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship
-                        - {{ topic.subtopic_id.topic_id.internship_id }}
+                    <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id.id %}">
+                        <i style="color:black"></i> Browse Topic : {{ subtopic.topic_id.internship_id }} </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black">
+                        <i style="color:black"></i> {{ subtopic.topic_id.internship_id }} - {{ subtopic.subtopic_name }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active"> View Data : {{ topic.subtopic_id.topic_id }}
-                    - {{ topic.subtopic_id }}</li>
             </ol>
         </nav>
     </section>
@@ -29,15 +29,15 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th><h3>Internship Name : {{ topic.subtopic_id.topic_id.internship_id }}</h3></th>
+                <th><h3>Internship Name : {{ subtopic.topic_id.internship_id }}</h3></th>
             </tr>
             </thead>
             <thead class="thread-light">
             <tr>
-                <th><h4>Topic Name : {{ topic.subtopic_id.topic_id }}</h4></th>
+                <th><h4>Topic Name : {{ subtopic.topic_id }}</h4></th>
             </tr>
             <tr>
-                <th><h5>Sub topic : {{ topic.subtopic_id }}</h5></th>
+                <th><h5>Sub topic : {{ subtopic.subtopic_name }}</h5></th>
             </tr>
             </thead>
             <tbody>
@@ -45,28 +45,24 @@
                 <th>Content</th>
             </tr>
             <tr>
-                <td id="content_data">{{ topic.data_content }}
+                <td id="content_data">{{ data.data_content }}
                 </td>
             </tr>
             <tr>
                 <th>Reference</th>
             </tr>
             <tr>
-                <td>{{ topic.data_reference }}
+                <td>{{ data.data_reference }}
                 </td>
             </tr>
             <tr>
-                <th>Post date : {{ topic.data_post_date }}</th>
-            </tr>
-            <tr>
-                <th>Status : {{ topic.data_status }}</th>
+                <th> author and other details</th>
             </tr>
             </tbody>
             <script>
                 $(document).ready(function () {
                     var data = $("#content_data").text()
                     $("#content_data").html(data)
-
                 })
             </script>
             </tbody>
@@ -76,11 +72,4 @@
     <br>
     <hr>
     <br>
-    <script>
-        $(document).ready(function () {
-            var content = $('#topic').text()
-            $("#topic").html(content)
-        })
-    </script>
-
 {% endblock %}
