@@ -40,7 +40,7 @@ class AddUserForm2(ModelForm):
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
-        fields = ['internship_topic', 'internship_thumbnail', 'internship_status']
+        fields = ['internship_topic', 'internship_quote','internship_quote_author','internship_thumbnail', 'internship_status']
 
 
 class ManageInternship(ModelForm):
