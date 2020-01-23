@@ -13,3 +13,5 @@ phonenumbers
 django-tinymce
 email_validator
 Django-tinymce
+django-ckeditor
+
