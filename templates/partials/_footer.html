@@ -1,17 +1,16 @@
-{% load static %}
-
+{% load static %}{% load staticfiles %}
 <footer class="py-5" id="py-5" style="background-color:#222222; width: 100%;">
     <div class="container">
         <div class="container">
             <center>
                 <a href="http://www.fossee.in"><img id="fossee"
-                                                    src="https://fossee.in/sites/all/themes/software_responsive_theme/img/logo.png"
-                                                    width="90px" class="pl-4"/></a>
+                                                    src="{% static 'web-files/img/fossee_logo_iitb.png' %}"
+                                                    width="200px" class="pl-4" /></a>
                 <a href="http://www.iitb.ac.in"><img id="iitb" src="https://www.ee.iitb.ac.in/web/iitblogowhite.png"
                                                      width="60px" class="pl-4"/></a>
                 <a href="http://animations.fossee.in"><img id="animations"
-                                                           src="https://animations.fossee.in/static/img/logo_main.png"
-                                                           width="90px" class="pl-4"></a>
+                                                           src="{% static 'web-files/img/main_logo.png' %}"
+                                                           width="200px" class="pl-4"></a>
             </center>
         </div>
         <p class="m-0 text-center text-white small">The FOSSEE project is funded by the National Mission on Education
