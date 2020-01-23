@@ -36,7 +36,8 @@
                         <div class="col-sm-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="card-text">Add Quotes.</p>
+                                    <p class="card-text">"{{ i.internship_quote }}"</p>
+                                    <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
                                     <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
                                 </div>
                             </div>
