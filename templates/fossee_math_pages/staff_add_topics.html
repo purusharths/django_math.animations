@@ -1,57 +1,48 @@
 {% extends 'base.html' %} {% block title %}Topics{% endblock %} {% block content %}
-    <section id="bc" class="mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Topics</li>
-            </ol>
-        </nav>
-    </section>
+<section id="bc">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white text-dark">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Topics</li>
+        </ol>
+    </nav>
+</section>
 
-    <!-- Page Content -->
-    <div class="container">
-        {% include 'partials/_alerts.html' %}
-        <div class="container" style="padding-top: 3%;">
-            <table class="table table-condensed">
-                <thead>
+<!-- Page Content -->
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <div class="container" style="padding-top: 3%;">
+        <table class="table table-condensed">
+            <thead>
                 <tr>
                     <th>
                         Internship : {{ intern.internship_topic }}
                     </th>
                     <th></th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 {% for i in i_topic %}
-                    <tr>
-                        <td>
-                            {{ i.topic_name }}
-                        </td>
-                        <td>
-                            <a href="{% url 'staff_add_subtopic' i.id %}">Add / View Subtopics</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        {{ i.topic_name }}
+                    </td>
+                    <td>
+                        <a href="{% url 'staff_add_subtopic' i.id %}">Add / View Subtopics</a>
+                    </td>
+                </tr>
 
-                    {#                    {% for st in subtopics %}#}
-                    {#                        {% if st.id == i.id %}#}
-                    {#                            <tr>#}
-                    {#                                <td>#}
-                    {#                                    {{ st.subtopic_name }}#}
-                    {#                                </td>#}
-                    {#                                <td>#}
-                    {#                                </td>#}
-                    {#                            </tr>#}
-                    {#                        {% endif %}#}
-                    {#                    {% endfor %}#}
-
-                {% endfor %}
+                {# {% for st in subtopics %}#} {# {% if st.id == i.id %}#} {#
+                <tr>#} {#
+                    <td>#} {# {{ st.subtopic_name }}#} {# </td>#} {#
+                    <td>#} {# </td>#} {# </tr>#} {# {% endif %}#} {# {% endfor %}#} {% endfor %}
                 <tr>
                     <td>
                         <form method="POST" class="form-group" name="AddTopic">
@@ -63,10 +54,10 @@
                     <td></td>
                 </tr>
 
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <!-- /.container -->
+<!-- /.container -->
 {% endblock %}
