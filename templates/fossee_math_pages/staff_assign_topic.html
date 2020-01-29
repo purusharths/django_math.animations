@@ -1,55 +1,51 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block title %}Topics{% endblock %} {% block content %}
-    <section id="bc" class="mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active"> Assign Topics</li>
-            </ol>
-        </nav>
-    </section>
+<section id="bc">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white text-dark">
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'index' %}">
+                    <i class="fa fa-home" style="color:black"></i> Index</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a style="color:black" href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active"> Assign Topics</li>
+        </ol>
+    </nav>
+</section>
 
-    <!-- Page Content -->
-    <div class="container">
-        {% include 'partials/_alerts.html' %}
-        <h2>{{ intern.internship_topic }}</h2>
-        <table class="table table-condensed">
-            <thead>
+<!-- Page Content -->
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <h2>{{ intern.internship_topic }}</h2>
+    <table class="table table-condensed">
+        <thead>
             <tr>
                 <th>Intern Name</th>
                 <th>Topic</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             {% for i in interns %}
-                <tr>
-                    <td>{{ i.username }}</td>
-                    <td>
-                        {% for j in as_topic %}
-                            {% if i.id == j.user_id_id %}
-                                {{ j.topic_id }}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ i.username }}</td>
+                <td>
+                    {% for j in as_topic %} {% if i.id == j.user_id_id %} {{ j.topic_id }} {% endif %} {% endfor %}
+                </td>
+            </tr>
             {% endfor %}
-            </tbody>
-        </table>
-        <hr>
-        <div class="container">
-            <h3>Assign Topic to interns</h3>
-            <form method="POST" class="form-group" name="AssignTopics">
-                {% csrf_token %} {{ form|crispy }}
-                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-            </form>
-        </div>
+        </tbody>
+    </table>
+    <hr>
+    <div class="container">
+        <h3>Assign Topic to interns</h3>
+        <form method="POST" class="form-group" name="AssignTopics">
+            {% csrf_token %} {{ form|crispy }}
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+        </form>
     </div>
+</div>
 
-    <!-- /.container -->
+<!-- /.container -->
 {% endblock %}
