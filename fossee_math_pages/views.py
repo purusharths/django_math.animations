@@ -175,8 +175,8 @@ def admin_add_intern(request):
 
 
 @login_required
-def admin_view_intern(request):
-    datas = UserDetails.objects.filter(user_role="INTERN")
+def admin_view_intern(request,id):
+    datas = Intern.objects.filter(internship_id=id)
     form = ManageIntern
     if request.method == 'POST':
         int_id = request.POST["id"]
@@ -248,14 +248,6 @@ def dashboard(request):
     return render(request, 'fossee_math_pages/dashboard.html')
 
 
-def home_topics(request):
-    interships = Internship.objects.filter(internship_status='COMPLETED')
-    context = {
-        'internship': interships,
-    }
-    return render(request, 'fossee_math_pages/home_topics.html', context)
-
-
 def home_view_data(request, id):
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
@@ -283,14 +275,17 @@ def home_details(request, id):
 
 
 def index(request):
-    return render(request, 'fossee_math_pages/index.html')
+    interships = Internship.objects.filter(internship_status='COMPLETED')
+    context = {
+        'internship': interships,
+    }
+    return render(request, 'fossee_math_pages/index.html',context)
 
 
 @login_required
 def intern_add_data(request, t_id):
     form = data
     user = request.user
-    internship = Internship.objects.get(internship_status='ACTIVE')
     subtopic = Subtopic.objects.get(id=t_id)
 
     if request.method == 'POST':
@@ -311,7 +306,6 @@ def intern_add_data(request, t_id):
 
     context = {
         'form': form,
-        'internship': internship,
         'subtopic': subtopic,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
@@ -319,8 +313,8 @@ def intern_add_data(request, t_id):
 
 @login_required
 def intern_view_internship(request):
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    topics = Topic.objects.filter(internship_id=internship.pk)
+    internship = Internship.objects.filter(internship_status='ACTIVE')
+    topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
 
     context = {
@@ -333,7 +327,6 @@ def intern_view_internship(request):
 
 @login_required
 def intern_edit_data(request, e_id):
-    internship = Internship.objects.get(internship_status='ACTIVE')
     post = get_object_or_404(Data, subtopic_id_id=e_id)
     sub = Data.objects.get(subtopic_id_id=e_id)
     subtopic = Subtopic.objects.get(id=sub.subtopic_id_id)
@@ -375,12 +368,10 @@ def intern_view_data(request, v_id):
 
 @login_required
 def intern_view_topic(request):
-    internship = Internship.objects.get(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
     subtopic = Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
 
     context = {
-        'internship': internship,
         'assigned': assigned_topic,
         'subtopic': subtopic,
     }
@@ -404,18 +395,18 @@ def user_login(request):
                 if request.user.is_staff:
                     return render(request, "fossee_math_pages/dashboard.html")
                 else:
-                    internship=Intern.objects.get(user_id=request.user.pk)
-                    internship_ststus=Internship.objects.get(id=internship.internship_id_id)
+                    internship = Intern.objects.get(user_id=request.user.pk)
+                    internship_ststus = Internship.objects.get(id=internship.internship_id_id)
                     if internship_ststus.internship_status == 'COMPLETED':
                         form = UserLoginForm()
                         context = {
                             'form': form,
                         }
-                        messages.error(request,"Internship completed")
+                        messages.error(request, "Internship completed")
                         logout(request)
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
-                      return render(request, "fossee_math_pages/dashboard.html")
+                        return render(request, "fossee_math_pages/dashboard.html")
 
             except:
 
@@ -435,23 +426,20 @@ def user_login(request):
 @login_required
 def staff_add_subtopic(request, id):
     form = add_subtopic()
-    intern = Internship.objects.get(internship_status='ACTIVE')
     i_topic = Topic.objects.get(id=id)
-    subtopics = Subtopic.objects.filter(topic_id_id=id)
+    subtopics = Subtopic.objects.all()
 
     if request.method == 'POST':
         subtopic = request.POST['subtopic']
-        topic_id = id
+        topic_id = request.POST['id']
         u_id = request.user.id
         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
         data.save()
         messages.success(request, 'Topic added with internship')
-        intern = Internship.objects.get(internship_status='ACTIVE')
         i_topic = Topic.objects.get(id=id)
 
     context = {
         'form': form,
-        'intern': intern,
         'i_topic': i_topic,
         'subtopics': subtopics,
     }
@@ -461,25 +449,23 @@ def staff_add_subtopic(request, id):
 @login_required
 def staff_add_topics(request):
     form = add_topic()
-    intern = Internship.objects.get(internship_status='ACTIVE')
-    i_topic = Topic.objects.filter(internship_id_id=intern.id)
-    subtopics = Subtopic.objects.all()
+    intern = Internship.objects.filter(internship_status='ACTIVE')
+    topic = Topic.objects.all()
 
     if request.method == 'POST':
         topic = request.POST['topic']
-        intern_id = intern.id
+        id=request.POST['id']
         u_id = request.user.id
-        data = Topic(topic_name=topic, internship_id_id=intern_id, user_id_id=u_id)
+        data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
         data.save()
         messages.success(request, 'Topic added with internship')
-        intern = Internship.objects.get(internship_status='ACTIVE')
-        i_topic = Topic.objects.filter(internship_id_id=intern.id)
+        intern = Internship.objects.filter(internship_status='ACTIVE')
+        topic = Topic.objects.all()
 
     context = {
         'form': form,
         'intern': intern,
-        'i_topic': i_topic,
-        'subtopics': subtopics,
+        'topic': topic,
     }
     return render(request, 'fossee_math_pages/staff_add_topics.html', context)
 
@@ -489,7 +475,7 @@ def staff_aprove_contents(request):
     data_f = Data.objects.filter(data_status='WAITING')
     sub_f = Subtopic.objects.all()
     topic_f = Topic.objects.all()
-    internship_f = Internship.objects.get(internship_status='ACTIVE')
+    internship_f = Internship.objects.filter(internship_status='ACTIVE')
     user_details = UserDetails.objects.filter(user_role='INTERN')
     aproved = Data.objects.filter(data_status='ACCEPTED')
     rejected = Data.objects.filter(data_status='REJECTED')
@@ -511,8 +497,8 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    topic = Topic.objects.filter(internship_id=internship.pk)
+    internship = Internship.objects.filter(internship_status='ACTIVE')
+    topic = Topic.objects.all()
 
     assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
 
@@ -545,7 +531,7 @@ def staff_assign_topic(request):
     user = User.objects.all()
     form = AssignTopic(user)
     inters = User.objects.filter(is_staff=False, is_superuser=False)
-    intern = Internship.objects.get(internship_status='ACTIVE')
+    intern = Internship.objects.filter(internship_status='ACTIVE')
     i_topic = Topic.objects.all()
     as_topic = AssignedTopics.objects.all()
 
@@ -553,15 +539,18 @@ def staff_assign_topic(request):
         intern_name = request.POST['user_id']
         topic = request.POST['topic_id']
         usr = UserDetails.objects.get(id=intern_name)
-        print(usr)
         temp1 = User.objects.get(id=usr.user_id_id)
         temp2 = Topic.objects.get(id=topic)
-        if AssignedTopics.objects.filter(user_id=intern_name).exists():
+        if AssignedTopics.objects.filter(user_id=temp1).exists():
             messages.error(request, 'That intern has an assigned topic')
             return redirect('staff_assign_topic')
-        data = AssignedTopics(user_id=temp1, topic_id=temp2)
-        data.save()
-        messages.success(request, 'Intern assigned with topic')
+        elif AssignedTopics.objects.filter(topic_id=temp2).exists():
+            messages.error(request, 'That topic is assigned alredy')
+            return redirect('staff_assign_topic')
+        else:
+            data = AssignedTopics(user_id=temp1, topic_id=temp2)
+            data.save()
+            messages.success(request, 'Intern assigned with topic')
 
     context = {
         'interns': inters,
@@ -585,8 +574,8 @@ def staff_view_interns(request):
 
 @login_required
 def staff_view_internship(request):
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    topics = Topic.objects.filter(internship_id=internship.pk)
+    internship = Internship.objects.filter(internship_status='ACTIVE')
+    topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
 
     context = {
@@ -602,7 +591,7 @@ def staff_view_topic(request, s_id):
     print(s_id)
     data_info = Data.objects.get(id=s_id)
     post = get_object_or_404(Data, id=s_id)
-    interndhip_info = Internship.objects.get(internship_status='ACTIVE')
+    interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
     subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
     print(data_info.data_reference)
@@ -625,7 +614,7 @@ def staff_view_topic(request, s_id):
                 post.save()
                 form = AproveContents
                 data_info = Data.objects.get(id=s_id)
-                interndhip_info = Internship.objects.get(internship_status='ACTIVE')
+                interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
                 assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
                 subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
                 context = {'form': form,
