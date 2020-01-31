@@ -11,7 +11,7 @@
                     <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
             </li>
 
-            <li class="breadcrumb-item active">Internship - {{ internship.internship_topic }}</li>
+            <li class="breadcrumb-item active">Internships </li>
         </ol>
     </nav>
 </section>
@@ -19,24 +19,31 @@
 <div class="container">
 
     <table class="table">
+    {% for i in internship %}
         <thead class="thead-dark">
             <tr>
-                <th scope="col">Internship Name : {{ internship.internship_topic }}</th>
+                <th scope="col">Internship Name : {{ i.internship_topic }}</th>
             </tr>
         </thead>
-        {% for i in topics %}
+        {% for j in topics %}
+            {% if j.internship_id_id == i.id %}
         <thead class="thead-light">
             <tr>
-                <th scope="col">Topic Name : {{ i.topic_name }}</th>
+                <th scope="col">Topic Name : {{ j.topic_name }}</th>
             </tr>
         </thead>
-        {% for j in subtopics %} {% if j.topic_id_id == i.id %}
-        <tbody>
+                {% for k in subtopics %}
+                    {% if k.topic_id_id == j.id %}
+            <tbody>
             <tr>
-                <th scope="row">Subtopic : {{ j.subtopic_name }}</th>
+                <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
             </tr>
         </tbody>
-        {% endif %} {% endfor %} {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% endfor %}
+    {% endfor %}
     </table>
 </div>
 <br>
