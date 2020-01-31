@@ -248,14 +248,6 @@ def dashboard(request):
     return render(request, 'fossee_math_pages/dashboard.html')
 
 
-def home_topics(request):
-    interships = Internship.objects.filter(internship_status='COMPLETED')
-    context = {
-        'internship': interships,
-    }
-    return render(request, 'fossee_math_pages/home_topics.html', context)
-
-
 def home_view_data(request, id):
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
@@ -283,7 +275,11 @@ def home_details(request, id):
 
 
 def index(request):
-    return render(request, 'fossee_math_pages/index.html')
+    interships = Internship.objects.filter(internship_status='COMPLETED')
+    context = {
+        'internship': interships,
+    }
+    return render(request, 'fossee_math_pages/index.html',context)
 
 
 @login_required
