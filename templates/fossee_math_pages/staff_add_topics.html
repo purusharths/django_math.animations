@@ -10,7 +10,7 @@
                 <a style="color:black" href="{% url 'dashboard' %}">
                     <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
             </li>
-            <li class="breadcrumb-item active"> {{ intern.internship_topic }} - Topics</li>
+            <li class="breadcrumb-item active"> Add Topics</li>
         </ol>
     </nav>
 </section>
@@ -20,30 +20,33 @@
     {% include 'partials/_alerts.html' %}
     <div class="container" style="padding-top: 3%;">
         <table class="table table-condensed">
+        {% for i in intern %}
             <thead>
                 <tr>
                     <th>
-                        Internship : {{ intern.internship_topic }}
+                        Internship : {{ i.internship_topic }}
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for i in i_topic %}
+            {% for tp in topic %}
+                {% if tp.internship_id_id == i.id %}
                 <tr>
                     <td>
-                        {{ i.topic_name }}
+                        {{ tp.topic_name }}
                     </td>
                     <td>
-                        <a href="{% url 'staff_add_subtopic' i.id %}">Add / View Subtopics</a>
+                        <a href="{% url 'staff_add_subtopic' tp.id %}">Add / View Subtopics</a>
                     </td>
                 </tr>
-
+                {% endif %}
                 {% endfor %}
                 <tr>
                     <td>
                         <form method="POST" class="form-group" name="AddTopic">
                             {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ i.id }}">
                             <label>New topic : &nbsp;</label>{{ form.topic }}
                             <input type="submit" class="btn btn-success" value="Add">
                         </form>
@@ -52,6 +55,7 @@
                 </tr>
 
             </tbody>
+        {% endfor %}
         </table>
     </div>
 </div>

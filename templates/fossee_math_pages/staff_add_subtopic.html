@@ -12,9 +12,9 @@
             </li>
             <li class="breadcrumb-item">
                 <a style="color:black" href="{% url 'staff_add_topics' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> {{ intern.internship_topic }} </a>
+                    <i class="fa fa-dashboard" style="color:black"></i> Topic </a>
             </li>
-            <li class="breadcrumb-item active"> {{ intern.internship_topic }} - {{ i_topic.topic_name }} - Subtopics
+            <li class="breadcrumb-item active"> Subtopics
             </li>
         </ol>
     </nav>
@@ -28,23 +28,26 @@
             <thead>
                 <tr>
                     <th>
-                        {{ intern.internship_topic }} - {{ i_topic.topic_name }}
+                        Topic : {{ i_topic.topic_name }}
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {% for i in subtopics %}
+                    {% if i.topic_id_id == i_topic.id%}
                 <tr>
                     <td>
                         {{ i.subtopic_name }}
                     </td>
                 </tr>
+                    {% endif %}
                 {% endfor %}
                 <tr>
                     <td>
                         <div class="row">
                             <form method="POST">
                                 {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ i_topic.id }}">
                                 <label>New Sub topic : </label>{{ form.subtopic }}
                                 <input type="submit" class="btn btn-success" value="Add">
                             </form>
