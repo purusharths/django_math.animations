@@ -12,7 +12,7 @@
             </li>
             <li class="breadcrumb-item">
                 <a style="color:black" href="{% url 'intern_view_topic' %}">
-                    <i class="fa fa-pencil" style="color:black"></i>Internship - {{ internship.internship_topic }}
+                    <i class="fa fa-pencil" style="color:black"></i>Internship - {{ subtopic.topic_id.internship_id }}
                 </a>
             </li>
             <li class="breadcrumb-item active"> Edit Data - {{ subtopic.subtopic_name }}</li>
@@ -26,6 +26,9 @@
     <script>
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
+
+    <h2>Internship :{{ subtopic.topic_id.internship_id }}</h2>
+    <h3>Topic :{{ subtopic.topic_id }}</h3>
 
     <form method="post">
         {% csrf_token %} {{ form.media }} {{ form.as_p }}
