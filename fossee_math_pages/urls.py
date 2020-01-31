@@ -14,7 +14,6 @@ urlpatterns = [
                   path('admin_view_users/', views.admin_view_users, name='admin_view_users'),
                   path('admin_manage_intern/', views.admin_manage_intern, name='admin_manage_intern'),
                   path('dashboard/', views.dashboard, name='dashboard'),
-                  path('home_topics/', views.home_topics, name='home_topics'),
                   path('home_view_data/<int:id>', views.home_view_data, name='home_view_data'),
                   path('home_details/<int:id>', views.home_details, name='home_details'),
                   path('intern_add_data/<int:t_id>', views.intern_add_data, name='intern_add_data'),
