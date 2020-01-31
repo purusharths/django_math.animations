@@ -548,15 +548,18 @@ def staff_assign_topic(request):
         intern_name = request.POST['user_id']
         topic = request.POST['topic_id']
         usr = UserDetails.objects.get(id=intern_name)
-        print(usr)
         temp1 = User.objects.get(id=usr.user_id_id)
         temp2 = Topic.objects.get(id=topic)
-        if AssignedTopics.objects.filter(user_id=intern_name).exists():
+        if AssignedTopics.objects.filter(user_id=temp1).exists():
             messages.error(request, 'That intern has an assigned topic')
             return redirect('staff_assign_topic')
-        data = AssignedTopics(user_id=temp1, topic_id=temp2)
-        data.save()
-        messages.success(request, 'Intern assigned with topic')
+        elif AssignedTopics.objects.filter(topic_id=temp2).exists():
+            messages.error(request, 'That topic is assigned alredy')
+            return redirect('staff_assign_topic')
+        else:
+            data = AssignedTopics(user_id=temp1, topic_id=temp2)
+            data.save()
+            messages.success(request, 'Intern assigned with topic')
 
     context = {
         'interns': inters,
