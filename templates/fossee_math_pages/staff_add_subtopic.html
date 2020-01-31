@@ -34,11 +34,13 @@
             </thead>
             <tbody>
                 {% for i in subtopics %}
+                    {% if i.topic_id_id == i_topic.id%}
                 <tr>
                     <td>
                         {{ i.subtopic_name }}
                     </td>
                 </tr>
+                    {% endif %}
                 {% endfor %}
                 <tr>
                     <td>
