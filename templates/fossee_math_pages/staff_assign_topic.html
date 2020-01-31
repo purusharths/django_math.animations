@@ -24,6 +24,7 @@
             <tr>
                 <th>Intern Name</th>
                 <th>Topic</th>
+                <th>Internship</th>
             </tr>
         </thead>
         <tbody>
@@ -33,6 +34,8 @@
                 <td>
                     {% for j in as_topic %} {% if i.id == j.user_id_id %} {{ j.topic_id }} {% endif %} {% endfor %}
                 </td>
+            <td>{% for j in as_topic %} {% if i.id == j.user_id_id %} {{ j.topic_id.internship_id }} {% endif %} {% endfor %}
+             </td>
             </tr>
             {% endfor %}
         </tbody>

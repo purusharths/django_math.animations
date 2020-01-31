@@ -175,8 +175,8 @@ def admin_add_intern(request):
 
 
 @login_required
-def admin_view_intern(request):
-    datas = UserDetails.objects.filter(user_role="INTERN")
+def admin_view_intern(request,id):
+    datas = Intern.objects.filter(internship_id=id)
     form = ManageIntern
     if request.method == 'POST':
         int_id = request.POST["id"]
@@ -480,7 +480,7 @@ def staff_aprove_contents(request):
     data_f = Data.objects.filter(data_status='WAITING')
     sub_f = Subtopic.objects.all()
     topic_f = Topic.objects.all()
-    internship_f = Internship.objects.get(internship_status='ACTIVE')
+    internship_f = Internship.objects.filter(internship_status='ACTIVE')
     user_details = UserDetails.objects.filter(user_role='INTERN')
     aproved = Data.objects.filter(data_status='ACCEPTED')
     rejected = Data.objects.filter(data_status='REJECTED')
@@ -502,8 +502,8 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    topic = Topic.objects.filter(internship_id=internship.pk)
+    internship = Internship.objects.filter(internship_status='ACTIVE')
+    topic = Topic.objects.all()
 
     assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
 
@@ -579,8 +579,8 @@ def staff_view_interns(request):
 
 @login_required
 def staff_view_internship(request):
-    internship = Internship.objects.get(internship_status='ACTIVE')
-    topics = Topic.objects.filter(internship_id=internship.pk)
+    internship = Internship.objects.filter(internship_status='ACTIVE')
+    topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
 
     context = {

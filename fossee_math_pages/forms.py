@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data,Topic
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
