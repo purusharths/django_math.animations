@@ -10,7 +10,7 @@
                 <a style="color:black" href="{% url 'dashboard' %}">
                     <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
             </li>
-            <li class="breadcrumb-item active"> Internship - {{ internship.internship_topic }}</li>
+            <li class="breadcrumb-item active"> Internship - {{ assigned.topic_id.internship_id }}</li>
         </ol>
     </nav>
 </section>
@@ -22,7 +22,7 @@
         <thead class="thead-dark">
             <tr>
                 <th>
-                    <h3>Internship Name : {{ internship.internship_topic }}</h3>
+                    <h3>Internship Name : {{ assigned.topic_id.internship_id }}</h3>
                 </th>
                 <th></th>
                 <th></th>
