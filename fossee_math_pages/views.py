@@ -210,10 +210,10 @@ def admin_manage_intern(request):
             obj = form.save(commit=False)
             obj.save()
             messages.success(request, "Changed")
-            return redirect('admin_view_intern')
+            return redirect('admin_manage_intern')
         else:
             messages.error(request, "Error")
-            return redirect('admin_view_intern')
+            return redirect('admin_manage_intern')
 
     context = {
         'datas': datas,
