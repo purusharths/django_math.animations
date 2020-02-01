@@ -32,6 +32,7 @@
             </tr>
         </thead>
         <tbody>
+        {% if  i.subtopic_id.topic_id.internship_id.internship_status == 'ACTIVE' %}
             {% for i in datas %}
             <tr>
                 <td>{{ i.user_id }}</td>
@@ -42,6 +43,7 @@
                 <td><a href="{% url 'staff_view_topic' i.id %}">Approve</a></td>
             </tr>
             {% endfor %}
+        {% endif %}
         </tbody>
     </table>
     <hr>
@@ -59,6 +61,7 @@
             </tr>
         </thead>
         <tbody>
+        {% if  i.subtopic_id.topic_id.internship_id.internship_status == 'ACTIVE' %}
             {% for i in aproved %}
             <tr>
                 <td>{{ i.user_id }}</td>
@@ -69,6 +72,7 @@
                 <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
             </tr>
             {% endfor %}
+        {% endif %}
         </tbody>
     </table>
     <h3>REJECTED</h3>
@@ -85,6 +89,7 @@
             </tr>
         </thead>
         <tbody>
+        {% if  i.subtopic_id.topic_id.internship_id.internship_status == 'ACTIVE' %}
             {% for i in rejected %}
             <tr>
                 <td>{{ i.user_id }}</td>
@@ -95,6 +100,7 @@
                 <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
             </tr>
             {% endfor %}
+        {% endif %}
         </tbody>
     </table>
     <h3>UNDER REVIEW</h3>
@@ -111,6 +117,8 @@
             </tr>
         </thead>
         <tbody>
+
+        {% if  i.subtopic_id.topic_id.internship_id.internship_status == 'ACTIVE' %}
             {% for i in changes %}
             <tr>
                 <td>{{ i.user_id }}</td>
@@ -121,6 +129,7 @@
                 <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
             </tr>
             {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 </div>
