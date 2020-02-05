@@ -23,11 +23,15 @@ def admin_add_internship(request):
         internship_topic = request.POST['internship_topic']
         internship_thumbnail = request.POST['internship_thumbnail']
         internship_status = request.POST['internship_status']
+        internship_quote = request.POST['internship_quote']
+        internship_quote_author = request.POST['internship_quote_author']
         if Internship.objects.filter(internship_topic=internship_topic).exists():
             messages.error(request, 'That internship already exist')
             return redirect('admin_add_internship')
         try:
-            data = Internship(internship_topic=internship_topic, internship_thumbnail=internship_thumbnail,
+            data = Internship(internship_topic=internship_topic, internship_quote=internship_quote,
+                              internship_quote_author=internship_quote_author,
+                              internship_thumbnail=internship_thumbnail,
                               internship_status=internship_status)
             data.save()
             messages.success(request, 'Internship added')
@@ -175,7 +179,7 @@ def admin_add_intern(request):
 
 
 @login_required
-def admin_view_intern(request,id):
+def admin_view_intern(request, id):
     datas = Intern.objects.filter(internship_id=id)
     form = ManageIntern
     if request.method == 'POST':
@@ -281,13 +285,13 @@ def index(request):
     search_contains_query = request.GET.get('title_contains')
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
-    
+
     if search_contains_query != '' and search_contains_query is not None:
         datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
         datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
-    
+
     if datas:
-        paginator = Paginator(datas, 5)      
+        paginator = Paginator(datas, 5)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -301,7 +305,7 @@ def index(request):
         'internship': interships,
     }
 
-    return render(request, 'fossee_math_pages/index.html',context)
+    return render(request, 'fossee_math_pages/index.html', context)
 
 
 @login_required
@@ -476,7 +480,7 @@ def staff_add_topics(request):
 
     if request.method == 'POST':
         topic = request.POST['topic']
-        id=request.POST['id']
+        id = request.POST['id']
         u_id = request.user.id
         data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
         data.save()
