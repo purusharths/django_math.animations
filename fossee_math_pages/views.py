@@ -275,10 +275,30 @@ def home_details(request, id):
 
 
 def index(request):
+    datas = ""
+    search_contains_query = request.GET.get('title_contains')
+
     interships = Internship.objects.filter(internship_status='COMPLETED')
+    
+    if search_contains_query != '' and search_contains_query is not None:
+        datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+        datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
+    
+    if datas:
+        paginator = Paginator(datas, 5)      
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+    if datass:
+        paginator = Paginator(datass, 5)      
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
     context = {
+        'datas': page_obj,
         'internship': interships,
     }
+
     return render(request, 'fossee_math_pages/index.html',context)
 
 

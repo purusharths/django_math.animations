@@ -21,7 +21,42 @@
 <hr>
 <div class="container" id="topics">
     <div>
-        Search :
+        Search : 
+        <form method="GET" action=".">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Search For Topics or Sub-topics" />
+                        <span class="input-group-append" style="width: 10%;">
+                                        <div class="input-group-text bg-transparent">
+                                            <i class="fa fa-search"></i>
+                                        </div>
+                                    </span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        {% if datas %}
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Topic Name</th>
+                <th scope="col">Sub Topic Name</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for data in datas %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ data.topic_id }}</td>
+                <td>{{ data.subtopic_name }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
     </div>
     <hr>
     <h1>Topics</h1>
