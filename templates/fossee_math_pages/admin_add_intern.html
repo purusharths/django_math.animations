@@ -1,54 +1,54 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Add Internship{% endblock %}{% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'admin_manage_internship' %}">
-                    <i class="fa fa-tasks" style="color:black"></i> Manage Internship</a>
-            </li>
-            <li class="breadcrumb-item active"> Add Interns</li>
-        </ol>
-    </nav>
-</section>
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin Add Intern{% endblock %}{% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'admin_manage_internship' %}">
+                        <i class="fa fa-tasks" style="color:black"></i> Manage Internship</a>
+                </li>
+                <li class="breadcrumb-item active"> Add Interns</li>
+            </ol>
+        </nav>
+    </section>
 
-<div class="container">
-    {% include 'partials/_alerts.html' %} {% if user.is_authenticated %} {% if user.is_superuser %}
-    <hr> {% if interns %}
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                <th>Intern Name</th>
-                <th>Internship</th>
-            </tr>
-        </thead>
-        {% for interns in interns %}
-        <tbody>
-            <tr>
-                <td>{{ interns.user_id }}</td>
-                <td>{{ interns.internship_id }}</td>
-            </tr>
-        </tbody>
-        {% endfor %}
-    </table>
-    {% endif %}
+    <div class="container">
+        {% include 'partials/_alerts.html' %} {% if user.is_authenticated %} {% if user.is_superuser %}
+        <hr> {% if interns %}
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Intern Name</th>
+                    <th>Internship</th>
+                </tr>
+                </thead>
+                {% for interns in interns %}
+                    <tbody>
+                    <tr>
+                        <td>{{ interns.user_id }}</td>
+                        <td>{{ interns.internship_id }}</td>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+        {% endif %}
 
 
-    <hr>
-    <form method="POST" class="form-group" name="AddIntern">
-        {% csrf_token %} {{ form|crispy }}
-        <br>
-        <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-    </form>
+        <hr>
+        <form method="POST" class="form-group" name="AddIntern">
+            {% csrf_token %} {{ form|crispy }}
+            <br>
+            <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+        </form>
 
-</div>
-{% endif %} {% endif %}
-</div>
+        </div>
+    {% endif %} {% endif %}
+    </div>
 {% endblock %}
