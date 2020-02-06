@@ -50,8 +50,8 @@ class Internship(models.Model):
     internship_status = models.CharField(max_length=20,
                                          choices=STATUS,
                                          default='INACTIVE')
-    internship_quote=models.TextField(max_length=255)
-    internship_quote_author=models.CharField(max_length=255)
+    internship_quote = models.TextField(max_length=255)
+    internship_quote_author = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.internship_topic) if self.internship_topic else ''

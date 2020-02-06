@@ -1,133 +1,135 @@
-{% extends 'base.html' %}{% load humanize %} {% block title %}Dashboard{% endblock %}{% block content %} {% if user.is_authenticated %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item active"> Dashboard</li>
-        </ol>
-    </nav>
-</section>
-{% if user.is_superuser %}
-<div class="container">
-    <div class="card">
+{% extends 'base.html' %}{% load humanize %} {% block title %}Dashboard{% endblock %}{% block content %}
+    {% if user.is_authenticated %}
+        <section id="bc">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-white text-dark">
+                    <li class="breadcrumb-item">
+                        <a style="color:black" href="{% url 'index' %}">
+                            <i class="fa fa-home" style="color:black"></i> Index</a>
+                    </li>
+                    <li class="breadcrumb-item active"> Dashboard</li>
+                </ol>
+            </nav>
+        </section>
+        {% if user.is_superuser %}
+            <div class="container">
+                <div class="card">
 
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Add Users</h5>
-            <p class="card-text">Add the interns and staff to the system.</p>
-            <a href="{% url 'admin_add_user' %}" class="btn btn-dark">Add Users</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">View users</h5>
-            <p class="card-text">View all the users (Interns and Staff), currently in the system.</p>
-            <a href="{% url 'admin_view_users' %}" class="btn btn-primary">View Users</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Add internship</h5>
-            <p class="card-text">Add the internship for interns and staff to the system.</p>
-            <a href="{% url 'admin_add_internship' %}" class="btn btn-danger">Add Internship</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Manage internship </h5>
-            <p class="card-text">Manage the internships in the system.</p>
-            <a href="{% url 'admin_manage_internship' %}" class="btn btn-success">Manage Internship</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Intern Status</h5>
-            <p class="card-text">Activate/Deactivate Intern in the system.</p>
-            <a href="{% url 'admin_manage_intern' %}" class="btn btn-warning">Change Intern Status</a>
-        </div>
-    </div>
-    <br>
-</div>
-{% elif user.is_staff %}
-<div class="container">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Add Topics & Subtopics</h5>
-            <p class="card-text">Add topics and subtopics to the internship.</p>
-            <a href="{% url 'staff_add_topics' %}" class="btn btn-info">Add Topics</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Assign Topics</h5>
-            <p class="card-text">Assign topics to the interns to start the internship.</p>
-            <a href="{% url 'staff_assign_topic' %}" class="btn btn-danger">Assign Topic</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Add Users</h5>
+                        <p class="card-text">Add the interns and staff to the system.</p>
+                        <a href="{% url 'admin_add_user' %}" class="btn btn-dark">Add Users</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">View users</h5>
+                        <p class="card-text">View all the users (Interns and Staff), currently in the system.</p>
+                        <a href="{% url 'admin_view_users' %}" class="btn btn-primary">View Users</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Add internship</h5>
+                        <p class="card-text">Add the internship for interns and staff to the system.</p>
+                        <a href="{% url 'admin_add_internship' %}" class="btn btn-danger">Add Internship</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Manage internship </h5>
+                        <p class="card-text">Manage the internships in the system.</p>
+                        <a href="{% url 'admin_manage_internship' %}" class="btn btn-success">Manage Internship</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Intern Status</h5>
+                        <p class="card-text">Activate/Deactivate Intern in the system.</p>
+                        <a href="{% url 'admin_manage_intern' %}" class="btn btn-warning">Change Intern Status</a>
+                    </div>
+                </div>
+                <br>
+            </div>
+        {% elif user.is_staff %}
+            <div class="container">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Add Topics & Subtopics</h5>
+                        <p class="card-text">Add topics and subtopics to the internship.</p>
+                        <a href="{% url 'staff_add_topics' %}" class="btn btn-info">Add Topics</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Assign Topics</h5>
+                        <p class="card-text">Assign topics to the interns to start the internship.</p>
+                        <a href="{% url 'staff_assign_topic' %}" class="btn btn-danger">Assign Topic</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
 
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Manage Interns</h5>
-            <p class="card-text">Manage and take control on your interns.</p>
-            <a href="{% url 'staff_manage_intern' %}" class="btn btn-dark">Manage Interns</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Manage Submissions</h5>
-            <p class="card-text">Manage the data submitted by your interns.</p>
-            <a href="{% url 'staff_aprove_contents' %}" class="btn btn-warning">Manage Submissions</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">View Internships</h5>
-            <p class="card-text">View the internship progress.</p>
-            <a href="{% url 'staff_view_internship' %}" class="btn btn-primary">View Internship</a>
-        </div>
-    </div>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">View Interns</h5>
-            <p class="card-text">View the interns in the internship progress.</p>
-            <a href="{% url 'staff_view_interns' %}" class="btn btn-primary">View Interns</a>
-        </div>
-    </div>
-</div>
-{% else %}
-<br>
-<hr>
-<br>
-<div class="container">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Manage Interns</h5>
+                        <p class="card-text">Manage and take control on your interns.</p>
+                        <a href="{% url 'staff_manage_intern' %}" class="btn btn-dark">Manage Interns</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Manage Submissions</h5>
+                        <p class="card-text">Manage the data submitted by your interns.</p>
+                        <a href="{% url 'staff_aprove_contents' %}" class="btn btn-warning">Manage Submissions</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">View Internships</h5>
+                        <p class="card-text">View the internship progress.</p>
+                        <a href="{% url 'staff_view_internship' %}" class="btn btn-primary">View Internship</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">View Interns</h5>
+                        <p class="card-text">View the interns in the internship progress.</p>
+                        <a href="{% url 'staff_view_interns' %}" class="btn btn-primary">View Interns</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <br>
+            <hr>
+            <br>
+            <div class="container">
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">Add Data & View Work</h5>
-            <p class="card-text">Add the data to the topics and click on submit to submit to the mentors. View your submissions</p>
-            <a href="{% url 'intern_view_topic' %}" class="btn btn-warning">Add Data</a>
-        </div>
-    </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">Add Data & View Work</h5>
+                        <p class="card-text">Add the data to the topics and click on submit to submit to the mentors.
+                            View your submissions</p>
+                        <a href="{% url 'intern_view_topic' %}" class="btn btn-warning">Add Data</a>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">View Internship details</h5>
+                        <p class="card-text">Allows you to see the entire intership details.</p>
+                        <a href="{% url 'intern_view_internship' %}" class="btn btn-info">View Internship</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}{% endif %}
     <br>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">View Internship details</h5>
-            <p class="card-text">Allows you to see the entire intership details.</p>
-            <a href="{% url 'intern_view_internship' %}" class="btn btn-info">View Internship</a>
-        </div>
-    </div>
-</div>
-{% endif %}{% endif %}
-<br>
-<hr>
-<br> {% endblock %}
+    <hr>
+    <br> {% endblock %}

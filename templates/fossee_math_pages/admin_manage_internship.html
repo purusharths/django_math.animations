@@ -1,27 +1,28 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Manage Internship{% endblock %} {% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active"> Manage Internship</li>
-        </ol>
-    </nav>
-</section>
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Manage Internship{% endblock %}
+{% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active"> Manage Internship</li>
+            </ol>
+        </nav>
+    </section>
 
-<div class="container">
-    {% include 'partials/_alerts.html' %}
-    <div class="container" style="padding-top: 3%;">
-        <h2>Manage Intership</h2>
-        <hr> {% if manage_internships %}
-        <table class="table table-condensed">
-            <thead>
+    <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <div class="container" style="padding-top: 3%;">
+            <h2>Manage Intership</h2>
+            <hr> {% if manage_internships %}
+            <table class="table table-condensed">
+                <thead>
                 <tr>
                     <th>Topic</th>
                     <th>Current status</th>
@@ -30,33 +31,35 @@
                     <th>Add Interns</th>
                     <th>View Interns</th>
                 </tr>
-            </thead>
-            {% for manage_internship in manage_internships %}
-            <tbody>
-                <tr>
-                    <td>{{ manage_internship.internship_topic }}</td>
-                    <td>{{ manage_internship.internship_status }}</td>
-                    <form method="POST" class="form-group" name="AddInternship">
-                        <td>
-                            <input type="hidden" value="{{ manage_internship.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
+                </thead>
+                {% for manage_internship in manage_internships %}
+                    <tbody>
+                    <tr>
+                        <td>{{ manage_internship.internship_topic }}</td>
+                        <td>{{ manage_internship.internship_status }}</td>
+                        <form method="POST" class="form-group" name="AddInternship">
+                            <td>
+                                <input type="hidden" value="{{ manage_internship.id }}"
+                                       name="id"> {% csrf_token %} {{ form|crispy }}
+                            </td>
+                            <td>
+                                <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                            </td>
+                        </form>
+                        <td><a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
                         </td>
                         <td>
-                            <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                            <a class="btn btn-success" href="{% url 'admin_view_intern' manage_internship.id %}">View
+                                Intern</a>
                         </td>
-                    </form>
-                    <td><a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-success" href="{% url 'admin_view_intern' manage_internship.id%}">View Intern</a>
-                    </td>
-                </tr>
-            </tbody>
-            {% endfor %}
-        </table>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
         {% endif %}
+        </div>
+        <script>
+            $('.requiredField').hide();
+        </script>
     </div>
-    <script>
-        $('.requiredField').hide();
-    </script>
-</div>
 {% endif %} {% endif %} {% endblock %}
