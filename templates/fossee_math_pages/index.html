@@ -36,34 +36,35 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
         </form>
         {% if datas %}
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Topic Name</th>
-                <th scope="col">Sub Topic Name</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for data in datas %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ data.topic_id }}</td>
-                <td>{{ data.subtopic_name }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endif %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Topic Name</th>
+                    <th scope="col">Sub Topic Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for data in datas %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ data.topic_id }}</td>
+                        <td>{{ data.subtopic_name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
     <hr>
-    <h1>Topics</h1>
-    <hr> {% for i in internship %}
-    <div class="card">
+    <div class="container">
+        <h1>Topics</h1>
+        <hr> {% for i in internship %}
+        <div class="card">
         <h5 class="card-header">{{ i.internship_topic }}</h5>
         <div class="card-body">
             <div class="row">
@@ -84,7 +85,8 @@
             </div>
         </div>
     {% endfor %}
+        </div>
+        <br>
     </div>
-    <br>
 
 {% endblock %}
