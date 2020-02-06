@@ -12,8 +12,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
+                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents, Data_Verification)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, DataVerification)
 
 
 @login_required
@@ -23,11 +23,15 @@ def admin_add_internship(request):
         internship_topic = request.POST['internship_topic']
         internship_thumbnail = request.POST['internship_thumbnail']
         internship_status = request.POST['internship_status']
+        internship_quote = request.POST['internship_quote']
+        internship_quote_author = request.POST['internship_quote_author']
         if Internship.objects.filter(internship_topic=internship_topic).exists():
             messages.error(request, 'That internship already exist')
             return redirect('admin_add_internship')
         try:
-            data = Internship(internship_topic=internship_topic, internship_thumbnail=internship_thumbnail,
+            data = Internship(internship_topic=internship_topic, internship_quote=internship_quote,
+                              internship_quote_author=internship_quote_author,
+                              internship_thumbnail=internship_thumbnail,
                               internship_status=internship_status)
             data.save()
             messages.success(request, 'Internship added')
@@ -175,7 +179,7 @@ def admin_add_intern(request):
 
 
 @login_required
-def admin_view_intern(request,id):
+def admin_view_intern(request, id):
     datas = Intern.objects.filter(internship_id=id)
     form = ManageIntern
     if request.method == 'POST':
@@ -262,24 +266,53 @@ def home_view_data(request, id):
 
 def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
+    ver = ""
     try:
         data = Data.objects.get(subtopic_id_id=subtopic.pk)
+        data_d = Data.objects.get(subtopic_id=data.pk)
+        try:
+            ver = DataVerification.objects.get(data_id=data_d.pk)
+        except:
+            ver = ""
     except Data.DoesNotExist:
         data = None
 
     context = {
         'subtopic': subtopic,
         'data': data,
+        'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
 
 
 def index(request):
+    datas = ""
+    datass = ""
+    page_obj = ""
+    search_contains_query = request.GET.get('title_contains')
+
     interships = Internship.objects.filter(internship_status='COMPLETED')
+
+    if search_contains_query != '' and search_contains_query is not None:
+        datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+        datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
+
+    if datas:
+        paginator = Paginator(datas, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+    if datass:
+        paginator = Paginator(datass, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
     context = {
+        'datas': page_obj,
         'internship': interships,
     }
-    return render(request, 'fossee_math_pages/index.html',context)
+
+    return render(request, 'fossee_math_pages/index.html', context)
 
 
 @login_required
@@ -454,7 +487,7 @@ def staff_add_topics(request):
 
     if request.method == 'POST':
         topic = request.POST['topic']
-        id=request.POST['id']
+        id = request.POST['id']
         u_id = request.user.id
         data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
         data.save()
@@ -587,8 +620,40 @@ def staff_view_internship(request):
 
 
 @login_required
+def staff_add_reviever(request, s_id):
+    data_info = Data.objects.get(id=s_id)
+    interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
+    verify = Data_Verification()
+    ver = ""
+
+    if request.POST:
+        try:
+            ver = DataVerification.objects.get(data_id=s_id)
+            messages.error(request, 'Data exists')
+        except:
+            verifier = request.POST['dataverification_verifier']
+            mentor = request.POST['dataverification_mentor']
+            mentor = User.objects.get(id=mentor)
+            daa = Data.objects.get(pk=s_id)
+            data = DataVerification(dataverification_verifier=verifier, dataverification_mentor=mentor, data_id=daa)
+            data.save()
+            ver = DataVerification.objects.get(data_id=s_id)
+            messages.success(request, 'Data Added Successfully')
+
+    context = {
+        'form': verify,
+        'ver': ver,
+        'data_info': data_info,
+        'interndhip_info': interndhip_info,
+        'assigned_topic': assigned_topic,
+    }
+
+    return render(request, 'fossee_math_pages/staff_add_reviewer.html', context)
+
+
+@login_required
 def staff_view_topic(request, s_id):
-    print(s_id)
     data_info = Data.objects.get(id=s_id)
     post = get_object_or_404(Data, id=s_id)
     interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
@@ -596,10 +661,16 @@ def staff_view_topic(request, s_id):
     subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
     print(data_info.data_reference)
 
+    try:
+        verify = DataVerification.objects.get(data_id=s_id)
+    except:
+        verify = ""
+
     if request.user:
         form = AproveContents
         form = AproveContents(instance=post)
         context = {
+            'ver': verify,
             'data_info': data_info,
             'internship_info': interndhip_info,
             'assigned_topic': assigned_topic,

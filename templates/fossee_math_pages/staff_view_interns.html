@@ -1,43 +1,43 @@
-{% extends 'base.html' %}{% block title %}View Topic Details{% endblock %}{% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
+{% extends 'base.html' %}{% block title %}Staff View Interns{% endblock %}{% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
 
-            <li class="breadcrumb-item active"> View Interns</li>
-        </ol>
-    </nav>
-</section>
+                <li class="breadcrumb-item active"> View Interns</li>
+            </ol>
+        </nav>
+    </section>
 
-<br>
-<hr>
-<div class="container">
-    <table class="table">
-        <thead class="thead-dark">
+    <br>
+    <hr>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th>Intern Name</th>
                 <th>Internship</th>
                 <th>Topic</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for i in topics %}
-            <tr>
-                <td>{{ i.user_id }}</td>
-                <td>{{ i.topic_id.internship_id }}</td>
-                <td>{{ i.topic_id }}</td>
-            </tr>
+                <tr>
+                    <td>{{ i.user_id }}</td>
+                    <td>{{ i.topic_id.internship_id }}</td>
+                    <td>{{ i.topic_id }}</td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</div>
-<br>
-<hr>
-<br> {% endblock %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br> {% endblock %}
