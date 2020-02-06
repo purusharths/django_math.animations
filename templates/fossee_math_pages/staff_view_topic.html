@@ -1,36 +1,38 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}View Intern Data{% endblock %} {% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}View Intern Data{% endblock %}
+{% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
 
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'staff_aprove_contents' %}">
-                    <i class="fa fa-pencil" style="color:black"></i>Aprove Contents - {{ assigned_topic.topic_id.internship_id }}
-                </a>
-            </li>
-            <li class="breadcrumb-item active"> View Data : {{ subtopic.subtopic_name }}</li>
-        </ol>
-    </nav>
-</section>
-<hr>
-<div class="container">
-    <table class="table">
-        <thead class="thead-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
+                        <i class="fa fa-pencil" style="color:black"></i>Aprove Contents
+                        - {{ assigned_topic.topic_id.internship_id }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active"> View Data : {{ subtopic.subtopic_name }}</li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th>
                     <h3>Internship Name : {{ assigned_topic.topic_id.internship_id }}</h3>
                 </th>
             </tr>
-        </thead>
-        <thead class="thread-light">
+            </thead>
+            <thead class="thread-light">
             <tr>
                 <th>
                     <h4>Topic Name : {{ assigned_topic.topic_id }}</h4>
@@ -41,8 +43,8 @@
                     <h5>Sub topic : {{ subtopic.subtopic_name }}</h5>
                 </th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
                 <th>Content</th>
             </tr>
@@ -63,16 +65,16 @@
             <tr>
                 <th>Status : {{ data_info.data_status }}</th>
             </tr>
-                         {% if ver %}
-            <tr>
-                <th> Reviever : {{ ver.dataverification_verifier }}</th>
-            </tr>
-              <tr>
-                <th> Mentor : {{ ver.dataverification_mentor }}</th>
-            </tr>
-             <tr>
-                <th> Aproved On : {{ ver.dataverification_date }}</th>
-            </tr>{% endif %}
+            {% if ver %}
+                <tr>
+                    <th> Reviever : {{ ver.dataverification_verifier }}</th>
+                </tr>
+                <tr>
+                    <th> Mentor : {{ ver.dataverification_mentor }}</th>
+                </tr>
+                <tr>
+                    <th> Aproved On : {{ ver.dataverification_date }}</th>
+                </tr>{% endif %}
             <tr>
                 <td><a href="{% url 'staff_add_reviever' data_info.id %}">Add Reviever Details</a></td>
             </tr>
@@ -85,24 +87,24 @@
                     </form>
                 </td>
             </tr>
-        </tbody>
-        <script>
-            $(document).ready(function() {
-                var data = $("#content_data").text()
-                $("#content_data").html(data)
+            </tbody>
+            <script>
+                $(document).ready(function () {
+                    var data = $("#content_data").text()
+                    $("#content_data").html(data)
 
-            })
-        </script>
-    </table>
-</div>
-<br>
-<hr>
-<br>
-<script>
-    $(document).ready(function() {
-        var content = $('#topic').text()
-        $("#topic").html(content)
-    })
-</script>
+                })
+            </script>
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <script>
+        $(document).ready(function () {
+            var content = $('#topic').text()
+            $("#topic").html(content)
+        })
+    </script>
 
 {% endblock %}

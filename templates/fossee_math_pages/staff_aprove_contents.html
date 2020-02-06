@@ -1,27 +1,27 @@
 {% extends 'base.html' %}{% block title %}Approve Contents{% endblock %}{% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color: black" href="{% url 'index' %}">
-                    <i class="fa fa-home"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active"> Manage Submissions</li>
-        </ol>
-    </nav>
-</section>
-<br>
-<hr>
-<div class="container">
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color: black" href="{% url 'index' %}">
+                        <i class="fa fa-home"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active"> Manage Submissions</li>
+            </ol>
+        </nav>
+    </section>
+    <br>
     <hr>
-    <h3>WAITING</h3>
-    <hr>
-    <table class="table">
-        <thead class="thead-dark">
+    <div class="container">
+        <hr>
+        <h3>WAITING</h3>
+        <hr>
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Submition Date</th>
@@ -31,107 +31,107 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for i in datas %}
-            <tr>
-                <td>{{ i.user_id }}</td>
-                <td>{{ i.data_post_date }}</td>
-                <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
-                <td>{{ i.subtopic_id.topic_id }}</td>
-                <td>{{ i.subtopic_id }}</td>
-                <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
-                <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
-            </tr>
+                <tr>
+                    <td>{{ i.user_id }}</td>
+                    <td>{{ i.data_post_date }}</td>
+                    <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
+                    <td>{{ i.subtopic_id.topic_id }}</td>
+                    <td>{{ i.subtopic_id }}</td>
+                    <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
+                    <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <hr>
-    <h3>ACCEPTED</h3>
-    <hr>
-    <table class="table">
-        <thead class="thead-dark">
+            </tbody>
+        </table>
+        <hr>
+        <h3>ACCEPTED</h3>
+        <hr>
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Submition Date</th>
-                   <th scope="col">Internship</th>
+                <th scope="col">Internship</th>
                 <th scope="col">Topic</th>
                 <th scope="col">Subtopic</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for i in aproved %}
-            <tr>
-                <td>{{ i.user_id }}</td>
-                <td>{{ i.data_post_date }}</td>
-                   <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
-                <td>{{ i.subtopic_id.topic_id }}</td>
-                <td>{{ i.subtopic_id }}</td>
-                <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
-                <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
-            </tr>
+                <tr>
+                    <td>{{ i.user_id }}</td>
+                    <td>{{ i.data_post_date }}</td>
+                    <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
+                    <td>{{ i.subtopic_id.topic_id }}</td>
+                    <td>{{ i.subtopic_id }}</td>
+                    <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
+                    <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <h3>REJECTED</h3>
-    <hr>
-    <table class="table">
-        <thead class="thead-dark">
+            </tbody>
+        </table>
+        <h3>REJECTED</h3>
+        <hr>
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Submition Date</th>
-                   <th scope="col">Internship</th>
+                <th scope="col">Internship</th>
                 <th scope="col">Topic</th>
                 <th scope="col">Subtopic</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for i in rejected %}
-            <tr>
-                <td>{{ i.user_id }}</td>
-                <td>{{ i.data_post_date }}</td>
-                   <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
-                <td>{{ i.subtopic_id.topic_id }}</td>
-                <td>{{ i.subtopic_id }}</td>
-                <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
-                <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
-            </tr>
+                <tr>
+                    <td>{{ i.user_id }}</td>
+                    <td>{{ i.data_post_date }}</td>
+                    <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
+                    <td>{{ i.subtopic_id.topic_id }}</td>
+                    <td>{{ i.subtopic_id }}</td>
+                    <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
+                    <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <h3>UNDER REVIEW</h3>
-    <hr>
-    <table class="table">
-        <thead class="thead-dark">
+            </tbody>
+        </table>
+        <h3>UNDER REVIEW</h3>
+        <hr>
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Submition Date</th>
-                   <th scope="col">Internship</th>
+                <th scope="col">Internship</th>
                 <th scope="col">Topic</th>
                 <th scope="col">Subtopic</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for i in changes %}
-            <tr>
-                <td>{{ i.user_id }}</td>
-                <td>{{ i.data_post_date }}</td>
-                   <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
-                <td>{{ i.subtopic_id.topic_id }}</td>
-                <td>{{ i.subtopic_id }}</td>
-                <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
-                <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
-            </tr>
+                <tr>
+                    <td>{{ i.user_id }}</td>
+                    <td>{{ i.data_post_date }}</td>
+                    <td>{{ i.subtopic_id.topic_id.internship_id }}</td>
+                    <td>{{ i.subtopic_id.topic_id }}</td>
+                    <td>{{ i.subtopic_id }}</td>
+                    <td><a href="{% url 'staff_view_topic' i.id %}">View</a></td>
+                    <td><a href="{% url 'staff_add_reviever' i.id %}">Reviever Details</a></td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</div>
-<br>
-<hr>
-<br> {% endblock %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br> {% endblock %}

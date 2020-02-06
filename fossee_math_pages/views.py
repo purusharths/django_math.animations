@@ -266,21 +266,21 @@ def home_view_data(request, id):
 
 def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
-    ver=""
+    ver = ""
     try:
         data = Data.objects.get(subtopic_id_id=subtopic.pk)
-        data_d=Data.objects.get(subtopic_id=data.pk)
+        data_d = Data.objects.get(subtopic_id=data.pk)
         try:
-            ver=DataVerification.objects.get(data_id=data_d.pk)
+            ver = DataVerification.objects.get(data_id=data_d.pk)
         except:
-            ver=""
+            ver = ""
     except Data.DoesNotExist:
         data = None
 
     context = {
         'subtopic': subtopic,
         'data': data,
-        'ver':ver,
+        'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
 
@@ -625,7 +625,7 @@ def staff_add_reviever(request, s_id):
     interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
     verify = Data_Verification()
-    ver=""
+    ver = ""
 
     if request.POST:
         try:
@@ -635,7 +635,7 @@ def staff_add_reviever(request, s_id):
             verifier = request.POST['dataverification_verifier']
             mentor = request.POST['dataverification_mentor']
             mentor = User.objects.get(id=mentor)
-            daa=Data.objects.get(pk=s_id)
+            daa = Data.objects.get(pk=s_id)
             data = DataVerification(dataverification_verifier=verifier, dataverification_mentor=mentor, data_id=daa)
             data.save()
             ver = DataVerification.objects.get(data_id=s_id)
@@ -643,7 +643,7 @@ def staff_add_reviever(request, s_id):
 
     context = {
         'form': verify,
-        'ver':ver,
+        'ver': ver,
         'data_info': data_info,
         'interndhip_info': interndhip_info,
         'assigned_topic': assigned_topic,
@@ -662,15 +662,15 @@ def staff_view_topic(request, s_id):
     print(data_info.data_reference)
 
     try:
-        verify=DataVerification.objects.get(data_id=s_id)
+        verify = DataVerification.objects.get(data_id=s_id)
     except:
-        verify=""
+        verify = ""
 
     if request.user:
         form = AproveContents
         form = AproveContents(instance=post)
         context = {
-            'ver':verify,
+            'ver': verify,
             'data_info': data_info,
             'internship_info': interndhip_info,
             'assigned_topic': assigned_topic,
