@@ -270,7 +270,10 @@ def home_details(request, id):
     try:
         data = Data.objects.get(subtopic_id_id=subtopic.pk)
         data_d=Data.objects.get(subtopic_id=data.pk)
-        ver=DataVerification.objects.get(data_id=data_d.pk)
+        try:
+            ver=DataVerification.objects.get(data_id=data_d.pk)
+        except:
+            ver=""
     except Data.DoesNotExist:
         data = None
 

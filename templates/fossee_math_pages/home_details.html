@@ -44,6 +44,7 @@
                 </th>
             </tr>
         </thead>
+        {% if data.data_status == 'ACCEPTED'%}
         <tbody>
             <tr>
                 <th>Content</th>
@@ -59,18 +60,28 @@
                 <td>{{ data.data_reference }}
                 </td>
             </tr>
-            <tr>
-                <th> author and other details</th>
+          {% if ver %}
+               <tr>
+                <th> Author : {{ data.user_id }}</th>
             </tr>
+            <tr>
+                <th> Reviever : {{ ver.dataverification_verifier }}</th>
+            </tr>
+              <tr>
+                <th> Mentor : {{ ver.dataverification_mentor }}</th>
+            </tr>
+             <tr>
+                <th> Aproved On : {{ ver.dataverification_date }}</th>
+            </tr>{% endif %}
+
         </tbody>
+        {% endif %}
         <script>
             $(document).ready(function() {
                 var data = $("#content_data").text()
                 $("#content_data").html(data)
             })
         </script>
-        </tbody>
-
     </table>
 </div>
 <br>
