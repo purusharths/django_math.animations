@@ -1,25 +1,25 @@
 {% extends 'base.html' %}{% block title %}Intern View Topic {% endblock %}{% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active"> Internship - {{ assigned.topic_id.internship_id }}</li>
-        </ol>
-    </nav>
-</section>
-<br>
-<hr>
-<div class="container">
-    {% include 'partials/_alerts.html' %}
-    <table class="table">
-        <thead class="thead-dark">
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active"> Internship - {{ assigned.topic_id.internship_id }}</li>
+            </ol>
+        </nav>
+    </section>
+    <br>
+    <hr>
+    <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th>
                     <h3>Internship Name : {{ assigned.topic_id.internship_id }}</h3>
@@ -28,8 +28,8 @@
                 <th></th>
                 <th></th>
             </tr>
-        </thead>
-        <thead class="thead-light">
+            </thead>
+            <thead class="thead-light">
             <tr>
                 <th>
                     <h4>Topic Name : {{ assigned.topic_id }}</h4>
@@ -38,20 +38,20 @@
                 <th></th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
 
             {% for i in subtopic %}
-            <tr>
-                <td>{{ i.subtopic_name }}</td>
-                <td><a href="{% url  'intern_add_data' i.id %}">Add Data</a></td>
-                <td><a href="{% url  'intern_view_data' i.id %}">View Data</a></td>
-                <td><a href="{% url  'intern_edit_data' i.id %}">Edit Data</a></td>
-            </tr>
+                <tr>
+                    <td>{{ i.subtopic_name }}</td>
+                    <td><a href="{% url  'intern_add_data' i.id %}">Add Data</a></td>
+                    <td><a href="{% url  'intern_view_data' i.id %}">View Data</a></td>
+                    <td><a href="{% url  'intern_edit_data' i.id %}">Edit Data</a></td>
+                </tr>
             {% endfor %}
 
-        </tbody>
-    </table>
-</div>
-<hr>
-<br> {% endblock %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <br> {% endblock %}

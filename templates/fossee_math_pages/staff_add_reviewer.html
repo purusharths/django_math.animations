@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Staff View Topic{% endblock %}
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Staff Add Reviever{% endblock %}
 {% block content %}
     <section id="bc">
         <nav aria-label="breadcrumb">
@@ -15,15 +15,16 @@
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'staff_aprove_contents' %}">
                         <i class="fa fa-pencil" style="color:black"></i>Aprove Contents
-                        - {{ assigned_topic.topic_id.internship_id }}
+                        - {{ data_info.subtopic_id.topic_id.internship_id }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active"> View Data : {{ subtopic.subtopic_name }}</li>
+                <li class="breadcrumb-item active"> View Data : {{ data_info.subtopic_id }}</li>
             </ol>
         </nav>
     </section>
     <hr>
     <div class="container">
+        {% include 'partials/_alerts.html' %}
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -40,25 +41,11 @@
             </tr>
             <tr>
                 <th>
-                    <h5>Sub topic : {{ subtopic.subtopic_name }}</h5>
+                    <h5>Sub topic : {{ data_info.subtopic_id }}</h5>
                 </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th>Content</th>
-            </tr>
-            <tr>
-                <td id="content_data">{{ data_info.data_content }}
-                </td>
-            </tr>
-            <tr>
-                <th>Reference</th>
-            </tr>
-            <tr>
-                <td>{{ data_info.data_reference }}
-                </td>
-            </tr>
             <tr>
                 <th>Post date : {{ data_info.data_post_date }}</th>
             </tr>
@@ -76,10 +63,7 @@
                     <th> Aproved On : {{ ver.dataverification_date }}</th>
                 </tr>{% endif %}
             <tr>
-                <td><a href="{% url 'staff_add_reviever' data_info.id %}">Add Reviever Details</a></td>
-            </tr>
-            <tr>
-                <td style="background-color:#282B2E">
+                <td>
                     <form method="POST" class="form-group" name="ManageIntern">
                         <input type="hidden" value="{{ data_info.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
 
@@ -88,13 +72,7 @@
                 </td>
             </tr>
             </tbody>
-            <script>
-                $(document).ready(function () {
-                    var data = $("#content_data").text()
-                    $("#content_data").html(data)
 
-                })
-            </script>
         </table>
     </div>
     <br>
