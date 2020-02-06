@@ -1,90 +1,87 @@
 {% extends 'base.html' %}{% load static %}{% block title %}Index{% endblock %}{% block content %}
-    <!-- Page Content -->
-    <div class="container">
-        <br><br>
-        <!-- Heading Row -->
-        <div class="row align-items-center my-5">
+<!-- Page Content -->
+<div class="container">
+    <br><br>
+    <!-- Heading Row -->
+    <div class="row align-items-center my-5">
 
-            <!-- /.col-lg-8 -->
-            <div class="col-lg-5">
-                <h1 class="font-weight-light serif">FOSSEE Animations | Math</h1>
-                <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
-            </div>
-            <div class="col-lg-7">
-                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/logo.png' %}" alt="">
-            </div>
-            <!-- /.col-md-4 -->
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-5">
+            <h1 class="font-weight-light serif">FOSSEE Animations | Math</h1>
+            <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
         </div>
-        <!-- /.row -->
-        <br>
+        <div class="col-lg-7">
+            <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/logo.png' %}" alt="">
+        </div>
+        <!-- /.col-md-4 -->
     </div>
-    <hr>
-    <div class="container" id="topics">
-        <div>
-            Search :
-            <form method="GET" action=".">
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <div class="input-group">
-                            <input class="form-control py-2 border-right-0 border" type="search" name="title_contains"
-                                   placeholder="Search For Topics or Sub-topics"/>
-                            <span class="input-group-append" style="width: 10%;">
-                                        <div class="input-group-text bg-transparent">
-                                            <i class="fa fa-search"></i>
-                                        </div>
-                                    </span>
-                        </div>
+    <!-- /.row -->
+    <br>
+</div>
+<hr>
+<div class="container" id="topics">
+    <div>
+        Search :
+        <form method="GET" action=".">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="title_contains"
+                            placeholder="Search For Topics or Sub-topics" />
+                        <span class="input-group-append" style="width: 10%;">
+                            <div class="input-group-text bg-transparent">
+                                <i class="fa fa-search"></i>
+                            </div>
+                        </span>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
-            {% if datas %}
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Topic Name</th>
-                        <th scope="col">Sub Topic Name</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for data in datas %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ data.topic_id }}</td>
-                            <td><a href="{% url 'home_view_data' data.pk %}">{{ data.subtopic_name }}</a></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
-        <hr>
-        <h1>Topics</h1>
-        <hr> {% for i in internship %}
-        <div class="card">
-            <h5 class="card-header">{{ i.internship_topic }}</h5>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <img src="{{ i.internship_thumbnail }}">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-text">"{{ i.internship_quote }}"</p>
-                                <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
-                                <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    {% if datas %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Topic Name</th>
+                <th scope="col">Sub Topic Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ data.topic_id }}</td>
+                <td>{{ data.subtopic_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+<hr>
+<div class="container">
+    <h1>Topics</h1>
+    <hr> {% for i in internship %}
+    <div class="card">
+        <h5 class="card-header">{{ i.internship_topic }}</h5>
+        <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="{{ i.internship_thumbnail.url }}" height="85%" width="80%">
+                </div>
+                <div class="col-lg-6">
+                    <p class="card-text">"{{ i.internship_quote }}"</p>
+                    <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
+                    <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
                 </div>
             </div>
         </div>
     {% endfor %}
+        </div>
+        <br>
     </div>
-    <br>
 
 {% endblock %}
