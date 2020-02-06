@@ -74,6 +74,9 @@
                 <th> Aproved On : {{ ver.dataverification_date }}</th>
             </tr>{% endif %}
             <tr>
+                <td><a href="{% url 'staff_add_reviever' data_info.id %}">Add Reviever Details</a></td>
+            </tr>
+            <tr>
                 <td style="background-color:#282B2E">
                     <form method="POST" class="form-group" name="ManageIntern">
                         <input type="hidden" value="{{ data_info.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
@@ -90,8 +93,6 @@
 
             })
         </script>
-        </tbody>
-
     </table>
 </div>
 <br>
