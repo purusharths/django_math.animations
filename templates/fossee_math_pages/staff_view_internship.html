@@ -1,51 +1,51 @@
-{% extends 'base.html' %} {% block title %}View Intern Data{% endblock %} {% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
+{% extends 'base.html' %} {% block title %}Staff View Internship{% endblock %} {% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
 
-            <li class="breadcrumb-item active">Internships </li>
-        </ol>
-    </nav>
-</section>
-<hr>
-<div class="container">
+                <li class="breadcrumb-item active">Internships</li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
 
-    <table class="table">
-    {% for i in internship %}
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Internship Name : {{ i.internship_topic }}</th>
-            </tr>
-        </thead>
-        {% for j in topics %}
-            {% if j.internship_id_id == i.id %}
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Topic Name : {{ j.topic_name }}</th>
-            </tr>
-        </thead>
-                {% for k in subtopics %}
-                    {% if k.topic_id_id == j.id %}
-            <tbody>
-            <tr>
-                <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
-            </tr>
-        </tbody>
+        <table class="table">
+            {% for i in internship %}
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Internship Name : {{ i.internship_topic }}</th>
+                </tr>
+                </thead>
+                {% for j in topics %}
+                    {% if j.internship_id_id == i.id %}
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                        </tr>
+                        </thead>
+                        {% for k in subtopics %}
+                            {% if k.topic_id_id == j.id %}
+                                <tbody>
+                                <tr>
+                                    <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
+                                </tr>
+                                </tbody>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
                 {% endfor %}
-            {% endif %}
             {% endfor %}
-    {% endfor %}
-    </table>
-</div>
-<br>
-<hr>
-<br> {% endblock %}
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br> {% endblock %}

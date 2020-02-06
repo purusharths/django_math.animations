@@ -1,38 +1,38 @@
-{% extends 'base.html' %} {% block title %}View Intern Data{% endblock %} {% block content %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i style="color:black"></i> Topics</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id.id %}">
-                    <i style="color:black"></i> Browse Topic : {{ subtopic.topic_id.internship_id }} </a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black">
-                    <i style="color:black"></i> {{ subtopic.topic_id.internship_id }} - {{ subtopic.subtopic_name }}
-                </a>
-            </li>
-        </ol>
-    </nav>
-</section>
-<hr>
-<div class="container">
-    <table class="table">
-        <thead class="thead-dark">
+{% extends 'base.html' %} {% block title %}Details{% endblock %} {% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i style="color:black"></i> Topics</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id.id %}">
+                        <i style="color:black"></i> Browse Topic : {{ subtopic.topic_id.internship_id }} </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black">
+                        <i style="color:black"></i> {{ subtopic.topic_id.internship_id }} - {{ subtopic.subtopic_name }}
+                    </a>
+                </li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
                 <th>
                     <h3>Internship Name : {{ subtopic.topic_id.internship_id }}</h3>
                 </th>
             </tr>
-        </thead>
-        <thead class="thread-light">
+            </thead>
+            <thead class="thread-light">
             <tr>
                 <th>
                     <h4>Topic Name : {{ subtopic.topic_id }}</h4>
@@ -43,36 +43,47 @@
                     <h5>Sub topic : {{ subtopic.subtopic_name }}</h5>
                 </th>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>Content</th>
-            </tr>
-            <tr>
-                <td id="content_data">{{ data.data_content }}
-                </td>
-            </tr>
-            <tr>
-                <th>Reference</th>
-            </tr>
-            <tr>
-                <td>{{ data.data_reference }}
-                </td>
-            </tr>
-            <tr>
-                <th> author and other details</th>
-            </tr>
-        </tbody>
-        <script>
-            $(document).ready(function() {
-                var data = $("#content_data").text()
-                $("#content_data").html(data)
-            })
-        </script>
-        </tbody>
+            </thead>
+            {% if data.data_status == 'ACCEPTED' %}
+                <tbody>
+                <tr>
+                    <th>Content</th>
+                </tr>
+                <tr>
+                    <td id="content_data">{{ data.data_content }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Reference</th>
+                </tr>
+                <tr>
+                    <td>{{ data.data_reference }}
+                    </td>
+                </tr>
+                {% if ver %}
+                    <tr>
+                        <th> Author : {{ data.user_id }}</th>
+                    </tr>
+                    <tr>
+                        <th> Reviever : {{ ver.dataverification_verifier }}</th>
+                    </tr>
+                    <tr>
+                        <th> Mentor : {{ ver.dataverification_mentor }}</th>
+                    </tr>
+                    <tr>
+                        <th> Aproved On : {{ ver.dataverification_date }}</th>
+                    </tr>{% endif %}
 
-    </table>
-</div>
-<br>
-<hr>
-<br> {% endblock %}
+                </tbody>
+            {% endif %}
+            <script>
+                $(document).ready(function () {
+                    var data = $("#content_data").text()
+                    $("#content_data").html(data)
+                })
+            </script>
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br> {% endblock %}

@@ -1,60 +1,62 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Internships{% endblock %}{% block content %} {% if user.is_authenticated %} {% if user.is_superuser %}
-<section id="bc">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white text-dark">
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'index' %}">
-                    <i class="fa fa-home" style="color:black"></i> Index</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a style="color:black" href="{% url 'dashboard' %}">
-                    <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active">Manage Interns</li>
-        </ol>
-    </nav>
-</section>
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin manage Intern{% endblock %}{% block content %}
+    {% if user.is_authenticated %} {% if user.is_superuser %}
+        <section id="bc">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-white text-dark">
+                    <li class="breadcrumb-item">
+                        <a style="color:black" href="{% url 'index' %}">
+                            <i class="fa fa-home" style="color:black"></i> Index</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a style="color:black" href="{% url 'dashboard' %}">
+                            <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Manage Interns</li>
+                </ol>
+            </nav>
+        </section>
 
-<div class="container">
-    {% include 'partials/_alerts.html' %}
-    <div class="container" style="padding-top: 3%;">
-        <hr> {% if datas %}
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>Intern Name</th>
-                    <th>Internship</th>
-                    <th></th>
-                    <th></th>
-                    <th>Set Status</th>
-                </tr>
-            </thead>
-            {% for datas in datas %}
-            <tbody>
-                <tr>
-                    <td>{{ datas.user_id }}</td>
-                    <td>{{ datas.user_status }}</td>
-                    <td>
-                        <form method="POST" class="form-group" name="ManageIntern">
+        <div class="container">
+            {% include 'partials/_alerts.html' %}
+            <div class="container" style="padding-top: 3%;">
+                <hr> {% if datas %}
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Intern Name</th>
+                        <th>Internship</th>
+                        <th></th>
+                        <th></th>
+                        <th>Set Status</th>
+                    </tr>
+                    </thead>
+                    {% for datas in datas %}
+                        <tbody>
+                        <tr>
+                            <td>{{ datas.user_id }}</td>
+                            <td>{{ datas.user_status }}</td>
                             <td>
-                                <input type="hidden" value="{{ datas.id }}" name="id"> {% csrf_token %} {{ form|crispy }}
+                                <form method="POST" class="form-group" name="ManageIntern">
+                            <td>
+                                <input type="hidden" value="{{ datas.id }}"
+                                       name="id"> {% csrf_token %} {{ form|crispy }}
                             </td>
                             <td>
                                 <input class="btn btn-success" type="submit" name="submit" value="Submit">
                             </td>
-                        </form>
-                    </td>
-                </tr>
+                            </form>
+                            </td>
+                        </tr>
 
-            </tbody>
+                        </tbody>
 
-            {% endfor %}
-        </table>
-        {% endif %}
+                    {% endfor %}
+                </table>
+            {% endif %}
 
-    </div>
-    <script>
-        $('.requiredField').hide();
-    </script>
-</div>
-{% endif %} {% endif %} {% endblock %}
+            </div>
+            <script>
+                $('.requiredField').hide();
+            </script>
+        </div>
+    {% endif %} {% endif %} {% endblock %}
