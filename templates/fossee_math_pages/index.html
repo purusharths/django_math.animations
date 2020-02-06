@@ -51,7 +51,7 @@
               <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ data.topic_id }}</td>
-                <td>{{ data.subtopic_name }}</td>
+                  <td><a href="{% url 'home_view_data' data.pk %}">{{ data.subtopic_name }}</a></td>
               </tr>
               {% endfor %}
             </tbody>
