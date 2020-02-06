@@ -50,6 +50,16 @@
             <tr>
                 <th>Status : {{ data_info.data_status }}</th>
             </tr>
+            {% if ver %}
+            <tr>
+                <th> Reviever : {{ ver.dataverification_verifier }}</th>
+            </tr>
+              <tr>
+                <th> Mentor : {{ ver.dataverification_mentor }}</th>
+            </tr>
+             <tr>
+                <th> Aproved On : {{ ver.dataverification_date }}</th>
+            </tr>{% endif %}
             <tr>
                 <td>
                     <form method="POST" class="form-group" name="ManageIntern">
