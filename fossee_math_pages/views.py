@@ -15,30 +15,26 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
 from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
 
-
+#  pic = request.FILES
+#         internship_thumbnail = pic['internship_thumbnail']
 @login_required
 def admin_add_internship(request):
     form = AddInternship()
     if request.method == 'POST':
         internship_topic = request.POST['internship_topic']
-        internship_thumbnail = request.POST['internship_thumbnail']
-        internship_status = request.POST['internship_status']
-        internship_quote = request.POST['internship_quote']
-        internship_quote_author = request.POST['internship_quote_author']
+        form = AddInternship(request.POST, request.FILES)
+        print(form)
         if Internship.objects.filter(internship_topic=internship_topic).exists():
             messages.error(request, 'That internship already exist')
             return redirect('admin_add_internship')
-        try:
-            data = Internship(internship_topic=internship_topic, internship_quote=internship_quote,
-                              internship_quote_author=internship_quote_author,
-                              internship_thumbnail=internship_thumbnail,
-                              internship_status=internship_status)
-            data.save()
+        if form.is_valid():
+            form.save()
             messages.success(request, 'Internship added')
             return redirect('admin_add_internship')
-        except:
+        else:
             messages.error(request, 'Some error occured')
             return redirect('admin_add_internship')
+    form = AddInternship()
     context = {
         'form': form,
     }

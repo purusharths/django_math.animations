@@ -20,7 +20,7 @@
     <div class="container" style="padding-top: 3%;">
         <h2> Add Intership</h2>
         <hr>
-        <form method="POST" class="form-group" name="AddInternship">
+        <form method="POST" class="form-group" name="AddInternship" enctype="multipart/form-data">
 
             {% csrf_token %} {{ form|crispy }}
 
