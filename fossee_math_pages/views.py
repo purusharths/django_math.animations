@@ -12,8 +12,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
-from .models import UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data
+                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents, Data_Verification)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, DataVerification)
 
 
 @login_required
@@ -613,8 +613,37 @@ def staff_view_internship(request):
 
 
 @login_required
+def staff_add_reviever(request, s_id):
+    data_info = Data.objects.get(id=s_id)
+    interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
+    assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
+    verify = Data_Verification()
+
+    if request.POST:
+        try:
+            DataVerification.objects.get(data_id=s_id)
+            messages.error(request, 'Data exists')
+        except:
+            verifier = request.POST['dataverification_verifier']
+            mentor = request.POST['dataverification_mentor']
+            mentor = User.objects.get(id=mentor)
+            daa=Data.objects.get(pk=s_id)
+            data = DataVerification(dataverification_verifier=verifier, dataverification_mentor=mentor, data_id=daa)
+            data.save()
+            messages.success(request, 'Data Added Successfully')
+
+    context = {
+        'form': verify,
+        'data_info': data_info,
+        'interndhip_info': interndhip_info,
+        'assigned_topic': assigned_topic,
+    }
+
+    return render(request, 'fossee_math_pages/staff_add_reviewer.html', context)
+
+
+@login_required
 def staff_view_topic(request, s_id):
-    print(s_id)
     data_info = Data.objects.get(id=s_id)
     post = get_object_or_404(Data, id=s_id)
     interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
