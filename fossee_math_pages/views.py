@@ -618,10 +618,11 @@ def staff_add_reviever(request, s_id):
     interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
     assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
     verify = Data_Verification()
+    ver=""
 
     if request.POST:
         try:
-            DataVerification.objects.get(data_id=s_id)
+            ver = DataVerification.objects.get(data_id=s_id)
             messages.error(request, 'Data exists')
         except:
             verifier = request.POST['dataverification_verifier']
@@ -630,10 +631,12 @@ def staff_add_reviever(request, s_id):
             daa=Data.objects.get(pk=s_id)
             data = DataVerification(dataverification_verifier=verifier, dataverification_mentor=mentor, data_id=daa)
             data.save()
+            ver = DataVerification.objects.get(data_id=s_id)
             messages.success(request, 'Data Added Successfully')
 
     context = {
         'form': verify,
+        'ver':ver,
         'data_info': data_info,
         'interndhip_info': interndhip_info,
         'assigned_topic': assigned_topic,
@@ -651,10 +654,16 @@ def staff_view_topic(request, s_id):
     subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
     print(data_info.data_reference)
 
+    try:
+        verify=DataVerification.objects.get(data_id=s_id)
+    except:
+        verify=""
+
     if request.user:
         form = AproveContents
         form = AproveContents(instance=post)
         context = {
+            'ver':verify,
             'data_info': data_info,
             'internship_info': interndhip_info,
             'assigned_topic': assigned_topic,
