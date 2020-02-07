@@ -15,6 +15,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, AssignTopic, data, AproveContents, Data_Verification)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, DataVerification)
 
+
 #  pic = request.FILES
 #         internship_thumbnail = pic['internship_thumbnail']
 @login_required
