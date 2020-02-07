@@ -378,7 +378,8 @@ def intern_edit_data(request, e_id):
                 post = form.save(commit=False)
                 post.save()
                 form = data
-                return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+                messages.success(request, "Editing was successfull")
+                return redirect(intern_view_topic)
 
         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
 
