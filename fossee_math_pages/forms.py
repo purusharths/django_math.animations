@@ -69,7 +69,7 @@ class Data_Verification(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(Data_Verification, self).__init__(*args, **kwargs)
-        self.fields['dataverification_mentor'].queryset = User.objects.filter(is_staff=True,is_superuser=False)
+        self.fields['dataverification_mentor'].queryset = User.objects.filter(is_staff=True, is_superuser=False)
 
 
 class AddIntern(ModelForm):
