@@ -15,6 +15,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, AssignTopic, data, AproveContents, Data_Verification)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, DataVerification)
 
+
 #  pic = request.FILES
 #         internship_thumbnail = pic['internship_thumbnail']
 @login_required
@@ -377,7 +378,8 @@ def intern_edit_data(request, e_id):
                 post = form.save(commit=False)
                 post.save()
                 form = data
-                return render(request, 'fossee_math_pages/intern_edit_data.html', {'form': form})
+                messages.success(request, "Editing was successfull")
+                return redirect(intern_view_topic)
 
         return render(request, 'fossee_math_pages/intern_edit_data.html', context)
 
