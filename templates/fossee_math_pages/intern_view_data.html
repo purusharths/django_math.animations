@@ -53,8 +53,8 @@
             <tr>
                 <th>Content</th>
             </tr>{% for topic in topic %}
-            <tr> in various ways using CSS3 text box. We can style the different part of the text box. That is, we can change the border, outline, margin, background color , fore color, padding, font, shadow,
-                <td id="content_data">{{ topic.data_content }}
+            <tr>
+                <td class="content_list">{{ topic.data_content }}
                 </td>
             </tr>
             <tr>
@@ -67,7 +67,7 @@
                 {% if topic.data_video.url != null %}
                 <td>
 
-                    <video width='320' height= '240' controls autoplay>
+                    <video width='320' height= '240' controls >
 <source src="{{ topic.data_video.url  }}" type='video/mp4'>
 Your browser does not support the video tag.
 </video>
@@ -86,18 +86,20 @@ Your browser does not support the video tag.
             <tr>
                 <th>Post date : {{ topic.data_post_date }}</th>
             </tr>
+
             {% endfor %}
+            <!-- for loop ends here-->
 
             <tr>
                 <th>Status : {{ status }}</th>
             </tr>
             </tbody>
             <script>
-                $(document).ready(function () {
+              /*  $(document).ready(function () {
                     var data = $("#content_data").text()
                     $("#content_data").html(data)
 
-                })
+                })*/
             </script>
             </tbody>
 
@@ -112,5 +114,22 @@ Your browser does not support the video tag.
             $("#topic").html(content)
         })
     </script>
+<script type="text/javascript">
+ //    $(document).ready(function ()
+ // {
+	var contents = document.getElementsByClassName('content_list');
+
+	for(var i=0; i< contents.length; i++)
+	{
+           var data = contents[i].textContent;
+          // console.log(data);
+           console.log("--------------")
+           //$("#content_data").html(data)
+	       contents[i].innerHTML=data;
+           console.log(contents[i].value)
+
+	}
+// }
+</script>
 
 {% endblock %}
