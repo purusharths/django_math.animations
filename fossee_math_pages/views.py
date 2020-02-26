@@ -314,29 +314,40 @@ def index(request):
 
 @login_required
 def intern_add_data(request, t_id):
-    form = data
+    form = data()
+    i=1
     user = request.user
     subtopic = Subtopic.objects.get(id=t_id)
 
     if request.method == 'POST':
         content = request.POST['data_content']
         reference = request.POST['data_reference']
+        img = request.FILES.get('image')
+        video = request.FILES.get('video')
+
         status = "WAITING"
 
+
         if Data.objects.filter(subtopic_id_id=t_id).exists():
-            print("error")
-            messages.error(request, "Data already exists")
-            return redirect(intern_view_topic)
-        else:
-            messages.success(request, "Data added successfully")
-            add_data = Data(data_content=content, data_reference=reference, data_status=status, subtopic_id_id=t_id,
+            messages.success(request,"Data added successfuly")
+            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
+                            data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
-            return redirect(intern_view_topic)
+            # print("error")
+            # messages.error(request, "Data already exists")
+            # return redirect(intern_view_topic)
+        else:
+            messages.success(request,"Data added successfuly")
+            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img, data_video=video, subtopic_id_id=t_id,
+                            user_id_id=user.id)
+            add_data.save()
+    form = data
 
     context = {
         'form': form,
         'subtopic': subtopic,
+        'i' : i,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
@@ -386,15 +397,35 @@ def intern_edit_data(request, e_id):
 
 @login_required
 def intern_view_data(request, v_id):
-    try:
-        topic = Data.objects.get(subtopic_id_id=v_id)
-        context = {
-            'topic': topic
-        }
-        return render(request, 'fossee_math_pages/intern_view_data.html', context)
-
-    except:
-        return render(request, 'fossee_math_pages/intern_view_data.html')
+    print(v_id)
+    i=[1,2]
+    if Data.objects.filter(subtopic_id_id=v_id).exists():
+        print("haii")
+    topic = Data.objects.filter(subtopic_id_id=v_id)
+    int_name =topic[0].subtopic_id.topic_id.internship_id
+    topic_name = topic[0].subtopic_id.topic_id
+    sub_topic = topic[0].subtopic_id
+    status = topic[0].data_status
+    context = {
+        'topic': topic,
+        'int_name':int_name,
+        'topic_name' : topic_name,
+        'sub_topic':sub_topic,
+        'status':status
+         }
+    print(topic[0].subtopic_id.topic_id.internship_id)
+    return render(request, 'fossee_math_pages/intern_view_data.html', context)
+    # try:
+    #
+    #     topic = Data.objects.get(subtopic_id_id=v_id)
+    #     context = {
+    #         'topic': topic
+    #     }
+    #     print(topic.internship_id)
+    #     return render(request, 'fossee_math_pages/intern_view_data.html', context)
+    #
+    # except:
+    #     return render(request, 'fossee_math_pages/intern_view_data.html')
 
 
 @login_required

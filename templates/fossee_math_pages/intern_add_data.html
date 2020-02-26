@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
-    {% load static %} {{ form.media }}
+    {% load static %} {{ form.media }} {% load crispy_forms_tags %}
     <section id="bc">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-white text-dark">
@@ -32,9 +32,10 @@
         <h2>Internship :{{ subtopic.topic_id.internship_id }}</h2>
         <h3>Topic :{{ subtopic.topic_id }}</h3>
 
-        <form method="post">
-            {% csrf_token %} {{ form.media }} {{ form.as_p }}
-
+        <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+           Upload image: <input type="file" name="image" name="myfile"><br><br>
+            {{ form.media }} {{ form.as_p }}
+           Upload video: <input type="file" name="video" value="Upload video">
             <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
         </form>
         <br>
