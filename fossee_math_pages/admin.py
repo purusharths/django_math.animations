@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (UserDetails, Internship, Intern, AssignedTopics)
+from .models import (UserDetails, Internship, Intern, AssignedTopics, Data)
 
 # # Register your models here.
 # myModels = [AddUser,data]
@@ -8,3 +8,5 @@ from .models import (UserDetails, Internship, Intern, AssignedTopics)
 
 myModels = [UserDetails, Internship, Intern, AssignedTopics]
 admin.site.register(myModels)
+
+admin.site.register(Data)
