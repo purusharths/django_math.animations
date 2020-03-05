@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor',
-    'ckeditor_uploader',
+    # 'ckeditor',
+    # 'ckeditor_uploader',
     'crispy_forms',
+    'mdeditor',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -133,7 +134,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+# CKEDITOR_UPLOAD_PATH = "uploads/"
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # messages
 from django.contrib.messages import constants as messages
