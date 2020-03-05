@@ -352,14 +352,9 @@ def intern_add_data(request, t_id):
             # messages.error(request, "Data already exists")
             # return redirect(intern_view_topic)
         else:
-<<<<<<< HEAD
-            messages.success(request,"Data added successfully")
-            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img, data_video=video, subtopic_id_id=t_id,
-=======
             messages.success(request, "Data added successfuly")
             add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
->>>>>>> 59350a05853da675bf84595d75ef51847d9e27d0
                             user_id_id=user.id)
             add_data.save()
     form = data
