@@ -19,19 +19,21 @@
     <div class="container">
 
         <table class="table">
+            {% for internships in internship %}
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Internship Name : {{ internship.topic_id.internship_id }}</th>
+                    <th scope="col">Internship Name : {{ internships.internship_topic }}</th>
                 </tr>
                 </thead>
+
                 {% for j in topics %}
-                    {% if j.internship_id == internship.topic_id.internship_id %}
+                    {% if internships.internship_topic == j.internship_id.internship_topic %}
                         <thead class="thead-light">
                         <tr>
                             <th scope="col">Topic Name : {{ j.topic_name }}</th>
                         </tr>
                         </thead>
-                        {% for k in subtopics %}
+                        {% for k in subtopic %}
                             {% if k.topic_id.topic_name == j.topic_name %}
                                 <tbody>
                                 <tr>
@@ -42,6 +44,7 @@
                         {% endfor %}
                     {% endif %}
                 {% endfor %}
+            {% endfor %}
         </table>
     </div>
     <br>
