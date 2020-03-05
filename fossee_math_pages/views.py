@@ -329,7 +329,61 @@ def index(request):
 
 @login_required
 def intern_add_data(request, t_id):
+    # extra begin
+    print(t_id)
     form = data()
+    if Data.objects.filter(subtopic_id_id=t_id).exists():
+        i=1;
+        subtopic = Subtopic.objects.get(id=t_id)
+        print("data exists")
+        topic = Data.objects.filter(subtopic_id_id=t_id)
+        int_name = topic[0].subtopic_id.topic_id.internship_id
+        topic_name = topic[0].subtopic_id.topic_id
+        sub_topic = topic[0].subtopic_id
+        print(sub_topic)
+        status = topic[0].data_status
+        context1 = {
+            'form': form,
+            'subtopic': subtopic,
+            'i': i,
+            'topic': topic,
+            'int_name': int_name,
+            'topic_name': topic_name,
+            'sub_topic': sub_topic,
+            'status': status
+        }
+        i = 1
+        user = request.user
+        subtopic = Subtopic.objects.get(id=t_id)
+
+        if request.method == 'POST':
+            content = request.POST['data_content']
+            # reference = request.POST['data_reference']
+            img = request.FILES.get('image')
+            video = request.FILES.get('video')
+            status = "WAITING"
+
+            if Data.objects.filter(subtopic_id_id=t_id).exists():
+                messages.success(request, "Data added successfuly")
+                add_data = Data(data_content=content, data_status=status, data_image=img,
+                                data_video=video, subtopic_id_id=t_id,
+                                user_id_id=user.id)
+                add_data.save()
+                # print("error")
+                # messages.error(request, "Data already exists")
+                # return redirect(intern_view_topic)
+            else:
+                messages.success(request, "Data added successfuly")
+                add_data = Data(data_content=content, data_status=status, data_image=img,
+                                data_video=video, subtopic_id_id=t_id,
+                                user_id_id=user.id)
+                add_data.save()
+        form = data
+        return render(request, 'fossee_math_pages/intern_add_data.html', context1)
+
+    form = data()
+
+    # extra
     i = 1
     user = request.user
     subtopic = Subtopic.objects.get(id=t_id)
@@ -339,7 +393,6 @@ def intern_add_data(request, t_id):
         # reference = request.POST['data_reference']
         img = request.FILES.get('image')
         video = request.FILES.get('video')
-
         status = "WAITING"
 
         if Data.objects.filter(subtopic_id_id=t_id).exists():
