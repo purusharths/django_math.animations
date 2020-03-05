@@ -104,13 +104,13 @@ class AssignTopic(ModelForm):
 class data(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content', 'data_reference']
+        fields = ['data_content']
 
 
 class edit_data(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content', 'data_reference']
+        fields = ['data_content']
 
 
 class UserLoginForm(forms.Form):

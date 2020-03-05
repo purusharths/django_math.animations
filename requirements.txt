@@ -11,5 +11,5 @@ django-crispy-forms
 django-phonenumber-field
 phonenumbers
 email_validator
-django-mdeditor
+django-ckeditor
 
