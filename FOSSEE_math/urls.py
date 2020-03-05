@@ -22,8 +22,7 @@ from django.urls import path
 urlpatterns = [
     path('', include('fossee_math_pages.urls')),
     path('admin/', admin.site.urls),
-    # path('ckeditor/', include('ckeditor_uploader.urls')),
-    path(r'mdeditor/', include('mdeditor.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
