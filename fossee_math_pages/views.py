@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404,get_list_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
@@ -384,39 +384,38 @@ def intern_view_internship(request):
 
 @login_required
 def intern_edit_data(request, e_id):
-    post = get_list_or_404(Data,subtopic_id_id = e_id)
-    datas = Data.objects.filter(subtopic_id_id = e_id)
+    post = get_list_or_404(Data, subtopic_id_id=e_id)
+    datas = Data.objects.filter(subtopic_id_id=e_id)
     sub = Data.objects.filter(subtopic_id_id=e_id)
     print("sub")
     form = data
 
-
     listing = Data.objects.all();
-    paginator = Paginator(listing,2)
+    paginator = Paginator(listing, 2)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     for i in page_obj:
         if form.is_valid:
             form.data_content = i.data_content
-    #content = page_obj.data_content;
-    #xprint(content)
-    return render(request, 'fossee_math_pages/intern_edit_data.html', {'page_obj': page_obj,'form':form})
+    # content = page_obj.data_content;
+    # xprint(content)
+    return render(request, 'fossee_math_pages/intern_edit_data.html', {'page_obj': page_obj, 'form': form})
     for i in sub:
         print(i.data_reference)
     form = data
     for i in datas:
         print(i.data_content)
     context = {
-        'data' : datas,
-        'form' : form
+        'data': datas,
+        'form': form
     }
     if request.user:
         form = data
-       # form = data(instance = post)
-        context ={
-            'form' : form,
-            'sub' : sub
+        # form = data(instance = post)
+        context = {
+            'form': form,
+            'sub': sub
         }
     return render(request, 'fossee_math_pages/intern_edit_data.html', context)
 
@@ -427,7 +426,7 @@ def intern_edit_data(request, e_id):
             post.save()
             form = data
             messages.success(request, "Editing was successfull")
-    return render(request, 'fossee_math_pages/intern_edit_data.html',context)
+    return render(request, 'fossee_math_pages/intern_edit_data.html', context)
     # post = get_object_or_404(Data, subtopic_id_id=e_id)
     # sub = Data.objects.filter(subtopic_id_id=e_id)
     # subtopic = Subtopic.objects.filter(id=sub.subtopic_id_id)
@@ -615,6 +614,7 @@ def staff_aprove_contents(request):
     }
 
     return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
+
 
 @login_required
 def staff_manage_intern(request):
