@@ -336,7 +336,7 @@ def intern_add_data(request, t_id):
 
     if request.method == 'POST':
         content = request.POST['data_content']
-        reference = request.POST['data_reference']
+        # reference = request.POST['data_reference']
         img = request.FILES.get('image')
         video = request.FILES.get('video')
 
@@ -344,7 +344,7 @@ def intern_add_data(request, t_id):
 
         if Data.objects.filter(subtopic_id_id=t_id).exists():
             messages.success(request, "Data added successfuly")
-            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
+            add_data = Data(data_content=content, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
@@ -353,7 +353,7 @@ def intern_add_data(request, t_id):
             # return redirect(intern_view_topic)
         else:
             messages.success(request, "Data added successfuly")
-            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
+            add_data = Data(data_content=content, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
