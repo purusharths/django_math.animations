@@ -4,6 +4,6 @@ venv/*
 db.sqlite3
 __pycache__/*
 FOSSEE_math/__pycache__/*
-fossee_math_page/__pycache__/*
+fossee_math_pages/__pycache__/*
 fossee_math/*
 https:/*
