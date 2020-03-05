@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,get_list_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
@@ -338,7 +338,7 @@ def intern_add_data(request, t_id):
             # messages.error(request, "Data already exists")
             # return redirect(intern_view_topic)
         else:
-            messages.success(request,"Data added successfuly")
+            messages.success(request,"Data added successfully")
             add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img, data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
@@ -368,31 +368,75 @@ def intern_view_internship(request):
 
 @login_required
 def intern_edit_data(request, e_id):
-    post = get_object_or_404(Data, subtopic_id_id=e_id)
-    sub = Data.objects.get(subtopic_id_id=e_id)
-    subtopic = Subtopic.objects.get(id=sub.subtopic_id_id)
+    post = get_list_or_404(Data,subtopic_id_id = e_id)
+    datas = Data.objects.filter(subtopic_id_id = e_id)
+    sub = Data.objects.filter(subtopic_id_id=e_id)
+    print("sub")
+    form = data
 
+
+    listing = Data.objects.all();
+    paginator = Paginator(listing,2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    for i in page_obj:
+        if form.is_valid:
+            form.data_content = i.data_content
+    #content = page_obj.data_content;
+    #xprint(content)
+    return render(request, 'fossee_math_pages/intern_edit_data.html', {'page_obj': page_obj,'form':form})
+    for i in sub:
+        print(i.data_reference)
+    form = data
+    for i in datas:
+        print(i.data_content)
+    context = {
+        'data' : datas,
+        'form' : form
+    }
     if request.user:
         form = data
-        form = data(instance=post)
-        context = {
-            'internship': internship,
-            'form': form,
-            'subtopic': subtopic,
-            'content': sub.data_content,
-            'reference': sub.data_reference,
+       # form = data(instance = post)
+        context ={
+            'form' : form,
+            'sub' : sub
         }
+    return render(request, 'fossee_math_pages/intern_edit_data.html', context)
 
-        if request.method == 'POST':
-            form = data(request.POST, request.FILES, instance=post)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.save()
-                form = data
-                messages.success(request, "Editing was successfull")
-                return redirect(intern_view_topic)
-
-        return render(request, 'fossee_math_pages/intern_edit_data.html', context)
+    if request.method == 'POST':
+        form = data(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            form = data
+            messages.success(request, "Editing was successfull")
+    return render(request, 'fossee_math_pages/intern_edit_data.html',context)
+    # post = get_object_or_404(Data, subtopic_id_id=e_id)
+    # sub = Data.objects.filter(subtopic_id_id=e_id)
+    # subtopic = Subtopic.objects.filter(id=sub.subtopic_id_id)
+    #
+    # if request.user:
+    #     form = data
+    #     form = data(instance=post)
+    #     context = {
+    #         'internship': internship,
+    #         'form': form,
+    #         'subtopic': subtopic,
+    #         'content': sub.data_content,
+    #         'reference': sub.data_reference,
+    #     }
+    #
+    #     if request.method == 'POST':
+    #         form = data(request.POST, request.FILES, instance=post)
+    #         if form.is_valid():
+    #             post = form.save(commit=False)
+    #             post.save()
+    #             form = data
+    #             messages.success(request, "Editing was successfull")
+    #             return redirect(intern_view_topic)
+    #
+    #     return render(request, 'fossee_math_pages/intern_edit_data.html', context)
 
 
 @login_required
@@ -554,7 +598,6 @@ def staff_aprove_contents(request):
     }
 
     return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
-
 
 @login_required
 def staff_manage_intern(request):
