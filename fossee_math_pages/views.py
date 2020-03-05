@@ -390,7 +390,7 @@ def intern_edit_data(request, e_id):
     print("sub")
     form = data
 
-    listing = Data.objects.all();
+    listing = Data.objects.all()
     paginator = Paginator(listing, 2)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
