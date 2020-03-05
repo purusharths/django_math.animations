@@ -354,7 +354,8 @@ def intern_add_data(request, t_id):
 
 @login_required
 def intern_view_internship(request):
-    internship = Internship.objects.filter(internship_status='ACTIVE')
+    # internship = Internship.objects.filter(internship_status='ACTIVE')
+    internship=AssignedTopics.objects.get(user_id_id=request.user.id)
     topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
 
