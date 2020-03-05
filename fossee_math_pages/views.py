@@ -200,6 +200,21 @@ def admin_view_intern(request, id):
 
 
 @login_required
+def admin_view_intership(request):
+    internship = Internship.objects.all()
+    topic = Topic.objects.all()
+    subtopic = Subtopic.objects.all()
+
+    context = {
+        'internship': internship,
+        'topics': topic,
+        'subtopic': subtopic,
+    }
+
+    return render(request, 'fossee_math_pages/admin_view_internship.html', context)
+
+
+@login_required
 def admin_manage_intern(request):
     datas = UserDetails.objects.filter(user_role="INTERN")
     form = ManageIntern
@@ -315,7 +330,7 @@ def index(request):
 @login_required
 def intern_add_data(request, t_id):
     form = data()
-    i=1
+    i = 1
     user = request.user
     subtopic = Subtopic.objects.get(id=t_id)
 
@@ -327,9 +342,8 @@ def intern_add_data(request, t_id):
 
         status = "WAITING"
 
-
         if Data.objects.filter(subtopic_id_id=t_id).exists():
-            messages.success(request,"Data added successfuly")
+            messages.success(request, "Data added successfuly")
             add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
@@ -338,8 +352,9 @@ def intern_add_data(request, t_id):
             # messages.error(request, "Data already exists")
             # return redirect(intern_view_topic)
         else:
-            messages.success(request,"Data added successfuly")
-            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img, data_video=video, subtopic_id_id=t_id,
+            messages.success(request, "Data added successfuly")
+            add_data = Data(data_content=content, data_reference=reference, data_status=status, data_image=img,
+                            data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
     form = data
@@ -347,7 +362,7 @@ def intern_add_data(request, t_id):
     context = {
         'form': form,
         'subtopic': subtopic,
-        'i' : i,
+        'i': i,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
@@ -355,7 +370,7 @@ def intern_add_data(request, t_id):
 @login_required
 def intern_view_internship(request):
     # internship = Internship.objects.filter(internship_status='ACTIVE')
-    internship=AssignedTopics.objects.get(user_id_id=request.user.id)
+    internship = AssignedTopics.objects.get(user_id_id=request.user.id)
     topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
 
@@ -399,21 +414,21 @@ def intern_edit_data(request, e_id):
 @login_required
 def intern_view_data(request, v_id):
     print(v_id)
-    i=[1,2]
+    i = [1, 2]
     if Data.objects.filter(subtopic_id_id=v_id).exists():
         print("haii")
     topic = Data.objects.filter(subtopic_id_id=v_id)
-    int_name =topic[0].subtopic_id.topic_id.internship_id
+    int_name = topic[0].subtopic_id.topic_id.internship_id
     topic_name = topic[0].subtopic_id.topic_id
     sub_topic = topic[0].subtopic_id
     status = topic[0].data_status
     context = {
         'topic': topic,
-        'int_name':int_name,
-        'topic_name' : topic_name,
-        'sub_topic':sub_topic,
-        'status':status
-         }
+        'int_name': int_name,
+        'topic_name': topic_name,
+        'sub_topic': sub_topic,
+        'status': status
+    }
     print(topic[0].subtopic_id.topic_id.internship_id)
     return render(request, 'fossee_math_pages/intern_view_data.html', context)
     # try:

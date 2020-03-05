@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block title %}Intern View Internship{% endblock %} {% block content %}
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+
+                <li class="breadcrumb-item active">Internships</li>
+            </ol>
+        </nav>
+    </section>
+    <hr>
+    <div class="container">
+
+        <table class="table">
+            {% for internships in internship %}
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Internship Name : {{ internships.internship_topic }}</th>
+                </tr>
+                </thead>
+
+                {% for j in topics %}
+                    {% if internships.internship_topic == j.internship_id.internship_topic %}
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                        </tr>
+                        </thead>
+                        {% for k in subtopic %}
+                            {% if k.topic_id.topic_name == j.topic_name %}
+                                <tbody>
+                                <tr>
+                                    <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
+                                </tr>
+                                </tbody>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
+    <br>
+    <hr>
+    <br> {% endblock %}
