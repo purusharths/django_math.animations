@@ -13,6 +13,7 @@ urlpatterns = [
                   path('admin_add_intern/', views.admin_add_intern, name='admin_add_intern'),
                   path('admin_view_users/', views.admin_view_users, name='admin_view_users'),
                   path('admin_manage_intern/', views.admin_manage_intern, name='admin_manage_intern'),
+                path('admin_view_intership/',views.admin_view_intership,name='admin_view_internshp'),
                   path('dashboard/', views.dashboard, name='dashboard'),
                   path('home_view_data/<int:id>', views.home_view_data, name='home_view_data'),
                   path('home_details/<int:id>', views.home_details, name='home_details'),
