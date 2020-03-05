@@ -515,7 +515,7 @@ def user_login(request):
                 user = form.authenticate_user()
                 login(request, user)
                 if request.user.is_staff:
-                    return render(request, "fossee_math_pages/dashboard.html")
+                    return dashboard(request)
                 else:
                     internship = Intern.objects.get(user_id=request.user.pk)
                     internship_ststus = Internship.objects.get(id=internship.internship_id_id)
@@ -528,7 +528,8 @@ def user_login(request):
                         logout(request)
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
-                        return render(request, "fossee_math_pages/dashboard.html")
+                        return dashboard(request)
+                        # return render(request, "fossee_math_pages/dashboard.html")
 
             except:
 
