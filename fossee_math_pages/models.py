@@ -4,7 +4,6 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from mdeditor.fields import MDTextField
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -79,11 +78,9 @@ class Subtopic(models.Model):
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    # data_content = RichTextUploadingField()
-    data_content = MDTextField()
+    data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank = True,null=True)
     data_video = models.FileField(upload_to='media/',null = True)
-    data_reference = models.TextField(blank=True)
     data_post_date = models.DateTimeField(default=datetime.now, blank=True)
     data_status = models.CharField(max_length=20,
                                    choices=DATA_STATUS,
