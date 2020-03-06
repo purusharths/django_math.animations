@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Edit Data{% endblock %}{% block content %}
-    {% load static %} {{ form.media }}
+    {% load static %} {{ form.media }}{% load crispy_forms_tags %}
     <section id="bc">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-white text-dark">
@@ -28,15 +28,24 @@
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
+        <div class="pagination">
 
+        </div>
         <h2>Internship :{{ subtopic.topic_id.internship_id }}</h2>
         <h3>Topic :{{ subtopic.topic_id }}</h3>
+        {% for i in page_obj %}
 
-        <form method="post">
-            {% csrf_token %} {{ form.media }} {{ form.as_p }}
+        <form method="post" name="data" enctype="multipart/form-data">
+
+            {% csrf_token %} {{ form.media }} {{ form.as_p  }}
+
 
             <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+            <input class="btn btn-success" type="submit"  value="Next">
         </form>
+        {% endfor %}
+
+
         <br>
     </div>
 {% endblock %}
