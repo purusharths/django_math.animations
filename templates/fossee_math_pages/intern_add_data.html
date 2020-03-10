@@ -56,25 +56,35 @@
 
         <h2>Internship :{{ subtopic.topic_id.internship_id }}</h2>
         <h3>Topic :{{ subtopic.topic_id }}</h3>
+
         {% for topic in topic %}
+        {% if topic.data_content != null %}
+             <p>{{ topic.data_content |safe}}</p>
+        {% endif %}
+        <table>
+
+            <tr>
             {% if topic.data_image.url != null %}
-                <td><img src="{{ topic.data_image.url }}" width="250px">
+                <td>
+                    <img src="{{ topic.data_image.url }}" width="250px">
                 </td><br><br>
+
                 {% endif %}
+            </tr>
             <tr>
                 {% if topic.data_video.url != null %}
                 <td>
 
                     <video width='320' height= '240' controls >
-<source src="{{ topic.data_video.url  }}" type='video/mp4'>
-Your browser does not support the video tag.
-</video><br><br>
-
-
+                    <source src="{{ topic.data_video.url  }}" type='video/mp4'>
+                    Your browser does not support the video tag.
+                    </video><br><br>
                 </td>
                 {% endif %}
             </tr>
+            </table>
         {% endfor %}
+
         <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
 {#           Upload image: <input type="file" name="image" name="myfile"><br><br>#}

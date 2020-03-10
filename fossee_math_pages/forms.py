@@ -107,6 +107,7 @@ class data(ModelForm):
         fields = ['data_content']
 
 
+
 class edit_data(ModelForm):
     class Meta:
         model = Data

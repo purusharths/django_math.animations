@@ -330,8 +330,17 @@ def index(request):
 @login_required
 def intern_add_data(request, t_id):
     # extra begin
-    print(t_id)
+    # print(t_id)
     form = data()
+    content ="";
+    con = Data.objects.filter(subtopic_id_id=t_id)
+    for i in con:
+
+        if i.data_content != "":
+            content = content+i.data_content
+
+        # print(i.data_content)
+    print(content)
     if Data.objects.filter(subtopic_id_id=t_id).exists():
         i=1;
         subtopic = Subtopic.objects.get(id=t_id)
@@ -350,7 +359,8 @@ def intern_add_data(request, t_id):
             'int_name': int_name,
             'topic_name': topic_name,
             'sub_topic': sub_topic,
-            'status': status
+            'status': status,
+            'content':content
         }
         i = 1
         user = request.user
@@ -396,6 +406,8 @@ def intern_add_data(request, t_id):
         status = "WAITING"
 
         if Data.objects.filter(subtopic_id_id=t_id).exists():
+            if content == " " or content == "":
+                content = "null"
             messages.success(request, "Data added successfuly")
             add_data = Data(data_content=content, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
