@@ -329,105 +329,26 @@ def index(request):
 
 @login_required
 def intern_add_data(request, t_id):
-    # extra begin
-    # print(t_id)
-    form = data()
-    content ="";
-    con = Data.objects.filter(subtopic_id_id=t_id)
-    for i in con:
-
-        if i.data_content != "":
-            content = content+i.data_content
-
-        # print(i.data_content)
-    print(content)
-    if Data.objects.filter(subtopic_id_id=t_id).exists():
-        i=1;
-        subtopic = Subtopic.objects.get(id=t_id)
-        print("data exists")
-        topic = Data.objects.filter(subtopic_id_id=t_id)
-        int_name = topic[0].subtopic_id.topic_id.internship_id
-        topic_name = topic[0].subtopic_id.topic_id
-        sub_topic = topic[0].subtopic_id
-        print(sub_topic)
-        status = topic[0].data_status
-        context1 = {
-            'form': form,
-            'subtopic': subtopic,
-            'i': i,
-            'topic': topic,
-            'int_name': int_name,
-            'topic_name': topic_name,
-            'sub_topic': sub_topic,
-            'status': status,
-            'content':content
-        }
-        i = 1
-        user = request.user
-        subtopic = Subtopic.objects.get(id=t_id)
-
-        if request.method == 'POST':
-            content = request.POST['data_content']
-            # reference = request.POST['data_reference']
-            img = request.FILES.get('image')
-            video = request.FILES.get('video')
-            status = "WAITING"
-
-            if Data.objects.filter(subtopic_id_id=t_id).exists():
-                messages.success(request, "Data added successfuly")
-                add_data = Data(data_content=content, data_status=status, data_image=img,
-                                data_video=video, subtopic_id_id=t_id,
-                                user_id_id=user.id)
-                add_data.save()
-                # print("error")
-                # messages.error(request, "Data already exists")
-                # return redirect(intern_view_topic)
-            else:
-                messages.success(request, "Data added successfuly")
-                add_data = Data(data_content=content, data_status=status, data_image=img,
-                                data_video=video, subtopic_id_id=t_id,
-                                user_id_id=user.id)
-                add_data.save()
-        form = data
-        return render(request, 'fossee_math_pages/intern_add_data.html', context1)
-
-    form = data()
-
-    # extra
-    i = 1
     user = request.user
+    e_data = Data.objects.filter(subtopic_id=t_id)
     subtopic = Subtopic.objects.get(id=t_id)
+    form = data()
 
     if request.method == 'POST':
-        content = request.POST['data_content']
-        # reference = request.POST['data_reference']
+        content = request.POST.get('data_content')
         img = request.FILES.get('image')
         video = request.FILES.get('video')
         status = "WAITING"
 
-        if Data.objects.filter(subtopic_id_id=t_id).exists():
-            if content == " " or content == "":
-                content = "null"
-            messages.success(request, "Data added successfuly")
-            add_data = Data(data_content=content, data_status=status, data_image=img,
-                            data_video=video, subtopic_id_id=t_id,
-                            user_id_id=user.id)
-            add_data.save()
-            # print("error")
-            # messages.error(request, "Data already exists")
-            # return redirect(intern_view_topic)
-        else:
-            messages.success(request, "Data added successfuly")
-            add_data = Data(data_content=content, data_status=status, data_image=img,
-                            data_video=video, subtopic_id_id=t_id,
-                            user_id_id=user.id)
-            add_data.save()
-    form = data
+        add_data = Data(data_content=content, data_status=status, data_image=img,
+                        data_video=video, subtopic_id_id=t_id,
+                        user_id_id=user.id)
+        add_data.save()
 
     context = {
+        'topic': e_data,
         'form': form,
         'subtopic': subtopic,
-        'i': i,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
@@ -445,111 +366,6 @@ def intern_view_internship(request):
         'subtopics': subtopics,
     }
     return render(request, 'fossee_math_pages/intern_view_internship.html', context)
-
-
-@login_required
-def intern_edit_data(request, e_id):
-    post = get_list_or_404(Data, subtopic_id_id=e_id)
-    datas = Data.objects.filter(subtopic_id_id=e_id)
-    sub = Data.objects.filter(subtopic_id_id=e_id)
-    print("sub")
-    form = data
-
-    listing = Data.objects.all()
-    paginator = Paginator(listing, 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    for i in page_obj:
-        if form.is_valid:
-            form.data_content = i.data_content
-    # content = page_obj.data_content;
-    # xprint(content)
-    return render(request, 'fossee_math_pages/intern_edit_data.html', {'page_obj': page_obj, 'form': form})
-    for i in sub:
-        print(i.data_reference)
-    form = data
-    for i in datas:
-        print(i.data_content)
-    context = {
-        'data': datas,
-        'form': form
-    }
-    if request.user:
-        form = data
-        # form = data(instance = post)
-        context = {
-            'form': form,
-            'sub': sub
-        }
-    return render(request, 'fossee_math_pages/intern_edit_data.html', context)
-
-    if request.method == 'POST':
-        form = data(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            form = data
-            messages.success(request, "Editing was successfull")
-    return render(request, 'fossee_math_pages/intern_edit_data.html', context)
-    # post = get_object_or_404(Data, subtopic_id_id=e_id)
-    # sub = Data.objects.filter(subtopic_id_id=e_id)
-    # subtopic = Subtopic.objects.filter(id=sub.subtopic_id_id)
-    #
-    # if request.user:
-    #     form = data
-    #     form = data(instance=post)
-    #     context = {
-    #         'internship': internship,
-    #         'form': form,
-    #         'subtopic': subtopic,
-    #         'content': sub.data_content,
-    #         'reference': sub.data_reference,
-    #     }
-    #
-    #     if request.method == 'POST':
-    #         form = data(request.POST, request.FILES, instance=post)
-    #         if form.is_valid():
-    #             post = form.save(commit=False)
-    #             post.save()
-    #             form = data
-    #             messages.success(request, "Editing was successfull")
-    #             return redirect(intern_view_topic)
-    #
-    #     return render(request, 'fossee_math_pages/intern_edit_data.html', context)
-
-
-@login_required
-def intern_view_data(request, v_id):
-    print(v_id)
-    i = [1, 2]
-    if Data.objects.filter(subtopic_id_id=v_id).exists():
-        print("haii")
-    topic = Data.objects.filter(subtopic_id_id=v_id)
-    int_name = topic[0].subtopic_id.topic_id.internship_id
-    topic_name = topic[0].subtopic_id.topic_id
-    sub_topic = topic[0].subtopic_id
-    status = topic[0].data_status
-    context = {
-        'topic': topic,
-        'int_name': int_name,
-        'topic_name': topic_name,
-        'sub_topic': sub_topic,
-        'status': status
-    }
-    print(topic[0].subtopic_id.topic_id.internship_id)
-    return render(request, 'fossee_math_pages/intern_view_data.html', context)
-    # try:
-    #
-    #     topic = Data.objects.get(subtopic_id_id=v_id)
-    #     context = {
-    #         'topic': topic
-    #     }
-    #     print(topic.internship_id)
-    #     return render(request, 'fossee_math_pages/intern_view_data.html', context)
-    #
-    # except:
-    #     return render(request, 'fossee_math_pages/intern_view_data.html')
 
 
 @login_required

@@ -107,13 +107,6 @@ class data(ModelForm):
         fields = ['data_content']
 
 
-
-class edit_data(ModelForm):
-    class Meta:
-        model = Data
-        fields = ['data_content']
-
-
 class UserLoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(
