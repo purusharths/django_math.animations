@@ -1,29 +1,32 @@
 {% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
     <style>
-    .upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
 
 
-.upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}
-.mleft{
-        margin-left: 415px;
-}
-.ck{
-    display: none;
-}
-#add{
-    width: 92px;
-}
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .mleft {
+            margin-left: 415px;
+        }
+
+        .ck {
+            display: none;
+        }
+
+        #add {
+            width: 92px;
+        }
     </style>
     <section id="bc">
         <nav aria-label="breadcrumb">
@@ -54,71 +57,74 @@
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
 
-        <h2>Internship :{{ subtopic.topic_id.internship_id }}</h2>
+        <h1>Internship :{{ subtopic.topic_id.internship_id }}</h1>
         <h3>Topic :{{ subtopic.topic_id }}</h3>
-
-        {% for topic in topic %}
-        {% if topic.data_content != null %}
-             <p>{{ topic.data_content |safe}}</p>
-        {% endif %}
+        <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
+        <br>
+        <br>
         <table>
-
-            <tr>
-            {% if topic.data_image.url != null %}
-                <td>
-                    <img src="{{ topic.data_image.url }}" width="250px">
-                </td><br><br>
-
-                {% endif %}
-            </tr>
-            <tr>
-                {% if topic.data_video.url != null %}
-                <td>
-
-                    <video width='320' height= '240' controls >
-                    <source src="{{ topic.data_video.url  }}" type='video/mp4'>
-                    Your browser does not support the video tag.
-                    </video><br><br>
-                </td>
-                {% endif %}
-            </tr>
-            </table>
-        {% endfor %}
+            {% for topic in topic %}
+                <tr>
+                    {% if topic.data_content != null %}
+                        <td>{{ topic.data_content |safe }}</td>
+                        <td><a href="">Delete</a>
+                            <br>
+                            <br>
+                            <a href="">Edit</a>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if topic.data_image.url != null %}
+                        <td>
+                            <img src="{{ topic.data_image.url }}" width="100%">
+                        </td>
+                          <td><a href="">Delete</a></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if topic.data_video.url != null %}
+                        <td>
+                            <video width='100%' controls>
+                                <source src="{{ topic.data_video.url }}" type='video/mp4'>
+                                Your browser does not support the video tag.
+                            </video>
+                        </td>
+                          <td><a href="">Delete</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
 
         <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
-{#           Upload image: <input type="file" name="image" name="myfile"><br><br>#}
             <div class="ck" id="cc">
-                            {{ form.media }} {{ form.as_p }}
+                {{ form.media }} {{ form.as_p }}
             </div>
 
             <div class="upload-btn-wrapper">
-              <button class="btn btn-success">Upload image</button>
-              <input type="file" name="image" />
+                <button class="btn btn-success">Upload image</button>
+                <input type="file" name="image"/>
             </div>
 
             <div class="upload-btn-wrapper">
-              <button class="btn btn-success">Upload video</button>
-              <input type="file" name="video" />
+                <button class="btn btn-success">Upload video</button>
+                <input type="file" name="video"/>
             </div>
 
-{#            <input type="file" name="image" name="myfile">#}
-{#           Upload video: <input type="file" name="video" value="Upload video">#}
-
             <div class="upload-btn-wrapper">
-            <input class="btn btn-success" name="submit" id="add" onclick="show()" value="Add text">
+                <input class="btn btn-success" type="button" id="add" onclick="show()" value="Add text">
             </div>
 
             <div class="upload-btn-wrapper">
                 <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
             </div>
-
         </form>
         <br>
     </div>
     <script>
-    function show() {
-        document.getElementById("cc").style.display = "block";
-    }
+        function show() {
+            document.getElementById("cc").style.display = "block";
+        }
     </script>
 {% endblock %}
