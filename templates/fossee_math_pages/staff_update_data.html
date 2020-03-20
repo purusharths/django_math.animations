@@ -1,0 +1,68 @@
+{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+    {% load static %} {{ form.media }} {% load crispy_forms_tags %}
+
+    <style>
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .mleft {
+            margin-left: 415px;
+        }
+
+    </style>
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
+                        <i class="fa fa-pencil" style="color:black"></i>Manage Submissions
+                    </a>
+                </li>
+                  <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
+                        <i class="fa fa-pencil" style="color:black"></i>View Data : {{ subtopic.subtopic_name }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active"> Edit Data : {{ subtopic.subtopic_name }}</li>
+            </ol>
+        </nav>
+    </section>
+    <div class="container">
+        <br>
+        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
+        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+        <script>
+            window.CKEDITOR_BASEPATH = '/static/ckeditor/';
+        </script>
+
+        <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+
+            {{ form.media }} {{ form.as_p }}
+
+            <div class="upload-btn-wrapper">
+                <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
+            </div>
+        </form>
+        <br>
+    </div>
+{% endblock %}
