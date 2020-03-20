@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
@@ -340,6 +340,15 @@ def intern_add_data(request, t_id):
         video = request.FILES.get('video')
         status = "WAITING"
 
+        if content == "" or content == " ":
+            content = "NULL"
+
+        if img == "" or img == " ":
+            img = "NULL"
+
+        if video == "" or video == " ":
+            video = "NULL"
+
         add_data = Data(data_content=content, data_status=status, data_image=img,
                         data_video=video, subtopic_id_id=t_id,
                         user_id_id=user.id)
@@ -351,6 +360,33 @@ def intern_add_data(request, t_id):
         'subtopic': subtopic,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
+
+
+@login_required
+def intern_update_data(request, id):
+    instance = Data.objects.get(id=id)
+    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+    t_id = instance.subtopic_id.pk
+    form = data(request.POST or None, instance=instance)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return redirect('intern_add_data', t_id)
+
+    context = {
+        'form': form,
+        'subtopic': subtopic,
+    }
+
+    return render(request, 'fossee_math_pages/intern_update_data.html', context)
+
+
+@login_required
+def intern_delete_data(request, id):
+    instance = Data.objects.get(id=id)
+    t_id = instance.subtopic_id.pk
+    instance.delete()
+    return redirect('intern_add_data', t_id)
 
 
 @login_required
