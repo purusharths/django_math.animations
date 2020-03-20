@@ -12,6 +12,3 @@ django-phonenumber-field
 phonenumbers
 email_validator
 django-ckeditor
-
-django-bootstrap-modal-forms
-django-widget-tweaks

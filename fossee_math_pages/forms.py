@@ -1,4 +1,3 @@
-from bootstrap_modal_forms.forms import BSModalForm
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
