@@ -280,13 +280,13 @@ def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
     ver = ""
     try:
-        data = Data.objects.get(subtopic_id_id=subtopic.pk)
+        data = Data.objects.all()
     except Data.DoesNotExist:
         data = None
 
     context = {
         'subtopic': subtopic,
-        'data': data,
+        'datas': data,
         'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
