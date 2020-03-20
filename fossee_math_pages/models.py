@@ -20,7 +20,6 @@ DATA_STATUS = (
     ("ACCEPTED", "ACCEPTED"),
     ("REJECTED", "REJECTED"),
     ("WAITING", "WAITING"),
-    ("UNDER REVIEW", "UNDER REVIEW"),
 )
 
 
@@ -88,16 +87,6 @@ class Data(models.Model):
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
-
-
-class DataVerification(models.Model):
-    data_id = models.ForeignKey(Data, on_delete=models.CASCADE)
-    dataverification_mentor = models.ForeignKey(User, on_delete=models.CASCADE)
-    dataverification_verifier = models.CharField(max_length=255, blank=False)
-    dataverification_date = models.DateTimeField(default=datetime.now, blank=True)
-
-    def __str__(self):
-        return str(self.data_id) if self.data_id else ''
 
 
 class Chat(models.Model):

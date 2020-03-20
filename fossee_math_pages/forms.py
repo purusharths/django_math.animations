@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data, DataVerification
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -60,16 +60,6 @@ class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_status']
-
-
-class Data_Verification(ModelForm):
-    class Meta:
-        model = DataVerification
-        fields = ['dataverification_verifier', 'dataverification_mentor']
-
-    def __init__(self, *args, **kwargs):
-        super(Data_Verification, self).__init__(*args, **kwargs)
-        self.fields['dataverification_mentor'].queryset = User.objects.filter(is_staff=True, is_superuser=False)
 
 
 class AddIntern(ModelForm):
