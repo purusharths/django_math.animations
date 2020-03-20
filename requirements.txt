@@ -12,4 +12,3 @@ django-phonenumber-field
 phonenumbers
 email_validator
 django-ckeditor
-

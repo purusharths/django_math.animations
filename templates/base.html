@@ -11,38 +11,35 @@
 
     <!-- Style sheets -->
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
-    <link rel="stylesheet" href="{% static 'web-files/css/fontawesome-all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'web-files/css/style.css' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'web-files/img/favicon.ico' %}">
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css"
-          media="all" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <title>FOSSEE Animations | {% block title %}{% endblock %}</title>
 
 <body>
 
 <!-- Header -->
-{% include 'partials/_header.html' %} {% block content %} {% endblock %}
+{% include 'partials/_header.html' %}
+
+<!-- Body -->
+{% block content %} {% endblock %}
 
 <!-- footer -->
 {% include 'partials/_footer.html' %}
 
-<!-- Script archive -->
-<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.bundle.min.js"></script>
 
-
-<!-- Bootstrap Script -->
-<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/bootstrap.min.js"></script>
-{% comment %}
-    <script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/jquery-3.3.1.slim.min.js"></script>{% endcomment %}
-<script type="text/javascript" src="{{ URL_ROOT }}/static/web-files/javascript/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -61,6 +58,9 @@
         font-family: "Lora", serif;
     }
 </style>
+
+{% block extrascripts %}{% endblock extrascripts %}
+
 </body>
 
 </html>
