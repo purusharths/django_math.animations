@@ -1,4 +1,5 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin View Intern{% endblock %}{% block content %}
+{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin View Intern{% endblock %}
+{% block content %}
     {% if user.is_authenticated %} {% if user.is_superuser %}
         <section id="bc">
             <nav aria-label="breadcrumb">

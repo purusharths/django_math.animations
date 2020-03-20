@@ -7,12 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
@@ -386,11 +382,11 @@ def intern_update_data(request, id):
 
 
 @login_required
-def intern_delete_data(request,id):
+def intern_delete_data(request, id):
     instance = Data.objects.get(id=id)
     t_id = instance.subtopic_id.pk
     instance.delete()
-    return redirect('intern_add_data',t_id)
+    return redirect('intern_add_data', t_id)
 
 
 @login_required
