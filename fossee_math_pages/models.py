@@ -85,13 +85,6 @@ class Data(models.Model):
     data_status = models.CharField(max_length=20,
                                    choices=DATA_STATUS,
                                    default='WAITING')
-class Content(models.Model):
-    subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    data_content = RichTextUploadingField()
-    data_status = models.CharField(max_length=20,
-                                   choices=DATA_STATUS,
-                                   default='WAITING')
-
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
