@@ -6,3 +6,4 @@ __pycache__/*
 FOSSEE_math/__pycache__/*
 fossee_math_pages/__pycache__/*
 https:/*
+fossee_math_pages/migrations/*
