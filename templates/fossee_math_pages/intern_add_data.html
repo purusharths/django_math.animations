@@ -99,6 +99,12 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'intern_delete_data' data.pk %}">Delete
                                 </a>
+                              <br>
+                                <br>
+                                <a class="btn btn-sm btn-primary"
+                                   href="{% url 'intern_update_media' data.pk %}">
+                                    Edit
+                                </a>
                             </td>
                         {% endif %}
                     {% endif %}
@@ -116,6 +122,12 @@
                             <td>
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'intern_delete_data' data.pk %}">Delete
+                                </a>
+                              <br>
+                                <br>
+                                <a class="btn btn-sm btn-primary"
+                                   href="{% url 'intern_update_media' data.pk %}">
+                                    Edit
                                 </a>
                             </td>
                         {% endif %}
