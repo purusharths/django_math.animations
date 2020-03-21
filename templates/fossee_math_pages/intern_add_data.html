@@ -28,6 +28,8 @@
         #add {
             width: 92px;
         }
+
+        #dta tr:hover {background-color: #ddd;}
     </style>
     <section id="bc">
         <nav aria-label="breadcrumb">
@@ -63,7 +65,7 @@
         <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
         <br>
         <br>
-        <table>
+        <table id="dta">
             {% for data in topic %}
                 <tr>
                     {% if data.data_content != "NULL" %}

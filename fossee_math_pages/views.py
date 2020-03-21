@@ -12,8 +12,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents, Data_Verification)
-from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, DataVerification)
+                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data)
 
 
 #  pic = request.FILES
@@ -280,18 +280,13 @@ def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
     ver = ""
     try:
-        data = Data.objects.get(subtopic_id_id=subtopic.pk)
-        data_d = Data.objects.get(subtopic_id=data.pk)
-        try:
-            ver = DataVerification.objects.get(data_id=data_d.pk)
-        except:
-            ver = ""
+        data = Data.objects.all()
     except Data.DoesNotExist:
         data = None
 
     context = {
         'subtopic': subtopic,
-        'data': data,
+        'datas': data,
         'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
@@ -511,23 +506,11 @@ def staff_add_topics(request):
 
 @login_required
 def staff_aprove_contents(request):
-    data_f = Data.objects.filter(data_status='WAITING')
-    sub_f = Subtopic.objects.all()
-    topic_f = Topic.objects.all()
-    internship_f = Internship.objects.filter(internship_status='ACTIVE')
-    user_details = UserDetails.objects.filter(user_role='INTERN')
-    aproved = Data.objects.filter(data_status='ACCEPTED')
-    rejected = Data.objects.filter(data_status='REJECTED')
-    changes = Data.objects.filter(data_status='UNDER REVIEW')
+    subtopic = Subtopic.objects.all()
+    assigned = AssignedTopics.objects.all()
     context = {
-        'datas': data_f,
-        'sub_f': sub_f,
-        'topic_f': topic_f,
-        'internship_f': internship_f,
-        'user_details': user_details,
-        'aproved': aproved,
-        'rejected': rejected,
-        'changes': changes,
+        'assigned': assigned,
+        'subtopic': subtopic,
     }
 
     return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
@@ -626,85 +609,65 @@ def staff_view_internship(request):
 
 
 @login_required
-def staff_add_reviever(request, s_id):
-    data_info = Data.objects.get(id=s_id)
-    interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
-    assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
-    verify = Data_Verification()
-    ver = ""
-
-    if request.POST:
-        try:
-            ver = DataVerification.objects.get(data_id=s_id)
-            messages.error(request, 'Data exists')
-        except:
-            verifier = request.POST['dataverification_verifier']
-            mentor = request.POST['dataverification_mentor']
-            mentor = User.objects.get(id=mentor)
-            daa = Data.objects.get(pk=s_id)
-            data = DataVerification(dataverification_verifier=verifier, dataverification_mentor=mentor, data_id=daa)
-            data.save()
-            ver = DataVerification.objects.get(data_id=s_id)
-            messages.success(request, 'Data Added Successfully')
+def staff_view_topic(request, s_id):
+    subtopic = Subtopic.objects.get(id=s_id)
+    data = Data.objects.filter(subtopic_id=subtopic.pk)
 
     context = {
-        'form': verify,
-        'ver': ver,
-        'data_info': data_info,
-        'interndhip_info': interndhip_info,
-        'assigned_topic': assigned_topic,
+        'subtopic': subtopic,
+        'datas': data,
     }
 
-    return render(request, 'fossee_math_pages/staff_add_reviewer.html', context)
+    return render(request, 'fossee_math_pages/staff_view_topic.html', context)
 
 
 @login_required
-def staff_view_topic(request, s_id):
-    data_info = Data.objects.get(id=s_id)
-    post = get_object_or_404(Data, id=s_id)
-    interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
-    assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
-    subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
-    print(data_info.data_reference)
+def staff_update_data(request, id):
+    instance = Data.objects.get(id=id)
+    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+    t_id = instance.subtopic_id.pk
+    form = data(request.POST or None, instance=instance)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return redirect('staff_view_topic', t_id)
 
-    try:
-        verify = DataVerification.objects.get(data_id=s_id)
-    except:
-        verify = ""
+    context = {
+        'form': form,
+        'subtopic': subtopic,
+    }
 
-    if request.user:
-        form = AproveContents
-        form = AproveContents(instance=post)
-        context = {
-            'ver': verify,
-            'data_info': data_info,
-            'internship_info': interndhip_info,
-            'assigned_topic': assigned_topic,
-            'subtopic': subtopic,
-            'form': form,
-        }
-
-        if request.method == "POST":
-            form = AproveContents(request.POST, request.FILES, instance=post)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.save()
-                form = AproveContents
-                data_info = Data.objects.get(id=s_id)
-                interndhip_info = Internship.objects.filter(internship_status='ACTIVE')
-                assigned_topic = AssignedTopics.objects.get(user_id_id=data_info.user_id_id)
-                subtopic = Subtopic.objects.get(id=data_info.subtopic_id_id)
-                context = {'form': form,
-                           'data_info': data_info,
-                           'internship_info': interndhip_info,
-                           'assigned_topic': assigned_topic,
-                           'subtopic': subtopic,
-                           }
-                return render(request, 'fossee_math_pages/staff_view_topic.html', context)
-
-        return render(request, 'fossee_math_pages/staff_view_topic.html', context)
+    return render(request, 'fossee_math_pages/staff_update_data.html', context)
 
 
+@login_required
+def staff_aprove_data(request, id):
+    instance = Data.objects.get(id=id)
+    t_id = instance.subtopic_id.pk
+    instance.data_status = "ACCEPTED"
+    instance.save()
+    return redirect('staff_view_topic', t_id)
+
+
+@login_required
+def staff_reject_data(request, id):
+    print("hello")
+    instance = Data.objects.get(id=id)
+    t_id = instance.subtopic_id.pk
+    instance.data_status = "REJECTED"
+    instance.save()
+    return redirect('staff_view_topic', t_id)
+
+
+@login_required
+def staff_delete_data(request, id):
+    instance = Data.objects.get(id=id)
+    t_id = instance.subtopic_id.pk
+    instance.delete()
+    return redirect('staff_view_topic', t_id)
+
+
+@login_required
 def user_logout(request):
     logout(request)
     return redirect('index')

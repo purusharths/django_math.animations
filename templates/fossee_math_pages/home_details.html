@@ -44,44 +44,35 @@
                 </th>
             </tr>
             </thead>
-            {% if data.data_status == 'ACCEPTED' %}
-                <tbody>
-                <tr>
-                    <th>Content</th>
-                </tr>
-                <tr>
-                    <td id="content_data">{{ data.data_content }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Reference</th>
-                </tr>
-                <tr>
-                    <td>{{ data.data_reference }}
-                    </td>
-                </tr>
-                {% if ver %}
-                    <tr>
-                        <th> Author : {{ data.user_id }}</th>
-                    </tr>
-                    <tr>
-                        <th> Reviever : {{ ver.dataverification_verifier }}</th>
-                    </tr>
-                    <tr>
-                        <th> Mentor : {{ ver.dataverification_mentor }}</th>
-                    </tr>
-                    <tr>
-                        <th> Aproved On : {{ ver.dataverification_date }}</th>
-                    </tr>{% endif %}
+            <tbody>
+            {% for data in datas %}
+                {% if data.data_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id %}
 
-                </tbody>
-            {% endif %}
-            <script>
-                $(document).ready(function () {
-                    var data = $("#content_data").text()
-                    $("#content_data").html(data)
-                })
-            </script>
+                    <tr>
+                    {% if data.data_content != "NULL" %}
+                        <td>{{ data.data_content |safe }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_image.url != "NULL" %}
+                        <td>
+                            <img src="{{ data.data_image.url }}" width="100%">
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_video.url != "NULL" %}
+                        <td>
+                            <video width='100%' controls>
+                                <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                Your browser does not support the video tag.
+                            </video>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
         </table>
     </div>
     <br>
