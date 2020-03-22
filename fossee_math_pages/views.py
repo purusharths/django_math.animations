@@ -389,6 +389,7 @@ def intern_update_media(request, id):
             instance = Data.objects.get(id=id)
             instance.data_image = img
             instance.data_video = video
+            instance.data_status = "WAITING"
             instance.save()
             return redirect('intern_add_data', t_id)
 
@@ -662,6 +663,26 @@ def staff_update_data(request, id):
     }
 
     return render(request, 'fossee_math_pages/staff_update_data.html', context)
+
+
+@login_required
+def staff_aprove_subtopic(request, id):
+    instance = Subtopic.objects.get(id=id)
+    t_id = instance.pk
+    instance.subtopic_status = "ACCEPTED"
+    instance.save()
+    Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
+    return redirect('staff_aprove_contents')
+
+
+@login_required
+def staff_reject_subtopic(request, id):
+    instance = Subtopic.objects.get(id=id)
+    t_id = instance.pk
+    instance.subtopic_status = "REJECTED"
+    instance.save()
+    Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
+    return redirect('staff_aprove_contents')
 
 
 @login_required

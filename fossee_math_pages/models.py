@@ -69,6 +69,9 @@ class Subtopic(models.Model):
     topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic_name = models.CharField(max_length=255, null=False)
+    subtopic_status = models.CharField(max_length=20,
+                                       choices=DATA_STATUS,
+                                       default='WAITING')
 
     def __str__(self):
         return self.subtopic_name
