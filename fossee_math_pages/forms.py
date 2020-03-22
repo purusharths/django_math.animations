@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -54,6 +54,12 @@ class AproveContents(ModelForm):
     class Meta:
         model = Data
         fields = ['data_status']
+
+
+class AddContributor(ModelForm):
+    class Meta:
+        model = Contributor
+        fields = ['mentor', 'professor']
 
 
 class EditMedia(ModelForm):

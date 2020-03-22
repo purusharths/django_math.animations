@@ -77,6 +77,17 @@ class Subtopic(models.Model):
         return self.subtopic_name
 
 
+class Contributor(models.Model):
+    topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    contributor = models.CharField(max_length=255, null=False)
+    mentor = models.CharField(max_length=255, null=False)
+    professor = models.CharField(max_length=255, null=False)
+    data_aproval_date = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return self.topic_id.topic_name, self.contributor, self.mentor, self.professor
+
+
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

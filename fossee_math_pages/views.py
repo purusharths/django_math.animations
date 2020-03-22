@@ -12,8 +12,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia)
-from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor)
 
 
 #  pic = request.FILES
@@ -624,11 +624,13 @@ def staff_view_internship(request):
     internship = Internship.objects.filter(internship_status='ACTIVE')
     topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
+    assigned = AssignedTopics.objects.all()
 
     context = {
         'internship': internship,
         'topics': topics,
         'subtopics': subtopics,
+        'assigned': assigned,
     }
     return render(request, 'fossee_math_pages/staff_view_internship.html', context)
 
@@ -716,3 +718,39 @@ def staff_delete_data(request, id):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+@login_required
+def staff_add_contribution(request, id):
+    try:
+        instance = Contributor.objects.get(topic_id=id)
+        form = AddContributor(request.POST or None, instance=instance)
+    except:
+        instance = None
+        form = AddContributor()
+
+    assigned = AssignedTopics.objects.get(topic_id=id)
+
+    if request.POST:
+        if instance is not None:
+            obj = form.save(commit=False)
+            obj.save()
+        else:
+            internname = request.POST['username']
+            mentorname = request.POST['mentor']
+            professorname = request.POST['professor']
+            obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+                              professor=professorname)
+            obj.save()
+    try:
+        instance = Contributor.objects.get(topic_id=id)
+        form = AddContributor(request.POST or None, instance=instance)
+    except:
+        instance = None
+        form = AddContributor()
+
+    context = {
+        'form': form,
+        'assigned': assigned,
+    }
+    return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
