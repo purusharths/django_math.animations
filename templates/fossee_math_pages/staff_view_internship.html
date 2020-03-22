@@ -23,6 +23,7 @@
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Internship Name : {{ i.internship_topic }}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 {% for j in topics %}
@@ -30,6 +31,11 @@
                         <thead class="thead-light">
                         <tr>
                             <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                            {% for k in assigned %}
+                                {% if k.topic_id_id == j.pk %}
+                                    <th><a href="{% url 'staff_add_contribution' j.pk %}">Contributor Info</a></th>
+                                {% endif %}
+                            {% endfor %}
                         </tr>
                         </thead>
                         {% for k in subtopics %}

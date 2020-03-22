@@ -39,5 +39,6 @@ urlpatterns = [
                   path('staff_delete_data/<int:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
                   path('staff_reject_subtopic/<int:id>', views.staff_reject_subtopic, name='staff_reject_subtopic'),
+                  path('staff_add_contribution/<int:id>', views.staff_add_contribution, name='staff_add_contribution'),
                   path('logout/', views.user_logout, name='logout'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
