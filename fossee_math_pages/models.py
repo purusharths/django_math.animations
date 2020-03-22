@@ -44,7 +44,7 @@ class UserDetails(models.Model):
 
 class Internship(models.Model):
     internship_topic = models.CharField(max_length=255, null=False)
-    internship_thumbnail = models.ImageField(blank=False)
+    internship_thumbnail = models.ImageField(upload_to='images/', blank=False)
     internship_start_date = models.DateTimeField(default=datetime.now, blank=True)
     internship_status = models.CharField(max_length=20,
                                          choices=STATUS,
@@ -79,7 +79,7 @@ class Data(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
-    data_video = models.FileField(upload_to='media/', null=True)
+    data_video = models.FileField(upload_to='media/', blank=True, null=True)
     data_post_date = models.DateTimeField(default=datetime.now, blank=True)
     data_status = models.CharField(max_length=20,
                                    choices=DATA_STATUS,

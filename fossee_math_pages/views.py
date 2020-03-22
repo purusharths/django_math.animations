@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data)
 
 
@@ -377,6 +377,30 @@ def intern_update_data(request, id):
 
 
 @login_required
+def intern_update_media(request, id):
+    instance = Data.objects.get(id=id)
+    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+    t_id = instance.subtopic_id.pk
+    form = EditMedia(request.POST or None, instance=instance)
+    if request.POST:
+        if form.is_valid():
+            img = request.FILES.get('data_image')
+            video = request.FILES.get('data_video')
+            instance = Data.objects.get(id=id)
+            instance.data_image = img
+            instance.data_video = video
+            instance.save()
+            return redirect('intern_add_data', t_id)
+
+    context = {
+        'form': form,
+        'subtopic': subtopic,
+    }
+
+    return render(request, 'fossee_math_pages/intern_update_media.html', context)
+
+
+@login_required
 def intern_delete_data(request, id):
     instance = Data.objects.get(id=id)
     t_id = instance.subtopic_id.pk
@@ -426,7 +450,7 @@ def user_login(request):
                 user = form.authenticate_user()
                 login(request, user)
                 if request.user.is_staff:
-                    return dashboard(request)
+                    return redirect(dashboard)
                 else:
                     internship = Intern.objects.get(user_id=request.user.pk)
                     internship_ststus = Internship.objects.get(id=internship.internship_id_id)
@@ -439,7 +463,7 @@ def user_login(request):
                         logout(request)
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
-                        return dashboard(request)
+                        return redirect(dashboard)
                         # return render(request, "fossee_math_pages/dashboard.html")
 
             except:
