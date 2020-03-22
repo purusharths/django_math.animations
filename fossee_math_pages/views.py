@@ -278,6 +278,8 @@ def home_view_data(request, id):
 
 def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
+    contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
+    print(contributor.contributor)
     ver = ""
     try:
         data = Data.objects.all()
@@ -287,6 +289,7 @@ def home_details(request, id):
     context = {
         'subtopic': subtopic,
         'datas': data,
+        'contributor': contributor,
         'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)

@@ -74,6 +74,15 @@
             {% endfor %}
             </tbody>
         </table>
+    <div style="background-color: lightgrey">
+        <table>
+               <tr><td>Data Provided By:-</td></tr>
+            <tr><td>Contributor Name: {{ contributor.contributor }}</td></tr>
+            <tr><td>Mentored By: {{ contributor.mentor }}</td></tr>
+            <tr><td>Monitored By: {{ contributor.professor }}</td></tr>
+            <tr><td>Aproved On: {{ contributor.data_aproval_date }}</td></tr>
+        </table>
+    </div>
     </div>
     <br>
     <hr>
