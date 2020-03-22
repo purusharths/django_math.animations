@@ -56,14 +56,14 @@
                 <tr>
                     {% if data.data_image.url != "NULL" %}
                         <td>
-                            <img src="{{ data.data_image.url }}" width="100%">
+                            <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;" >
                         </td>
                     {% endif %}
                 </tr>
                 <tr>
                     {% if data.data_video.url != "NULL" %}
                         <td>
-                            <video width='100%' controls>
+                            <video width='70%' style="display:block; margin:0 auto;"  controls>
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
