@@ -56,6 +56,12 @@ class AproveContents(ModelForm):
         fields = ['data_status']
 
 
+class EditMedia(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_image', 'data_video']
+
+
 class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
