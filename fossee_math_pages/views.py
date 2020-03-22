@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, AproveContents, EditMedia)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data)
 
 
