@@ -12,8 +12,8 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia)
-from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor)
 
 
 #  pic = request.FILES
@@ -265,10 +265,34 @@ def dashboard(request):
 
 
 def home_view_data(request, id):
+    datas = ""
+    datass = ""
+    page_obj = ""
+    topic = AssignedTopics.objects.all();
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
     subtopics = Subtopic.objects.all()
+
+    if request.POST:
+        print("hello")
+        search_contains_query = request.POST.get('title_contains')
+        if search_contains_query != '' and search_contains_query is not None:
+            datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
+            datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
+
+        if datas:
+            paginator = Paginator(datas, 5)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
+        if datass:
+            paginator = Paginator(datass, 5)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
     context = {
+        'datas': page_obj,
+        'topic': topic,
         'details': details,
         'topics': topics,
         'subtopics': subtopics,
@@ -278,6 +302,8 @@ def home_view_data(request, id):
 
 def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
+    contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
+    print(contributor.contributor)
     ver = ""
     try:
         data = Data.objects.all()
@@ -287,6 +313,7 @@ def home_details(request, id):
     context = {
         'subtopic': subtopic,
         'datas': data,
+        'contributor': contributor,
         'ver': ver,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
@@ -296,12 +323,13 @@ def index(request):
     datas = ""
     datass = ""
     page_obj = ""
+    topic = AssignedTopics.objects.all();
     search_contains_query = request.GET.get('title_contains')
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
     if search_contains_query != '' and search_contains_query is not None:
-        datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+        datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
         datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
 
     if datas:
@@ -316,6 +344,7 @@ def index(request):
 
     context = {
         'datas': page_obj,
+        'topic': topic,
         'internship': interships,
     }
 
@@ -389,6 +418,7 @@ def intern_update_media(request, id):
             instance = Data.objects.get(id=id)
             instance.data_image = img
             instance.data_video = video
+            instance.data_status = "WAITING"
             instance.save()
             return redirect('intern_add_data', t_id)
 
@@ -623,11 +653,13 @@ def staff_view_internship(request):
     internship = Internship.objects.filter(internship_status='ACTIVE')
     topics = Topic.objects.all()
     subtopics = Subtopic.objects.all()
+    assigned = AssignedTopics.objects.all()
 
     context = {
         'internship': internship,
         'topics': topics,
         'subtopics': subtopics,
+        'assigned': assigned,
     }
     return render(request, 'fossee_math_pages/staff_view_internship.html', context)
 
@@ -665,6 +697,26 @@ def staff_update_data(request, id):
 
 
 @login_required
+def staff_aprove_subtopic(request, id):
+    instance = Subtopic.objects.get(id=id)
+    t_id = instance.pk
+    instance.subtopic_status = "ACCEPTED"
+    instance.save()
+    Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
+    return redirect('staff_aprove_contents')
+
+
+@login_required
+def staff_reject_subtopic(request, id):
+    instance = Subtopic.objects.get(id=id)
+    t_id = instance.pk
+    instance.subtopic_status = "REJECTED"
+    instance.save()
+    Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
+    return redirect('staff_aprove_contents')
+
+
+@login_required
 def staff_aprove_data(request, id):
     instance = Data.objects.get(id=id)
     t_id = instance.subtopic_id.pk
@@ -695,3 +747,39 @@ def staff_delete_data(request, id):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+@login_required
+def staff_add_contribution(request, id):
+    try:
+        instance = Contributor.objects.get(topic_id=id)
+        form = AddContributor(request.POST or None, instance=instance)
+    except:
+        instance = None
+        form = AddContributor()
+
+    assigned = AssignedTopics.objects.get(topic_id=id)
+
+    if request.POST:
+        if instance is not None:
+            obj = form.save(commit=False)
+            obj.save()
+        else:
+            internname = request.POST['username']
+            mentorname = request.POST['mentor']
+            professorname = request.POST['professor']
+            obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+                              professor=professorname)
+            obj.save()
+    try:
+        instance = Contributor.objects.get(topic_id=id)
+        form = AddContributor(request.POST or None, instance=instance)
+    except:
+        instance = None
+        form = AddContributor()
+
+    context = {
+        'form': form,
+        'assigned': assigned,
+    }
+    return render(request, 'fossee_math_pages/staff_add_contributor.html', context)

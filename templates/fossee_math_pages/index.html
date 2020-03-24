@@ -59,6 +59,11 @@
                         <td>{{ forloop.counter }}</td>
                         <td>{{ data.topic_id }}</td>
                         <td>{{ data.subtopic_name }}</td>
+                        {% for i in topic %}
+                            {% if i.topic_id == data.topic_id %}
+                                <td><a href="{% url 'home_details' i.topic_id_id %}">View</a></td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -70,24 +75,25 @@
         <h1>Topics</h1>
         <hr> {% for i in internship %}
         <div class="card">
-        <h5 class="card-header">{{ i.internship_topic }}</h5>
-        <br>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-6">
-                    <br>
-                    <img src="{{ i.internship_thumbnail.url }}" height="85%" width="80%">
-                </div>
-                <div class="col-lg-6">
-                    <br>
-                    <p class="card-text">"{{ i.internship_quote }}"</p>
-                    <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
-                    <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
+            <h5 class="card-header">{{ i.internship_topic }}</h5>
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <br>
+                        <img src="{{ i.internship_thumbnail.url }}" height="85%" width="80%">
+                    </div>
+                    <div class="col-lg-6">
+                        <br>
+                        <p class="card-text">"{{ i.internship_quote }}"</p>
+                        <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
+                        <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
+                    </div>
                 </div>
             </div>
         </div>
+        <br>
     {% endfor %}
-        </div>
         <br>
     </div>
 
