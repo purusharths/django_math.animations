@@ -135,6 +135,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'extraPlugins': ','.join(
+            [
+                'mathjax',
+            ]
+        ),
+    },
+}
+
 # messages
 from django.contrib.messages import constants as messages
 

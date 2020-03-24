@@ -41,6 +41,10 @@
             <h3>Topic :{{ subtopic.topic_id }}</h3>
             <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
             <br>
+            <div align="center">
+            <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-primary" >Aprove All</a>
+            <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
+            </div>
         </div>
         <h2 style="background-color: yellow">Waiting contents</h2>
         <br>
