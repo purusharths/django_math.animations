@@ -302,13 +302,18 @@ def home_view_data(request, id):
 
 def home_details(request, id):
     subtopic = Subtopic.objects.get(id=id)
-    contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
-    print(contributor.contributor)
+    contributor = ""
     ver = ""
     try:
         data = Data.objects.all()
     except Data.DoesNotExist:
         data = None
+
+    try:
+        contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
+    except:
+        contributor = None
+
 
     context = {
         'subtopic': subtopic,

@@ -67,11 +67,19 @@
         <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
         <br>
         <br>
+        <div align="center">
+            Current sataus of data : {{ subtopic.subtopic_status }}
+        </div>
+        <br>
+        <br>
         <table id="dta">
             {% for data in topic %}
                 <tr>
                     {% if data.data_content != "NULL" %}
-                        <td>{{ data.data_content |safe }}</td>
+                        <td>
+                            <p></p>
+                            {{ data.data_content |safe }}
+                        </td>
                         <td>{{ data.data_status }}</td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
@@ -91,6 +99,7 @@
                 <tr>
                     {% if data.data_image.url != "NULL" %}
                         <td>
+                            <p></p>
                             <img src="{{ data.data_image.url }}" width="70%" style="display:block; margin:0 auto;">
                         </td>
                         <td>{{ data.data_status }}</td>
@@ -112,6 +121,7 @@
                 <tr>
                     {% if data.data_video.url != "NULL" %}
                         <td>
+                            <p></p>
                             <video width='70%' style="display:block; margin:0 auto;" controls>
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
@@ -135,31 +145,32 @@
                 </tr>
             {% endfor %}
         </table>
+        {% if subtopic.subtopic_status != 'ACCEPTED' %}
+            <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
-        <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+                <div class="ck" id="cc">
+                    {{ form.media }} {{ form.as_p }}
+                </div>
 
-            <div class="ck" id="cc">
-                {{ form.media }} {{ form.as_p }}
-            </div>
+                <div class="upload-btn-wrapper">
+                    <button class="btn btn-success">Upload image</button>
+                    <input type="file" name="image"/>
+                </div>
 
-            <div class="upload-btn-wrapper">
-                <button class="btn btn-success">Upload image</button>
-                <input type="file" name="image"/>
-            </div>
+                <div class="upload-btn-wrapper">
+                    <button class="btn btn-success">Upload video</button>
+                    <input type="file" name="video"/>
+                </div>
 
-            <div class="upload-btn-wrapper">
-                <button class="btn btn-success">Upload video</button>
-                <input type="file" name="video"/>
-            </div>
+                <div class="upload-btn-wrapper">
+                    <input class="btn btn-success" type="button" id="add" onclick="show()" value="Add text">
+                </div>
 
-            <div class="upload-btn-wrapper">
-                <input class="btn btn-success" type="button" id="add" onclick="show()" value="Add text">
-            </div>
-
-            <div class="upload-btn-wrapper">
-                <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
-            </div>
-        </form>
+                <div class="upload-btn-wrapper">
+                    <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
+                </div>
+            </form>
+        {% endif %}
         <br>
     </div>
     <script>

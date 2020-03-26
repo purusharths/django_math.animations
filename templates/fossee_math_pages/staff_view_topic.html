@@ -42,8 +42,11 @@
             <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
             <br>
             <div align="center">
-            <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-primary" >Aprove All</a>
-            <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
+                Current Status : {{ subtopic.subtopic_status }}
+            </div>
+            <div align="center">
+                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-primary">Aprove All</a> &nbsp;
+                <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
             </div>
         </div>
         <h2 style="background-color: yellow">Waiting contents</h2>
@@ -53,18 +56,21 @@
                 {% if data.data_status == "WAITING" %}
                     <tr>
                         {% if data.data_content != "NULL" %}
-                            <td>{{ data.data_content |safe }}</td>
+                            <td>
+                                <p></p>
+                                {{ data.data_content |safe }}
+                            </td>
                             <td>
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                                 <br>
                                 <br>
                                 <a class="btn btn-sm btn-primary"
@@ -77,25 +83,27 @@
                     <tr>
                         {% if data.data_image.url != "NULL" %}
                             <td>
+                                <p></p>
                                 <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
                             </td>
                             <td>
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
                     <tr>
                         {% if data.data_video.url != "NULL" %}
                             <td>
+                                <p></p>
                                 <video width='70%' style="display:block; margin:0 auto;" controls>
                                     <source src="{{ data.data_video.url }}" type='video/mp4'>
                                     Your browser does not support the video tag.
@@ -105,13 +113,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
@@ -131,13 +139,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                                 <br>
                                 <br>
                                 <a class="btn btn-sm btn-primary"
@@ -156,13 +164,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
@@ -178,13 +186,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
@@ -204,13 +212,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                                 <br>
                                 <br>
                                 <a class="btn btn-sm btn-primary"
@@ -229,13 +237,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
@@ -251,13 +259,13 @@
                                 <a class="btn btn-sm btn-danger"
                                    href="{% url 'staff_delete_data' data.pk %}">Delete
                                 </a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-primary"#}
+                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                {#                                <br>#}
+                                {#                                <br>#}
+                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
                             </td>
                         {% endif %}
                     </tr>
