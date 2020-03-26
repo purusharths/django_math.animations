@@ -80,7 +80,6 @@
                             <p></p>
                             {{ data.data_content |safe }}
                         </td>
-                        <td>{{ data.data_status }}</td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a class="btn btn-sm btn-danger"
@@ -102,7 +101,6 @@
                             <p></p>
                             <img src="{{ data.data_image.url }}" width="70%" style="display:block; margin:0 auto;">
                         </td>
-                        <td>{{ data.data_status }}</td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a class="btn btn-sm btn-danger"
@@ -127,7 +125,6 @@
                                 Your browser does not support the video tag.
                             </video>
                         </td>
-                        <td>{{ data.data_status }}</td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a class="btn btn-sm btn-danger"
