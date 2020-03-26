@@ -50,12 +50,16 @@
 
                     <tr>
                         {% if data.data_content != "NULL" %}
-                            <td>{{ data.data_content |safe }}</td>
+                            <td>
+                                <p></p>
+                                {{ data.data_content |safe }}
+                            </td>
                         {% endif %}
                     </tr>
                     <tr>
                         {% if data.data_image.url != "NULL" %}
                             <td>
+                                <p></p>
                                 <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
                             </td>
                         {% endif %}
@@ -63,6 +67,7 @@
                     <tr>
                         {% if data.data_video.url != "NULL" %}
                             <td>
+                                <p></p>
                                 <video width='70%' style="display:block; margin:0 auto;" controls>
                                     <source src="{{ data.data_video.url }}" type='video/mp4'>
                                     Your browser does not support the video tag.
@@ -74,15 +79,25 @@
             {% endfor %}
             </tbody>
         </table>
-    <div style="background-color: lightgrey">
-        <table>
-               <tr><td>Data Provided By:-</td></tr>
-            <tr><td>Contributor Name: {{ contributor.contributor }}</td></tr>
-            <tr><td>Mentored By: {{ contributor.mentor }}</td></tr>
-            <tr><td>Monitored By: {{ contributor.professor }}</td></tr>
-            <tr><td>Aproved On: {{ contributor.data_aproval_date }}</td></tr>
-        </table>
-    </div>
+        <div style="background-color: lightgrey">
+            <table>
+                <tr>
+                    <td>Data Provided By:-</td>
+                </tr>
+                <tr>
+                    <td>Contributor Name: {{ contributor.contributor }}</td>
+                </tr>
+                <tr>
+                    <td>Mentored By: {{ contributor.mentor }}</td>
+                </tr>
+                <tr>
+                    <td>Monitored By: {{ contributor.professor }}</td>
+                </tr>
+                <tr>
+                    <td>Aproved On: {{ contributor.data_aproval_date }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <br>
     <hr>
