@@ -18,7 +18,7 @@
         }
 
         .mleft {
-            margin-left: 415px;
+            margin-left: 800px;
         }
 
         .ck {
@@ -142,33 +142,30 @@
                 </tr>
             {% endfor %}
         </table>
+
         {% if subtopic.subtopic_status != 'ACCEPTED' %}
-            <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+            <br>
+            <div style="background-color: lightcyan">
+                      <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
-                <div class="ck" id="cc">
-                    {{ form.media }} {{ form.as_p }}
-                </div>
+                    <div class="ck" id="cc">
+                        {{ form.media }} {{ form.as_p }}
+                    </div>
+                    <div class="form-group row">
+                        <label>Select Image : </label>
+                        <input type="file" class="btn btn-success" name="image"/>
 
-                <div class="upload-btn-wrapper">
-                    <button class="btn btn-success">Upload image</button>
-                    <input type="file" name="image"/>
-                </div>
+                        <label> &nbsp; or Select Video : </label>
+                        <input type="file" class="btn btn-success" name="video"/>
 
-                <div class="upload-btn-wrapper">
-                    <button class="btn btn-success">Upload video</button>
-                    <input type="file" name="video"/>
-                </div>
-
-                <div class="upload-btn-wrapper">
-                    <input class="btn btn-success" type="button" id="add" onclick="show()" value="Add text">
-                </div>
-
-                <div class="upload-btn-wrapper">
-                    <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
-                </div>
-            </form>
+                        &nbsp; <input class="btn btn-success" type="button" id="add" onclick="show()" value="Add text">
+                        &nbsp;<input class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
+                    </div>
+                </form>
+            </div>
         {% endif %}
         <br>
+
     </div>
     <script>
         function show() {
