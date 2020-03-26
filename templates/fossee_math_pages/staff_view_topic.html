@@ -49,6 +49,7 @@
                 <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
             </div>
         </div>
+    {% if subtopic.subtopic_status == 'WAITING' %}
         <h2 style="background-color: yellow">Waiting contents</h2>
         <br>
         <table>
@@ -126,6 +127,8 @@
                 {% endif %}
             {% endfor %}
         </table>
+    {% endif %}
+    {% if subtopic.subtopic_status == 'ACCEPTED' %}
         <br>
         <h2 style="background-color: green">Aproved contents</h2>
         <br>
@@ -199,6 +202,8 @@
                 {% endif %}
             {% endfor %}
         </table>
+    {% endif %}
+    {% if subtopic.subtopic_status == 'REJECTED' %}
         <br>
         <h2 style="background-color: red">Rejected contents</h2>
         <br>
@@ -272,6 +277,7 @@
                 {% endif %}
             {% endfor %}
         </table>
+    {% endif %}
     </div>
     <br>
     <br>
