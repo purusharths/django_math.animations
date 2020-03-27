@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor)
 
 
@@ -433,6 +433,20 @@ def intern_update_media(request, id):
     }
 
     return render(request, 'fossee_math_pages/intern_update_media.html', context)
+
+
+@login_required
+def intern_update_image_size(request,id):
+    image = Data.objects.get(id=id)
+    form = imageFormatting()
+
+    context={
+        'image' : image,
+        'form' : form,
+    }
+
+    return render(request,'fossee_math_pages/intern_update_image_size.html',context)
+
 
 
 @login_required

@@ -23,6 +23,8 @@ urlpatterns = [
                   path('intern_delete_data/<int:id>', views.intern_delete_data, name='intern_delete_data'),
                   path('intern_view_internship/', views.intern_view_internship, name='intern_view_internship'),
                   path('intern_view_topic/', views.intern_view_topic, name='intern_view_topic'),
+                  path('intern_update_image_size/<int:id>', views.intern_update_image_size,
+                       name='intern_update_image_size'),
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
                   path('staff_add_subtopic/<int:id>', views.staff_add_subtopic, name='staff_add_subtopic'),
