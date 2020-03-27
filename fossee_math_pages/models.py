@@ -103,7 +103,7 @@ class Data(models.Model):
         return str(self.subtopic_id) if self.subtopic_id else ''
 
 
-class ImageFormating(models.Model):
+class ImageFormatting(models.Model):
     data_id = models.ForeignKey(Data,on_delete=models.CASCADE)
     image_height = models.CharField(max_length=5,default='100%')
     image_width = models.CharField(max_length=5,default='100%')
