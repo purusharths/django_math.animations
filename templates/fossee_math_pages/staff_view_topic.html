@@ -49,229 +49,270 @@
                 <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
             </div>
         </div>
-        <h2 style="background-color: yellow">Waiting contents</h2>
-        <br>
-        <table>
-            {% for data in datas %}
-                {% if data.data_status == "WAITING" %}
-                    <tr>
-                        {% if data.data_content != "NULL" %}
-                            <td>
-                                <p></p>
-                                {{ data.data_content |safe }}
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_update_data' data.pk %}">
-                                    Edit
-                                </a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_image.url != "NULL" %}
-                            <td>
-                                <p></p>
-                                <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_video.url != "NULL" %}
-                            <td>
-                                <p></p>
-                                <video width='70%' style="display:block; margin:0 auto;" controls>
-                                    <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                    Your browser does not support the video tag.
-                                </video>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
-        <br>
-        <h2 style="background-color: green">Aproved contents</h2>
-        <br>
-        <table>
-            {% for data in datas %}
-                {% if data.data_status == "ACCEPTED" %}
-                    <tr>
-                        {% if data.data_content != "NULL" %}
-                            <td>{{ data.data_content |safe }}</td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_update_data' data.pk %}">
-                                    Edit
-                                </a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_image.url != "NULL" %}
-                            <td>
-                                <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_video.url != "NULL" %}
-                            <td>
-                                <video width='70%' style="display:block; margin:0 auto;" controls>
-                                    <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                    Your browser does not support the video tag.
-                                </video>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
-        <br>
-        <h2 style="background-color: red">Rejected contents</h2>
-        <br>
-        <table>
-            {% for data in datas %}
-                {% if data.data_status == "REJECTED" %}
-                    <tr>
-                        {% if data.data_content != "NULL" %}
-                            <td>{{ data.data_content |safe }}</td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                                <br>
-                                <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'staff_update_data' data.pk %}">
-                                    Edit
-                                </a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_image.url != "NULL" %}
-                            <td>
-                                <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_video.url != "NULL" %}
-                            <td>
-                                <video width='70%' style="display:block; margin:0 auto;" controls>
-                                    <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                    Your browser does not support the video tag.
-                                </video>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'staff_delete_data' data.pk %}">Delete
-                                </a>
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-primary"#}
-                                {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
-                                {#                                <br>#}
-                                {#                                <br>#}
-                                {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
+        {% if subtopic.subtopic_status == 'WAITING' %}
+            <h2 style="background-color: yellow">Waiting contents</h2>
+            <br>
+            <table>
+                {% for data in datas %}
+                    {% if data.data_status == "WAITING" %}
+                        <tr>
+                            {% if data.data_content != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    {{ data.data_content |safe }}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{% url 'staff_update_data' data.pk %}">
+                                        Edit
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_image.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    {% for i in imagesize %}
+                                        {% if i.data_id_id == data.pk %}
+                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-primary"
+                                       href="{% url 'staff_update_image_size' data.pk %}">Format</a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_video.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    <video width='70%' style="display:block; margin:0 auto;" controls>
+                                        <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% endif %}
+        {% if subtopic.subtopic_status == 'ACCEPTED' %}
+            <br>
+            <h2 style="background-color: green">Aproved contents</h2>
+            <br>
+            <table>
+                {% for data in datas %}
+                    {% if data.data_status == "ACCEPTED" %}
+                        <tr>
+                            {% if data.data_content != "NULL" %}
+                                <td><p></p>
+                                    {{ data.data_content |safe }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{% url 'staff_update_data' data.pk %}">
+                                        Edit
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_image.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    {% for i in imagesize %}
+                                        {% if i.data_id_id == data.pk %}
+                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-primary"
+                                       href="{% url 'staff_update_image_size' data.pk %}">Format</a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_video.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    <video width='70%' style="display:block; margin:0 auto;" controls>
+                                        <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% endif %}
+        {% if subtopic.subtopic_status == 'REJECTED' %}
+            <br>
+            <h2 style="background-color: red">Rejected contents</h2>
+            <br>
+            <table>
+                {% for data in datas %}
+                    {% if data.data_status == "REJECTED" %}
+                        <tr>
+                            {% if data.data_content != "NULL" %}
+                                <td><p></p>
+                                    {{ data.data_content |safe }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{% url 'staff_update_data' data.pk %}">
+                                        Edit
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_image.url != "NULL" %}
+                                <td><p></p>
+                                    {% for i in imagesize %}
+                                        {% if i.data_id_id == data.pk %}
+                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a class="btn btn-primary"
+                                       href="{% url 'staff_update_image_size' data.pk %}">Format</a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_video.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    <video width='70%' style="display:block; margin:0 auto;" controls>
+                                        <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{% url 'staff_delete_data' data.pk %}">Delete
+                                    </a>
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-primary"#}
+                                    {#                                   href="{% url 'staff_aprove_data' data.id %}">Aprove</a>#}
+                                    {#                                <br>#}
+                                    {#                                <br>#}
+                                    {#                                <a class="btn btn-sm btn-danger" href="{% url 'staff_reject_data' data.id %}">Reject</a>#}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% endif %}
     </div>
     <br>
     <br>
