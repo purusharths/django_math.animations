@@ -74,19 +74,24 @@
     <div class="container">
         <h1>Topics</h1>
         <hr> {% for i in internship %}
-        <div class="card">
-            <h5 class="card-header">{{ i.internship_topic }}</h5>
+        <div class="card mb-3 col-md-12">
+
             <br>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6">
                         <br>
-                        <img src="{{ i.internship_thumbnail.url }}" height="85%" width="80%">
+                        <img src="{{ i.internship_thumbnail.url }}"  class="card-img" alt >
                     </div>
                     <div class="col-lg-6">
                         <br>
-                        <p class="card-text">"{{ i.internship_quote }}"</p>
-                        <p class="card-text"><i>-- {{ i.internship_quote_author }}</i></p>
+                         <h5 class="card-title serif" color = "blue">{{ i.internship_topic }}</h5>
+                        <i class="card-text serif">"{{ i.internship_quote }}"</i>
+                        <p class = "card-text">
+                        <small class="text-muted"></small>
+                              <i>-- {{ i.internship_quote_author }}</i>
+                    </p>
+
                         <a href="{% url 'home_view_data' i.id %}" class="btn btn-primary">Browse Topics</a>
                     </div>
                 </div>
