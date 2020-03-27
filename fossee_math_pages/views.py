@@ -16,6 +16,8 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
                      ImageFormatting)
 
+search_contains_query = ""
+
 
 #  pic = request.FILES
 #         internship_thumbnail = pic['internship_thumbnail']
@@ -266,34 +268,15 @@ def dashboard(request):
 
 
 def home_view_data(request, id):
-    datas = ""
-    datass = ""
-    page_obj = ""
-    topic = AssignedTopics.objects.all();
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
     subtopics = Subtopic.objects.all()
 
     if request.POST:
-        print("hello")
         search_contains_query = request.POST.get('title_contains')
-        if search_contains_query != '' and search_contains_query is not None:
-            datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
-            datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
-
-        if datas:
-            paginator = Paginator(datas, 5)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-
-        if datass:
-            paginator = Paginator(datass, 5)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
+        return redirect('home_search_results')
 
     context = {
-        'datas': page_obj,
-        'topic': topic,
         'details': details,
         'topics': topics,
         'subtopics': subtopics,
@@ -322,23 +305,34 @@ def home_details(request, id):
         'datas': data,
         'contributor': contributor,
         'ver': ver,
-        'imagesize':imagesize,
+        'imagesize': imagesize,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
 
 
 def index(request):
-    datas = ""
-    datass = ""
-    page_obj = ""
-    topic = AssignedTopics.objects.all();
     search_contains_query = request.GET.get('title_contains')
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
     if search_contains_query != '' and search_contains_query is not None:
-        datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
-        datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
+        return redirect(home_search_results)
+
+    context = {
+        'internship': interships,
+    }
+
+    return render(request, 'fossee_math_pages/index.html', context)
+
+
+def home_search_results(request):
+    datas = ""
+    datass = ""
+    page_obj = ""
+    topic = AssignedTopics.objects.all()
+
+    datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
+    datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
 
     if datas:
         paginator = Paginator(datas, 5)
@@ -353,10 +347,8 @@ def index(request):
     context = {
         'datas': page_obj,
         'topic': topic,
-        'internship': interships,
     }
-
-    return render(request, 'fossee_math_pages/index.html', context)
+    return render(request, 'fossee_math_pages/home_search_results.html', context)
 
 
 @login_required

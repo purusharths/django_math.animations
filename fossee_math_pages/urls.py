@@ -17,6 +17,7 @@ urlpatterns = [
                   path('dashboard/', views.dashboard, name='dashboard'),
                   path('home_view_data/<int:id>', views.home_view_data, name='home_view_data'),
                   path('home_details/<int:id>', views.home_details, name='home_details'),
+                  path('home_search_results/', views.home_search_results, name='home_search_results'),
                   path('intern_add_data/<int:t_id>', views.intern_add_data, name='intern_add_data'),
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
