@@ -99,7 +99,13 @@
                     {% if data.data_image.url != "NULL" %}
                         <td>
                             <p></p>
-                            <img src="{{ data.data_image.url }}" width="70%" style="display:block; margin:0 auto;">
+                            {% for i in imagesize %}
+                                {% if i.data_id_id == data.pk %}
+                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                {% endif %}
+                            {% endfor %}
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
@@ -111,6 +117,12 @@
                                 <a class="btn btn-sm btn-primary"
                                    href="{% url 'intern_update_media' data.pk %}">
                                     Edit
+                                </a>
+                                <br>
+                                <br>
+                                <a class="btn btn-sm btn-primary"
+                                   href="{% url 'intern_update_image_size' data.pk %}">
+                                    Format
                                 </a>
                             </td>
                         {% endif %}
@@ -146,7 +158,7 @@
         {% if subtopic.subtopic_status != 'ACCEPTED' %}
             <br>
             <div style="background-color: lightcyan">
-                      <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+                <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
                     <div class="ck" id="cc">
                         {{ form.media }} {{ form.as_p }}

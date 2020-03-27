@@ -13,7 +13,8 @@ from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting)
-from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor)
+from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
+                     ImageFormatting)
 
 
 #  pic = request.FILES
@@ -306,20 +307,22 @@ def home_details(request, id):
     ver = ""
     try:
         data = Data.objects.all()
+        imagesize = ImageFormatting.objects.all()
     except Data.DoesNotExist:
         data = None
+        imagesize = None
 
     try:
         contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
     except:
         contributor = None
 
-
     context = {
         'subtopic': subtopic,
         'datas': data,
         'contributor': contributor,
         'ver': ver,
+        'imagesize':imagesize,
     }
     return render(request, 'fossee_math_pages/home_details.html', context)
 
@@ -360,6 +363,7 @@ def index(request):
 def intern_add_data(request, t_id):
     user = request.user
     e_data = Data.objects.filter(subtopic_id=t_id)
+    imagesize = ImageFormatting.objects.all()
     subtopic = Subtopic.objects.get(id=t_id)
     form = data()
 
@@ -383,10 +387,16 @@ def intern_add_data(request, t_id):
                         user_id_id=user.id)
         add_data.save()
 
+        if img != "" or img != " ":
+            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%',
+                                        image_caption='NULL')
+            imgformat.save()
+
     context = {
         'topic': e_data,
         'form': form,
         'subtopic': subtopic,
+        'imagesize': imagesize,
     }
     return render(request, 'fossee_math_pages/intern_add_data.html', context)
 
@@ -436,17 +446,33 @@ def intern_update_media(request, id):
 
 
 @login_required
-def intern_update_image_size(request,id):
+def intern_update_image_size(request, id):
     image = Data.objects.get(id=id)
-    form = imageFormatting()
+    try:
+        image_size = ImageFormatting.objects.get(data_id_id=image.pk)
+        form = imageFormatting(instance=image_size)
+    except:
+        image_size = None
+        form = imageFormatting()
 
-    context={
-        'image' : image,
-        'form' : form,
+    if request.POST:
+        image_height = request.POST.get('image_height')
+        image_width = request.POST.get('image_width')
+        caption = request.POST.get('image_caption')
+        obj = ImageFormatting.objects.get(data_id_id=image.pk)
+        obj.image_height = image_height
+        obj.image_width = image_width
+        obj.image_caption = caption
+        obj.save()
+        return redirect(intern_update_image_size, id)
+
+    context = {
+        'image': image,
+        'image_size': image_size,
+        'form': form,
     }
 
-    return render(request,'fossee_math_pages/intern_update_image_size.html',context)
-
+    return render(request, 'fossee_math_pages/intern_update_image_size.html', context)
 
 
 @login_required
@@ -687,10 +713,12 @@ def staff_view_internship(request):
 def staff_view_topic(request, s_id):
     subtopic = Subtopic.objects.get(id=s_id)
     data = Data.objects.filter(subtopic_id=subtopic.pk)
+    imageformat = ImageFormatting.objects.all()
 
     context = {
         'subtopic': subtopic,
         'datas': data,
+        'imagesize': imageformat,
     }
 
     return render(request, 'fossee_math_pages/staff_view_topic.html', context)
@@ -713,6 +741,36 @@ def staff_update_data(request, id):
     }
 
     return render(request, 'fossee_math_pages/staff_update_data.html', context)
+
+
+@login_required
+def staff_update_image_size(request, id):
+    image = Data.objects.get(id=id)
+    try:
+        image_size = ImageFormatting.objects.get(data_id_id=image.pk)
+        form = imageFormatting(instance=image_size)
+    except:
+        image_size = None
+        form = imageFormatting()
+
+    if request.POST:
+        image_height = request.POST.get('image_height')
+        image_width = request.POST.get('image_width')
+        caption = request.POST.get('image_caption')
+        obj = ImageFormatting.objects.get(data_id_id=image.pk)
+        obj.image_height = image_height
+        obj.image_width = image_width
+        obj.image_caption = caption
+        obj.save()
+        return redirect(staff_update_image_size, id)
+
+    context = {
+        'image': image,
+        'image_size': image_size,
+        'form': form,
+    }
+
+    return render(request, 'fossee_math_pages/staff_update_image_size.html', context)
 
 
 @login_required

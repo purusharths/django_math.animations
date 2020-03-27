@@ -61,7 +61,13 @@
                         {% if data.data_image.url != "NULL" %}
                             <td>
                                 <p></p>
-                                <img src="{{ data.data_image.url }}" width='70%' style="display:block; margin:0 auto;">
+                                {% for i in imagesize %}
+                                        {% if i.data_id_id == data.pk %}
+                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                        {% endif %}
+                                    {% endfor %}
                             </td>
                         {% endif %}
                     </tr>
