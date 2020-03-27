@@ -44,31 +44,6 @@
                 </table>
             </form>
         </div>
-        {% if datas %}
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Topic Name</th>
-                    <th scope="col">Sub Topic Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for data in datas %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ data.topic_id }}</td>
-                        <td>{{ data.subtopic_name }}</td>
-                        {% for i in topic %}
-                            {% if i.topic_id == data.topic_id %}
-                                <td><a href="{% url 'home_details' i.topic_id_id %}">View</a></td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
     </div>
     <hr>
     <div class="container">
