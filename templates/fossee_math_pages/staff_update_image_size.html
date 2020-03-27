@@ -17,11 +17,7 @@
             opacity: 0;
         }
 
-        .mleft {
-            margin-left: 415px;
-        }
-
-    </style>
+       </style>
     <section id="bc">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-white text-dark">
@@ -29,17 +25,22 @@
                     <a style="color:black" href="{% url 'index' %}">
                         <i class="fa fa-home" style="color:black"></i> Index</a>
                 </li>
+
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'dashboard' %}">
                         <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship
-                        - {{ image.subtopic_id.topic_id.internship_id }}
+                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
+                        <i class="fa fa-pencil" style="color:black"></i> Manage Submissions
                     </a>
                 </li>
-                <li class="breadcrumb-item active"> Update Image : {{ image.subtopic_id.subtopic_name }}</li>
+                 <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_view_topic' image.subtopic_id.pk %}">
+                        <i class="fa fa-pencil" style="color:black"></i> Submissions - {{ image.subtopic_id }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active"> Upadte Image : {{ image_size.image_caption }}</li>
             </ol>
         </nav>
     </section>
@@ -61,7 +62,7 @@
         </div>
         <br>
         <div>
-            <a href="{% url 'intern_add_data' image.subtopic_id.pk %}" class="btn btn-success">back</a>
+            <a href="{% url 'staff_view_topic' image.subtopic_id.pk %}" class="btn btn-success">back</a>
         </div>
         <br>
     </div>
