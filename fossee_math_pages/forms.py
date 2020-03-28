@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor, ImageFormatting
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor, ImageFormatting, Topic
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -100,7 +100,11 @@ class AssignTopic(ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         super(AssignTopic, self).__init__(*args, **kwargs)
-        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+        assigned = AssignedTopics.objects.all().values_list('user_id_id')
+        qs = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE").exclude(user_id_id__in=assigned)
+        self.fields['user_id'].queryset = qs
+        inner = AssignedTopics.objects.all().values_list('topic_id_id')
+        self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
 
 
 class data(ModelForm):
