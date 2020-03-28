@@ -18,7 +18,7 @@
         </nav>
     </section>
     <hr>
-        <div class="container">
+    <div class="container">
         <div>
 
         </div>
@@ -36,11 +36,7 @@
                 {% for data in datas %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                     {% for i in topic %}
-                         {% if i.topic_id == data.topic_id %}
-                        <td>{{ i.topic_id.internship_id }}</td>
-                         {% endif %}
-                         {% endfor %}
+                        <td>{{ data.topic_id.internship_id }}</td>
                         <td>{{ data.topic_id }}</td>
                         <td>{{ data.subtopic_name }}</td>
                         {% for i in topic %}
