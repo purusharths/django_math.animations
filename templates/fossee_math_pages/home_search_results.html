@@ -18,9 +18,31 @@
         </nav>
     </section>
     <hr>
-        <div class="container">
+    <div class="container">
         <div>
-
+             <form method="GET" action=".">
+                <table>
+                    <tr>
+                        <td> Search :</td>
+                        <td>
+                            <div class="input-group">
+                                <input class="form-control py-2 border-right-0 border" type="search"
+                                       name="title_contains"
+                                       placeholder="Search For Topics or Sub-topics"/>
+                                <span class="input-group-append">
+                            <div class="input-group-text bg-transparent">
+                                <i class="fa fa-search"></i>
+                            </div>
+                        </span>
+                            </div>
+                        </td>
+                        <td>
+                            <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <br>
         </div>
         {% if datas %}
             <table class="table">
@@ -36,15 +58,11 @@
                 {% for data in datas %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                     {% for i in topic %}
-                         {% if i.topic_id == data.topic_id %}
-                        <td>{{ i.topic_id.internship_id }}</td>
-                         {% endif %}
-                         {% endfor %}
+                        <td>{{ data.topic_id.internship_id }}</td>
                         <td>{{ data.topic_id }}</td>
                         <td>{{ data.subtopic_name }}</td>
                         {% for i in topic %}
-                            {% if i.topic_id == data.topic_id %}
+                            {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED'%}
                                 <td><a href="{% url 'home_details' i.topic_id_id %}">View</a></td>
                             {% endif %}
                         {% endfor %}
