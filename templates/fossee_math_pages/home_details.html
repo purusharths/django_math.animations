@@ -40,7 +40,7 @@
             </tr>
             <tr>
                 <th>
-                    <h1 style="color: #6E6E6E; font-size: 20px;">{{ subtopic.subtopic_name }}</h1>
+                    <h1>{{ subtopic.subtopic_name }}</h1>
                 </th>
             </tr>
             </thead>
@@ -64,7 +64,7 @@
                                         {% if i.data_id_id == data.pk %}
                                             <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                                  height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                            <p align="center" style="color: #6E6E6E; font-size: 13px;">{{ i.image_caption }}</p>
                                         {% endif %}
                                     {% endfor %}
                             </td>
