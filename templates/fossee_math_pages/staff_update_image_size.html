@@ -1,0 +1,69 @@
+{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+    {% load static %} {{ form.media }} {% load crispy_forms_tags %}
+
+    <style>
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+       </style>
+    <section id="bc">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white text-dark">
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'index' %}">
+                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                </li>
+
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'dashboard' %}">
+                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
+                        <i class="fa fa-pencil" style="color:black"></i> Manage Submissions
+                    </a>
+                </li>
+                 <li class="breadcrumb-item">
+                    <a style="color:black" href="{% url 'staff_view_topic' image.subtopic_id.pk %}">
+                        <i class="fa fa-pencil" style="color:black"></i> Submissions - {{ image.subtopic_id }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active"> Upadte Image : {{ image_size.image_caption }}</li>
+            </ol>
+        </nav>
+    </section>
+    <div class="container">
+        <div>
+            <img src="{{ image.data_image.url }}" width="{{ image_size.image_width }}"
+                 height="{{ image_size.image_height }}">
+        </div>
+        <br>
+        <div>
+            <form method="POST" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+
+                {{ form.media }} {{ form.as_p }}
+
+                <div class="upload-btn-wrapper">
+                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
+                </div>
+            </form>
+        </div>
+        <br>
+        <div>
+            <a href="{% url 'staff_view_topic' image.subtopic_id.pk %}" class="btn btn-success">back</a>
+        </div>
+        <br>
+    </div>
+{% endblock %}
