@@ -30,6 +30,8 @@
             </thead>
             <tbody>
             {% for i in interns %}
+               {% for j in as_topic %}
+                   {% if i.id == j.user_id_id and j.topic_id.internship_id.internship_status != 'COMPLETED'%}
                 <tr>
                     <td>{{ i.username }}</td>
                     <td>
@@ -39,6 +41,7 @@
                     {% endif %} {% endfor %}
                     </td>
                 </tr>
+                 {% endif %} {% endfor %}
             {% endfor %}
             </tbody>
         </table>

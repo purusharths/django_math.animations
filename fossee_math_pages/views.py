@@ -529,7 +529,6 @@ def user_login(request):
                         # return render(request, "fossee_math_pages/dashboard.html")
 
             except:
-
                 form = UserLoginForm()
                 context = {
                     'form': form,
