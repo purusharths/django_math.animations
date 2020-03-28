@@ -16,11 +16,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
                      ImageFormatting)
 
-search_contains_query = ""
 
-
-#  pic = request.FILES
-#         internship_thumbnail = pic['internship_thumbnail']
 @login_required
 def admin_add_internship(request):
     form = AddInternship()
@@ -274,7 +270,7 @@ def home_view_data(request, id):
 
     if request.POST:
         search_contains_query = request.POST.get('title_contains')
-        return redirect('home_search_results')
+        return home_search_results(request, search_contains_query)
 
     context = {
         'details': details,
@@ -316,7 +312,7 @@ def index(request):
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
     if search_contains_query != '' and search_contains_query is not None:
-        return redirect(home_search_results)
+        return home_search_results(request, search_contains_query)
 
     context = {
         'internship': interships,
@@ -325,22 +321,22 @@ def index(request):
     return render(request, 'fossee_math_pages/index.html', context)
 
 
-def home_search_results(request):
+def home_search_results(request, search_contains_query):
     datas = ""
     datass = ""
     page_obj = ""
     topic = AssignedTopics.objects.all()
 
-    datas = Subtopic.objects.filter(subtopic_name__contains=search_contains_query)
-    datass = Subtopic.objects.filter(topic_id__topic_name__contains=search_contains_query)
+    datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+    datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
 
     if datas:
-        paginator = Paginator(datas, 5)
+        paginator = Paginator(datas, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
     if datass:
-        paginator = Paginator(datass, 5)
+        paginator = Paginator(datass, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -380,8 +376,7 @@ def intern_add_data(request, t_id):
         add_data.save()
 
         if img != "" or img != " ":
-            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%',
-                                        image_caption='NULL')
+            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
             imgformat.save()
 
     context = {
