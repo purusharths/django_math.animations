@@ -376,8 +376,7 @@ def intern_add_data(request, t_id):
         add_data.save()
 
         if img != "" or img != " ":
-            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%',
-                                        image_caption='NULL')
+            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
             imgformat.save()
 
     context = {
