@@ -7,8 +7,8 @@ Pillow==5.4.1
 pytz==2018.9
 requests==2.21.0
 urllib3==1.24.1
-django-crispy-forms
-django-phonenumber-field
-phonenumbers
-email_validator
-django-ckeditor
+django-crispy-forms==1.8.1
+django-phonenumber-field==3.0.1
+phonenumbers==8.11.0
+email-validator==1.0.5
+django-ckeditor==5.9.0

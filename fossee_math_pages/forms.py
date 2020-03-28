@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor
+from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor, ImageFormatting
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -107,6 +107,12 @@ class data(ModelForm):
     class Meta:
         model = Data
         fields = ['data_content']
+
+
+class imageFormatting(ModelForm):
+    class Meta:
+        model = ImageFormatting
+        fields = ['image_height', 'image_width', 'image_caption']
 
 
 class UserLoginForm(forms.Form):
