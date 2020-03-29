@@ -4,7 +4,7 @@
             <ol class="breadcrumb bg-white text-dark">
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
+                        <i class="fa fa-home" style="color:black"></i> Home</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'index' %}">
@@ -18,7 +18,7 @@
         </nav>
     </section>
     <hr>
-        <div class="container">
+    <div class="container">
         <div>
             <form method="POST" action="{% url 'home_view_data' details.pk %}">
                 {% csrf_token %}
@@ -38,8 +38,8 @@
                             </div>
                         </td>
                         <td>
-                <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
-{#                            <a href="{% url 'home_view_data' details.pk %}" class="btn btn-primary">Search</a>#}
+                            <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
+                            {#                            <a href="{% url 'home_view_data' details.pk %}" class="btn btn-primary">Search</a>#}
                         </td>
                     </tr>
                 </table>
