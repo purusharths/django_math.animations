@@ -343,6 +343,7 @@ def home_search_results(request, search_contains_query):
     context = {
         'datas': page_obj,
         'topic': topic,
+        'querry': search_contains_query,
     }
     return render(request, 'fossee_math_pages/home_search_results.html', context)
 
