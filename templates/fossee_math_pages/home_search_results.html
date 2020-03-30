@@ -4,11 +4,7 @@
             <ol class="breadcrumb bg-white text-dark">
                 <li class="breadcrumb-item">
                     <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Index</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}#Topics">
-                        <i style="color:black"></i> Topics</a>
+                        <i class="fa fa-home" style="color:black"></i> Home</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a style="color:black">
@@ -20,7 +16,7 @@
     <hr>
     <div class="container">
         <div>
-             <form method="GET" action=".">
+            <form method="GET" action=".">
                 <table>
                     <tr>
                         <td> Search :</td>
@@ -28,7 +24,8 @@
                             <div class="input-group">
                                 <input class="form-control py-2 border-right-0 border" type="search"
                                        name="title_contains"
-                                       placeholder="Search For Topics or Sub-topics"/>
+                                       placeholder="Search For Topics or Sub-topics"
+                                       value="{{ querry }}"/>
                                 <span class="input-group-append">
                             <div class="input-group-text bg-transparent">
                                 <i class="fa fa-search"></i>
@@ -62,7 +59,7 @@
                         <td>{{ data.topic_id }}</td>
                         <td>{{ data.subtopic_name }}</td>
                         {% for i in topic %}
-                            {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED'%}
+                            {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED' %}
                                 <td><a href="{% url 'home_details' i.topic_id_id %}">View</a></td>
                             {% endif %}
                         {% endfor %}
@@ -70,6 +67,8 @@
                 {% endfor %}
                 </tbody>
             </table>
+        {% else %}
+            <h3>No Results Found.</h3>
         {% endif %}
     </div>
     <hr>
