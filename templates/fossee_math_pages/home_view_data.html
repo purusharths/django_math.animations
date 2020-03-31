@@ -80,13 +80,15 @@
             <tbody>
             <tr>
                 <th scope="row">
-                    <h4>{{ i.topic_name }}</h4>
+                    <h4>{{ forloop.counter }}. {{ i.topic_name }}</h4>
                 </th>
             </tr>
             {% for j in subtopics %} {% if j.topic_id_id == i.id %}
                 <tr>
                     <th>
-                        <h5><a href="{% url 'home_details' j.id %}"> {{ j.subtopic_name }} </a></h5>
+                        <h6>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href="{% url 'home_details' j.id %}"> {{ j.subtopic_name }} </a>
+                        </h6>
                     </th>
                 </tr>
             {% endif %} {% endfor %}
