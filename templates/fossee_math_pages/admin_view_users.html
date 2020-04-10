@@ -17,27 +17,24 @@
             </nav>
         </section>
         <div class="container">
-            <h4>Search</h4>
             <form method="GET" action=".">
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <div class="input-group">
-                            <input class="form-control py-2 border-right-0 border" type="search" name="title_contains"
-                                   placeholder="Search (UserName, Intern, Staff)"/>
-                            <span class="input-group-append" style="width: 10%;">
-                                    <div class="input-group-text bg-transparent">
-                                        <i class="fa fa-search"></i>
-                                    </div>
-                                </span>
-                        </div>
-                    </div>
+                <div class="row">
+                    <h4>Search :</h4> &nbsp;
+                    <input class="form-control py-2 border col-lg-3" type="search" name="title_contains"
+                           placeholder="Search (UserName, Intern, Staff)"/> &nbsp;&nbsp;
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </div>
-                <button type="submit" class="btn btn-primary">Search</button>
             </form>
+        <hr/>
         </div>
         <div class="container">
             <br> {% if datas %}
-            <h4>All Users</h4>
+            Filter :
+            <button class="btn btn-primary">All</button>
+            <button class="btn btn-primary">STAFF</button>
+            <button class="btn btn-primary">INTERNS</button>
+            <br>
+            <br>
             <table class="table" style="text-align: center; width: 100%;">
                 <thead>
                 <tr>
