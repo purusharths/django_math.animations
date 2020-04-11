@@ -140,6 +140,6 @@ class AssignedTopics(models.Model):
 
 
 class HomeImages(models.Model):
-    image1 = models.ImageField(upload_to='images/', blank=True, null=True)
-    image2 = models.ImageField(upload_to='images/', blank=True, null=True)
-    image3 = models.ImageField(upload_to='images/', blank=True, null=True)
+    image1 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image2 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image3 = models.ImageField(upload_to='home/', blank=True, null=True)
