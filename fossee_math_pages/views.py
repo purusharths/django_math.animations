@@ -352,152 +352,172 @@ def home_search_results(request, search_contains_query):
 
 @login_required
 def intern_add_data(request, t_id):
-    user = request.user
-    e_data = Data.objects.filter(subtopic_id=t_id)
-    imagesize = ImageFormatting.objects.all()
-    subtopic = Subtopic.objects.get(id=t_id)
-    form = data()
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        user = request.user
+        e_data = Data.objects.filter(subtopic_id=t_id)
+        imagesize = ImageFormatting.objects.all()
+        subtopic = Subtopic.objects.get(id=t_id)
+        form = data()
 
-    if request.method == 'POST':
-        content = request.POST.get('data_content')
-        img = request.FILES.get('image')
-        video = request.FILES.get('video')
-        status = "WAITING"
+        if request.method == 'POST':
+            content = request.POST.get('data_content')
+            img = request.FILES.get('image')
+            video = request.FILES.get('video')
+            status = "WAITING"
 
-        if content == "" or content == " ":
-            content = "NULL"
+            if content == "" or content == " ":
+                content = "NULL"
 
-        if img == "" or img == " ":
-            img = "NULL"
+            if img == "" or img == " ":
+                img = "NULL"
 
-        if video == "" or video == " ":
-            video = "NULL"
+            if video == "" or video == " ":
+                video = "NULL"
 
-        add_data = Data(data_content=content, data_status=status, data_image=img,
-                        data_video=video, subtopic_id_id=t_id,
-                        user_id_id=user.id)
-        add_data.save()
+            add_data = Data(data_content=content, data_status=status, data_image=img,
+                            data_video=video, subtopic_id_id=t_id,
+                            user_id_id=user.id)
+            add_data.save()
 
-        if img != "" or img != " ":
-            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
-            imgformat.save()
+            if img != "" or img != " ":
+                imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
+                imgformat.save()
 
-    context = {
-        'topic': e_data,
-        'form': form,
-        'subtopic': subtopic,
-        'imagesize': imagesize,
-    }
-    return render(request, 'fossee_math_pages/intern_add_data.html', context)
+        context = {
+            'topic': e_data,
+            'form': form,
+            'subtopic': subtopic,
+            'imagesize': imagesize,
+        }
+        return render(request, 'fossee_math_pages/intern_add_data.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_update_data(request, id):
-    instance = Data.objects.get(id=id)
-    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-    t_id = instance.subtopic_id.pk
-    form = data(request.POST or None, instance=instance)
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        return redirect('intern_add_data', t_id)
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        instance = Data.objects.get(id=id)
+        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+        t_id = instance.subtopic_id.pk
+        form = data(request.POST or None, instance=instance)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            return redirect('intern_add_data', t_id)
 
-    context = {
-        'form': form,
-        'subtopic': subtopic,
-    }
+        context = {
+            'form': form,
+            'subtopic': subtopic,
+        }
 
-    return render(request, 'fossee_math_pages/intern_update_data.html', context)
+        return render(request, 'fossee_math_pages/intern_update_data.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_update_media(request, id):
-    instance = Data.objects.get(id=id)
-    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-    t_id = instance.subtopic_id.pk
-    form = EditMedia(request.POST or None, instance=instance)
-    if request.POST:
-        if form.is_valid():
-            img = request.FILES.get('data_image')
-            video = request.FILES.get('data_video')
-            instance = Data.objects.get(id=id)
-            instance.data_image = img
-            instance.data_video = video
-            instance.data_status = "WAITING"
-            instance.save()
-            return redirect('intern_add_data', t_id)
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        instance = Data.objects.get(id=id)
+        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+        t_id = instance.subtopic_id.pk
+        form = EditMedia(request.POST or None, instance=instance)
+        if request.POST:
+            if form.is_valid():
+                img = request.FILES.get('data_image')
+                video = request.FILES.get('data_video')
+                instance = Data.objects.get(id=id)
+                instance.data_image = img
+                instance.data_video = video
+                instance.data_status = "WAITING"
+                instance.save()
+                return redirect('intern_add_data', t_id)
 
-    context = {
-        'form': form,
-        'subtopic': subtopic,
-    }
+        context = {
+            'form': form,
+            'subtopic': subtopic,
+        }
 
-    return render(request, 'fossee_math_pages/intern_update_media.html', context)
+        return render(request, 'fossee_math_pages/intern_update_media.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_update_image_size(request, id):
-    image = Data.objects.get(id=id)
-    try:
-        image_size = ImageFormatting.objects.get(data_id_id=image.pk)
-        form = imageFormatting(instance=image_size)
-    except:
-        image_size = None
-        form = imageFormatting()
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        image = Data.objects.get(id=id)
+        try:
+            image_size = ImageFormatting.objects.get(data_id_id=image.pk)
+            form = imageFormatting(instance=image_size)
+        except:
+            image_size = None
+            form = imageFormatting()
 
-    if request.POST:
-        image_height = request.POST.get('image_height')
-        image_width = request.POST.get('image_width')
-        caption = request.POST.get('image_caption')
-        obj = ImageFormatting.objects.get(data_id_id=image.pk)
-        obj.image_height = image_height
-        obj.image_width = image_width
-        obj.image_caption = caption
-        obj.save()
-        return redirect(intern_update_image_size, id)
+        if request.POST:
+            image_height = request.POST.get('image_height')
+            image_width = request.POST.get('image_width')
+            caption = request.POST.get('image_caption')
+            obj = ImageFormatting.objects.get(data_id_id=image.pk)
+            obj.image_height = image_height
+            obj.image_width = image_width
+            obj.image_caption = caption
+            obj.save()
+            return redirect(intern_update_image_size, id)
 
-    context = {
-        'image': image,
-        'image_size': image_size,
-        'form': form,
-    }
+        context = {
+            'image': image,
+            'image_size': image_size,
+            'form': form,
+        }
 
-    return render(request, 'fossee_math_pages/intern_update_image_size.html', context)
+        return render(request, 'fossee_math_pages/intern_update_image_size.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_delete_data(request, id):
-    instance = Data.objects.get(id=id)
-    t_id = instance.subtopic_id.pk
-    instance.delete()
-    return redirect('intern_add_data', t_id)
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        instance = Data.objects.get(id=id)
+        t_id = instance.subtopic_id.pk
+        instance.delete()
+        return redirect('intern_add_data', t_id)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_view_internship(request):
-    # internship = Internship.objects.filter(internship_status='ACTIVE')
-    internship = AssignedTopics.objects.get(user_id_id=request.user.id)
-    topics = Topic.objects.all()
-    subtopics = Subtopic.objects.all()
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
+        topics = Topic.objects.all()
+        subtopics = Subtopic.objects.all()
 
-    context = {
-        'internship': internship,
-        'topics': topics,
-        'subtopics': subtopics,
-    }
-    return render(request, 'fossee_math_pages/intern_view_internship.html', context)
+        context = {
+            'internship': internship,
+            'topics': topics,
+            'subtopics': subtopics,
+        }
+        return render(request, 'fossee_math_pages/intern_view_internship.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def intern_view_topic(request):
-    assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
-    subtopic = Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
+        subtopic = Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
 
-    context = {
-        'assigned': assigned_topic,
-        'subtopic': subtopic,
-    }
-    return render(request, 'fossee_math_pages/intern_view_topic.html', context)
+        context = {
+            'assigned': assigned_topic,
+            'subtopic': subtopic,
+        }
+        return render(request, 'fossee_math_pages/intern_view_topic.html', context)
+    else:
+        return redirect('dashboard')
 
 
 def internship(request):
@@ -684,18 +704,21 @@ def staff_view_interns(request):
 
 @login_required
 def staff_view_internship(request):
-    internship = Internship.objects.filter(internship_status='ACTIVE')
-    topics = Topic.objects.all()
-    subtopics = Subtopic.objects.all()
-    assigned = AssignedTopics.objects.all()
+    if request.user.is_staff:
+        internship = Internship.objects.filter(internship_status='ACTIVE')
+        topics = Topic.objects.all()
+        subtopics = Subtopic.objects.all()
+        assigned = AssignedTopics.objects.all()
 
-    context = {
-        'internship': internship,
-        'topics': topics,
-        'subtopics': subtopics,
-        'assigned': assigned,
-    }
-    return render(request, 'fossee_math_pages/staff_view_internship.html', context)
+        context = {
+            'internship': internship,
+            'topics': topics,
+            'subtopics': subtopics,
+            'assigned': assigned,
+        }
+        return render(request, 'fossee_math_pages/staff_view_internship.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
