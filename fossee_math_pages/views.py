@@ -14,7 +14,7 @@ from email_validator import validate_email, EmailNotValidError
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting)
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
-                     ImageFormatting)
+                     ImageFormatting, HomeImages)
 
 
 @login_required
@@ -308,6 +308,7 @@ def home_details(request, id):
 
 def index(request):
     search_contains_query = request.GET.get('title_contains')
+    images = HomeImages.objects.all()
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
@@ -316,6 +317,7 @@ def index(request):
 
     context = {
         'internship': interships,
+        'images': images,
     }
 
     return render(request, 'fossee_math_pages/index.html', context)
