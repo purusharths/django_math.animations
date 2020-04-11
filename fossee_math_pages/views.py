@@ -124,6 +124,7 @@ def admin_add_user(request):
     else:
         return redirect('dashboard')
 
+
 @login_required
 def admin_manage_internship(request):
     if request.user.is_superuser:
@@ -778,6 +779,7 @@ def staff_view_topic(request, s_id):
     else:
         return redirect('dashboard')
 
+
 @login_required
 def staff_update_data(request, id):
     if request.user.is_staff:
@@ -937,3 +939,7 @@ def staff_add_contribution(request, id):
         return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
     else:
         return redirect('dashboard')
+
+
+def error_404_view(request, exception):
+    return render(request, 'fossee_math_pages/404.html')
