@@ -152,117 +152,132 @@ def admin_manage_internship(request):
 
 @login_required
 def admin_add_intern(request):
-    user = User.objects.all()
-    interns = Intern.objects.all()
-    form = AddIntern(user)
-    internships = Internship.objects.all()
-    if request.method == 'POST':
-        intern_name = request.POST['user_id']
-        topic = request.POST['internship_id']
-        usr = UserDetails.objects.get(id=intern_name)
-        print(usr)
-        print("\n------------", intern_name, "-------------\n")
-        temp1 = User.objects.get(username=usr)
-        print("\n------------", temp1, "-------------\n")
-        temp2 = Internship.objects.get(id=topic)
-        if Intern.objects.filter(user_id=temp1).exists():
-            messages.error(request, 'That intern has an internship')
+    if request.user.is_superuser:
+        user = User.objects.all()
+        interns = Intern.objects.all()
+        form = AddIntern(user)
+        internships = Internship.objects.all()
+        if request.method == 'POST':
+            intern_name = request.POST['user_id']
+            topic = request.POST['internship_id']
+            usr = UserDetails.objects.get(id=intern_name)
+            print(usr)
+            print("\n------------", intern_name, "-------------\n")
+            temp1 = User.objects.get(username=usr)
+            print("\n------------", temp1, "-------------\n")
+            temp2 = Internship.objects.get(id=topic)
+            if Intern.objects.filter(user_id=temp1).exists():
+                messages.error(request, 'That intern has an internship')
+                return redirect('admin_add_intern')
+            data = Intern(user_id=temp1, internship_id=temp2)
+            data.save()
+            messages.success(request, 'Intern added with internship')
             return redirect('admin_add_intern')
-        data = Intern(user_id=temp1, internship_id=temp2)
-        data.save()
-        messages.success(request, 'Intern added with internship')
-        return redirect('admin_add_intern')
 
-    context = {
-        'internships': internships,
-        'form': form,
-        'interns': interns,
-    }
-    return render(request, 'fossee_math_pages/admin_add_intern.html', context)
+        context = {
+            'internships': internships,
+            'form': form,
+            'interns': interns,
+        }
+        return render(request, 'fossee_math_pages/admin_add_intern.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def admin_view_intern(request, id):
-    datas = Intern.objects.filter(internship_id=id)
-    form = ManageIntern
-    if request.method == 'POST':
-        int_id = request.POST["id"]
-        obj = get_object_or_404(UserDetails, id=int_id)
-        form = ManageIntern(request.POST or None, instance=obj)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            messages.success(request, "Changed")
-            return redirect('admin_view_intern')
-        else:
-            messages.error(request, "Error")
-            return redirect('admin_view_intern')
+    if request.user.is_superuser:
+        datas = Intern.objects.filter(internship_id=id)
+        form = ManageIntern
+        if request.method == 'POST':
+            int_id = request.POST["id"]
+            obj = get_object_or_404(UserDetails, id=int_id)
+            form = ManageIntern(request.POST or None, instance=obj)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.save()
+                messages.success(request, "Changed")
+                return redirect('admin_view_intern')
+            else:
+                messages.error(request, "Error")
+                return redirect('admin_view_intern')
 
-    context = {
-        'datas': datas,
-        'form': form,
-    }
-    return render(request, 'fossee_math_pages/admin_view_intern.html', context)
+        context = {
+            'datas': datas,
+            'form': form,
+        }
+        return render(request, 'fossee_math_pages/admin_view_intern.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def admin_view_intership(request):
-    internship = Internship.objects.all()
-    topic = Topic.objects.all()
-    subtopic = Subtopic.objects.all()
+    if request.user.is_superuser:
+        internship = Internship.objects.all()
+        topic = Topic.objects.all()
+        subtopic = Subtopic.objects.all()
 
-    context = {
-        'internship': internship,
-        'topics': topic,
-        'subtopic': subtopic,
-    }
+        context = {
+            'internship': internship,
+            'topics': topic,
+            'subtopic': subtopic,
+        }
 
-    return render(request, 'fossee_math_pages/admin_view_internship.html', context)
+        return render(request, 'fossee_math_pages/admin_view_internship.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def admin_manage_intern(request):
-    datas = UserDetails.objects.filter(user_role="INTERN")
-    form = ManageIntern
-    if request.method == 'POST':
-        int_id = request.POST["id"]
-        obj = get_object_or_404(UserDetails, id=int_id)
-        form = ManageIntern(request.POST or None, instance=obj)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            messages.success(request, "Changed")
-            return redirect('admin_manage_intern')
-        else:
-            messages.error(request, "Error")
-            return redirect('admin_manage_intern')
+    if request.user.is_superuser:
+        datas = UserDetails.objects.filter(user_role="INTERN")
+        form = ManageIntern
+        if request.method == 'POST':
+            int_id = request.POST["id"]
+            obj = get_object_or_404(UserDetails, id=int_id)
+            form = ManageIntern(request.POST or None, instance=obj)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.save()
+                messages.success(request, "Changed")
+                return redirect('admin_manage_intern')
+            else:
+                messages.error(request, "Error")
+                return redirect('admin_manage_intern')
 
-    context = {
-        'datas': datas,
-        'form': form,
-    }
-    return render(request, 'fossee_math_pages/admin_manage_intern.html', context)
+        context = {
+            'datas': datas,
+            'form': form,
+        }
+        return render(request, 'fossee_math_pages/admin_manage_intern.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def admin_view_users(request):
-    datas = UserDetails.objects.all()
-    user_contains_query = request.GET.get('title_contains')
-    if user_contains_query != '' and user_contains_query is not None:
-        datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
-    if user_contains_query == "STAFF" or user_contains_query == "staff":
-        datas = UserDetails.objects.filter(user_role="STAFF")
-    if user_contains_query == "INTERN" or user_contains_query == "intern":
-        datas = UserDetails.objects.filter(user_role="INTERN")
+    if request.user.is_superuser:
+        datas = UserDetails.objects.all()
+        user_contains_query = request.GET.get('title_contains')
+        if user_contains_query != '' and user_contains_query is not None:
+            datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
+        if user_contains_query == "STAFF" or user_contains_query == "staff":
+            datas = UserDetails.objects.filter(user_role="STAFF")
+        if user_contains_query == "INTERN" or user_contains_query == "intern":
+            datas = UserDetails.objects.filter(user_role="INTERN")
 
-    paginator = Paginator(datas, 5)  # Show 25 contacts per page.
+        paginator = Paginator(datas, 5)  # Show 25 contacts per page.
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {
-        'datas': page_obj,
-    }
-    return render(request, 'fossee_math_pages/admin_view_users.html', context)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'datas': page_obj,
+        }
+        return render(request, 'fossee_math_pages/admin_view_users.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
@@ -574,139 +589,157 @@ def user_login(request):
 
 @login_required
 def staff_add_subtopic(request, id):
-    form = add_subtopic()
-    i_topic = Topic.objects.get(id=id)
-    subtopics = Subtopic.objects.all()
-
-    if request.method == 'POST':
-        subtopic = request.POST['subtopic']
-        topic_id = request.POST['id']
-        u_id = request.user.id
-        data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
-        data.save()
-        messages.success(request, 'Topic added with internship')
+    if request.user.is_staff:
+        form = add_subtopic()
         i_topic = Topic.objects.get(id=id)
+        subtopics = Subtopic.objects.all()
 
-    context = {
-        'form': form,
-        'i_topic': i_topic,
-        'subtopics': subtopics,
-    }
-    return render(request, 'fossee_math_pages/staff_add_subtopic.html', context)
+        if request.method == 'POST':
+            subtopic = request.POST['subtopic']
+            topic_id = request.POST['id']
+            u_id = request.user.id
+            data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+            data.save()
+            messages.success(request, 'Topic added with internship')
+            i_topic = Topic.objects.get(id=id)
+
+        context = {
+            'form': form,
+            'i_topic': i_topic,
+            'subtopics': subtopics,
+        }
+        return render(request, 'fossee_math_pages/staff_add_subtopic.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_add_topics(request):
-    form = add_topic()
-    intern = Internship.objects.filter(internship_status='ACTIVE')
-    topic = Topic.objects.all()
-
-    if request.method == 'POST':
-        topic = request.POST['topic']
-        id = request.POST['id']
-        u_id = request.user.id
-        data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
-        data.save()
-        messages.success(request, 'Topic added with internship')
+    if request.user.is_staff:
+        form = add_topic()
         intern = Internship.objects.filter(internship_status='ACTIVE')
         topic = Topic.objects.all()
 
-    context = {
-        'form': form,
-        'intern': intern,
-        'topic': topic,
-    }
-    return render(request, 'fossee_math_pages/staff_add_topics.html', context)
+        if request.method == 'POST':
+            topic = request.POST['topic']
+            id = request.POST['id']
+            u_id = request.user.id
+            data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+            data.save()
+            messages.success(request, 'Topic added with internship')
+            intern = Internship.objects.filter(internship_status='ACTIVE')
+            topic = Topic.objects.all()
+
+        context = {
+            'form': form,
+            'intern': intern,
+            'topic': topic,
+        }
+        return render(request, 'fossee_math_pages/staff_add_topics.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_aprove_contents(request):
-    subtopic = Subtopic.objects.all()
-    assigned = AssignedTopics.objects.all()
-    context = {
-        'assigned': assigned,
-        'subtopic': subtopic,
-    }
+    if request.user.is_staff:
+        subtopic = Subtopic.objects.all()
+        assigned = AssignedTopics.objects.all()
+        context = {
+            'assigned': assigned,
+            'subtopic': subtopic,
+        }
 
-    return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
+        return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_manage_intern(request):
-    datas = UserDetails.objects.filter(user_role="INTERN")
-    internship = Internship.objects.filter(internship_status='ACTIVE')
-    topic = Topic.objects.all()
+    if request.user.is_staff:
+        datas = UserDetails.objects.filter(user_role="INTERN")
+        internship = Internship.objects.filter(internship_status='ACTIVE')
+        topic = Topic.objects.all()
 
-    assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
+        assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
 
-    form = ManageIntern()
-    if request.method == 'POST':
-        int_id = request.POST["id"]
-        obj = get_object_or_404(UserDetails, id=int_id)
-        form = ManageIntern(request.POST or None, instance=obj)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            messages.success(request, "Changed")
-            return redirect('staff_manage_intern')
-        else:
-            messages.error(request, "Error")
-            return redirect('staff_manage_intern')
+        form = ManageIntern()
+        if request.method == 'POST':
+            int_id = request.POST["id"]
+            obj = get_object_or_404(UserDetails, id=int_id)
+            form = ManageIntern(request.POST or None, instance=obj)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.save()
+                messages.success(request, "Changed")
+                return redirect('staff_manage_intern')
+            else:
+                messages.error(request, "Error")
+                return redirect('staff_manage_intern')
 
-    context = {
-        'datas': datas,
-        'form': form,
-        'internship': internship,
-        'topic': topic,
-        'assigned_topics': assigned_topics,
-    }
-    return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
+        context = {
+            'datas': datas,
+            'form': form,
+            'internship': internship,
+            'topic': topic,
+            'assigned_topics': assigned_topics,
+        }
+        return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_assign_topic(request):
-    user = User.objects.all()
-    form = AssignTopic(user)
-    inters = User.objects.filter(is_staff=False, is_superuser=False)
-    intern = Internship.objects.filter(internship_status='ACTIVE')
-    i_topic = Topic.objects.all()
-    as_topic = AssignedTopics.objects.all()
+    if request.user.is_staff:
+        user = User.objects.all()
+        form = AssignTopic(user)
+        inters = User.objects.filter(is_staff=False, is_superuser=False)
+        intern = Internship.objects.filter(internship_status='ACTIVE')
+        i_topic = Topic.objects.all()
+        as_topic = AssignedTopics.objects.all()
 
-    if request.method == "POST":
-        intern_name = request.POST['user_id']
-        topic = request.POST['topic_id']
-        usr = UserDetails.objects.get(id=intern_name)
-        temp1 = User.objects.get(id=usr.user_id_id)
-        temp2 = Topic.objects.get(id=topic)
-        if AssignedTopics.objects.filter(user_id=temp1).exists():
-            messages.error(request, 'That intern has an assigned topic')
-            return redirect('staff_assign_topic')
-        elif AssignedTopics.objects.filter(topic_id=temp2).exists():
-            messages.error(request, 'That topic is assigned alredy')
-            return redirect('staff_assign_topic')
-        else:
-            data = AssignedTopics(user_id=temp1, topic_id=temp2)
-            data.save()
-            messages.success(request, 'Intern assigned with topic')
+        if request.method == "POST":
+            intern_name = request.POST['user_id']
+            topic = request.POST['topic_id']
+            usr = UserDetails.objects.get(id=intern_name)
+            temp1 = User.objects.get(id=usr.user_id_id)
+            temp2 = Topic.objects.get(id=topic)
+            if AssignedTopics.objects.filter(user_id=temp1).exists():
+                messages.error(request, 'That intern has an assigned topic')
+                return redirect('staff_assign_topic')
+            elif AssignedTopics.objects.filter(topic_id=temp2).exists():
+                messages.error(request, 'That topic is assigned alredy')
+                return redirect('staff_assign_topic')
+            else:
+                data = AssignedTopics(user_id=temp1, topic_id=temp2)
+                data.save()
+                messages.success(request, 'Intern assigned with topic')
 
-    context = {
-        'interns': inters,
-        'form': form,
-        'intern': intern,
-        'as_topic': as_topic,
-        'i_topic': i_topic,
-    }
-    return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
+        context = {
+            'interns': inters,
+            'form': form,
+            'intern': intern,
+            'as_topic': as_topic,
+            'i_topic': i_topic,
+        }
+        return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_view_interns(request):
-    topics = AssignedTopics.objects.all()
+    if request.user.is_staff:
+        topics = AssignedTopics.objects.all()
 
-    conxext = {
-        'topics': topics,
-    }
-    return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
+        conxext = {
+            'topics': topics,
+        }
+        return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
@@ -730,113 +763,135 @@ def staff_view_internship(request):
 
 @login_required
 def staff_view_topic(request, s_id):
-    subtopic = Subtopic.objects.get(id=s_id)
-    data = Data.objects.filter(subtopic_id=subtopic.pk)
-    imageformat = ImageFormatting.objects.all()
+    if request.user.is_staff:
+        subtopic = Subtopic.objects.get(id=s_id)
+        data = Data.objects.filter(subtopic_id=subtopic.pk)
+        imageformat = ImageFormatting.objects.all()
 
-    context = {
-        'subtopic': subtopic,
-        'datas': data,
-        'imagesize': imageformat,
-    }
+        context = {
+            'subtopic': subtopic,
+            'datas': data,
+            'imagesize': imageformat,
+        }
 
-    return render(request, 'fossee_math_pages/staff_view_topic.html', context)
-
+        return render(request, 'fossee_math_pages/staff_view_topic.html', context)
+    else:
+        return redirect('dashboard')
 
 @login_required
 def staff_update_data(request, id):
-    instance = Data.objects.get(id=id)
-    subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-    t_id = instance.subtopic_id.pk
-    form = data(request.POST or None, instance=instance)
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        return redirect('staff_view_topic', t_id)
+    if request.user.is_staff:
+        instance = Data.objects.get(id=id)
+        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+        t_id = instance.subtopic_id.pk
+        form = data(request.POST or None, instance=instance)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            return redirect('staff_view_topic', t_id)
 
-    context = {
-        'form': form,
-        'subtopic': subtopic,
-    }
+        context = {
+            'form': form,
+            'subtopic': subtopic,
+        }
 
-    return render(request, 'fossee_math_pages/staff_update_data.html', context)
+        return render(request, 'fossee_math_pages/staff_update_data.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_update_image_size(request, id):
-    image = Data.objects.get(id=id)
-    try:
-        image_size = ImageFormatting.objects.get(data_id_id=image.pk)
-        form = imageFormatting(instance=image_size)
-    except:
-        image_size = None
-        form = imageFormatting()
+    if request.user.is_staff:
+        image = Data.objects.get(id=id)
+        try:
+            image_size = ImageFormatting.objects.get(data_id_id=image.pk)
+            form = imageFormatting(instance=image_size)
+        except:
+            image_size = None
+            form = imageFormatting()
 
-    if request.POST:
-        image_height = request.POST.get('image_height')
-        image_width = request.POST.get('image_width')
-        caption = request.POST.get('image_caption')
-        obj = ImageFormatting.objects.get(data_id_id=image.pk)
-        obj.image_height = image_height
-        obj.image_width = image_width
-        obj.image_caption = caption
-        obj.save()
-        return redirect(staff_update_image_size, id)
+        if request.POST:
+            image_height = request.POST.get('image_height')
+            image_width = request.POST.get('image_width')
+            caption = request.POST.get('image_caption')
+            obj = ImageFormatting.objects.get(data_id_id=image.pk)
+            obj.image_height = image_height
+            obj.image_width = image_width
+            obj.image_caption = caption
+            obj.save()
+            return redirect(staff_update_image_size, id)
 
-    context = {
-        'image': image,
-        'image_size': image_size,
-        'form': form,
-    }
+        context = {
+            'image': image,
+            'image_size': image_size,
+            'form': form,
+        }
 
-    return render(request, 'fossee_math_pages/staff_update_image_size.html', context)
+        return render(request, 'fossee_math_pages/staff_update_image_size.html', context)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_aprove_subtopic(request, id):
-    instance = Subtopic.objects.get(id=id)
-    t_id = instance.pk
-    instance.subtopic_status = "ACCEPTED"
-    instance.save()
-    Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
-    return redirect('staff_aprove_contents')
+    if request.user.is_staff:
+        instance = Subtopic.objects.get(id=id)
+        t_id = instance.pk
+        instance.subtopic_status = "ACCEPTED"
+        instance.save()
+        Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
+        return redirect('staff_aprove_contents')
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_reject_subtopic(request, id):
-    instance = Subtopic.objects.get(id=id)
-    t_id = instance.pk
-    instance.subtopic_status = "REJECTED"
-    instance.save()
-    Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
-    return redirect('staff_aprove_contents')
+    if request.user.is_staff:
+        instance = Subtopic.objects.get(id=id)
+        t_id = instance.pk
+        instance.subtopic_status = "REJECTED"
+        instance.save()
+        Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
+        return redirect('staff_aprove_contents')
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_aprove_data(request, id):
-    instance = Data.objects.get(id=id)
-    t_id = instance.subtopic_id.pk
-    instance.data_status = "ACCEPTED"
-    instance.save()
-    return redirect('staff_view_topic', t_id)
+    if request.user.is_staff:
+        instance = Data.objects.get(id=id)
+        t_id = instance.subtopic_id.pk
+        instance.data_status = "ACCEPTED"
+        instance.save()
+        return redirect('staff_view_topic', t_id)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_reject_data(request, id):
-    print("hello")
-    instance = Data.objects.get(id=id)
-    t_id = instance.subtopic_id.pk
-    instance.data_status = "REJECTED"
-    instance.save()
-    return redirect('staff_view_topic', t_id)
+    if request.user.is_staff:
+        instance = Data.objects.get(id=id)
+        t_id = instance.subtopic_id.pk
+        instance.data_status = "REJECTED"
+        instance.save()
+        return redirect('staff_view_topic', t_id)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
 def staff_delete_data(request, id):
-    instance = Data.objects.get(id=id)
-    t_id = instance.subtopic_id.pk
-    instance.delete()
-    return redirect('staff_view_topic', t_id)
+    if request.user.is_staff:
+        instance = Data.objects.get(id=id)
+        t_id = instance.subtopic_id.pk
+        instance.delete()
+        return redirect('staff_view_topic', t_id)
+    else:
+        return redirect('dashboard')
 
 
 @login_required
@@ -847,35 +902,38 @@ def user_logout(request):
 
 @login_required
 def staff_add_contribution(request, id):
-    try:
-        instance = Contributor.objects.get(topic_id=id)
-        form = AddContributor(request.POST or None, instance=instance)
-    except:
-        instance = None
-        form = AddContributor()
+    if request.user.is_staff:
+        try:
+            instance = Contributor.objects.get(topic_id=id)
+            form = AddContributor(request.POST or None, instance=instance)
+        except:
+            instance = None
+            form = AddContributor()
 
-    assigned = AssignedTopics.objects.get(topic_id=id)
+        assigned = AssignedTopics.objects.get(topic_id=id)
 
-    if request.POST:
-        if instance is not None:
-            obj = form.save(commit=False)
-            obj.save()
-        else:
-            internname = request.POST['username']
-            mentorname = request.POST['mentor']
-            professorname = request.POST['professor']
-            obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-                              professor=professorname)
-            obj.save()
-    try:
-        instance = Contributor.objects.get(topic_id=id)
-        form = AddContributor(request.POST or None, instance=instance)
-    except:
-        instance = None
-        form = AddContributor()
+        if request.POST:
+            if instance is not None:
+                obj = form.save(commit=False)
+                obj.save()
+            else:
+                internname = request.POST['username']
+                mentorname = request.POST['mentor']
+                professorname = request.POST['professor']
+                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+                                  professor=professorname)
+                obj.save()
+        try:
+            instance = Contributor.objects.get(topic_id=id)
+            form = AddContributor(request.POST or None, instance=instance)
+        except:
+            instance = None
+            form = AddContributor()
 
-    context = {
-        'form': form,
-        'assigned': assigned,
-    }
-    return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
+        context = {
+            'form': form,
+            'assigned': assigned,
+        }
+        return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
+    else:
+        return redirect('dashboard')
