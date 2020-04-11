@@ -57,7 +57,7 @@
         <h3>Topic :{{ subtopic.topic_id }}</h3>
         <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
         <hr/>
-        <div align="center" style="background-color: lightgrey; color: black;">
+        <div align="center">
             Current status of data : {{ subtopic.subtopic_status }}
         </div>
         <hr/>
@@ -148,6 +148,7 @@
 
         {% if subtopic.subtopic_status != 'ACCEPTED' %}
             <br>
+            <hr/>
             <div style="background-color: lightcyan">
                 <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
                     <div class="ck center" align="center" id="cc">
