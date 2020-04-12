@@ -21,23 +21,19 @@
                     <tr>
                         <td> Search :</td>
                         <td>
-                            <div class="input-group">
-                                <input class="form-control py-2 border-right-0 border" type="search"
-                                       name="title_contains"
-                                       placeholder="Search For Topics or Sub-topics"
-                                       value="{{ querry }}"/>
-                                <span class="input-group-append">
-                            <div class="input-group-text bg-transparent">
-                                <i class="fa fa-search"></i>
-                            </div>
-                        </span>
-                            </div>
+                            <input class="form-control py-2 border" type="search"
+                                   name="title_contains"
+                                   placeholder="Search For Topics or Sub-topics"/>
                         </td>
+
                         <td>
                             <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
                         </td>
+
                     </tr>
+
                 </table>
+                <hr style="background-color: #902b2b;height: 1px">
             </form>
             <br>
         </div>
@@ -68,6 +64,8 @@
                 </tbody>
             </table>
         {% else %}
+            <br>
+            <hr/>
             <h3>No Results Found.</h3>
         {% endif %}
     </div>
