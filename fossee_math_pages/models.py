@@ -137,3 +137,9 @@ class AssignedTopics(models.Model):
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
+
+
+class HomeImages(models.Model):
+    image1 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image2 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image3 = models.ImageField(upload_to='home/', blank=True, null=True)
