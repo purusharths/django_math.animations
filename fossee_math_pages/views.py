@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting)
+                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting, )
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
                      ImageFormatting, HomeImages)
 
@@ -618,22 +618,27 @@ def staff_add_subtopic(request, id):
 def staff_add_topics(request):
     if request.user.is_staff:
         form = add_topic()
-        intern = Internship.objects.filter(internship_status='ACTIVE')
-        topic = Topic.objects.all()
+        internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
         if request.method == 'POST':
-            topic = request.POST['topic']
-            id = request.POST['id']
-            u_id = request.user.id
-            data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
-            data.save()
-            messages.success(request, 'Topic added with internship')
-            intern = Internship.objects.filter(internship_status='ACTIVE')
-            topic = Topic.objects.all()
+            if "search_internship" in request.POST:
+                internship = Internship.objects.get(pk=request.POST['search_internship'])
+            else:
+                topic = request.POST['topic']
+                id = request.POST['id']
+                u_id = request.user.id
+                data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+                data.save()
+                messages.success(request, 'Topic added with internship')
+                internship = Internship.objects.filter(internship_status='ACTIVE').first()
+
+        internship_all = Internship.objects.filter(internship_status='ACTIVE')
+        topic = Topic.objects.all()
 
         context = {
             'form': form,
-            'intern': intern,
+            'internship': internship,
+            'internship_all': internship_all,
             'topic': topic,
         }
         return render(request, 'fossee_math_pages/staff_add_topics.html', context)
@@ -644,11 +649,17 @@ def staff_add_topics(request):
 @login_required
 def staff_aprove_contents(request):
     if request.user.is_staff:
+        internship = Internship.objects.filter(internship_status='ACTIVE')
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
+
+        if "search_internship" in request.POST:
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+
         context = {
             'assigned': assigned,
             'subtopic': subtopic,
+            'internship': internship,
         }
 
         return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
@@ -662,7 +673,6 @@ def staff_manage_intern(request):
         datas = UserDetails.objects.filter(user_role="INTERN")
         internship = Internship.objects.filter(internship_status='ACTIVE')
         topic = Topic.objects.all()
-
         assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
 
         form = ManageIntern()
@@ -697,31 +707,40 @@ def staff_assign_topic(request):
         user = User.objects.all()
         form = AssignTopic(user)
         inters = User.objects.filter(is_staff=False, is_superuser=False)
-        intern = Internship.objects.filter(internship_status='ACTIVE')
+        internship = Internship.objects.all()
+        first_internsip = Internship.objects.filter(internship_status='ACTIVE').first()
         i_topic = Topic.objects.all()
-        as_topic = AssignedTopics.objects.all()
+        as_topic = AssignedTopics.objects.filter(topic_id__internship_id=first_internsip)
 
-        if request.method == "POST":
-            intern_name = request.POST['user_id']
-            topic = request.POST['topic_id']
-            usr = UserDetails.objects.get(id=intern_name)
-            temp1 = User.objects.get(id=usr.user_id_id)
-            temp2 = Topic.objects.get(id=topic)
-            if AssignedTopics.objects.filter(user_id=temp1).exists():
-                messages.error(request, 'That intern has an assigned topic')
-                return redirect('staff_assign_topic')
-            elif AssignedTopics.objects.filter(topic_id=temp2).exists():
-                messages.error(request, 'That topic is assigned alredy')
-                return redirect('staff_assign_topic')
+        if request.method == 'POST':
+            if "search_internship" in request.POST:
+                first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
+                try:
+                    as_topic = AssignedTopics.objects.filter(topic_id__internship_id_id=first_internsip.pk)
+                except:
+                    as_topic = None
             else:
-                data = AssignedTopics(user_id=temp1, topic_id=temp2)
-                data.save()
-                messages.success(request, 'Intern assigned with topic')
+                if request.method == "POST":
+                    intern_name = request.POST['user_id']
+                    topic = request.POST['topic_id']
+                    usr = UserDetails.objects.get(id=intern_name)
+                    temp1 = User.objects.get(id=usr.user_id_id)
+                    temp2 = Topic.objects.get(id=topic)
+                    if AssignedTopics.objects.filter(user_id=temp1).exists():
+                        messages.error(request, 'That intern has an assigned topic')
+                        return redirect('staff_assign_topic')
+                    elif AssignedTopics.objects.filter(topic_id=temp2).exists():
+                        messages.error(request, 'That topic is assigned alredy')
+                        return redirect('staff_assign_topic')
+                    else:
+                        data = AssignedTopics(user_id=temp1, topic_id=temp2)
+                        data.save()
+                        messages.success(request, 'Intern assigned with topic')
 
         context = {
             'interns': inters,
             'form': form,
-            'intern': intern,
+            'intern': internship,
             'as_topic': as_topic,
             'i_topic': i_topic,
         }
