@@ -17,9 +17,16 @@
             </nav>
         </section>
 
+        <style>
+            label {
+                display: none;
+            }
+        </style>
+
         <div class="container">
             {% include 'partials/_alerts.html' %}
-            <div class="container" style="padding-top: 3%;">
+
+            <div class="" style="padding-top: 3%;">
                 <hr> {% if assigned_topics %}
                 <table class="table table-condensed">
                     <thead>
@@ -28,9 +35,8 @@
                         <th>Status</th>
                         <th>Internship</th>
                         <th>Topic</th>
-                        <th></th>
-                        <th></th>
                         <th>Set Status</th>
+                        <th></th>
                     </tr>
                     </thead>
                     {% for assigned_topic in assigned_topics %}
@@ -43,12 +49,11 @@
                             <td>{{ assigned_topic.topic_id.internship_id }}</td>
 
                             <td>{{ assigned_topic.topic_id }}</td>
-                            <td>
+                            <td class="row">
                                 <form method="POST" class="form-group" name="ManageIntern">
-                            <td>
-                                <input type="hidden" value="{{ assigned_topic.user_id }}"
-                                       name="id"> {% csrf_token %} {{ form|crispy }}
-                            </td>
+
+                                    <input type="hidden" value="{{ assigned_topic.user_id }}"
+                                           name="id"> {% csrf_token %} {{ form|crispy }}
                             <td>
                                 <input class="btn btn-success" type="submit" name="submit" value="Submit">
                             </td>
@@ -62,9 +67,6 @@
                 </table>
             {% endif %}
             </div>
-            <script>
-                $('.requiredField').hide();
-            </script>
         </div>
         <br>
         <br>
