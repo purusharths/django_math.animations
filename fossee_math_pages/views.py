@@ -286,7 +286,10 @@ def dashboard(request):
     return render(request, 'fossee_math_pages/dashboard.html')
 
 
-def home_view_data(request, id):
+def home_view_data(request, internship):
+    print(internship)
+    internship_details = Internship.objects.get(internship_topic=internship)
+    id = internship_details.pk
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
     subtopics = Subtopic.objects.all()
@@ -303,8 +306,10 @@ def home_view_data(request, id):
     return render(request, 'fossee_math_pages/home_view_data.html', context)
 
 
-def home_details(request, id):
-    subtopic = Subtopic.objects.get(id=id)
+def home_details(request, subtopic):
+    subtopic_request = Subtopic.objects.get(subtopic_name=subtopic)
+    id = subtopic_request.pk
+    subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
     ver = ""
     try:
@@ -315,12 +320,12 @@ def home_details(request, id):
         imagesize = None
 
     try:
-        contributor = Contributor.objects.get(topic_id=subtopic.topic_id)
+        contributor = Contributor.objects.get(topic_id=subtopic_details.topic_id)
     except:
         contributor = None
 
     context = {
-        'subtopic': subtopic,
+        'subtopic': subtopic_details,
         'datas': data,
         'contributor': contributor,
         'ver': ver,
@@ -351,6 +356,7 @@ def home_search_results(request, search_contains_query):
     datass = ""
     page_obj = ""
     topic = AssignedTopics.objects.all()
+    data_search = Data.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
@@ -369,6 +375,7 @@ def home_search_results(request, search_contains_query):
         'datas': page_obj,
         'topic': topic,
         'querry': search_contains_query,
+        'data_search': data_search,
     }
     return render(request, 'fossee_math_pages/home_search_results.html', context)
 
