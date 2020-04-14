@@ -639,7 +639,7 @@ def staff_add_topics(request):
                 messages.success(request, 'Topic added with internship')
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
-        internship_all = Internship.objects.filter(internship_status='ACTIVE')
+        internship_all = Internship.objects.all()
         topic = Topic.objects.all()
 
         context = {
@@ -656,7 +656,7 @@ def staff_add_topics(request):
 @login_required
 def staff_aprove_contents(request):
     if request.user.is_staff:
-        internship = Internship.objects.filter(internship_status='ACTIVE')
+        internship = Internship.objects.all()
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
 
