@@ -15,7 +15,11 @@
             </ol>
         </nav>
     </section>
-
+    <style>
+        label {
+            display: none;
+        }
+    </style>
     <div class="container">
         {% include 'partials/_alerts.html' %}
         <div class="container" style="padding-top: 3%;">
@@ -58,8 +62,5 @@
             </table>
         {% endif %}
         </div>
-        <script>
-            $('.requiredField').hide();
-        </script>
     </div>
 {% endif %} {% endif %} {% endblock %}
