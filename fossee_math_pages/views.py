@@ -677,31 +677,33 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     if request.user.is_staff:
-        datas = UserDetails.objects.filter(user_role="INTERN")
-        internship = Internship.objects.filter(internship_status='ACTIVE')
-        topic = Topic.objects.all()
-        assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
-
+        interns = UserDetails.objects.filter(user_role="INTERN")
+        internship_all = Internship.objects.all()
         form = ManageIntern()
+        internship = Internship.objects.first()
+        interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
+
         if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(UserDetails, id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('staff_manage_intern')
+            if "search_internship" in request.POST:
+                interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
             else:
-                messages.error(request, "Error")
-                return redirect('staff_manage_intern')
+                int_id = request.POST["id"]
+                obj = get_object_or_404(UserDetails, id=int_id)
+                form = ManageIntern(request.POST or None, instance=obj)
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, "Changed")
+                    return redirect('staff_manage_intern')
+                else:
+                    messages.error(request, "Error")
+                    return redirect('staff_manage_intern')
 
         context = {
-            'datas': datas,
+            'interns': interns,
             'form': form,
-            'internship': internship,
-            'topic': topic,
-            'assigned_topics': assigned_topics,
+            'internship_all': internship_all,
+            'interns_in': interns_in,
         }
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
