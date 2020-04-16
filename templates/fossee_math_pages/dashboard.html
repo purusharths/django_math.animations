@@ -14,14 +14,6 @@
         {% if user.is_superuser %}
             <div class="container">
                 <div class="card">
-
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"> <a href="{% url 'admin_add_user' %}">Add Users</a></h5>
-                        <p class="card-text">Add the interns and staff to the system.</p>
-                    </div>
-                </div>
-                <br>
-                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"> <a href="{% url 'admin_view_users' %}">View users</a></h5>
                         <p class="card-text">View all the users (Interns and Staff), currently in the system.</p>

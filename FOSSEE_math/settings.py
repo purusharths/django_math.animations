@@ -128,6 +128,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'FOSSEE_math/static')
+
 ]
 
 MEDIA_URL = '/media/'

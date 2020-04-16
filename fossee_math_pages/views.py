@@ -44,88 +44,6 @@ def admin_add_internship(request):
 
 
 @login_required
-def admin_add_user(request):
-    if request.user.is_superuser:
-        form = AddUserForm1()
-        sub_form = AddUserForm2()
-        if request.method == 'POST':
-            # register user
-            firstname = request.POST['first_name']
-            lastname = request.POST['last_name']
-            username = firstname + " " + lastname
-            email = request.POST['email']
-            user_role = request.POST['user_role']
-            user_phone = request.POST['user_phone']
-            user_status_inactive = 'INACTIVE'
-            user_status_active = 'ACTIVE'
-
-            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'That email is being used')
-                return redirect('admin_add_user')
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'That username is being used')
-                return redirect('admin_add_user')
-            if firstname.isdigit():
-                messages.error(request, 'Firstname cannot have numbers')
-                return redirect('admin_add_user')
-            if regex.search(firstname):
-                messages.error(request, 'Firstname cannot have special characters')
-                return redirect('admin_add_user')
-            if lastname.isdigit():
-                messages.error(request, 'Lastname cannot have numbers')
-                return redirect('admin_add_user')
-            if regex.search(lastname):
-                messages.error(request, 'Lastname cannot have special characters')
-                return redirect('admin_add_user')
-            try:
-                v = validate_email(email)
-                val_email = v["email"]
-            except EmailNotValidError as e:
-                messages.error(request, 'Invalid Email ID')
-                return redirect('admin_add_user')
-
-            try:
-                password = random.randint(0, 99999999)
-                passwordstr = str(password)
-                user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
-                u_id = User.objects.get(username=username)
-
-                if user_role == 'INTERN':
-                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_inactive)
-                    addusr.save()
-                if user_role == 'STAFF':
-                    user.is_staff = True
-                    user.save()
-                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active)
-                    addusr.save()
-
-                send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
-            except:
-                usr = User.objects.get(username=email)
-                usr.delete()
-                messages.error(request, 'Some error occured !')
-                return redirect('admin_add_user')
-            messages.success(request, 'User Added!')
-            return redirect('admin_add_user')
-        context = {
-            'form': form,
-            'sub_form': sub_form,
-        }
-        return render(request, 'fossee_math_pages/admin_add_user.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
 def admin_manage_internship(request):
     if request.user.is_superuser:
         manage_internships = Internship.objects.order_by('-internship_start_date')
@@ -269,12 +187,85 @@ def admin_view_users(request):
         if user_contains_query == "INTERN" or user_contains_query == "intern":
             datas = UserDetails.objects.filter(user_role="INTERN")
 
-        paginator = Paginator(datas, 5)  # Show 25 contacts per page.
+        form = AddUserForm1()
+        sub_form = AddUserForm2()
+        if request.method == 'POST':
+            # register user
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = firstname + " " + lastname
+            email = request.POST['email']
+            user_role = request.POST['user_role']
+            user_phone = request.POST['user_phone']
+            user_status_inactive = 'INACTIVE'
+            user_status_active = 'ACTIVE'
+
+            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'That email is being used')
+                return redirect('admin_view_users')
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'That username is being used')
+                return redirect('admin_view_users')
+            if firstname.isdigit():
+                messages.error(request, 'Firstname cannot have numbers')
+                return redirect('admin_view_users')
+            if regex.search(firstname):
+                messages.error(request, 'Firstname cannot have special characters')
+                return redirect('admin_view_users')
+            if lastname.isdigit():
+                messages.error(request, 'Lastname cannot have numbers')
+                return redirect('admin_view_users')
+            if regex.search(lastname):
+                messages.error(request, 'Lastname cannot have special characters')
+                return redirect('admin_view_users')
+            try:
+                v = validate_email(email)
+                val_email = v["email"]
+            except EmailNotValidError as e:
+                messages.error(request, 'Invalid Email ID')
+                return redirect('admin_view_users')
+
+            try:
+                password = random.randint(0, 99999999)
+                passwordstr = str(password)
+                user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
+                                                last_name=lastname)
+                u_id = User.objects.get(username=username)
+
+                if user_role == 'INTERN':
+                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
+                                         user_temp_password=password, user_status=user_status_inactive)
+                    addusr.save()
+                if user_role == 'STAFF':
+                    user.is_staff = True
+                    user.save()
+                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
+                                         user_temp_password=password, user_status=user_status_active)
+                    addusr.save()
+
+                send_mail(
+                    'FOSSEE ANIMATION MATH',
+                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
+                    'fossee_math',
+                    [email, 'fossee_math@gmail.com'],
+                    fail_silently=True, )
+            except:
+                usr = User.objects.get(username=email)
+                usr.delete()
+                messages.error(request, 'Some error occured !')
+                return redirect('admin_view_users')
+            messages.success(request, 'User Added!')
+            return redirect('admin_view_users')
+
+        paginator = Paginator(datas, 25)  # Show 25 contacts per page.
 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context = {
             'datas': page_obj,
+            'form': form,
+            'sub_form': sub_form,
         }
         return render(request, 'fossee_math_pages/admin_view_users.html', context)
     else:
@@ -639,7 +630,7 @@ def staff_add_topics(request):
                 messages.success(request, 'Topic added with internship')
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
-        internship_all = Internship.objects.filter(internship_status='ACTIVE')
+        internship_all = Internship.objects.all()
         topic = Topic.objects.all()
 
         context = {
@@ -656,7 +647,7 @@ def staff_add_topics(request):
 @login_required
 def staff_aprove_contents(request):
     if request.user.is_staff:
-        internship = Internship.objects.filter(internship_status='ACTIVE')
+        internship = Internship.objects.all()
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
 
@@ -677,31 +668,33 @@ def staff_aprove_contents(request):
 @login_required
 def staff_manage_intern(request):
     if request.user.is_staff:
-        datas = UserDetails.objects.filter(user_role="INTERN")
-        internship = Internship.objects.filter(internship_status='ACTIVE')
-        topic = Topic.objects.all()
-        assigned_topics = AssignedTopics.objects.all().select_related('topic_id')
-
+        interns = UserDetails.objects.filter(user_role="INTERN")
+        internship_all = Internship.objects.all()
         form = ManageIntern()
+        internship = Internship.objects.first()
+        interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
+
         if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(UserDetails, id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('staff_manage_intern')
+            if "search_internship" in request.POST:
+                interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
             else:
-                messages.error(request, "Error")
-                return redirect('staff_manage_intern')
+                int_id = request.POST["id"]
+                obj = get_object_or_404(UserDetails, id=int_id)
+                form = ManageIntern(request.POST or None, instance=obj)
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, "Changed")
+                    return redirect('staff_manage_intern')
+                else:
+                    messages.error(request, "Error")
+                    return redirect('staff_manage_intern')
 
         context = {
-            'datas': datas,
+            'interns': interns,
             'form': form,
-            'internship': internship,
-            'topic': topic,
-            'assigned_topics': assigned_topics,
+            'internship_all': internship_all,
+            'interns_in': interns_in,
         }
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
