@@ -25,34 +25,36 @@
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
-        <hr/>
+            <hr/>
         </div>
         <div class="container">
+            {% include 'partials/_alerts.html' %}
+
             <br> {% if datas %}
             <table class="table" style="text-align: center; width: 100%;">
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 5%;">#</th>
-                    <th scope="col" style="width: 30%;">User Name</th>
-                    <th scope="col" style="width: 20%;">Email</th>
-                    <th scope="col" style="width: 10%;">Role</th>
-                    <th scope="col" style="width: 30%;">Last Activity</th>
+                    <th scope="col">#</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Last Activity</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for data in datas %}
                     <tr>
-                        <td style="width: 5%;">
+                        <td>
                             {{ forloop.counter }}
                         </td>
-                        <td style="width: 20%;">{{ data.user_id }}</td>
-                        <td style="width: 20%;">
+                        <td>{{ data.user_id }}</td>
+                        <td>
                             {{ data.user_id.email }}
                         </td>
-                        <td style="width: 10%;">
+                        <td>
                             {{ data.user_role }}
                         </td>
-                        <td style="width: 15%;">
+                        <td>
                             {{ data.user_id.last_login }}
                         </td>
                     </tr>
@@ -66,6 +68,18 @@
                 </p>
             </div>
         {% endif %}
+
+            <div class="container" style="padding-top: 3%;">
+                <h2>Add User</h2>
+                <hr>
+                <form method="POST" name="putdata" class="form-group" id="formTwo">
+
+                    {% csrf_token %} {{ form|crispy }} {{ sub_form|crispy }}
+
+                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+                </form>
+            </div>
+
             <nav aria-label="...">
                 {% if datas.has_other_pages %}
                     <ul class="pagination">
