@@ -11,7 +11,7 @@
                         <i style="color:black"></i> Topics</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id.id %}">
+                    <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id %}">
                         <i style="color:black"></i> {{ subtopic.topic_id.internship_id }} </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -24,20 +24,7 @@
     </section>
     <hr>
     <div class="container">
-        <table  style="border-collapse: collapse; border: none;">
-{#            <thead class="thead-dark">#}
-            <tr style="border: none;">
-                <th>
-{#                    <h3>Internship Name : {{ subtopic.topic_id.internship_id }}</h3>#}
-                </th>
-            </tr>
-            </thead>
             <thead class="thread-light">
-            <tr>
-                <th>
-{#                    <h4>Topic Name : {{ subtopic.topic_id }}</h4>#}
-                </th>
-            </tr>
             <tr>
                 <th>
                     <h1>{{ subtopic.subtopic_name }}</h1>
