@@ -757,9 +757,17 @@ def staff_assign_topic(request):
 def staff_view_interns(request):
     if request.user.is_staff:
         topics = AssignedTopics.objects.all()
+        internship_all = Internship.objects.all()
+        internship = Internship.objects.first()
+        internship = Internship.objects.get(pk=internship.pk)
+
+        if "search_internship" in request.POST:
+            internship = Internship.objects.get(pk=request.POST['search_internship'])
 
         conxext = {
             'topics': topics,
+            'internship':internship,
+            'internship_all': internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
     else:
@@ -784,7 +792,7 @@ def staff_view_internship(request):
             'topics': topics,
             'subtopics': subtopics,
             'assigned': assigned,
-            'internship_all':internship_all,
+            'internship_all': internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_internship.html', context)
     else:
