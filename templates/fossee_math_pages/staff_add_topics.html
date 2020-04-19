@@ -23,12 +23,13 @@
             <form method="POST">
                 {% csrf_token %}
                 <label>Select Internship : </label>
-                <select name="search_internship">
+                <select name="search_internship" onchange="submit();">
+                    <option>Select Internship</option>
                     {% for i in internship_all %}
                         <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
                     {% endfor %}
                 </select>
-                <button class="btn btn-primary">Search</button>
+                {#                <button class="btn btn-primary">Search</button>#}
             </form>
         </div>
 
