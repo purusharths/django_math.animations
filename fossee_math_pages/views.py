@@ -647,17 +647,21 @@ def staff_add_topics(request):
 @login_required
 def staff_aprove_contents(request):
     if request.user.is_staff:
+        first_internship = Internship.objects.first()
+        first_internship = Internship.objects.get(internship_topic=first_internship)
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
 
         if "search_internship" in request.POST:
+            first_internship = Internship.objects.get(pk=request.POST['search_internship'])
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
 
         context = {
             'assigned': assigned,
             'subtopic': subtopic,
             'internship': internship,
+            'first_internship': first_internship,
         }
 
         return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
@@ -765,16 +769,22 @@ def staff_view_interns(request):
 @login_required
 def staff_view_internship(request):
     if request.user.is_staff:
-        internship = Internship.objects.filter(internship_status='ACTIVE')
+        internship = Internship.objects.first()
+        internship = Internship.objects.filter(pk=internship.pk)
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
+        internship_all = Internship.objects.all()
+
+        if "search_internship" in request.POST:
+            internship = Internship.objects.filter(pk=request.POST['search_internship'])
 
         context = {
             'internship': internship,
             'topics': topics,
             'subtopics': subtopics,
             'assigned': assigned,
+            'internship_all':internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_internship.html', context)
     else:
