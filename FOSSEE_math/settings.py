@@ -76,6 +76,8 @@ TEMPLATES = [
     },
 ]
 
+BREADCRUMBS_TEMPLATE = "django_bootstrap_breadcrumbs/bootstrap4.html"
+
 WSGI_APPLICATION = 'FOSSEE_math.wsgi.application'
 
 # Database
