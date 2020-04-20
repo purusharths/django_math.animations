@@ -386,14 +386,13 @@ def intern_add_data(request, t_id):
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
-            status = "WAITING"
 
             if img is None and video is None:
                 if content == "" or content == " ":
                     messages.error(request, "Fill any one of the field")
                     return render(request, "fossee_math_pages/intern_add_data.html", context)
 
-            add_data = Data(data_content=content, data_status=status, data_image=img,
+            add_data = Data(data_content=content, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
@@ -871,7 +870,6 @@ def staff_aprove_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
         return redirect('staff_aprove_contents')
     else:
         return redirect('dashboard')
@@ -884,32 +882,7 @@ def staff_reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
         return redirect('staff_aprove_contents')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_aprove_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "ACCEPTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_reject_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "REJECTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
     else:
         return redirect('dashboard')
 
