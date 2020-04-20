@@ -14,6 +14,10 @@
   <hr>
     <div class="container">
         <div>
+
+            <h3>{{ details.internship_topic }}</h3>
+            <br>
+
             <form method="POST" action="{% url 'home_view_data' details.pk %}">
                 {% csrf_token %}
                 <table>
@@ -39,6 +43,11 @@
                 </table>
             </form>
         </div>
+
+        <br>
+        <br>
+        <h1>Contents</h1>
+
         {% if datas %}
             <table class="table">
                 <thead>
@@ -64,31 +73,28 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    <hr>
-    <div class="container">
+
         <hr>
-        <h3>{{ details.internship_topic }}</h3>
-        <hr> {% for i in topics %}
-        <table>
-            <tbody>
-            <tr>
-                <th scope="row">
-                    <h4>{{ forloop.counter }}. {{ i.topic_name }}</h4>
-                </th>
-            </tr>
-            {% for j in subtopics %} {% if j.topic_id_id == i.id %}
+        {% for i in topics %}
+            <table>
+                <tbody>
                 <tr>
-                    <th>
-                        <h6>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href="{% url 'home_details' j.subtopic_name %}"> {{ j.subtopic_name }} </a>
-                        </h6>
+                    <th scope="row">
+                        <h4>{{ forloop.counter }}. {{ i.topic_name }}</h4>
                     </th>
                 </tr>
-            {% endif %} {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
+                {% for j in subtopics %} {% if j.topic_id_id == i.id %}
+                    <tr>
+                        <th>
+                            <h6>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'home_details' j.subtopic_name %}"> {{ j.subtopic_name }} </a>
+                            </h6>
+                        </th>
+                    </tr>
+                {% endif %} {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
     </div>
     <br>
     <hr>
