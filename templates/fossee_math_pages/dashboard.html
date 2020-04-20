@@ -55,7 +55,7 @@
             </div>
         {% elif user.is_staff %}
             <div class="container">
-                <div class="card">
+                <div class="">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_add_topics' %}">Add
                             Topics & Subtopics</a></h5>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="card">
+                <div class="">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_assign_topic' %}">Assign
                             Topics</a></h5>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="card">
+                <div class="">
 
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_manage_intern' %}">Manage
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="card">
+                <div class="">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_aprove_contents' %}">Manage
                             Submissions</a></h5>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="card">
+                <div class="">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_view_internship' %}">View
                             Internships</a></h5>
@@ -96,14 +96,16 @@
                     </div>
                 </div>
                 <br>
-                <div class="card">
+                <div class="">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'staff_view_interns' %}">View
                             Interns</a></h5>
                         <p class="card-text">View the interns in the internship progress.</p>
                     </div>
                 </div>
+                <hr/>
             </div>
+            
         {% else %}
             <br>
             <hr>
