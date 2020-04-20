@@ -46,6 +46,8 @@
     </section>
 
     <div class="container">
+        <br> {% include 'partials/_alerts.html' %}
+        <br>
         <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
@@ -118,6 +120,7 @@
                             </td>
                         {% endif %}
                     {% endif %}
+                    
                 </tr>
                 <tr>
                     {% if data.data_video.url != "NULL" %}
@@ -143,34 +146,41 @@
                         {% endif %}
                     {% endif %}
                 </tr>
+                
             {% endfor %}
         </table>
 
         {% if subtopic.subtopic_status != 'ACCEPTED' %}
             <br>
-            <hr/>
-            <div style="background-color: lightcyan">
+            <div class="container" style="background-color: lightcyan">
                 <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
                     <div class="ck center" align="center" id="cc">
                         {{ form.media }} {{ form.as_p }}
                     </div>
-                    <div class="col">
-                        <label>Select Image : </label>
-                        <input type="file" class="btn btn-success" name="image"/>
+                    <div class="form-group row">
+                        <div class="col-md-auto">
+                            <input class="btn btn-dark" type="button" id="add" onclick="show()" value="Add text">
+                        </div>
                     </div>
-                    <br>
-                    <div class="col">
-                        <label>Select Video : </label>
-                        <input type="file" class="btn btn-success" name="video"/>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label>Select Image : </label>
+                            <input type="file" class="btn btn-dark" name="image"/>
+                        </div>
+                        <div class="col" style="font-style: oblique;text-align: left;">
+                            <b>OR</b>
+                        </div>
+                        <div class="col">
+                            <label> Select Video : </label>
+                            <input type="file" class="btn btn-dark" name="video"/>
+    
+                        </div>
                     </div>
-                    <br>
-                    <div class="col">
-                        <label>Select Text &nbsp;&nbsp;:</label>
-                        <input class="btn btn-success" type="button" id="add" onclick="show()"
-                               value="Add text">
-                    </div>
-                    <div class="col" align="right">
-                        &nbsp;<input class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
+                 
+                    <div class="form-group row">
+                        <div class="col">
+                            <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit" value="Save">
+                        </div>
                     </div>
                 </form>
             </div>

@@ -80,10 +80,7 @@ def admin_add_intern(request):
             intern_name = request.POST['user_id']
             topic = request.POST['internship_id']
             usr = UserDetails.objects.get(id=intern_name)
-            print(usr)
-            print("\n------------", intern_name, "-------------\n")
             temp1 = User.objects.get(username=usr)
-            print("\n------------", temp1, "-------------\n")
             temp2 = Internship.objects.get(id=topic)
             if Intern.objects.filter(user_id=temp1).exists():
                 messages.error(request, 'That intern has an internship')
@@ -379,21 +376,22 @@ def intern_add_data(request, t_id):
         imagesize = ImageFormatting.objects.all()
         subtopic = Subtopic.objects.get(id=t_id)
         form = data()
-
+        context = {
+            'topic': e_data,
+            'form': form,
+            'subtopic': subtopic,
+            'imagesize': imagesize,
+        }
         if request.method == 'POST':
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
             status = "WAITING"
 
-            if content == "" or content == " ":
-                content = "NULL"
-
-            if img == "" or img == " ":
-                img = "NULL"
-
-            if video == "" or video == " ":
-                video = "NULL"
+            if img is None and video is None:
+                if content == "" or content == " ":
+                    messages.error(request, "Fill any one of the field")
+                    return render(request, "fossee_math_pages/intern_add_data.html", context)
 
             add_data = Data(data_content=content, data_status=status, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
@@ -404,12 +402,6 @@ def intern_add_data(request, t_id):
                 imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
                 imgformat.save()
 
-        context = {
-            'topic': e_data,
-            'form': form,
-            'subtopic': subtopic,
-            'imagesize': imagesize,
-        }
         return render(request, 'fossee_math_pages/intern_add_data.html', context)
     else:
         return redirect('dashboard')
@@ -757,9 +749,17 @@ def staff_assign_topic(request):
 def staff_view_interns(request):
     if request.user.is_staff:
         topics = AssignedTopics.objects.all()
+        internship_all = Internship.objects.all()
+        internship = Internship.objects.first()
+        internship = Internship.objects.get(pk=internship.pk)
+
+        if "search_internship" in request.POST:
+            internship = Internship.objects.get(pk=request.POST['search_internship'])
 
         conxext = {
             'topics': topics,
+            'internship': internship,
+            'internship_all': internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
     else:
@@ -784,7 +784,7 @@ def staff_view_internship(request):
             'topics': topics,
             'subtopics': subtopics,
             'assigned': assigned,
-            'internship_all':internship_all,
+            'internship_all': internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_internship.html', context)
     else:
