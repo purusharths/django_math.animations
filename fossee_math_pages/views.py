@@ -386,14 +386,13 @@ def intern_add_data(request, t_id):
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
-            status = "WAITING"
 
             if img is None and video is None:
                 if content == "" or content == " ":
                     messages.error(request, "Fill any one of the field")
                     return render(request, "fossee_math_pages/intern_add_data.html", context)
 
-            add_data = Data(data_content=content, data_status=status, data_image=img,
+            add_data = Data(data_content=content, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()

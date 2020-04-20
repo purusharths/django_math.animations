@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
 from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor, ImageFormatting, Topic, \
-    HomeImages
+    HomeImages, Subtopic
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -53,8 +53,8 @@ class ManageInternship(ModelForm):
 
 class AproveContents(ModelForm):
     class Meta:
-        model = Data
-        fields = ['data_status']
+        model = Subtopic
+        fields = ['subtopic_status']
 
 
 class AddContributor(ModelForm):
