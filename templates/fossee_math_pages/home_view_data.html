@@ -24,7 +24,7 @@
             <h3>{{ details.internship_topic }}</h3>
             <br>
 
-            <form method="POST" action="{% url 'home_view_data' details.pk %}">
+            <form method="POST" action="{% url 'home_view_data' details.internship_topic %}">
                 {% csrf_token %}
                 <table>
                     <tr>

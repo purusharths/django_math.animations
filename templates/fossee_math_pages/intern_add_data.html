@@ -106,7 +106,7 @@
                                 </a>
                                 <br>
                                 <br>
-                                <a  href="{% url 'intern_update_media' data.pk %}">
+                                <a href="{% url 'intern_update_media' data.pk %}">
                                     Edit
                                 </a>
                                 <br>
@@ -117,7 +117,7 @@
                             </td>
                         {% endif %}
                     {% endif %}
-                    
+
                 </tr>
                 <tr>
                     {% if data.data_video.url != "NULL" %}
@@ -141,7 +141,7 @@
                         {% endif %}
                     {% endif %}
                 </tr>
-                
+
             {% endfor %}
         </table>
 
@@ -149,32 +149,43 @@
             <br>
             <div class="container" style="background-color: lightcyan">
                 <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
-                    <div class="ck center" align="center" id="cc">
-                        {{ form.media }} {{ form.as_p }}
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-auto">
-                            <input class="btn btn-dark" type="button" id="add" onclick="show()" value="Add text">
+
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
+                               onclick="show()">Text</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#image" role="tab" data-toggle="tab">Image</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#video" role="tab" data-toggle="tab">Video</a>
+                        </li>
+                        <li class="nav-item">
+                            <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"
+                                   value="Save">
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade show active" id="data">
+                            <div class="ck center" align="center" id="cc">
+                                {{ form.media }} {{ form.as_p }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col">
+                        <div role="tabpanel" class="tab-pane fade" id="image">
+                            <br>
                             <label>Select Image : </label>
                             <input type="file" class="btn btn-dark" name="image"/>
+                            <br>
+                            <br>
                         </div>
-                        <div class="col" style="font-style: oblique;text-align: left;">
-                            <b>OR</b>
-                        </div>
-                        <div class="col">
+                        <div role="tabpanel" class="tab-pane fade" id="video">
+                            <br>
                             <label> Select Video : </label>
                             <input type="file" class="btn btn-dark" name="video"/>
-    
-                        </div>
-                    </div>
-                 
-                    <div class="form-group row">
-                        <div class="col">
-                            <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit" value="Save">
+                            <br>
+                            <br>
                         </div>
                     </div>
                 </form>

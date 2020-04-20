@@ -25,15 +25,11 @@
                                    name="title_contains"
                                    placeholder="{{ querry }}"/>
                         </td>
-
                         <td>
                             <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
                         </td>
-
                     </tr>
-
                 </table>
-                <hr style="background-color: #902b2b;height: 1px">
             </form>
             <br>
         </div>
@@ -43,8 +39,8 @@
                     <div class="card-body">
                         {% for i in topic%}
                             {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                                <h5 class="card-title">{{ data.topic_id.internship_id }}</h5>
-                                <h5 class="card-title">{{ data.topic_id }} -  <a href="{% url 'home_details' data.subtopic_name %}"> {{ data.subtopic_name }}</a></h5>
+                                <p class="card-title">{{ data.topic_id.internship_id }} / {{ data.topic_id }}</p>
+                                <p class="card-title"> <a href="{% url 'home_details' data.subtopic_name %}"> {{ data.subtopic_name }}</a></p>
                             {% endif %}
                         {% endfor %}
                     </div>
