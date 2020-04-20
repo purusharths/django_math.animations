@@ -789,6 +789,7 @@ def staff_view_internship(request):
             'subtopics': subtopics,
             'assigned': assigned,
             'internship_all': internship_all,
+            'chosen_internship': internship[0],
         }
         return render(request, 'fossee_math_pages/staff_view_internship.html', context)
     else:
