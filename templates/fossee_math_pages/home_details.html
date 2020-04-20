@@ -1,4 +1,20 @@
-{% extends 'base.html' %} {% block title %}Details{% endblock %} {% block content %}
+{% extends 'base.html' %}
+{% block title %} Details {% endblock %}
+
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Topics" "/#topics" %}
+    {% breadcrumb  subtopic.topic_id.internship_id "home_view_data" subtopic.topic_id.internship_id %}
+    {% breadcrumb  subtopic.topic_id "subtopic.topic_id.internship_id"%}
+
+
+{% endblock %}
+
+{% block content %}
+  {% render_breadcrumbs %}
     <section id="bc">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-white text-dark">

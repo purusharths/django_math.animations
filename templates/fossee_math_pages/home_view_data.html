@@ -3,34 +3,16 @@
 
 {% load django_bootstrap_breadcrumbs %}
 
-
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb  "Topics" "/#topics" %}
-    {% breadcrumb  details "fossee_math_pages.views.home_view_data" details.internship_topic %}
+    {% breadcrumb  details "home_view_data" details.internship_topic %}
+{% endblock %}
 
-
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i style="color:black"></i> Topics</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black">
-                        <i style="color:black"></i> {{ details.internship_topic }} </a>
-                </li>
-            </ol>
-        </nav>
-    </section>
-
-
-    <hr>
+{% block content %}
+  <hr>
+  {% render_breadcrumbs %}
+  <hr>
     <div class="container">
         <div>
             <form method="POST" action="{% url 'home_view_data' details.pk %}">
@@ -111,4 +93,5 @@
     </div>
     <br>
     <hr>
-    <br> {% endblock %}
+    <br>
+{% endblock %}
