@@ -1,6 +1,5 @@
 import random
 import re
-import sys
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -389,41 +388,20 @@ def intern_add_data(request, t_id):
             video = request.FILES.get('video')
             status = "WAITING"
 
-            # my logic to validate empty string
-            str2 = ''
-            str2 = content.replace (" ", "_")
-            Temp_string = '<p>&nbsp;'  
-            bol_res = Temp_string in str2
-            #end of my logic
-
-            if bol_res == True:
-                messages.error(request, "Text cannot have blank spaces")
-                return render(request, "fossee_math_pages/intern_add_data.html", context)
-            else:
-                print(content is None)
-                print(img is None)
-                print(video is None)
-                if content is None and img is None and video is None:
+            if img is None and video is None:
+                if content == "" or content == " ":
                     messages.error(request, "Fill any one of the field")
                     return render(request, "fossee_math_pages/intern_add_data.html", context)
-                if content == "" or content == " ":
-                    content = "NULL"
 
-                if img == "" or img == " ":
-                    img = "NULL"
+            add_data = Data(data_content=content, data_status=status, data_image=img,
+                            data_video=video, subtopic_id_id=t_id,
+                            user_id_id=user.id)
+            add_data.save()
 
-                if video == "" or video == " ":
-                    video = "NULL"
+            if img != "" or img != " ":
+                imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
+                imgformat.save()
 
-                add_data = Data(data_content=content, data_status=status, data_image=img,
-                                data_video=video, subtopic_id_id=t_id,
-                                user_id_id=user.id)
-                add_data.save()
-
-                if img != "" or img != " ":
-                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
-                    imgformat.save()
-                    
         return render(request, 'fossee_math_pages/intern_add_data.html', context)
     else:
         return redirect('dashboard')
@@ -780,7 +758,7 @@ def staff_view_interns(request):
 
         conxext = {
             'topics': topics,
-            'internship':internship,
+            'internship': internship,
             'internship_all': internship_all,
         }
         return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
