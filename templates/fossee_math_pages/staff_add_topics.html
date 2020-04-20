@@ -40,7 +40,7 @@
         <div class="row">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship: </label>
+                <label>Internship: </label>
                 <select name="search_internship" onchange="submit();">
                     {% if internship in internship_all %}
                         <option>{{ internship }}</option>    
@@ -60,10 +60,10 @@
         <div class="" style="padding-top: 3%;">
             <table class="table table-condensed">
                 {% if internship %}
-                    <thead>
+                    <thead class="">
                     <tr>
                         <th>
-                            Internship : {{ internship.internship_topic }}
+                            <h3>{{ internship.internship_topic }}</h3>
                         </th>
                         <th></th>
                     </tr>
@@ -86,7 +86,7 @@
                             <form method="POST" class="form-group" name="AddTopic">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ internship.id }}">
-                                <label>New topic : &nbsp;</label>{{ form.topic }}
+                                <label>New topic: &nbsp;</label>{{ form.topic }}
                                 <input type="submit" class="btn btn-success" value="Add">
                             </form>
                         </td>
