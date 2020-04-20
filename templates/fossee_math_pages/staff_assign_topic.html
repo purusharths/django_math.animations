@@ -23,11 +23,17 @@
         <div class="row">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship : </label>
+                <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
-                    <option>Select Internship</option>
+                    {% if chosen_inernship in intern %} 
+                        <option>{{ chosen_inernship }}</option> 
+                    {% else %}
+                        <option>Select Internship</option>
+                    {% endif %}
                     {% for i in intern %}
-                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                        {% if i != chosen_inernship %}
+                            <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 {#                <button class="btn btn-primary">Search</button>#}
