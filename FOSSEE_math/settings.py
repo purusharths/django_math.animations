@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
+    'django_bootstrap_breadcrumbs'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -126,10 +127,9 @@ LOGOUT_REDIRECT_URL = 'index'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'FOSSEE_math/static')
-
-]
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'FOSSEE_math/static'),
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
