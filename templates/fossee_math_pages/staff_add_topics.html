@@ -19,17 +19,40 @@
     <div class="container">
         {% include 'partials/_alerts.html' %}
 
+
+      <!--  <form method="POST">
+            {% csrf_token %}
+            <label>Select Internship: </label>
+            <select name="search_internship" onchange="submit();">
+                {% if internship in internship_all %}
+                    <option>{{ internship }}</option>    
+                {% else %}
+                    <option>Select Internship</option>
+                {% endif %}
+                {% for i in internship_all %}
+                    {% if i.internship_topic is not internship %}
+                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </form>-->
+
         <div class="row">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship : </label>
+                <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
+                    {% if internship in internship_all %}
+                        <option>{{ internship }}</option>    
+                    {% else %}                    
                     <option>Select Internship</option>
+                    {% endif %}
                     {% for i in internship_all %}
-                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                        {% if i != internship %}
+                            <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                         {% endif %}
                     {% endfor %}
                 </select>
-                {#                <button class="btn btn-primary">Search</button>#}
             </form>
         </div>
 

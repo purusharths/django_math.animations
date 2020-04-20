@@ -622,6 +622,7 @@ def staff_add_topics(request):
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
         internship_all = Internship.objects.all()
+        
         topic = Topic.objects.all()
 
         context = {
@@ -668,7 +669,7 @@ def staff_manage_intern(request):
         form = ManageIntern()
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
-
+        print(internship, interns_in)
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
@@ -691,6 +692,7 @@ def staff_manage_intern(request):
             'internship_all': internship_all,
             'interns_in': interns_in,
         }
+        #print(context)
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
         return redirect('dashboard')
@@ -709,7 +711,9 @@ def staff_assign_topic(request):
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
+                
                 first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
+                print(first_internsip)
                 try:
                     as_topic = AssignedTopics.objects.filter(topic_id__internship_id_id=first_internsip.pk)
                 except:
@@ -738,6 +742,7 @@ def staff_assign_topic(request):
             'intern': internship,
             'as_topic': as_topic,
             'i_topic': i_topic,
+            'chosen_inernship': first_internsip,
         }
         return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
     else:
