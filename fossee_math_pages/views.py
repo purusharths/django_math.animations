@@ -870,7 +870,6 @@ def staff_aprove_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
         return redirect('staff_aprove_contents')
     else:
         return redirect('dashboard')
@@ -883,32 +882,7 @@ def staff_reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
         return redirect('staff_aprove_contents')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_aprove_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "ACCEPTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_reject_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "REJECTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
     else:
         return redirect('dashboard')
 
