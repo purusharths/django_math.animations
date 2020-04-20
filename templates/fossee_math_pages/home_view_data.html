@@ -1,4 +1,15 @@
-{% extends 'base.html' %} {% block title %}Home View Data{% endblock %} {% block content %}
+{% extends 'base.html' %}
+{% block title %} Home View Data {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Topics" "/#topics" %}
+    {% breadcrumb  details "fossee_math_pages.views.home_view_data" details.internship_topic %}
+
+
     <section id="bc">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-white text-dark">
@@ -17,6 +28,8 @@
             </ol>
         </nav>
     </section>
+
+
     <hr>
     <div class="container">
         <div>
