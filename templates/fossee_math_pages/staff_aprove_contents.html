@@ -15,11 +15,11 @@
         </nav>
     </section>
     <br>
-    <div class="col-lg-12">
+    <div class="container">
         <div class="align-self-center">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship : </label>
+                <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
                     <option>Select Internship</option>
                     {% for i in internship %}
@@ -28,11 +28,11 @@
                 </select>
             </form>
         </div>
-        <hr>
-        <h3>All Submissions : {{ first_internship.internship_topic }}</h3>
-        <hr>
+        <hr> <br>
+        <h3>All Submissions: {{ first_internship.internship_topic }}</h3>
+        <br>
         <table class="table">
-            <thead class="thead-dark">
+            <thead class="">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Topic</th>
