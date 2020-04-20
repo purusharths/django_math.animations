@@ -25,7 +25,7 @@ DATA_STATUS = (
 
 class UserDetails(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_phone = PhoneNumberField(null=False, blank=False, unique=True, default='+91')
+    user_phone = PhoneNumberField(null=False, blank=False, unique=False, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
     ROLE_TYPE = (
@@ -137,3 +137,9 @@ class AssignedTopics(models.Model):
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
+
+
+class HomeImages(models.Model):
+    image1 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image2 = models.ImageField(upload_to='home/', blank=True, null=True)
+    image3 = models.ImageField(upload_to='home/', blank=True, null=True)
