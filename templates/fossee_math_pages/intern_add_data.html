@@ -46,6 +46,8 @@
     </section>
 
     <div class="container">
+        <br> {% include 'partials/_alerts.html' %}
+        <br>
         <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
@@ -118,6 +120,7 @@
                             </td>
                         {% endif %}
                     {% endif %}
+                    
                 </tr>
                 <tr>
                     {% if data.data_video.url != "NULL" %}
@@ -143,6 +146,7 @@
                         {% endif %}
                     {% endif %}
                 </tr>
+                
             {% endfor %}
         </table>
 
