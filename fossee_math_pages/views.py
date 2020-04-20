@@ -666,13 +666,15 @@ def staff_manage_intern(request):
     if request.user.is_staff:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
-        form = ManageIntern()
+        form = ManageIntern() # what's happening here?
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
-        print(internship, interns_in)
+        #print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+                internship = Internship.objects.get(pk=request.POST['search_internship'])    # should be at
+                #print(interns_in)
             else:
                 int_id = request.POST["id"]
                 obj = get_object_or_404(UserDetails, id=int_id)
@@ -691,6 +693,7 @@ def staff_manage_intern(request):
             'form': form,
             'internship_all': internship_all,
             'interns_in': interns_in,
+            'chosen_internship': internship
         }
         #print(context)
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
