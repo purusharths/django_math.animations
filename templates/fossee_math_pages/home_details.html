@@ -24,73 +24,81 @@
     </section>
     <hr>
     <div class="container">
-            <thead class="thread-light">
-            <tr>
-                <th>
-                    <h1>{{ subtopic.subtopic_name }}</h1>
-                </th>
-            </tr>
-            </thead>
-            <body>
-            {% for data in datas %}
-                {% if data.data_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED'%}
+        <thead class="thread-light">
+        <tr>
+            <th>
+                <h1>{{ subtopic.subtopic_name }}</h1>
+            </th>
+        </tr>
+        </thead>
+        <body>
+        {% for data in datas %}
+            {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
 
-                    <tr>
-                        {% if data.data_content != "NULL" %}
-                            <td>
-                                <p></p>
-                                {{ data.data_content |safe }}
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_image.url != "NULL" %}
-                            <td>
-                                <p></p>
-                                {% for i in imagesize %}
-                                        {% if i.data_id_id == data.pk %}
-                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                                            <p align="center" style="color: #6E6E6E; font-size: 13px;">{{ i.image_caption }}</p>
-                                        {% endif %}
-                                    {% endfor %}
-                            </td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_video.url != "NULL" %}
-                            <td>
-                                <p></p>
-                                <video width='70%' style="display:block; margin:0 auto;" controls>
-                                    <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                    Your browser does not support the video tag.
-                                </video>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </body>
+                <tr>
+                    {% if data.data_content != "NULL" %}
+                        <td>
+                            <p></p>
+                            {{ data.data_content |safe }}
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_image.url != "NULL" %}
+                        <td>
+                            <p></p>
+                            {% for i in imagesize %}
+                                {% if i.data_id_id == data.pk %}
+                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                    <p align="center" style="color: #6E6E6E; font-size: 13px;">{{ i.image_caption }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_video.url != "NULL" %}
+                        <td>
+                            <p></p>
+                            <video width='70%' style="display:block; margin:0 auto;" controls>
+                                <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                Your browser does not support the video tag.
+                            </video>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+        {% if subtopic.subtopic_status != 'ACCEPTED' %}
+            <br>
+            <h1>Details are yet to be added</h1>
+            <br>
+        {% endif %}
+        </body>
         </table>
-        <div style="background-color: lightgrey">
-            <table>
-                <tr>
-                    <td>Data Provided By:-</td>
-                </tr>
-                <tr>
-                    <td>Contributor Name: {{ contributor.contributor }}</td>
-                </tr>
-                <tr>
-                    <td>Mentored By: {{ contributor.mentor }}</td>
-                </tr>
-                <tr>
-                    <td>Monitored By: {{ contributor.professor }}</td>
-                </tr>
-                <tr>
-                    <td>Aproved On: {{ contributor.data_aproval_date }}</td>
-                </tr>
-            </table>
-        </div>
+        {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
+
+            <div style="background-color: lightgrey">
+                <table>
+                    <tr>
+                        <td>Data Provided By:-</td>
+                    </tr>
+                    <tr>
+                        <td>Contributor Name: {{ contributor.contributor }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mentored By: {{ contributor.mentor }}</td>
+                    </tr>
+                    <tr>
+                        <td>Monitored By: {{ contributor.professor }}</td>
+                    </tr>
+                    <tr>
+                        <td>Aproved On: {{ contributor.data_aproval_date }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
     </div>
     <br>
     <hr>
