@@ -71,7 +71,7 @@
                             <p></p>
                             {{ data.data_content |safe }}
                         </td>
-                        {% if data.data_status != "ACCEPTED" %}
+                        {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a
                                         href="{% url 'intern_delete_data' data.pk %}">
@@ -99,22 +99,19 @@
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        {% if data.data_status != "ACCEPTED" %}
+                        {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a
-                                        href="{% url 'intern_delete_data' data.pk %}">
+                                <a href="{% url 'intern_delete_data' data.pk %}">
                                     Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a
-                                        href="{% url 'intern_update_media' data.pk %}">
+                                <a  href="{% url 'intern_update_media' data.pk %}">
                                     Edit
                                 </a>
                                 <br>
                                 <br>
-                                <a
-                                        href="{% url 'intern_update_image_size' data.pk %}">
+                                <a href="{% url 'intern_update_image_size' data.pk %}">
                                     Format
                                 </a>
                             </td>
@@ -133,13 +130,11 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a
-                                        href="{% url 'intern_delete_data' data.pk %}">Delete
+                                <a href="{% url 'intern_delete_data' data.pk %}">Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a
-                                        href="{% url 'intern_update_media' data.pk %}">
+                                <a href="{% url 'intern_update_media' data.pk %}">
                                     Edit
                                 </a>
                             </td>
