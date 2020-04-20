@@ -11,7 +11,25 @@
                 <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
             </div>
             <div class="col-lg-7">
-                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/logo.png' %}" alt="">
+                {% for sl in images %}
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class=" carousel-item active" data-interval="500">
+                                <img src="{{ sl.image1.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
+                                     alt="slider data not  uploaded">
+                            </div>
+                            <div class="carousel-item" data-interval="500">
+                                <img src="{{ sl.image2.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
+                                     alt="slider data not  uploaded">
+                            </div>
+                             <div class="carousel-item" data-interval="500">
+                                <img src="{{ sl.image3.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
+                                     alt="slider data not  uploaded">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {#                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/logo.png' %}" alt="">#}
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -21,29 +39,26 @@
     <hr>
     <div class="container" id="topics">
         <div>
-            <form method="GET" action="." >
+            <form method="GET" action=".">
                 <table>
                     <tr>
                         <td> Search :</td>
                         <td>
-                            <div class="input-group">
-                                <input class="form-control py-2 border-right-0 border" type="search"
-                                       name="title_contains"
-                                       placeholder="Search For Topics or Sub-topics"/>
-                                <span class="input-group-append">
-                            <div class="input-group-text bg-transparent">
-                                <i class="fa fa-search"></i>
-                            </div>
-                        </span>
-                            </div>
+                            <input class="form-control py-2 border" type="search"
+                                   name="title_contains"
+                                   placeholder="Search For Topics or Sub-topics"/>
+
                         </td>
                         <td>
                             <button type="submit" class="btn btn-primary">Search</button>
+
                         </td>
+
                     </tr>
                 </table>
             </form>
         </div>
+<!--        <hr style="background-color: #902b2b;height: 1px">-->
     </div>
     <hr>
     <div class="container">
@@ -58,7 +73,7 @@
                     <div class="card-body">
                         <h5 class="card-title serif">
                             <b><a
-                                    href="{% url 'home_view_data' i.id %}">{{ i.internship_topic }}</a></b></h5>
+                                    href="{% url 'home_view_data' i.internship_topic %}">{{ i.internship_topic }}</a></b></h5>
                         <span class="card-text serif"> <i>"{{ i.internship_quote }}"</i></span>
                         <p class="card-text">
                             <small class="text-muted">

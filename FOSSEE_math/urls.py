@@ -18,6 +18,7 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import handler404
 
 urlpatterns = [
     path('', include('fossee_math_pages.urls')),
@@ -26,3 +27,5 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'fossee_math_pages.views.error_404_view'

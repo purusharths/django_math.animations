@@ -2,12 +2,6 @@
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
     <style>
-        .upload-btn-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
-
 
         .upload-btn-wrapper input[type=file] {
             font-size: 100px;
@@ -15,10 +9,6 @@
             left: 0;
             top: 0;
             opacity: 0;
-        }
-
-        .mleft {
-            margin-left: 800px;
         }
 
         .ck {
@@ -54,6 +44,7 @@
             </ol>
         </nav>
     </section>
+
     <div class="container">
         <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
@@ -65,13 +56,11 @@
         <h1>Internship :{{ subtopic.topic_id.internship_id }}</h1>
         <h3>Topic :{{ subtopic.topic_id }}</h3>
         <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
-        <br>
-        <br>
+        <hr/>
         <div align="center">
             Current status of data : {{ subtopic.subtopic_status }}
         </div>
-        <br>
-        <br>
+        <hr/>
         <table id="dta">
             {% for data in topic %}
                 <tr>
@@ -82,13 +71,14 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'intern_delete_data' data.pk %}">Delete
+                                <a
+                                        href="{% url 'intern_delete_data' data.pk %}">
+                                    Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'intern_update_data' data.pk %}">
+                                <a
+                                        href="{% url 'intern_update_data' data.pk %}">
                                     Edit
                                 </a>
                             </td>
@@ -109,19 +99,20 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'intern_delete_data' data.pk %}">Delete
+                                <a
+                                        href="{% url 'intern_delete_data' data.pk %}">
+                                    Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'intern_update_media' data.pk %}">
+                                <a
+                                        href="{% url 'intern_update_media' data.pk %}">
                                     Edit
                                 </a>
                                 <br>
                                 <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'intern_update_image_size' data.pk %}">
+                                <a
+                                        href="{% url 'intern_update_image_size' data.pk %}">
                                     Format
                                 </a>
                             </td>
@@ -139,13 +130,13 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a class="btn btn-sm btn-danger"
-                                   href="{% url 'intern_delete_data' data.pk %}">Delete
+                                <a
+                                        href="{% url 'intern_delete_data' data.pk %}">Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a class="btn btn-sm btn-primary"
-                                   href="{% url 'intern_update_media' data.pk %}">
+                                <a
+                                        href="{% url 'intern_update_media' data.pk %}">
                                     Edit
                                 </a>
                             </td>
@@ -159,8 +150,7 @@
             <br>
             <div class="container" style="background-color: lightcyan">
                 <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
-
-                    <div class="ck" id="cc">
+                    <div class="ck center" align="center" id="cc">
                         {{ form.media }} {{ form.as_p }}
                     </div>
                     <div class="form-group row">
@@ -192,17 +182,11 @@
             </div>
         {% endif %}
         <br>
-
+        <br>
     </div>
     <script>
         function show() {
             document.getElementById("cc").style.display = "block";
         }
-    </script>
-{% endblock %}
-
-{% block extrascripts %}
-    <script type="text/javascript">
-
     </script>
 {% endblock %}
