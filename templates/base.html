@@ -23,6 +23,9 @@
         html * {
             font-family: 'Lora', serif;
         }
+        .breadcrumb {
+          /* background-color: white; */
+        }
     </style>
 
 </head>
@@ -38,7 +41,7 @@
 
 {% block breadcrumbs %}
     {% clear_breadcrumbs %}
-    {% breadcrumb "Home" "/" %}
+      {% breadcrumb "Home" "/" %}
 {% endblock %}
 
 {% block content %}
