@@ -37,12 +37,13 @@
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
         <div class="card">
-            <h4> <div class="card-header"><b>{{ subtopic.subtopic_name }}</b></h4>
+            <h4> <div class="card-header">{{ subtopic.subtopic_name }}</h4>
            <div class="card-body">
             <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
             <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+            <h6><b>Last Modified: </b> FEATURE PENDING</h6>
             <div align="center">
-                Current Status: <b>{{ subtopic.subtopic_status }}</b>
+                Current Status: <b>{{ subtopic.subtopic_status}}</b>
                 <br>
             </div>
             <div align="center">
