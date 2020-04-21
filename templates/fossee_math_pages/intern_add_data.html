@@ -73,14 +73,12 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a
-                                        href="{% url 'intern_delete_data' data.pk %}">
+                                <a href="{% url 'intern_delete_data' data.pk %}">
                                     Delete
                                 </a>
                                 <br>
                                 <br>
-                                <a
-                                        href="{% url 'intern_update_data' data.pk %}">
+                                <a href="{% url 'intern_update_data' data.pk %}">
                                     Edit
                                 </a>
                             </td>
@@ -153,13 +151,13 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
-                               onclick="show()"><img src="{% static '/web-files/img/edit-24px.svg' %}"> </a>
+                               onclick="show()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text"> </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}"> </a>
+                            <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image"> </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/video_library-24px.svg' %}"> </a>
+                            <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video"> </a>
                         </li>
                         <li class="nav-item" style="margin-left: 846px;">
                             <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"
