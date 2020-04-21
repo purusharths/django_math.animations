@@ -35,13 +35,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 
     <style>
-        html * {
-            font-family: 'Lora', serif;
-        }
-        .breadcrumb {
-          background-color: #f2f2f2;
-          font-size: 10pt;
-        }
+        html * {font-family: 'Lora', serif;}
+    /* breadcrumb */.breadcrumb {background-color: #f2f2f2;font-size: 10pt;}
+    .breadcrumb-item + .breadcrumb-item::before {content: ">";}
+    .breadcrumb-item{font-family: 'Open Sans', sans-serif}
     </style>
 
 </head>
