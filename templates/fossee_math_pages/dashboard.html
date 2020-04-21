@@ -14,7 +14,7 @@
     {% if user.is_authenticated %}
 
         {% if user.is_superuser %}
-            <div class="container">
+            <div class="container" style="margin-top:20px; margin-bottom:50px">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;"> <a href="{% url 'admin_view_users' %}">Add users</a></h5>
@@ -55,96 +55,87 @@
                 </div>
                 <br>
             </div>
+
         {% elif user.is_staff %}
-            <div class="container">
-                <h4 style="font-weight: lighter;"> Submissions: </h4>
-                <div class="row justify-content-center">
-                    <div class="card-body">
-                        <div class="col">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_aprove_contents' %}">Review Submissions</a></h5>
-                            <p class="card-text">Manage the data submitted by your interns.</p>
-                        </div>
-                    </div>  
-                    <div class="card-body">
-                        <div class="col ml-auto">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_view_internship' %}">Internships Progress</a></h5>
-                            <p class="card-text">View the internship progress.</p>
-                        </div>
-                    </div>                  
-                </div>
-                <br><hr>
-                <h4 style="font-weight: lighter;"> Content & Assignments: </h4>
-                <div class="row justify-content-center">
-                    <div class="card-body">
-                        <div class="col">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_add_topics' %}">Add Topics & Subtopics</a></h5>
-                            <p class="card-text">Add topics and subtopics to the internship.</p>
-                        </div>
-                    </div>
-                   
-                    <div class="card-body">
-                        <div class="col ml-auto">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_assign_topic' %}">Assign Topics</a></h5>
-                            <p class="card-text">Assign topics to the interns to start the internship.</p>
-                        </div>
-                    </div>
-                </div> 
-                <br><hr>
-                <h4 style="font-weight: lighter;"> Access Control: </h4>
-                <div class="row">
-                    <div class="card-body">
-                        <div class="col">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_manage_intern' %}">Intern Access</a></h5>
-                            <p class="card-text">Activate / Deactivate the intern access</p>
-                        </div>
-                    </div>
 
-                    <div class="card-body">
-                        <div class="col">
-                            <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'staff_view_interns' %}">Intern Outline</a></h5>
-                        <p class="card-text">View the interns in the internship progress.</p>
-                        </div>
-                    </div>
-                </div>
+          <div class="container" style="margin-top:20px; margin-bottom:100px">
+              <h4 style="font-weight: lighter;"> Submissions: </h4>
+              <br>
+              <div class="row justify-content-center">
+                  <div class="col-md-6">
+                      <div class="col">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_aprove_contents/">Review Submissions</a></h5>
+                          <p class="card-text">Manage the data submitted by your interns.</p>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="col ml-auto">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_view_internship/">Internships Progress</a></h5>
+                          <p class="card-text">View the internship progress.</p>
+                      </div>
+                  </div>
+              </div>
+              <br><hr>
+              <br>
+              <h4 style="font-weight: lighter;"> Content &amp; Assignments: </h4>
+              <br>
 
-                <br>
-                <div class="">
+              <div class="row justify-content-center">
+                  <div class="col-md-6">
+                      <div class="col">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_add_topics/">Add Topics &amp; Subtopics</a></h5>
+                          <p class="card-text">Add topics and subtopics to the internship.</p>
+                      </div>
+                  </div>
 
-                </div>
-                <br>
-                <div class="">
+                  <div class="col-md-6">
+                      <div class="col ml-auto">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_assign_topic">Assign Topics</a></h5>
+                          <p class="card-text">Assign topics to the interns to start the internship.</p>
+                      </div>
+                  </div>
+              </div>
+              <br><hr>
+              <br>
 
-                </div>
-                <br>
-                <div class="">
+              <h4 style="font-weight: lighter;"> Access Control: </h4>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="col">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_manage_intern/">Intern Access</a></h5>
+                          <p class="card-text">Activate / Deactivate the intern access</p>
+                      </div>
+                  </div>
 
-                </div>
-                <hr/>
-            </div>
+                  <div class="col-md-6">
+                      <div class="col">
+                          <h5 class="card-title" style="font-weight: normal;"><a href="/staff_view_interns/">Intern Outline</a></h5>
+                      <p class="card-text">View the interns in the internship progress.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
         {% else %}
-            <br>
-            <hr>
-            <br>
-            <div class="container">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'intern_view_topic' %}">Add
-                            Data & View Work</a></h5>
-                        <p class="card-text">Add the data to the topics and click on submit to submit to the mentors.
-                            View your submissions</p>
-                    </div>
-                </div>
-                <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'intern_view_internship' %}">View
-                            Internship details</a></h5>
-                        <p class="card-text">Allows you to see the entire intership details.</p>
-                    </div>
-                </div>
-            </div>
-        {% endif %}{% endif %}
-    <br>
-    <hr>
-    <br> {% endblock %}
+          <div class="container" style="margin-top:40px;">
+              <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'intern_view_topic' %}">Add
+                          Data & View Work</a></h5>
+                      <p class="card-text">Add the data to the topics and click on submit to submit to the mentors.
+                          View your submissions</p>
+                  </div>
+              </div>
+              <br>
+              <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'intern_view_internship' %}">View
+                          Internship details</a></h5>
+                      <p class="card-text">Allows you to see the entire intership details.</p>
+                  </div>
+              </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+ {% endblock %}
