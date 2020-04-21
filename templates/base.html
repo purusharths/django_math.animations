@@ -38,6 +38,9 @@
         html * {
             font-family: 'Lora', serif;
         }
+        .breadcrumb {
+          background-color: #ebebeb;
+        }
     </style>
 
 </head>
@@ -49,7 +52,16 @@
 {% include 'partials/_header.html' %}
 
 <!-- Body -->
-{% block content %} {% endblock %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {% clear_breadcrumbs %}
+      {% breadcrumb "Home" "/" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
+{% endblock %}
 
 <!-- footer -->
 {% include 'partials/_footer.html' %}
