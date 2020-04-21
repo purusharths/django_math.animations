@@ -21,6 +21,7 @@ from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedT
 def admin_add_internship(request):
     if request.user.is_superuser:
         form = AddInternship()
+        internship = Internship.objects.all()
         if request.method == 'POST':
             internship_topic = request.POST['internship_topic']
             form = AddInternship(request.POST, request.FILES)
@@ -37,6 +38,7 @@ def admin_add_internship(request):
         form = AddInternship()
         context = {
             'form': form,
+            'internship': internship,
         }
         return render(request, 'fossee_math_pages/admin_add_internship.html', context)
     else:
@@ -622,7 +624,7 @@ def staff_add_topics(request):
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
         internship_all = Internship.objects.all()
-        
+
         topic = Topic.objects.all()
 
         context = {
@@ -666,15 +668,15 @@ def staff_manage_intern(request):
     if request.user.is_staff:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
-        form = ManageIntern() # what's happening here?
+        form = ManageIntern()  # what's happening here?
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
-        #print(form)
+        # print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
-                internship = Internship.objects.get(pk=request.POST['search_internship'])    # should be at
-                #print(interns_in)
+                internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
+                # print(interns_in)
             else:
                 int_id = request.POST["id"]
                 obj = get_object_or_404(UserDetails, id=int_id)
@@ -695,7 +697,7 @@ def staff_manage_intern(request):
             'interns_in': interns_in,
             'chosen_internship': internship
         }
-        #print(context)
+        # print(context)
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
         return redirect('dashboard')
@@ -714,7 +716,7 @@ def staff_assign_topic(request):
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
-                
+
                 first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
                 print(first_internsip)
                 try:
