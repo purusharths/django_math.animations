@@ -1,34 +1,60 @@
 {% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin Add Internship{% endblock %}
 {% block content %}
-    {% if user.is_authenticated %} {% if user.is_superuser %}
-        <section id="bc">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-white text-dark">
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'index' %}">
-                            <i class="fa fa-home" style="color:black"></i> Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'dashboard' %}">
-                            <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active"> Add Internship</li>
-                </ol>
-            </nav>
-        </section>
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <section id="bc">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-white text-dark">
+                        <li class="breadcrumb-item">
+                            <a style="color:black" href="{% url 'index' %}">
+                                <i class="fa fa-home" style="color:black"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a style="color:black" href="{% url 'dashboard' %}">
+                                <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active"> Add Internship</li>
+                    </ol>
+                </nav>
+            </section>
 
-        <div class="container">
-            {% include 'partials/_alerts.html' %}
-            <div class="container" style="padding-top: 3%;">
-                <h2> Add Intership</h2>
-                <hr>
-                <form method="POST" class="form-group" name="AddInternship" enctype="multipart/form-data">
+            <div class="container">
+                {% include 'partials/_alerts.html' %}
+                <div class="container">
+                    <h2> Add New Intership</h2>
+                    <hr>
+                    <form method="POST" class="form-group" name="AddInternship" enctype="multipart/form-data">
 
-                    {% csrf_token %} {{ form|crispy }}
+                        {% csrf_token %} {{ form|crispy }}
 
-                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-                </form>
+                        <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+                    </form>
+                </div>
+                <hr/>
+                <h3>Current Internships :</h3>
+                {% for i in internship %}
+                    <div class="card mb-3 col-md-12">
+                        <div class="row row-no-gutters">
+                            <div class="col-md-2">
+                                <img class="card-img" src="{{ i.internship_thumbnail.url }}" alt="">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="card-body">
+                                    <h5 class="card-title serif">
+                                        <b>{{ i.internship_topic }}</b> <span style="float:right;">{{ i.internship_status }} | {{ i.internship_start_date }}</span>
+                                    </h5>
+                                    <span class="card-text serif"> <i>"{{ i.internship_quote }}"</i></span>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            -- {{ i.internship_quote_author }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
-
-        </div>
-    {% endif %} {% endif %} {% endblock %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
