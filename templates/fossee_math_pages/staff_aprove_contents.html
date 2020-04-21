@@ -15,24 +15,32 @@
         </nav>
     </section>
     <br>
-    <div class="col-lg-12">
+
+    <div class="container">
+        <h6>All Submissions: </h6>
+        <h2>{{ first_internship.internship_topic }}</h2>
+        <hr>
         <div class="align-self-center">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship : </label>
+                <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
+                    {% if first_internship in internship %} 
+                    <option>{{ first_internship }}</option> 
+                    {% else %}
                     <option>Select Internship</option>
+                    {% endif %}
                     {% for i in internship %}
+                    {% if i != first_internship %}
                         <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
-                    {% endfor %}
+                    {% endif %}
+                {% endfor %}
                 </select>
             </form>
         </div>
-        <hr>
-        <h3>All Submissions : {{ first_internship.internship_topic }}</h3>
-        <hr>
+<br/>
         <table class="table">
-            <thead class="thead-dark">
+            <thead class="thead-light">
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Topic</th>

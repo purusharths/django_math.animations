@@ -95,9 +95,6 @@ class Data(models.Model):
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='media/', blank=True, null=True)
     data_post_date = models.DateTimeField(default=datetime.now, blank=True)
-    data_status = models.CharField(max_length=20,
-                                   choices=DATA_STATUS,
-                                   default='WAITING')
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
