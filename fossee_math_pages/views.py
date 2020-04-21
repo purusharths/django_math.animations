@@ -297,7 +297,8 @@ def home_view_data(request, internship):
 
 def home_details(request, internship, topic, subtopic):
     selected_internship = Internship.objects.get(internship_topic=internship)
-    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(topic_id__topic_name=topic).get(
+    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
+        topic_id__topic_name=topic).get(
         subtopic_name=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
@@ -347,7 +348,6 @@ def home_search_results(request, search_contains_query):
     datass = ""
     page_obj = ""
     topic = AssignedTopics.objects.all()
-    data_search = Data.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
@@ -361,6 +361,8 @@ def home_search_results(request, search_contains_query):
         paginator = Paginator(datass, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+    data_search = Data.objects.all()
 
     context = {
         'datas': page_obj,
