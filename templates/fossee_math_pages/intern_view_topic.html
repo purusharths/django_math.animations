@@ -18,20 +18,15 @@
     <hr>
     <div class="container">
         {% include 'partials/_alerts.html' %}
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th>
-                    <h3>Internship Name : {{ assigned.topic_id.internship_id }}</h3>
-                </th>
-                <th></th>
-            </tr>
-            </thead>
+
+        <h5 style="font-weight: lighter;"> {{ assigned.topic_id.internship_id }}</h5>
+        <table class="table table-borderless">
             <thead class="thead-light">
             <tr>
                 <th>
-                    <h4>Topic Name : {{ assigned.topic_id }}</h4>
+                    <h3>{{ assigned.topic_id }}</h3>
                 </th>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
@@ -40,9 +35,9 @@
             {% for i in subtopic %}
                 {% if i.topic_id == assigned.topic_id %}
                     <tr>
-                        <td>{{ i.subtopic_name }}</td>
-
-                        <td><a href="{% url  'intern_add_data' i.id %}">Manage Data</a></td>
+                        <td>{{ forloop.counter }}. &nbsp; &nbsp; <b>{{ i.subtopic_name }}</b></td>
+                        <td><a href="{% url  'intern_add_data' i.id %}">Manage Submissions</a></td>
+                        <td>{{ i.subtopic_status|title }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}
