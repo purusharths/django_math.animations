@@ -21,19 +21,19 @@
     <div class="container">
         <div>
 
-            <h3>{{ details.internship_topic }}</h3>
+            <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
             <br>
 
             <form method="POST" action="{% url 'home_view_data' details.internship_topic %}">
                 {% csrf_token %}
                 <table>
                     <tr>
-                        <td> Search :</td>
+                        <td> Search: &nbsp;&nbsp; </td>
                         <td>
                             <div class="input-group">
                                 <input class="form-control py-2 border-right-0 border" type="search"
                                        name="title_contains"
-                                       placeholder="Search For Topics or Sub-topics"/>
+                                       placeholder="Search for topics/subtopics"/>
                                 <span class="input-group-append">
                             <div class="input-group-text bg-transparent">
                                 <i class="fa fa-search"></i>
@@ -52,7 +52,7 @@
 
         <br>
         <br>
-        <h1>Contents</h1>
+        <h2 style="font-weight:normal">Contents</h2>
 
         {% if datas %}
             <table class="table">
@@ -81,8 +81,19 @@
         {% endif %}
 
         <hr>
+        <ol>
         {% for i in topics %}
-            <table>
+                <li> {{ i.topic_name }} 
+                <ul style="list-style-type: circle;">
+                    {% for j in subtopics %} 
+                        {% if j.topic_id_id == i.id %}
+                    <li><a href="{% url 'home_details' j.subtopic_name %}"> {{ j.subtopic_name }} </a></li>
+                        {% endif %}{% endfor %}
+                </ul>        
+            </li>
+            {% endfor %}
+        </ol>
+            <!--<table>
                 <tbody>
                 <tr>
                     <th scope="row">
@@ -99,8 +110,8 @@
                     </tr>
                 {% endif %} {% endfor %}
                 </tbody>
-            </table>
-        {% endfor %}
+            </table>-->
+        
     </div>
     <br>
     <hr>

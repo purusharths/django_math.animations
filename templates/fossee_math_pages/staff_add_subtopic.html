@@ -25,35 +25,35 @@
         {% include 'partials/_alerts.html' %}
         <div class="container" style="padding-top: 3%;">
             <table class="table table-condensed">
-                <thead>
+                <thead class="thead-light">
                 <tr>
-                    <th>
-                        Internship : {{ i_topic.internship_id }}
-                    </th>
+                    <h2>{{ i_topic.internship_id }}</h2>
                 </tr>
                 <tr>
                     <th>
-                        Topic : {{ i_topic.topic_name }}
+                        <h4>{{ i_topic.topic_name }}</h4>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>
+                            <ol>
                 {% for i in subtopics %}
                     {% if i.topic_id_id == i_topic.id %}
-                        <tr>
-                            <td>
-                                {{ i.subtopic_name }}
-                            </td>
-                        </tr>
+                                <li>{{ i.subtopic_name }}</li>
                     {% endif %}
                 {% endfor %}
+            </ol>
+        </td>
+    </tr>
                 <tr>
                     <td>
                         <div class="row">
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ i_topic.id }}">
-                                <label>New Sub topic : </label>{{ form.subtopic }}
+                                <label>New Sub topic: </label>{{ form.subtopic }}
                                 <input type="submit" class="btn btn-success" value="Add">
                             </form>
                         </div>
