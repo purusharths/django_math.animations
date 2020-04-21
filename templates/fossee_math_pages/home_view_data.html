@@ -13,99 +13,52 @@
   {% render_breadcrumbs %}
   <hr>
     <div class="container">
-        <div>
 
-            <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
-            <br>
+        <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
+        <br>
 
-            <form method="POST" action="{% url 'home_view_data' details.pk %}">
-                {% csrf_token %}
-                <table>
-                    <tr>
-                        <td> Search: &nbsp;&nbsp; </td>
-                        <td>
-                            <div class="input-group">
-                                <input class="form-control py-2 border-right-0 border" type="search"
-                                       name="title_contains"
-                                       placeholder="Search for topics/subtopics"/>
-                                <span class="input-group-append">
+        <form method="POST" action="{% url 'home_view_data' details.internship_topic %}">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td> Search: &nbsp;&nbsp;</td>
+                    <td>
+                        <div class="input-group">
+                            <input class="form-control py-2 border-right-0 border" type="search"
+                                   name="title_contains"
+                                   placeholder="Search for topics/subtopics"/>
+                            <span class="input-group-append">
                             <div class="input-group-text bg-transparent">
                                 <i class="fa fa-search"></i>
                             </div>
                         </span>
-                            </div>
-                        </td>
-                        <td>
-                            <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
-                            {#                            <a href="{% url 'home_view_data' details.pk %}" class="btn btn-primary">Search</a>#}
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+                        </div>
+                    </td>
+                    <td>
+                        <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
+                    </td>
+                </tr>
+            </table>
+        </form>
 
         <br>
         <br>
         <h2 style="font-weight:normal">Contents</h2>
 
-        {% if datas %}
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Topic Name</th>
-                    <th scope="col">Sub Topic Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for data in datas %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ data.topic_id }}</td>
-                        <td>{{ data.subtopic_name }}</td>
-                        {% for i in topic %}
-                            {% if i.topic_id == data.topic_id %}
-                                <td><a href="{% url 'home_details' i.topic_id_id %}">View</a></td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-
         <hr>
         <ol>
-        {% for i in topics %}
-                <li> {{ i.topic_name }} 
-                <ul style="list-style-type: circle;">
-                    {% for j in subtopics %} 
-                        {% if j.topic_id_id == i.id %}
-                    <li><a href="{% url 'home_details' j.subtopic_name %}"> {{ j.subtopic_name }} </a></li>
-                        {% endif %}{% endfor %}
-                </ul>        
-            </li>
+            {% for i in topics %}
+                <li> {{ i.topic_name }}
+                    <ul style="list-style-type: circle;">
+                        {% for j in subtopics %}
+                            {% if j.topic_id_id == i.id %}
+                                <li><a href="{% url 'home_details' details.internship_topic j.topic_id j.subtopic_name %}"> {{ j.subtopic_name }} </a></li>
+                            {% endif %}{% endfor %}
+                    </ul>
+                </li>
             {% endfor %}
         </ol>
-            <!--<table>
-                <tbody>
-                <tr>
-                    <th scope="row">
-                        <h4>{{ forloop.counter }}. {{ i.topic_name }}</h4>
-                    </th>
-                </tr>
-                {% for j in subtopics %} {% if j.topic_id_id == i.id %}
-                    <tr>
-                        <th>
-                            <h6>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'home_details' j.subtopic_name %}"> {{ j.subtopic_name }} </a>
-                            </h6>
-                        </th>
-                    </tr>
-                {% endif %} {% endfor %}
-                </tbody>
-            </table>-->
-        
+
     </div>
     <br>
     <hr>

@@ -19,7 +19,7 @@
             <form method="GET" action=".">
                 <table>
                     <tr>
-                        <td> Search: </td>
+                        <td> Search:</td>
                         <td>
                             <input class="form-control py-2 border" type="search"
                                    name="title_contains"
@@ -28,25 +28,27 @@
                         <td>
                             <input class="btn btn-primary" type="submit" name="submit" id="submit" value="Search">
                         </td>
-
                     </tr>
-
                 </table>
-                <hr><!--- style="background-color: #902b2b;height: 1px">-->
             </form>
             <br>
         </div>
         {% if datas %}
             {% for data in datas %}
                 <div class="card">
-                    
                     <div class="card-body">
-                        {% for i in topic%}
+                        {% for i in topic %}
                             {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                            <div class=""> <small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }} </small> </div> <!-- topic |  subtopic -->    
-                            <h5 style="font-weight: normal;"> <a href="{% url 'home_details' data.subtopic_name %}"> {{ data.subtopic_name }}</a></h5>
-                                10 - 20 words summary of the search result
-                                
+                                <div class=""><small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }}
+                                </small></div> <!-- topic |  subtopic -->
+                                <h5 style="font-weight: normal;"><a
+                                        href="{% url 'home_details' data.topic_id.internship_id data.topic_id data.subtopic_name %}"> {{ data.subtopic_name }}</a>
+                                </h5>
+                                {% for obj in data_search %}
+                                    {% if data.subtopic_name == obj.subtopic_id.subtopic_name and obj.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' and obj.subtopic_id.subtopic_status == 'ACCEPTED'%}
+                                         {{ obj.data_content|truncatewords:10|striptags }}
+                                    {% endif %}
+                                {% endfor %}
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -54,9 +56,9 @@
                 <br/>
             {% endfor %}
         {% else %}
-            
-            <h3 style="font-weight: normal;">No Results Found for  <u><i>{{ querry }}</i></u></h3>
+            <h3 style="font-weight: normal;">No Results Found for <u><i>{{ querry }}</i></u></h3>
         {% endif %}
     </div>
     <hr>
-    <br> {% endblock %}
+    <br>
+{% endblock %}
