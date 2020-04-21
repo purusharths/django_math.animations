@@ -72,24 +72,18 @@
         </table>
         {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
 
-            <div style="background-color: lightgrey">
+            <div style="background-color: #ffffff">
+                <hr>
                 <table>
-                    <tr>
-                        <td>Data Provided By:-</td>
-                    </tr>
-                    <tr>
-                        <td>Contributor Name: {{ contributor.contributor }}</td>
-                    </tr>
-                    <tr>
-                        <td>Mentored By: {{ contributor.mentor }}</td>
-                    </tr>
-                    <tr>
-                        <td>Monitored By: {{ contributor.professor }}</td>
-                    </tr>
-                    <tr>
-                        <td>Aproved On: {{ contributor.data_aproval_date }}</td>
-                    </tr>
+                    <tr><td><i>Contributor: {{ contributor.contributor }} </i></td></tr>
+                    <!--<tr> <td>Contributor Name: </td>  </tr>-->
+                    <tr><td> <i>Mentor & Editor: {{ contributor.mentor }}</i></td></tr>
+                    <tr><td><i>Verified by: {{ contributor.professor }}</i></td></tr>
+                    <tr><td>Aproved On: {{ contributor.data_aproval_date }}</td></tr>
                 </table>
+                <hr>
+                <i>The following notes and their corrosponding animations was created by the above-mentioned contributor and is freely avilable under CC licence.</i>
+                
             </div>
         {% endif %}
     </div>
