@@ -622,7 +622,7 @@ def staff_add_topics(request):
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
         internship_all = Internship.objects.all()
-        
+
         topic = Topic.objects.all()
 
         context = {
@@ -714,7 +714,7 @@ def staff_assign_topic(request):
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
-                
+
                 first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
                 print(first_internsip)
                 try:
