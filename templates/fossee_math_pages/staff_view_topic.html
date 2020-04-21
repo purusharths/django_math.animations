@@ -3,7 +3,7 @@
 {% block content %}
     <style>
         tr:hover {
-            background-color: #ddd;
+            background-color: rgb(240, 240, 240);
         }
     </style>
 
@@ -36,17 +36,20 @@
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
-        <div style="background-color: lightcyan">
-            <h1>Internship :{{ subtopic.topic_id.internship_id }}</h1>
-            <h3>Topic :{{ subtopic.topic_id }}</h3>
-            <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
-            <br>
+        <div class="card">
+            <h4> <div class="card-header">{{ subtopic.subtopic_name }}</h4>
+           <div class="card-body">
+            <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+            <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+            <h6><b>Last Modified: </b> FEATURE PENDING</h6>
             <div align="center">
-                Current Status : {{ subtopic.subtopic_status }}
+                Current Status: <b>{{ subtopic.subtopic_status}}</b>
+                <br>
             </div>
             <div align="center">
-                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-primary">Aprove All</a> &nbsp;
-                <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-danger">Reject All</a>
+                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-warning">Aprove</a> &nbsp;
+                <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-outline-danger">Reject</a>
+            </div>
             </div>
         </div>
         <br>

@@ -20,11 +20,18 @@
 
         <form method="POST">
             {% csrf_token %}
-            <label>Select Internship : </label>
+            <label>Select Internship: </label>
             <select name="search_internship" onchange="submit();">
-                <option>Select Internship</option>
+                {% if chosen_internship in internship_all %} 
+                    <option>{{ chosen_internship }}</option> 
+                {% else %}
+                    <option> ---- </option>
+                {% endif %}
                 {% for i in internship_all %}
-                    <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    {% if i != chosen_internship %}
+                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    {% endif %}
+
                 {% endfor %}
             </select>
         </form>
@@ -32,9 +39,9 @@
 
         <table class="table">
             {% for i in internship %}
-                <thead class="thead-dark">
+                <thead class="">
                 <tr>
-                    <th scope="col">Internship Name : {{ i.internship_topic }}</th>
+                    <th scope="col"><h3>{{ i.internship_topic }}</h3></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -42,28 +49,34 @@
                     {% if j.internship_id_id == i.id %}
                         <thead class="thead-light">
                         <tr>
-                            <th scope="col">Topic Name : {{ j.topic_name }}</th>
-                            {% for k in assigned %}
-                                {% if k.topic_id_id == j.pk %}
-                                    <th><a href="{% url 'staff_add_contribution' j.pk %}">Contributor Info</a></th>
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
+                            <th scope="col"> <h4>{{ j.topic_name }}</h4></th>
+                                {% for k in assigned %}
+                                    {% if k.topic_id_id == j.pk %}
+                                        <th><a href="{% url 'staff_add_contribution' j.pk %}">Contributor Info</a></th>
+                                        {% else %}
+                                        <th> . </th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
                         </thead>
-                        {% for k in subtopics %}
-                            {% if k.topic_id_id == j.id %}
-                                <tbody>
-                                <tr>
-                                    <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
-                                </tr>
-                                </tbody>
-                            {% endif %}
-                        {% endfor %}
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                   <ol>        
+                                        {% for k in subtopics %}
+                                            {% if k.topic_id_id == j.id %}
+                                                <li>{{ k.subtopic_name }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ol>
+                                </th>
+                            </tr>
+                        </tbody>
                     {% endif %}
                 {% endfor %}
             {% endfor %}
         </table>
     </div>
     <br>
-    <hr>
+    <hr/>
     <br> {% endblock %}

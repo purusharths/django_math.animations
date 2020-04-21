@@ -19,7 +19,7 @@
             <form method="GET" action=".">
                 <table>
                     <tr>
-                        <td> Search :</td>
+                        <td> Search: </td>
                         <td>
                             <input class="form-control py-2 border" type="search"
                                    name="title_contains"
@@ -36,11 +36,13 @@
         {% if datas %}
             {% for data in datas %}
                 <div class="card">
+                    
                     <div class="card-body">
                         {% for i in topic%}
                             {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                                <p class="card-title">{{ data.topic_id.internship_id }} / {{ data.topic_id }}</p>
-                                <p class="card-title"> <a href="{% url 'home_details' data.subtopic_name %}"> {{ data.subtopic_name }}</a></p>
+                            <div class=""> <small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }} </small> </div> <!-- topic |  subtopic -->
+                            <h5 style="font-weight: normal;"> <a href="{% url 'home_details' data.subtopic_name %}"> {{ data.subtopic_name }}</a></h5>
+                                10 - 20 words summary of the search result
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -48,10 +50,8 @@
                 <br/>
             {% endfor %}
         {% else %}
-            <br>
-            <br>
-            <br>
-            <h3>No Results Found.</h3>
+            
+            <h3 style="font-weight: normal;">No Results Found for  <u><i>{{ querry }}</i></u></h3>
         {% endif %}
     </div>
     <hr>
