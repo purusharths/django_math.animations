@@ -296,8 +296,9 @@ def home_view_data(request, internship):
     return render(request, 'fossee_math_pages/home_view_data.html', context)
 
 
-def home_details(request, subtopic):
-    subtopic_request = Subtopic.objects.get(subtopic_name=subtopic)
+def home_details(request, internship, subtopic):
+    selected_internship = Internship.objects.get(internship_topic=internship)
+    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).get(subtopic_name=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
