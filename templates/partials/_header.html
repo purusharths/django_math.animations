@@ -39,7 +39,7 @@
                 </li>
                 {% if user.is_authenticated %} {% if user.is_superuser %}
                     <li class="nav-item dropdown">
-                        <a style="color: #ffffff;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ user.username }}
                         </a>
@@ -51,7 +51,7 @@
 
                     {% else %}{% if user.is_staff %}
                         <li class="nav-item dropdown">
-                            <a style="color: #ffffff;" class="nav-link text-body dropdown-toggle" href="#" id="navbarDropdown"
+                            <a class="nav-link text-body dropdown-toggle" href="#" id="navbarDropdown"
                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ user.username }}
                             </a>
@@ -62,7 +62,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item dropdown">
-                            <a style="color: #ffffff;" class="nav-link text-body dropdown-toggle" href="#" id="navbarDropdown"
+                            <a class="nav-link text-body dropdown-toggle" href="#" id="navbarDropdown"
                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ user.username }}
                             </a>
