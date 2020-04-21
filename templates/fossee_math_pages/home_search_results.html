@@ -41,7 +41,7 @@
                         {% for i in topic%}
                             {% if i.topic_id == data.topic_id  and i.topic_id.internship_id.internship_status == 'COMPLETED' %}
                             <div class=""> <small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }} </small> </div> <!-- topic |  subtopic -->
-                            <h5 style="font-weight: normal;"> <a href="{% url 'home_details' data.topic_id.internship_id data.subtopic_name %}"> {{ data.subtopic_name }}</a></h5>
+                            <h5 style="font-weight: normal;"> <a href="{% url 'home_details' data.topic_id.internship_id data.topic_id data.subtopic_name %}"> {{ data.subtopic_name }}</a></h5>
                                 10 - 20 words summary of the search result
                             {% endif %}
                         {% endfor %}

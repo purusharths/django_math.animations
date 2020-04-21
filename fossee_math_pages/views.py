@@ -277,7 +277,6 @@ def dashboard(request):
 
 
 def home_view_data(request, internship):
-    print(internship)
     internship_details = Internship.objects.get(internship_topic=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
@@ -296,9 +295,10 @@ def home_view_data(request, internship):
     return render(request, 'fossee_math_pages/home_view_data.html', context)
 
 
-def home_details(request, internship, subtopic):
+def home_details(request, internship, topic, subtopic):
     selected_internship = Internship.objects.get(internship_topic=internship)
-    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).get(subtopic_name=subtopic)
+    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(topic_id__topic_name=topic).get(
+        subtopic_name=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
