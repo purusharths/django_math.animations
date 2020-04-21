@@ -1,16 +1,18 @@
-{% extends 'base.html' %}{% load humanize %} {% block title %}Dashboard{% endblock %}{% block content %}
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} Dashboard {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard " %}
+{% endblock %}
+
+{% block content %}
+{% render_breadcrumbs %}
     {% if user.is_authenticated %}
-        <section id="bc">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-white text-dark">
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'index' %}">
-                            <i class="fa fa-home" style="color:black"></i> Home</a>
-                    </li>
-                    <li class="breadcrumb-item active"> Dashboard</li>
-                </ol>
-            </nav>
-        </section>
+
         {% if user.is_superuser %}
             <div class="container">
                 <div class="card">
@@ -119,7 +121,7 @@
                 </div>
                 <hr/>
             </div>
-            
+
         {% else %}
             <br>
             <hr>

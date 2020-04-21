@@ -1,23 +1,17 @@
-{% extends 'base.html' %} {% block title %}Home View Data{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i style="color:black"></i> Topics</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black">
-                        <i style="color:black"></i> {{ details.internship_topic }} </a>
-                </li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
+{% extends 'base.html' %}
+{% block title %} Home View Data {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Topics" "/#topics" %}
+    {% breadcrumb  details "home_view_data" details.internship_topic %}
+{% endblock %}
+
+{% block content %}
+  {% render_breadcrumbs %}
+  <hr>
     <div class="container">
 
         <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
@@ -68,4 +62,5 @@
     </div>
     <br>
     <hr>
-    <br> {% endblock %}
+    <br>
+{% endblock %}

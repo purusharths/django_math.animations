@@ -1,20 +1,17 @@
-{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title %}Staff Assign Topics{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Staff Assign Topics{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Assign Topics" "staff_assign_topic" %}
+{% endblock %}
+
 {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active"> Assign Topics</li>
-            </ol>
-        </nav>
-    </section>
+    {% render_breadcrumbs %}
 
     <!-- Page Content -->
     <div class="container">
@@ -28,8 +25,8 @@
                 {% csrf_token %}
                 <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
-                    {% if chosen_inernship in intern %} 
-                        <option>{{ chosen_inernship }}</option> 
+                    {% if chosen_inernship in intern %}
+                        <option>{{ chosen_inernship }}</option>
                     {% else %}
                         <option>Select Internship</option>
                     {% endif %}
@@ -45,7 +42,7 @@
         <hr/>
 
         <div class="container">
-            
+
 
             <h4>Assign Topic to interns</h4>
             <form method="POST" class="form-group" name="AssignTopics">
