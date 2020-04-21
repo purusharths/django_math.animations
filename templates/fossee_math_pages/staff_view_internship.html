@@ -1,29 +1,24 @@
-{% extends 'base.html' %} {% block title %}Staff View Internship{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
+{% extends 'base.html' %}
+{% block title %} Staff View Internship {% endblock %}
 
-                <li class="breadcrumb-item active">Internships</li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Internships" "staff_view_internship" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     <div class="container">
 
         <form method="POST">
             {% csrf_token %}
             <label>Select Internship: </label>
             <select name="search_internship" onchange="submit();">
-                {% if chosen_internship in internship_all %} 
-                    <option>{{ chosen_internship }}</option> 
+                {% if chosen_internship in internship_all %}
+                    <option>{{ chosen_internship }}</option>
                 {% else %}
                     <option> ---- </option>
                 {% endif %}
@@ -62,7 +57,7 @@
                         <tbody>
                             <tr>
                                 <th scope="row">
-                                   <ol>        
+                                   <ol>
                                         {% for k in subtopics %}
                                             {% if k.topic_id_id == j.id %}
                                                 <li>{{ k.subtopic_name }}</li>
