@@ -12,20 +12,33 @@
                         <a style="color:black" href="{% url 'dashboard' %}">
                             <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item active">View Users</li>
+                    <li class="breadcrumb-item active">Add Users</li>
                 </ol>
             </nav>
         </section>
+
         <div class="container">
+            <h2>Add User</h2>
+            <hr>
+            <form method="POST" name="putdata" class="form-group" id="formTwo">
+
+                {% csrf_token %} {{ form|crispy }} {{ sub_form|crispy }}
+
+                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+            </form>
+            <hr/>
+        </div>
+
+        <div class="container">
+            <br>
             <form method="GET" action=".">
                 <div class="row">
-                    <h4>Search :</h4> &nbsp;
+                    <h5>Search Users:</h5> &nbsp;
                     <input class="form-control py-2 border col-lg-3" type="search" name="title_contains"
                            placeholder="Search (UserName, Intern, Staff)"/> &nbsp;&nbsp;
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
-            <hr/>
         </div>
         <div class="container">
             {% include 'partials/_alerts.html' %}
@@ -69,17 +82,6 @@
             </div>
         {% endif %}
 
-            <div class="container" style="padding-top: 3%;">
-                <h2>Add User</h2>
-                <hr>
-                <form method="POST" name="putdata" class="form-group" id="formTwo">
-
-                    {% csrf_token %} {{ form|crispy }} {{ sub_form|crispy }}
-
-                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-                </form>
-            </div>
-
             <nav aria-label="...">
                 {% if datas.has_other_pages %}
                     <ul class="pagination">
@@ -111,5 +113,10 @@
                     </ul>
                 {% endif %}
             </nav>
+            <br>
+            <br>
         </div>
-        <br> {% endif %} {% endif %} {% endblock %}
+        <br>
+    {% endif %}
+    {% endif %}
+{% endblock %}

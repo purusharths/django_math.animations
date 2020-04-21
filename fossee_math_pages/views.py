@@ -21,6 +21,7 @@ from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedT
 def admin_add_internship(request):
     if request.user.is_superuser:
         form = AddInternship()
+        internship = Internship.objects.all()
         if request.method == 'POST':
             internship_topic = request.POST['internship_topic']
             form = AddInternship(request.POST, request.FILES)
@@ -37,6 +38,7 @@ def admin_add_internship(request):
         form = AddInternship()
         context = {
             'form': form,
+            'internship': internship,
         }
         return render(request, 'fossee_math_pages/admin_add_internship.html', context)
     else:
@@ -275,7 +277,6 @@ def dashboard(request):
 
 
 def home_view_data(request, internship):
-    print(internship)
     internship_details = Internship.objects.get(internship_topic=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
@@ -294,8 +295,11 @@ def home_view_data(request, internship):
     return render(request, 'fossee_math_pages/home_view_data.html', context)
 
 
-def home_details(request, subtopic):
-    subtopic_request = Subtopic.objects.get(subtopic_name=subtopic)
+def home_details(request, internship, topic, subtopic):
+    selected_internship = Internship.objects.get(internship_topic=internship)
+    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
+        topic_id__topic_name=topic).get(
+        subtopic_name=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
@@ -344,7 +348,6 @@ def home_search_results(request, search_contains_query):
     datass = ""
     page_obj = ""
     topic = AssignedTopics.objects.all()
-    data_search = Data.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
@@ -358,6 +361,8 @@ def home_search_results(request, search_contains_query):
         paginator = Paginator(datass, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+    data_search = Data.objects.all()
 
     context = {
         'datas': page_obj,
@@ -386,14 +391,13 @@ def intern_add_data(request, t_id):
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
-            status = "WAITING"
 
             if img is None and video is None:
                 if content == "" or content == " ":
                     messages.error(request, "Fill any one of the field")
                     return render(request, "fossee_math_pages/intern_add_data.html", context)
 
-            add_data = Data(data_content=content, data_status=status, data_image=img,
+            add_data = Data(data_content=content, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
                             user_id_id=user.id)
             add_data.save()
@@ -623,6 +627,7 @@ def staff_add_topics(request):
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
         internship_all = Internship.objects.all()
+
         topic = Topic.objects.all()
 
         context = {
@@ -666,13 +671,15 @@ def staff_manage_intern(request):
     if request.user.is_staff:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
-        form = ManageIntern()
+        form = ManageIntern()  # what's happening here?
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
-
+        # print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+                internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
+                # print(interns_in)
             else:
                 int_id = request.POST["id"]
                 obj = get_object_or_404(UserDetails, id=int_id)
@@ -691,7 +698,9 @@ def staff_manage_intern(request):
             'form': form,
             'internship_all': internship_all,
             'interns_in': interns_in,
+            'chosen_internship': internship
         }
+        # print(context)
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
         return redirect('dashboard')
@@ -710,7 +719,9 @@ def staff_assign_topic(request):
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
+
                 first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
+                print(first_internsip)
                 try:
                     as_topic = AssignedTopics.objects.filter(topic_id__internship_id_id=first_internsip.pk)
                 except:
@@ -739,6 +750,7 @@ def staff_assign_topic(request):
             'intern': internship,
             'as_topic': as_topic,
             'i_topic': i_topic,
+            'chosen_inernship': first_internsip,
         }
         return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
     else:
@@ -785,6 +797,7 @@ def staff_view_internship(request):
             'subtopics': subtopics,
             'assigned': assigned,
             'internship_all': internship_all,
+            'chosen_internship': internship[0],
         }
         return render(request, 'fossee_math_pages/staff_view_internship.html', context)
     else:
@@ -871,7 +884,6 @@ def staff_aprove_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="ACCEPTED")
         return redirect('staff_aprove_contents')
     else:
         return redirect('dashboard')
@@ -884,32 +896,7 @@ def staff_reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        Data.objects.filter(subtopic_id=t_id).update(data_status="REJECTED")
         return redirect('staff_aprove_contents')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_aprove_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "ACCEPTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_reject_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.data_status = "REJECTED"
-        instance.save()
-        return redirect('staff_view_topic', t_id)
     else:
         return redirect('dashboard')
 
