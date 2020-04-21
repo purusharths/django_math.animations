@@ -1,27 +1,21 @@
-{% extends 'base.html' %} {% block title %}Details{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i style="color:black"></i> Topics</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'home_view_data' subtopic.topic_id.internship_id %}">
-                        <i style="color:black"></i> {{ subtopic.topic_id.internship_id }} </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black">
-                        <i style="color:black"></i> {{ subtopic.subtopic_name }}
-                    </a>
-                </li>
-            </ol>
-        </nav>
-    </section>
+{% extends 'base.html' %}
+{% block title %} Details {% endblock %}
+
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Topics" "/#topics" %}
+    {% breadcrumb  subtopic.topic_id.internship_id "home_view_data" subtopic.topic_id.internship_id %}
+    {% breadcrumb  subtopic.topic_id ""%}
+    {% breadcrumb  subtopic.subtopic_name "home_view_details" %}
+
+
+{% endblock %}
+
+{% block content %}
+  {% render_breadcrumbs %}
     <hr>
     <div class="container">
         <thead class="thread-light">

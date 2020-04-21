@@ -1,16 +1,5 @@
 {% extends 'base.html' %} {% block title %}Login{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item active"> Login</li>
-            </ol>
-        </nav>
-    </section>
-    <br>
+
     <div class="container" align="justify" style="margin-top:20px;">
         <br> {% include 'partials/_alerts.html' %}
         <br>
@@ -29,8 +18,4 @@
                 </form>
             </div>
         </center>
-        <br>
-        <br>
-    </div>
-    <br><br><br>
-    <br><br><br> {% endblock %}
+    </div> {% endblock %}
