@@ -21,6 +21,7 @@ from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedT
 def admin_add_internship(request):
     if request.user.is_superuser:
         form = AddInternship()
+        internship = Internship.objects.all()
         if request.method == 'POST':
             internship_topic = request.POST['internship_topic']
             form = AddInternship(request.POST, request.FILES)
@@ -37,6 +38,7 @@ def admin_add_internship(request):
         form = AddInternship()
         context = {
             'form': form,
+            'internship': internship,
         }
         return render(request, 'fossee_math_pages/admin_add_internship.html', context)
     else:
@@ -275,7 +277,6 @@ def dashboard(request):
 
 
 def home_view_data(request, internship):
-    print(internship)
     internship_details = Internship.objects.get(internship_topic=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
@@ -294,8 +295,11 @@ def home_view_data(request, internship):
     return render(request, 'fossee_math_pages/home_view_data.html', context)
 
 
-def home_details(request, subtopic):
-    subtopic_request = Subtopic.objects.get(subtopic_name=subtopic)
+def home_details(request, internship, topic, subtopic):
+    selected_internship = Internship.objects.get(internship_topic=internship)
+    subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
+        topic_id__topic_name=topic).get(
+        subtopic_name=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
@@ -344,7 +348,6 @@ def home_search_results(request, search_contains_query):
     datass = ""
     page_obj = ""
     topic = AssignedTopics.objects.all()
-    data_search = Data.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
@@ -358,6 +361,8 @@ def home_search_results(request, search_contains_query):
         paginator = Paginator(datass, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+    data_search = Data.objects.all()
 
     context = {
         'datas': page_obj,
@@ -666,15 +671,15 @@ def staff_manage_intern(request):
     if request.user.is_staff:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
-        form = ManageIntern() # what's happening here?
+        form = ManageIntern()  # what's happening here?
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
-        #print(form)
+        # print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
-                internship = Internship.objects.get(pk=request.POST['search_internship'])    # should be at
-                #print(interns_in)
+                internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
+                # print(interns_in)
             else:
                 int_id = request.POST["id"]
                 obj = get_object_or_404(UserDetails, id=int_id)
@@ -695,7 +700,7 @@ def staff_manage_intern(request):
             'interns_in': interns_in,
             'chosen_internship': internship
         }
-        #print(context)
+        # print(context)
         return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
     else:
         return redirect('dashboard')
