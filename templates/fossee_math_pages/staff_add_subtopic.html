@@ -1,24 +1,17 @@
-{% extends 'base.html' %} {% block title %}Staff Add Subtopic{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_add_topics' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Topic </a>
-                </li>
-                <li class="breadcrumb-item active"> Subtopics
-                </li>
-            </ol>
-        </nav>
-    </section>
+{% extends 'base.html' %}
+{% block title %} Staff Add Subtopic {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Add Topics" "staff_add_topics" %}
+    {% breadcrumb  "Add Subtopics" "staff_add_subtopic" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
 
     <!-- Page Content -->
     <div class="container">
