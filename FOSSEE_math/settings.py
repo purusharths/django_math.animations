@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-BREADCRUMBS_TEMPLATE = "django_bootstrap_breadcrumbs/bootstrap4.html"
+BREADCRUMBS_TEMPLATE = os.path.join(BASE_DIR, 'templates/fossee_math_pages/breadcrumbs_template.html')
 
 WSGI_APPLICATION = 'FOSSEE_math.wsgi.application'
 
