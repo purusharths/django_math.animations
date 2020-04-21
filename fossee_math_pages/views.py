@@ -374,7 +374,7 @@ def home_search_results(request, search_contains_query):
 
 
 @login_required
-def intern_add_data(request, t_id):
+def intern_add_data(request, t_id,id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         user = request.user
         e_data = Data.objects.filter(subtopic_id=t_id)
