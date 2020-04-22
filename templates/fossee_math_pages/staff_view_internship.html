@@ -5,8 +5,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Internships" "staff_view_internship" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Internships" "staff_view_internship" %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,6 @@
                     {% if i != chosen_internship %}
                         <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
                     {% endif %}
-
                 {% endfor %}
             </select>
         </form>
@@ -48,6 +47,7 @@
                             <th>
                                 {% for k in assigned %}
                                     {% if k.topic_id_id == j.pk %}
+                                        {{ k.user_id }} -
                                         <a href="{% url 'staff_add_contribution' j.pk %}">Contributor Info</a>
                                     {% else %}
                                     {% endif %}
@@ -61,13 +61,20 @@
                                 <ol>
                                     {% for k in subtopics %}
                                         {% if k.topic_id_id == j.id %}
-                                            <li>{{ k.subtopic_name }}</li>
+                                            <li>
+                                                {% if k.subtopic_status == 'ACCEPTED' %}
+                                                    <span style="color: green"> {{ k.subtopic_name }}</span>
+                                                {% elif k.subtopic_status == 'WAITING' %}
+                                                    <span style="color: yellow"> {{ k.subtopic_name }}</span>
+                                                {% elif k.subtopic_status == 'REJECTED' %}
+                                                    <span style="color: red"> {{ k.subtopic_name }}</span>
+                                                {% endif %}
+                                            </li>
                                         {% endif %}
                                     {% endfor %}
                                 </ol>
                             </th>
                         </tr>
-
                         </tbody>
                     {% endif %}
                 {% endfor %}
