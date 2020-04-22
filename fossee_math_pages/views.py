@@ -413,8 +413,9 @@ def intern_add_data(request, st_id):
             if assigned_topic:
                 if img is None and video is None:
                     if content == "" or content == " ":
-                        messages.error(request, "Fill any one of the field")
-                        return redirect(intern_add_data, t_id)
+                        if content.strip() == '':
+                            messages.error(request, "Fill any one of the field")
+                            return redirect(intern_add_data, t_id)
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id,
@@ -632,7 +633,8 @@ def staff_add_subtopic(request, id):
             data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
             data.save()
             current_subtopic = Subtopic.objects.get(subtopic_name=subtopic,topic_id_id=topic_id, user_id_id=u_id)
-            hash_result = hashlib.md5(subtopic.encode())
+            hashtext = subtopic.pk+'-'+request.user.pk
+            hash_result = hashlib.md5(hashtext.encode())
             current_subtopic.subtopic_hash = hash_result.hexdigest()
             current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
             current_subtopic.save()
