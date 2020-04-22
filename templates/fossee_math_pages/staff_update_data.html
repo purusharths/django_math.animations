@@ -1,4 +1,18 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Intern Add Data{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "View Data" "" %}
+    {% breadcrumb "Edit Data" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
     <style>
@@ -22,31 +36,7 @@
         }
 
     </style>
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Manage Submissions
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>View Data : {{ subtopic.subtopic_name }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> Edit Data : {{ subtopic.subtopic_name }}</li>
-            </ol>
-        </nav>
-    </section>
+
     <div class="container">
         <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
