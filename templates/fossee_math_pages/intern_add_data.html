@@ -1,8 +1,20 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Intern Add Data{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Internship" "intern_view_topic" %}
+    {% breadcrumb "Add Submission" "intern_add_data" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
     <style>
-
         .upload-btn-wrapper input[type=file] {
             font-size: 100px;
             position: absolute;
@@ -23,32 +35,9 @@
             background-color: #ddd;
         }
     </style>
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship
-                        - {{ subtopic.topic_id.internship_id }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> Add Data : {{ subtopic.subtopic_name }}</li>
-            </ol>
-        </nav>
-    </section>
 
     <div class="container">
-        <br> {% include 'partials/_alerts.html' %}
-        <br>
-        <br>
+        {% include 'partials/_alerts.html' %}
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
         <script>
@@ -66,7 +55,7 @@
         <table id="dta" class="table" style="width: 100%;">
             {% for data in topic %}
                 <tr>
-                    {% if data.data_content != "NULL" %}
+                    {% if data.data_content != "" and data.data_content != " " %}
                         <td>
                             <p></p>
                             {{ data.data_content |safe }}
@@ -74,13 +63,14 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    Delete
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_data' data.pk %}">
-                                    Edit
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
                                 </a>
+
                             </td>
                         {% endif %}
                     {% endif %}
@@ -100,17 +90,17 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    Delete
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    Edit
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
                                 </a>
                                 <br>
                                 <br>
-                                <a href="{% url 'intern_update_image_size' data.pk %}">
-                                    Format
+                                <a href="{% url 'intern_update_image_size' data.pk %}"> <img
+                                        src="{% static '/web-files/img/icons8-photo-editor-24.png' %}" title="Format">
                                 </a>
                             </td>
                         {% endif %}
@@ -128,12 +118,13 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}">Delete
+                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
+                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    Edit
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
                                 </a>
                             </td>
                         {% endif %}
@@ -154,10 +145,12 @@
                                onclick="show()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text"> </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image"> </a>
+                            <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
+                                    src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image"> </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video"> </a>
+                            <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
+                                    src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video"> </a>
                         </li>
                         <li class="nav-item" style="margin-left: 846px;">
                             <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"

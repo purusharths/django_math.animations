@@ -1,23 +1,16 @@
-{% extends 'base.html' %} {% block title %}Intern View Internship{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
+{% extends 'base.html' %}
+{% block title %}Intern View Internship{% endblock %}
 
-                <li class="breadcrumb-item active">Internships</li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Internship" "admin_view_internship" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     <div class="container">
-
         <table class="table">
             {% for internships in internship %}
                 <thead class="thead-dark">

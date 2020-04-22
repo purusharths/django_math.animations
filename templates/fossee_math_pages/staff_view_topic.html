@@ -1,34 +1,24 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Staff View Topic{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Staff View Topic{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "View Data" "" %}
+{% endblock %}
+
 {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 {% block content %}
+    {% render_breadcrumbs %}
     <style>
         tr:hover {
             background-color: rgb(240, 240, 240);
         }
     </style>
 
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
-                        <i class="fa fa-pencil" style="color:black"></i> Manage Submissions
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> View Data : {{ subtopic.subtopic_name }}</li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
     <div class="container">
 
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
