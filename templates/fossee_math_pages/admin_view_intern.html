@@ -1,49 +1,36 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin View Intern{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Admin View Intern{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Manage Internship" "" %}
+    {% breadcrumb "View Interns" "" %}
+{% endblock %}
+
 {% block content %}
-    {% if user.is_authenticated %} {% if user.is_superuser %}
-        <section id="bc">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-white text-dark">
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'index' %}">
-                            <i class="fa fa-home" style="color:black"></i> Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'dashboard' %}">
-                            <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'admin_manage_internship' %}">
-                            <i class="fa fa-tasks" style="color:black"></i> Manage Internship</a>
-                    </li>
-                    <li class="breadcrumb-item active">View Interns</li>
-                </ol>
-            </nav>
-        </section>
-
-        <div class="container">
-            {% include 'partials/_alerts.html' %}
-            <div class="container" style="padding-top: 3%;">
-                <table class="table table-condensed">
-                    <thead>
-                    <tr>
-                        <th>Intern Name</th>
-                    </tr>
-                    </thead>
-                    {% if datas %}
-                        {% for datas in datas %}
-                            <tbody>
-                            <tr>
-                                <td>{{ datas.user_id }}</td>
-                            </tr>
-
-                            </tbody>
-
-                        {% endfor %}
-
-                    {% endif %}
-                </table>
-
-            </div>
-        </div>
-    {% endif %} {% endif %} {% endblock %}
+    <div class="container">
+        {% render_breadcrumbs %}
+        {% include 'partials/_alerts.html' %}
+        {% if user.is_authenticated %} {% if user.is_superuser %}
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Intern Name</th>
+                </tr>
+                </thead>
+                {% if datas %}
+                    {% for datas in datas %}
+                        <tbody>
+                        <tr>
+                            <td>{{ datas.user_id }}</td>
+                        </tr>
+                        </tbody>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        {% endif %} {% endif %}
+    </div>
+{% endblock %}

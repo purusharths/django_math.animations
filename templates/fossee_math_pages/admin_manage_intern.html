@@ -1,21 +1,17 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin manage Intern{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Admin manage Intern{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Manage Interns" "admin_manage_interns" %}
+{% endblock %}
+
 {% block content %}
+        {% render_breadcrumbs %}
     {% if user.is_authenticated %} {% if user.is_superuser %}
-        <section id="bc">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-white text-dark">
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'index' %}">
-                            <i class="fa fa-home" style="color:black"></i> Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'dashboard' %}">
-                            <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">Manage Interns</li>
-                </ol>
-            </nav>
-        </section>
         <style>
             label {
                 display: none;
@@ -23,7 +19,6 @@
         </style>
         <div class="container">
             {% include 'partials/_alerts.html' %}
-            <div class="container" style="padding-top: 3%;">
                 {% if datas %}
                 <table class="table table-condensed">
                     <thead>
@@ -59,7 +54,6 @@
                 </table>
             {% endif %}
 
-            </div>
             <script>
                 $('.requiredField').hide();
             </script>
