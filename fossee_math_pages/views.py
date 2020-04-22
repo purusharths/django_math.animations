@@ -419,7 +419,7 @@ def intern_add_data(request, t_id):
         e_data = Data.objects.filter(subtopic_id=t_id)
         imagesize = ImageFormatting.objects.all()
         subtopic = Subtopic.objects.get(id=t_id)
-        last_modified = sorted([data.data_post_date for data in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+        last_modified = sorted([dta.data_post_date for dta in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
 
         context = {
             'topic': e_data,
