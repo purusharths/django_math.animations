@@ -55,7 +55,7 @@
         <table id="dta" class="table" style="width: 100%;">
             {% for data in topic %}
                 <tr>
-                    {% if data.data_content != "NULL" %}
+                    {% if data.data_content != "" and data.data_content != " " %}
                         <td>
                             <p></p>
                             {{ data.data_content |safe }}
