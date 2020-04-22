@@ -1,23 +1,17 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin Add Intern{% endblock %}{% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'admin_manage_internship' %}">
-                        <i class="fa fa-tasks" style="color:black"></i> Manage Internship</a>
-                </li>
-                <li class="breadcrumb-item active"> Add Interns</li>
-            </ol>
-        </nav>
-    </section>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Admin Add Intern{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Manage Internship" "admin_manage_internship" %}
+    {% breadcrumb "Add Interns" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
 
     <div class="container">
         {% include 'partials/_alerts.html' %} {% if user.is_authenticated %} {% if user.is_superuser %}

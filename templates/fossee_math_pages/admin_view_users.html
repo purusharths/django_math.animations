@@ -1,21 +1,17 @@
-{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title %}Admin View Users{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Admin View Users{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Add Users" "" %}
+{% endblock %}
+
 {% block content %}
     {% if user.is_authenticated %} {% if user.is_superuser %}
-        <section id="bc">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-white text-dark">
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'index' %}">
-                            <i class="fa fa-home" style="color:black"></i> Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a style="color:black" href="{% url 'dashboard' %}">
-                            <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active">Add Users</li>
-                </ol>
-            </nav>
-        </section>
+        {% render_breadcrumbs %}
 
         <div class="container">
             <h2>Add User</h2>
