@@ -453,12 +453,13 @@ def intern_update_data(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.pk
+        t_id = instance.subtopic_id.subtopic_hash
         form = data(request.POST or None, instance=instance)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            return redirect('intern_add_data', t_id)
+            if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+                obj = form.save(commit=False)
+                obj.save()
+                return redirect('intern_add_data', t_id)
 
         context = {
             'form': form,
@@ -475,7 +476,7 @@ def intern_update_media(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.pk
+        t_id = instance.subtopic_id.subtopic_hash
         form = EditMedia(request.POST or None, instance=instance)
         if request.POST:
             if form.is_valid():
@@ -517,7 +518,7 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, id)
+            return redirect(intern_update_image_size, image.subtopic_id.subtopic_hash)
 
         context = {
             'image': image,
@@ -534,9 +535,10 @@ def intern_update_image_size(request, id):
 def intern_delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.delete()
-        return redirect('intern_add_data', t_id)
+        if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.delete()
+            return redirect('intern_add_data', t_id)
     else:
         return redirect('dashboard')
 
