@@ -511,9 +511,12 @@ def intern_delete_data(request, id):
 @login_required
 def intern_view_internship(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id) # what is tghis???
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
+        #intern_subtopics = Subtopic.objects.fetch(user_id_id)
+        #internship_details = AssignedTopics.objects.filter(user_id_id=request.user.id)
+        #print(dir(internship), request.user.id)
 
         context = {
             'internship': internship,
