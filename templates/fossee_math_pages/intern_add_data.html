@@ -22,17 +22,14 @@
             top: 0;
             opacity: 0;
         }
-
         .ck {
             display: none;
         }
-
         #add {
             width: 92px;
         }
-
         #dta tr:hover {
-            background-color: #ddd;
+            background-color: #fffafa;
         }
     </style>
 
@@ -44,20 +41,39 @@
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
 
-        <h1>Internship :{{ subtopic.topic_id.internship_id }}</h1>
-        <h3>Topic :{{ subtopic.topic_id }}</h3>
-        <h5>Subtopic : {{ subtopic.subtopic_name }}</h5>
-        <hr/>
-        <div align="center">
-            Current status of data : {{ subtopic.subtopic_status }}
-        </div>
-        <hr/>
-        <table id="dta" class="table" style="width: 100%;">
+{% if subtopic.subtopic_status == "WAITING" %}
+<div class="card border-warning" style="margin-bottom: 15px;">
+    <h4> <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}</h4>
+{% elif subtopic.subtopic_status == "ACCEPTED"%}
+<div class="card border-success">
+    <h4> <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}</h4>
+{% elif subtopic.subtopic_status == "REJECTED"%}
+<div class="card border-danger">
+    <h4> <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}</h4>
+{% else %}
+<div class="card border-info">
+    <h4> <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}</h4>
+{% endif %}
+
+   <div class="card-body">
+    <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+    <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+    <h6><b>Last Modified: </b> {{ last_modified }}</h6>
+    <div align="center">
+        Current Status: <b>{{ subtopic.subtopic_status|title}}</b>
+    </div>
+</div>
+</div>
+<hr/>
+<div class="d-flex justify-content-center"><h5><u><i>{{subtopic.subtopic_name}}</i></u></h5></div>
+     
+        <table id="dta" class="table table-borderless" style="width: 100%;">
             {% for data in topic %}
                 <tr>
-                    {% if data.data_content != "" and data.data_content != " " %}
+                    {% if data.data_content != "" and data.data_content != " " %} <!-- detect whitespace properly. Add null as well!-->
                         <td>
                             <p></p>
+                            <!-- {{ data.data_post_date }}  Save it for hover on edit option--> 
                             {{ data.data_content |safe }}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
@@ -136,7 +152,7 @@
 
         {% if subtopic.subtopic_status != 'ACCEPTED' %}
             <br>
-            <div class="container" style="background-color: lightcyan">
+            <div class="container" style="background-color:#F5F5F5  ">
                 <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
                     <ul class="nav nav-tabs">
@@ -166,15 +182,15 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
-                            <label>Select Image : </label>
-                            <input type="file" class="btn btn-dark" name="image"/>
+                            <label>Select Image: </label>
+                            <input type="file" class="btn " name="image"/>
                             <br>
                             <br>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
-                            <label> Select Video : </label>
-                            <input type="file" class="btn btn-dark" name="video"/>
+                            <label> Select Video: </label>
+                            <input type="file" class="btn" name="video"/>
                             <br>
                             <br>
                         </div>
@@ -184,7 +200,9 @@
         {% endif %}
         <br>
         <br>
+       
     </div>
+    <div class="container" style="margin-top:15%;"> <hr/></div>
     <script>
         function show() {
             document.getElementById("cc").style.display = "block";
