@@ -81,8 +81,8 @@
         </div>
 
         <table id="dta" class="table table-borderless" style="width: 100%;">
-            
-			{% for data in topic %}
+
+            {% for data in topic %}
                 <tr>
                     {% if data.data_content != "" and data.data_content != " " %}
                         <td>
@@ -92,7 +92,8 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                         alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -119,7 +120,8 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                         alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -148,7 +150,8 @@
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                        alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -189,8 +192,9 @@
                         </li>
 
 
-						<li class="nav-item" style="margin-left: 846px;">
-                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX"
+                        <li class="nav-item" style="margin-left: 846px;">
+                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()"
+                                   id="submitAJAX"
                                    value="Add Data">
                         </li>
 
@@ -227,35 +231,32 @@
         </div>
         <script>
 
-			var show = () =>{
-				$("#cc").toggle()
-			}
+            var show = () => {
+                $("#cc").toggle()
+            }
 
-			var addData = ()=>{
+            var addData = () => {
 
-				var data= window.CKEDITOR.instances.id_data_content.getData();
-				var xhttp = new XMLHttpRequest();
-				
-				var csrf_token= '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
-                if (data == null || data.trim() === '' ){
+                var data = window.CKEDITOR.instances.id_data_content.getData();
+                var xhttp = new XMLHttpRequest();
+
+                var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
+                if (data == null || data.trim() === '') {
                     alert("Please enter data");
-                }else{
-                    xhttp.onreadystatechange = function() {
+                } else {
+                    xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             var mainTable = document.getElementById("dta");
                             var row = mainTable.insertRow()
                             var cell1 = row.insertCell(0)
-                            cell1.innerHTML =data
+                            cell1.innerHTML = data
                         }
                     };
-				    xhttp.open('post',"/intern_add_data/5",true);
-				    xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-            	    xhttp.setRequestHeader('Content-type',"application/x-www-form-urlencoded");
-            	    xhttp.send("data_content="+data);
+                    xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
+                    xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                    xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                    xhttp.send("data_content=" + data);
                 }
             }
-
-			
-
         </script>
 {% endblock %}
