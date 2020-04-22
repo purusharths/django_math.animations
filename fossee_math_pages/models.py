@@ -51,7 +51,7 @@ class Internship(models.Model):
                                          default='INACTIVE')
     internship_quote = models.TextField(max_length=255)
     internship_quote_author = models.CharField(max_length=255)
-    internship_url = models.CharField(max_length=255, null=False)
+    internship_url = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.internship_topic) if self.internship_topic else ''
@@ -61,7 +61,7 @@ class Topic(models.Model):
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
     user_id = models.ForeignKey(UserDetails, on_delete=models.CASCADE)
     topic_name = models.CharField(max_length=255, null=False)
-    topic_url = models.CharField(max_length=255, null=False)
+    topic_url = models.CharField(max_length=255)
 
     def __str__(self):
         return self.topic_name
@@ -74,8 +74,8 @@ class Subtopic(models.Model):
     subtopic_status = models.CharField(max_length=20,
                                        choices=DATA_STATUS,
                                        default='WAITING')
-    subtopic_hash = models.CharField(max_length=50, null=False)
-    subtopic_url = models.CharField(max_length=255, null=False)
+    subtopic_hash = models.CharField(max_length=50)
+    subtopic_url = models.CharField(max_length=255)
 
     def __str__(self):
         return self.subtopic_name
