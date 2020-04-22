@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb  "Topics" "/#topics" %}
-    {% breadcrumb  details "home_view_data" details.internship_topic %}
+    {% breadcrumb  details "contents" details.internship_topic %}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
         <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
         <br>
 
-        <form method="POST" action="{% url 'home_view_data' details.internship_url %}">
+        <form method="POST" action="{% url 'contents' details.internship_url %}">
             {% csrf_token %}
             <table>
                 <tr>
