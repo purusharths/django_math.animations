@@ -9,10 +9,10 @@
             <div class="container" style="font-family: 'Lato', sans-serif;">
                 <form method="post">
                     {% csrf_token %}
-                    <table class="table table-borderless" style="margin-left: 150px;">
+                    <table class="table" style="margin: auto; width: 50%;">
                         {{ form.as_table }}
                     </table>
-                    <button class="btn btn-outline-success " type="submit"
+                    <button class="btn btn-success btn-sm" type="submit"
                             style="background-color:#e45700;color:white; border:0px">Login
                     </button>
                 </form>
