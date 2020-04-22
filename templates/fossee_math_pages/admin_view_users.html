@@ -14,6 +14,7 @@
         {% render_breadcrumbs %}
 
         <div class="container">
+            {% include 'partials/_alerts.html' %}
             <h2>Add User</h2>
             <hr>
             <form method="POST" name="putdata" class="form-group" id="formTwo">
@@ -37,7 +38,6 @@
             </form>
         </div>
         <div class="container">
-            {% include 'partials/_alerts.html' %}
 
             <br> {% if datas %}
             <table class="table" style="text-align: center; width: 100%;">
