@@ -42,6 +42,44 @@
         
         <div class="container" style="padding-top: 3%;">
             <h2>Manage Intership</h2>
+            <hr> {% if internship %}
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Current status</th>
+                    <th>Change Status</th>
+                    <th></th>
+                    <th>Add Interns</th>
+                    <th>View Interns</th>
+                </tr>
+                </thead>
+                {% for manage_internship in internship %}
+                    <tbody>
+                    <tr>
+                        <td>{{ manage_internship.internship_topic }}</td>
+                        <td>{{ manage_internship.internship_status }}</td>
+                        <form method="POST" class="form-group" name="AddInternship">
+                            <td>
+                                <input type="hidden" value="{{ manage_internship.id }}"
+                                       name="id"> {% csrf_token %} {{ form|crispy }}
+                            </td>
+                            <td>
+                                <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                            </td>
+                        </form>
+                        <td><a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-success" href="{% url 'admin_view_intern' manage_internship.id %}">View
+                                Intern</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+            <br>
             <hr> {% if internship_all %}
             <table class="table table-condensed">
                 <thead>
