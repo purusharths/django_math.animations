@@ -22,9 +22,27 @@
     </style>
     <div class="container">
         {% include 'partials/_alerts.html' %}
+        <form method="POST">
+            {% csrf_token %}
+            Internship: 
+            <label>Select Internship: </label>
+            <select name="search_internship" onchange="submit();">
+                {% if internship in internship_all %} 
+                    <option>{{ internship }}</option> 
+                {% else %}
+                    <option>Select Internship</option>
+                {% endif %}
+                {% for i in internship_all %}
+                    {% if i != internship %}
+                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </form>
+        
         <div class="container" style="padding-top: 3%;">
             <h2>Manage Intership</h2>
-            <hr> {% if manage_internships %}
+            <hr> {% if internship_all %}
             <table class="table table-condensed">
                 <thead>
                 <tr>
@@ -36,7 +54,7 @@
                     <th>View Interns</th>
                 </tr>
                 </thead>
-                {% for manage_internship in manage_internships %}
+                {% for manage_internship in internship_all %}
                     <tbody>
                     <tr>
                         <td>{{ manage_internship.internship_topic }}</td>
