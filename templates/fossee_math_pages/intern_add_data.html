@@ -22,12 +22,15 @@
             top: 0;
             opacity: 0;
         }
+
         .ck {
             display: none;
         }
+
         #add {
             width: 92px;
         }
+
         #dta tr:hover {
             background-color: #fffafa;
         }
@@ -41,50 +44,59 @@
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
 
-{% if subtopic.subtopic_status == "WAITING" %}
-<div class="card border-warning" style="margin-bottom: 15px;">
-    <h4> <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}</h4>
-{% elif subtopic.subtopic_status == "ACCEPTED"%}
-<div class="card border-success">
-    <h4> <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}</h4>
-{% elif subtopic.subtopic_status == "REJECTED"%}
-<div class="card border-danger">
-    <h4> <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}</h4>
-{% else %}
-<div class="card border-info">
-    <h4> <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}</h4>
-{% endif %}
+        {% if subtopic.subtopic_status == "WAITING" %}
+            <div class="card border-warning" style="margin-bottom: 15px;">
+            <h4>
+                <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "ACCEPTED" %}
+            <div class="card border-success">
+            <h4>
+                <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "REJECTED" %}
+            <div class="card border-danger">
+            <h4>
+                <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
+            </h4>
+        {% else %}
+            <div class="card border-info">
+            <h4>
+                <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
+            </h4>
+        {% endif %}
 
-   <div class="card-body">
-    <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
-    <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
-    <h6><b>Last Modified: </b> {{ last_modified }}</h6>
-    <div align="center">
-        Current Status: <b>{{ subtopic.subtopic_status|title}}</b>
-    </div>
-</div>
-</div>
-<hr/>
-<div class="d-flex justify-content-center"><h5><u><i>{{subtopic.subtopic_name}}</i></u></h5></div>
-     
+        <div class="card-body">
+            <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+            <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+            <h6><b>Last Modified: </b> {{ last_modified }}</h6>
+            <div align="center">
+                Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
+            </div>
+        </div>
+        </div>
+        <hr/>
+        <div class="d-flex justify-content-center">
+            <h5><u><i>{{ subtopic.subtopic_name }}</i></u></h5>
+        </div>
+
         <table id="dta" class="table table-borderless" style="width: 100%;">
             {% for data in topic %}
                 <tr>
-                    {% if data.data_content != "" and data.data_content != " " %} <!-- detect whitespace properly. Add null as well!-->
+                    {% if data.data_content != "" and data.data_content != " " %}
                         <td>
                             <p></p>
-                            <!-- {{ data.data_post_date }}  Save it for hover on edit option--> 
                             {{ data.data_content |safe }}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
                                 </a>
 
                             </td>
@@ -98,7 +110,7 @@
                             {% for i in imagesize %}
                                 {% if i.data_id_id == data.pk %}
                                     <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
                                     <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
                                 {% endif %}
                             {% endfor %}
@@ -106,12 +118,12 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
                                 </a>
                                 <br>
                                 <br>
@@ -135,12 +147,12 @@
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete">
+                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
                                 </a>
                                 <br>
                                 <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit">
+                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
                                 </a>
                             </td>
                         {% endif %}
@@ -158,11 +170,13 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
-                               onclick="show()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text"> </a>
+                               onclick="show()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text">
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
-                                    src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image"> </a>
+                                    src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image">
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
@@ -182,15 +196,15 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
-                            <label>Select Image: </label>
-                            <input type="file" class="btn " name="image"/>
+                            <label>Select Image : </label>
+                            <input type="file" class="btn btn-dark" name="image"/>
                             <br>
                             <br>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
-                            <label> Select Video: </label>
-                            <input type="file" class="btn" name="video"/>
+                            <label> Select Video : </label>
+                            <input type="file" class="btn btn-dark" name="video"/>
                             <br>
                             <br>
                         </div>
@@ -200,12 +214,10 @@
         {% endif %}
         <br>
         <br>
-       
-    </div>
-    <div class="container" style="margin-top:15%;"> <hr/></div>
-    <script>
-        function show() {
-            document.getElementById("cc").style.display = "block";
-        }
-    </script>
+        </div>
+        <script>
+            function show() {
+                document.getElementById("cc").style.display = "block";
+            }
+        </script>
 {% endblock %}
