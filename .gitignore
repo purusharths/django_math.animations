@@ -1,7 +1,7 @@
 .vscode/
 .idea/
 venv/*
-db.sqlite3
+*.sqlite3
 __pycache__/*
 FOSSEE_math/__pycache__/*
 FOSSEE_math/__pycache__
