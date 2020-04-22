@@ -415,7 +415,7 @@ def intern_add_data(request, st_id):
                     if content == "" or content == " ":
                         if content.strip() == '':
                             messages.error(request, "Fill any one of the field")
-                            return redirect(intern_add_data, t_id)
+                            return redirect(intern_add_data, st_id)
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id,
