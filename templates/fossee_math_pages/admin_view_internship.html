@@ -11,23 +11,39 @@
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            <label>Select Internship: </label>
+            <select name="search_internship" onchange="submit();">
+                {% if internship in internship_all %} 
+                    <option>{{ internship }}</option> 
+                {% else %}
+                    <option>Select Internship</option>
+                {% endif %}
+                {% for i in internship_all %}
+                    {% if i != internship %}
+                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </form>
+        
         <table class="table">
-            {% for internships in internship %}
+            {% if internship %}
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Internship Name : {{ internships.internship_topic }}</th>
+                    <th scope="col">Internship Name : {{ internship.internship_topic }}</th>
                 </tr>
                 </thead>
-
-                {% for j in topics %}
-                    {% if internships.internship_topic == j.internship_id.internship_topic %}
+                {% for tp in topic %}
+                    {% if tp.internship_id_id == internship.id %}
                         <thead class="thead-light">
                         <tr>
-                            <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                            <th scope="col">Topic Name : {{ tp.topic_name }}</th>
                         </tr>
                         </thead>
                         {% for k in subtopic %}
-                            {% if k.topic_id.topic_name == j.topic_name %}
+                            {% if k.topic_id.topic_name == tp.topic_name %}
                                 <tbody>
                                 <tr>
                                     <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
@@ -37,8 +53,39 @@
                         {% endfor %}
                     {% endif %}
                 {% endfor %}
-            {% endfor %}
+            {% else %}
+                {% for internships in internship_all %}
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Internship Name : {{ internships.internship_topic }}</th>
+                    </tr>
+                    </thead>
+
+                        {% for j in topic %}
+                            {% if internships.internship_topic == j.internship_id.internship_topic %}
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                                </tr>
+                                </thead>
+                                {% for k in subtopic %}
+                                    {% if k.topic_id.topic_name == j.topic_name %}
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
+                                        </tr>
+                                        </tbody>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                {% endfor %}
+            {% endif %}
+            
         </table>
+        
+        
+        
     </div>
     <br>
     <hr>

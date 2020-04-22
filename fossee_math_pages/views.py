@@ -142,13 +142,23 @@ def admin_view_intern(request, id):
 @login_required
 def admin_view_intership(request):
     if request.user.is_superuser:
-        internship = Internship.objects.all()
+        
+        internship = None
+        topic = None
+        subtopic = None
+        internship_all = None
+        if "search_internship" in request.POST:
+            internship = Internship.objects.get(pk=request.POST['search_internship'])
+        
+        internship_all = Internship.objects.all()
         topic = Topic.objects.all()
         subtopic = Subtopic.objects.all()
 
+        
         context = {
             'internship': internship,
-            'topics': topic,
+            'internship_all' : internship_all,
+            'topic': topic,
             'subtopic': subtopic,
         }
 
