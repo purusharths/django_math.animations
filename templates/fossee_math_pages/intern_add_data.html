@@ -91,7 +91,8 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                         alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -118,7 +119,8 @@
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                         alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -147,7 +149,8 @@
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
                                 <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
+                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
+                                        alt="Delete">
                                 </a>
                                 <br>
                                 <br>
@@ -170,32 +173,41 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" href="#data" role="tab" data-toggle="tab" id="text"
-                               onclick="hide()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text" title="Add Text">
+                               onclick="hide()"><img src="{% static '/web-files/img/edit-24px.svg' %}" alt="Text"
+                                                     title="Add Text">
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#image" role="tab" data-toggle="tab" onclick="img()"><img
-                                    src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image" title="Add Image">
+                                    src="{% static '/web-files/img/add_photo_alternate-24px.svg' %}" alt="Image"
+                                    title="Add Image">
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#video" role="tab" data-toggle="tab" onclick="vid()"><img
-                                    src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video" title="Add Video"> </a>
-                        </li>
-                        <li class="nav-item" style="margin-left: 846px;">
-                            <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"
-                                   value="Save">
+                                    src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video"
+                                    title="Add Video"> </a>
                         </li>
                     </ul>
 
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade show active" id="data">
                             <div class="ck center" align="center" id="cc">
+                                <div class="nav-item" style="margin-left: 846px;">
+                                    <input class="btn btn-success btn-md btn-block" type="submit" name="submit"
+                                           id="submit"
+                                           value="Save">
+                                </div>
                                 {{ form.media }} {{ form.as_p }}
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
+                             <div class="nav-item" style="margin-left: 846px;">
+                                    <input class="btn btn-success btn-md btn-block" type="submit" name="submit"
+                                           id="submit"
+                                           value="Upload">
+                                </div>
                             <label>Select Image : </label>
                             <input type="file" class="btn btn-dark" name="image"/>
                             <br>
@@ -203,6 +215,11 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
+                             <div class="nav-item" style="margin-left: 846px;">
+                                    <input class="btn btn-success btn-md btn-block" type="submit" name="submit"
+                                           id="submit"
+                                           value="Upload">
+                                </div>
                             <label> Select Video : </label>
                             <input type="file" class="btn btn-dark" name="video"/>
                             <br>
@@ -219,29 +236,32 @@
             function show() {
                 document.getElementById("cc").style.display = "block";
             }
+
             function hide() {
                 var x = document.getElementById("cc");
                 if (x.style.display === "none") {
-                  x.style.display = "block";
+                    x.style.display = "block";
                 } else {
-                  x.style.display = "none";
+                    x.style.display = "none";
+                }
             }
-            }
+
             function img() {
                 var im = document.getElementById("image");
-                if (im.style.display =="none"){
+                if (im.style.display == "none") {
                     im.style.display = "block";
-                }else{
-                    im.style.display ="none";
+                } else {
+                    im.style.display = "none";
                 }
 
             }
+
             function vid() {
                 var vi = document.getElementById("video");
-                if (vi.style.display =="none"){
+                if (vi.style.display == "none") {
                     vi.style.display = "block";
-                }else{
-                    vi.style.display ="none";
+                } else {
+                    vi.style.display = "none";
                 }
 
             }
