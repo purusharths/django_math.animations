@@ -90,16 +90,19 @@
                             {{ data.data_content |safe }}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
-                            <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
-                                         alt="Delete">
-                                </a>
-                                <br>
-                                <br>
+                            <td> 
                                 <a href="{% url 'intern_update_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
-                                </a>
+                                    <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                     title="Last Modified on {{ data.data_post_date }}"
+                                     alt="Edit">
+                                </a><hr>
+                                <a href="{% url 'intern_delete_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete" width="15px"
+                                         alt="Delete">
+                                </a><br>
+                                <!--add option for cropping-->
+                                
+
 
                             </td>
                         {% endif %}
@@ -119,20 +122,18 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
-                                         alt="Delete">
-                                </a>
-                                <br>
-                                <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
-                                </a>
-                                <br>
-                                <br>
+                                    <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
+                                     title="Added on {{ data.data_post_date }}"
+                                     alt="Edit">
+                                </a><hr>
+                                <a href="{% url 'intern_delete_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image" width="15px"
+                                         alt="Delete">
+                                </a><hr/>
                                 <a href="{% url 'intern_update_image_size' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-photo-editor-24.png' %}" title="Format">
-                                </a>
+                                        src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop" width="15px">
+                                </a><br/>
                             </td>
                         {% endif %}
                     {% endif %}
@@ -149,15 +150,15 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete"
-                                        alt="Delete">
-                                </a>
-                                <br>
-                                <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
+                                    width="15px" alt="Edit">
+                                </a><hr/>
+                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
+                                        src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
+                                        width="15px" alt="Delete">
                                 </a>
+
                             </td>
                         {% endif %}
                     {% endif %}
@@ -210,14 +211,14 @@
 
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
-                            <label>Select Image : </label>
+                            <label>Select Image: </label>
                             <input type="file" class="btn btn-dark" name="image"/>
                             <br>
                             <br>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
-                            <label> Select Video : </label>
+                            <label> Select Video: </label>
                             <input type="file" class="btn btn-dark" name="video"/>
                             <br>
                             <br>

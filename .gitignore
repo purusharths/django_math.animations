@@ -2,6 +2,8 @@
 .idea/
 venv/*
 *.sqlite3
+*.png
+*.mp4
 __pycache__/*
 FOSSEE_math/__pycache__/*
 FOSSEE_math/__pycache__
