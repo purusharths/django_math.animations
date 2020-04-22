@@ -1,4 +1,18 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Intern Add Data{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "View Data" "" %}
+    {% breadcrumb "Update Image Size" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
     <style>
@@ -18,32 +32,7 @@
         }
 
     </style>
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
 
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_aprove_contents' %}">
-                        <i class="fa fa-pencil" style="color:black"></i> Manage Submissions
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'staff_view_topic' image.subtopic_id.pk %}">
-                        <i class="fa fa-pencil" style="color:black"></i> Submissions - {{ image.subtopic_id }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> Upadte Image : {{ image_size.image_caption }}</li>
-            </ol>
-        </nav>
-    </section>
     <div class="container">
         <div>
             <img src="{{ image.data_image.url }}" width="{{ image_size.image_width }}"

@@ -457,7 +457,6 @@ def intern_update_media(request, id):
                 instance = Data.objects.get(id=id)
                 instance.data_image = img
                 instance.data_video = video
-                instance.data_status = "WAITING"
                 instance.save()
                 return redirect('intern_add_data', t_id)
 
