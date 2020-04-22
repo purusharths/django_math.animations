@@ -454,12 +454,14 @@ def intern_update_data(request, id):
         instance = Data.objects.get(id=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
         t_id = instance.subtopic_id.subtopic_hash
-        form = data(request.POST or None, instance=instance)
-        if form.is_valid():
-            if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+        if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+            form = data(request.POST or None, instance=instance)
+            if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
                 return redirect('intern_add_data', t_id)
+        else:
+            return redirect('dashboard')
 
         context = {
             'form': form,
@@ -539,6 +541,9 @@ def intern_delete_data(request, id):
             t_id = instance.subtopic_id.subtopic_hash
             instance.delete()
             return redirect('intern_add_data', t_id)
+        else:
+            return redirect('dashboard')
+
     else:
         return redirect('dashboard')
 
