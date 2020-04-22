@@ -50,7 +50,7 @@ def admin_manage_internship(request):
         
     if request.user.is_superuser:
     
-        internship = Internship.objects.filter(internship_status='ACTIVE').first()
+        internship = None
         form = ManageInternship
         
         if request.method == 'POST':
@@ -69,7 +69,7 @@ def admin_manage_internship(request):
                     messages.error(request, "Error")
                     return redirect('admin_manage_internship')
 
-            internship_all = Internship.objects.all()
+        internship_all = Internship.objects.all()
 
         context = {
             'internship': internship,
