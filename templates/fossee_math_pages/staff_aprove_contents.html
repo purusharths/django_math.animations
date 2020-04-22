@@ -1,21 +1,15 @@
-{% extends 'base.html' %}{% block title %}Staff Approve Contents{% endblock %}{% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color: black" href="{% url 'index' %}">
-                        <i class="fa fa-home"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active"> Manage Submissions</li>
-            </ol>
-        </nav>
-    </section>
-    <br>
+{% extends 'base.html' %}
+{% block title %} Staff Manage Submissions {% endblock %}
+{% load django_bootstrap_breadcrumbs %}
 
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     <div class="container">
         <h6>All Submissions: </h6>
         <h2>{{ first_internship.internship_topic }}</h2>
@@ -25,8 +19,8 @@
                 {% csrf_token %}
                 <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
-                    {% if first_internship in internship %} 
-                    <option>{{ first_internship }}</option> 
+                    {% if first_internship in internship %}
+                    <option>{{ first_internship }}</option>
                     {% else %}
                     <option>Select Internship</option>
                     {% endif %}

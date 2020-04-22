@@ -35,9 +35,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 
     <style>
-        html * {
-            font-family: 'Lora', serif;
-        }
+        html * {font-family: 'Lora', serif;}
+    /* breadcrumb */.breadcrumb {background-color: #f2f2f2;font-size: 10pt;}
+    .breadcrumb-item + .breadcrumb-item::before {content: ">";}
+    .breadcrumb-item{font-family: 'Open Sans', sans-serif}
     </style>
 
 </head>
@@ -49,7 +50,16 @@
 {% include 'partials/_header.html' %}
 
 <!-- Body -->
-{% block content %} {% endblock %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {% clear_breadcrumbs %}
+      {% breadcrumb "Home" "/" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
+{% endblock %}
 
 <!-- footer -->
 {% include 'partials/_footer.html' %}
