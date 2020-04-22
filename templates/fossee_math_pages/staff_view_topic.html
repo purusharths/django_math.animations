@@ -5,8 +5,8 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Manage Submissions" "staff_aprove_contents" %}
     {% breadcrumb "View Data" "" %}
 {% endblock %}
 
@@ -26,21 +26,42 @@
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
-        <div class="card">
-            <h4> <div class="card-header">{{ subtopic.subtopic_name }}</h4>
-           <div class="card-body">
+
+        {% if subtopic.subtopic_status == "WAITING" %}
+            <div class="card border-warning" style="margin-bottom: 15px;">
+            <h4>
+                <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "ACCEPTED" %}
+            <div class="card border-success">
+            <h4>
+                <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "REJECTED" %}
+            <div class="card border-danger">
+            <h4>
+                <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
+            </h4>
+        {% else %}
+            <div class="card border-info">
+            <h4>
+                <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
+            </h4>
+        {% endif %}
+        <div class="card-body">
             <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
             <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
             <h6><b>Last Modified: </b> FEATURE PENDING</h6>
             <div align="center">
-                Current Status: <b>{{ subtopic.subtopic_status}}</b>
+                Current Status: <b>{{ subtopic.subtopic_status }}</b>
                 <br>
             </div>
             <div align="center">
-                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-warning">Aprove</a> &nbsp;
+                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-success">Aprove</a>
+                &nbsp;
                 <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-outline-danger">Reject</a>
             </div>
-            </div>
+        </div>
         </div>
         <br>
         <table>
@@ -101,8 +122,8 @@
             {% endfor %}
         </table>
         <br>
-    <br>
-    </div>
+        <br>
+        </div>
 
 
 {% endblock %}

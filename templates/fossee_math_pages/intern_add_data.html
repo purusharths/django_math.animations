@@ -82,7 +82,7 @@
 
         <table id="dta" class="table table-borderless" style="width: 100%;">
 
-			{% for data in topic %}
+            {% for data in topic %}
                 <tr>
                     {% if data.data_content != "" and data.data_content != " " %}
                         <td>
@@ -91,14 +91,18 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
-                                </a>
-                                <br>
-                                <br>
                                 <a href="{% url 'intern_update_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
-                                </a>
+                                    <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                     title="Last Modified on {{ data.data_post_date }}"
+                                     alt="Edit">
+                                </a><hr>
+                                <a href="{% url 'intern_delete_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete" width="15px"
+                                         alt="Delete">
+                                </a><br>
+                                <!--add option for cropping-->
+
+
 
                             </td>
                         {% endif %}
@@ -118,19 +122,18 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
-                                </a>
-                                <br>
-                                <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
-                                </a>
-                                <br>
-                                <br>
+                                    <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
+                                     title="Added on {{ data.data_post_date }}"
+                                     alt="Edit">
+                                </a><hr>
+                                <a href="{% url 'intern_delete_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image" width="15px"
+                                         alt="Delete">
+                                </a><hr/>
                                 <a href="{% url 'intern_update_image_size' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-photo-editor-24.png' %}" title="Format">
-                                </a>
+                                        src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop" width="15px">
+                                </a><br/>
                             </td>
                         {% endif %}
                     {% endif %}
@@ -147,14 +150,15 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/icons8-trash.svg' %}" title="Delete" alt="Delete">
-                                </a>
-                                <br>
-                                <br>
                                 <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/edit.png' %}" title="Edit" alt="Edit">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
+                                    width="15px" alt="Edit">
+                                </a><hr/>
+                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
+                                        src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
+                                        width="15px" alt="Delete">
                                 </a>
+
                             </td>
                         {% endif %}
                     {% endif %}
@@ -189,8 +193,9 @@
                         </li>
 
 
-						<li class="nav-item" style="margin-left: 846px;">
-                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX"
+                        <li class="nav-item" style="margin-left: 846px;">
+                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()"
+                                   id="submitAJAX"
                                    value="Add Data">
                         </li>
 
@@ -206,14 +211,14 @@
 
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
-                            <label>Select Image : </label>
+                            <label>Select Image: </label>
                             <input type="file" class="btn btn-dark" name="image"/>
                             <br>
                             <br>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
-                            <label> Select Video : </label>
+                            <label> Select Video: </label>
                             <input type="file" class="btn btn-dark" name="video"/>
                             <br>
                             <br>
@@ -226,36 +231,32 @@
         <br>
         </div>
 
-        <script>
-      			var show = () =>{
-      				$("#cc").toggle()
-      			}
-      			var addData = ()=>{
-      				var data= window.CKEDITOR.instances.id_data_content.getData();
-      				var xhttp = new XMLHttpRequest();
+            var show = () => {
+                $("#cc").toggle()
+            }
 
-      				var csrf_token=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+            var addData = () => {
 
-      				xhttp.onreadystatechange = function() {
+                var data = window.CKEDITOR.instances.id_data_content.getData();
+                var xhttp = new XMLHttpRequest();
 
-      					if (this.readyState == 4 && this.status == 200) {
-
-      						var mainTable = document.getElementById("dta");
-      						var row = mainTable.insertRow()
-      						var cell1 = row.insertCell(0)
-      						cell1.innerHTML =data
-      					}
-      				};
-
-      				//console.log(csrf)
-
-
-      				xhttp.open('post',"/intern_add_data/5",true);
-      				xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-                  	xhttp.setRequestHeader('Content-type',"application/x-www-form-urlencoded");
-                  	xhttp.send("data_content="+data);
-
-      			}
-
+                var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
+                if (data == null || data.trim() === '') {
+                    alert("Please enter data");
+                } else {
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var mainTable = document.getElementById("dta");
+                            var row = mainTable.insertRow()
+                            var cell1 = row.insertCell(0)
+                            cell1.innerHTML = data
+                        }
+                    };
+                    xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
+                    xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                    xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                    xhttp.send("data_content=" + data);
+                }
+            }
         </script>
 {% endblock %}
