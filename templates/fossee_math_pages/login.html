@@ -1,15 +1,13 @@
 {% extends 'base.html' %} {% block title %}Login{% endblock %} {% block content %}
 
-    <div class="container" align="justify" style="margin-top:20px;">
+    <div class="container" align="justify" style="margin-top:100px;margin-bottom:100px;">
         <br> {% include 'partials/_alerts.html' %}
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+   
         <center>
             <h1>Login</h1>
             <hr>
+            <br>
+            <br>
             <div class="container" style="font-family: 'Lato', sans-serif;">
                 <form method="post">
                     {% csrf_token %}
