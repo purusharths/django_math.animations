@@ -52,7 +52,7 @@
                     <ul style="list-style-type: circle;">
                         {% for j in subtopics %}
                             {% if j.topic_id_id == i.id %}
-                                <li><a href="{% url 'home_details' details.internship_topic j.topic_id j.subtopic_name %}"> {{ j.subtopic_name }} </a></li>
+                                <li><a href="{% url 'home_details' details.internship_url j.topic_id.topic_url j.subtopic_url %}"> {{ j.subtopic_name }} </a></li>
                             {% endif %}{% endfor %}
                     </ul>
                 </li>

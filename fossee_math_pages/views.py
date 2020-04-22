@@ -299,7 +299,7 @@ def dashboard(request):
 
 
 def home_view_data(request, internship):
-    internship_details = Internship.objects.get(internship_topic=internship)
+    internship_details = Internship.objects.get(internship_url=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
@@ -318,10 +318,10 @@ def home_view_data(request, internship):
 
 
 def home_details(request, internship, topic, subtopic):
-    selected_internship = Internship.objects.get(internship_topic=internship)
+    selected_internship = Internship.objects.get(internship_url=internship)
     subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
-        topic_id__topic_name=topic).get(
-        subtopic_name=subtopic)
+        topic_id__topic_url=topic).get(
+        subtopic_url=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
