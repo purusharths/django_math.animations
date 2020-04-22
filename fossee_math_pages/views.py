@@ -633,7 +633,7 @@ def staff_add_subtopic(request, id):
             data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
             data.save()
             current_subtopic = Subtopic.objects.get(subtopic_name=subtopic,topic_id_id=topic_id, user_id_id=u_id)
-            hashtext = subtopic.pk+'-'+request.user.pk
+            hashtext = str(subtopic.pk)+'-'+str(request.user.pk)
             hash_result = hashlib.md5(hashtext.encode())
             current_subtopic.subtopic_hash = hash_result.hexdigest()
             current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
