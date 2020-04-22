@@ -11,12 +11,13 @@
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
-
-        <table class="table">
-            <thead class="thead-dark">
+        <h2 style="font-weight: lighter;">Contents</h2>
+        <p> Content for the internship. Status of your submission and remaining topics covered during the course of the internship.</p>
+        <hr/>
+        <table class="table table-borderless">
+            <thead class="">
             <tr>
-                <th scope="col">Internship Name : {{ internship.topic_id.internship_id }}</th>
-                <th>Submission status</th>
+                <th scope="col" class="align-right">Your progress in {{ internship.topic_id.internship_id }} () </th>
             </tr>
             </thead>
             {% for j in topics %}

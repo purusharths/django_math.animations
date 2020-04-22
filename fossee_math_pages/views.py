@@ -380,12 +380,15 @@ def intern_add_data(request, t_id):
         e_data = Data.objects.filter(subtopic_id=t_id)
         imagesize = ImageFormatting.objects.all()
         subtopic = Subtopic.objects.get(id=t_id)
+        last_modified = sorted([data.data_post_date for data in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+        #print(post_dates) NOT SURE IF WORKS CORRECTLY
         form = data()
         context = {
             'topic': e_data,
             'form': form,
             'subtopic': subtopic,
             'imagesize': imagesize,
+            'last_modified': last_modified,
         }
         if request.method == 'POST':
             content = request.POST.get('data_content')
@@ -507,9 +510,12 @@ def intern_delete_data(request, id):
 @login_required
 def intern_view_internship(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id) # what is tghis???
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
+        #intern_subtopics = Subtopic.objects.fetch(user_id_id)
+        #internship_details = AssignedTopics.objects.filter(user_id_id=request.user.id)
+        #print(dir(internship), request.user.id)
 
         context = {
             'internship': internship,
