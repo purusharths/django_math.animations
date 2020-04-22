@@ -42,7 +42,7 @@
                                 <div class=""><small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }}
                                 </small></div> <!-- topic |  subtopic -->
                                 <h5 style="font-weight: normal;"><a
-                                        href="{% url 'home_details' data.topic_id.internship_id data.topic_id data.subtopic_name %}"> {{ data.subtopic_name }}</a>
+                                        href="{% url 'home_details' data.topic_id.internship_id.internship_url data.topic_id.topic_url data.subtopic_url %}"> {{ data.subtopic_name }}</a>
                                 </h5>
                                 {% for obj in data_search %}
                                     {% if data.subtopic_name == obj.subtopic_id.subtopic_name and obj.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' and obj.subtopic_id.subtopic_status == 'ACCEPTED'%}
