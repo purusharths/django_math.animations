@@ -243,16 +243,16 @@
         <br>
         <br>
         </div>
-        <script>
 
+        <div class="container" style="margin-top:25%;"><hr/></div>
+
+        <script>
             var show = () => {
                 $("#cc").toggle()
             }
-
             var addData = () => {
                 var data = window.CKEDITOR.instances.id_data_content.getData();
                 var xhttp = new XMLHttpRequest();
-
                 var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
                 if (data == null || data.trim() === '') {
                     alert("Please enter data");
@@ -266,7 +266,8 @@
                         if (this.readyState == 4 && this.status == 200) {
                             cell1.innerHTML = data
                             window.CKEDITOR.instances.id_data_content.setData('');
-                            //cell2.innerHTML = 'Yo!';
+                            cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
+                            width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
                         }
                     };
                     xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);

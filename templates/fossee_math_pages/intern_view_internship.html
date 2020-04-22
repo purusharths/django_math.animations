@@ -17,14 +17,14 @@
         <table class="table table-borderless">
             <thead class="">
             <tr>
-                <th scope="col" class="align-right">Your progress in {{ internship.topic_id.internship_id }} () </th>
+                <th scope="col" class="align-right">Your progress in {{ internship.topic_id.internship_id }} </th>
             </tr>
             </thead>
             {% for j in topics %}
                 {% if j.internship_id == internship.topic_id.internship_id %}
-                    <thead class="thead-light">
+                    <thead class="thead">
                     <tr>
-                        <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                        <th scope="col">Topic Name: {{ j.topic_name }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -32,10 +32,10 @@
                         {% if k.topic_id.topic_name == j.topic_name %}
                             <tbody>
                             <tr>
-                                <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
+                                <th scope="row"> &nbsp;&nbsp;&nbsp;&nbsp;   {{ k.subtopic_name }}</th>
                                 <th>
                                     {% if internship.topic_id == k.topic_id %}
-                                        {{ k.subtopic_status }}
+                                        {{ k.subtopic_status|title }}
                                     {% endif %}
                                 </th>
                             </tr>
