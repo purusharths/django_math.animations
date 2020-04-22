@@ -236,28 +236,26 @@
 				var data= window.CKEDITOR.instances.id_data_content.getData();
 				var xhttp = new XMLHttpRequest();
 				
-				var csrf_token=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+				var csrf_token= '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
+                if (data == null || data.trim() === '' ){
+                    alert("Please enter data");
+                }else{
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var mainTable = document.getElementById("dta");
+                            var row = mainTable.insertRow()
+                            var cell1 = row.insertCell(0)
+                            cell1.innerHTML =data
+                        }
+                    };
+				    xhttp.open('post',"/intern_add_data/5",true);
+				    xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+            	    xhttp.setRequestHeader('Content-type',"application/x-www-form-urlencoded");
+            	    xhttp.send("data_content="+data);
+                }
+            }
 
-				xhttp.onreadystatechange = function() {
-
-					if (this.readyState == 4 && this.status == 200) {
-
-						var mainTable = document.getElementById("dta");
-						var row = mainTable.insertRow()
-						var cell1 = row.insertCell(0)
-						cell1.innerHTML =data
-					}
-				};
-
-				//console.log(csrf)
-
-
-				xhttp.open('post',"/intern_add_data/5",true);
-				xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-            	xhttp.setRequestHeader('Content-type',"application/x-www-form-urlencoded");
-            	xhttp.send("data_content="+data);
-
-			}
+			
 
         </script>
 {% endblock %}
