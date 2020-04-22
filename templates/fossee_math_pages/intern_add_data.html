@@ -81,7 +81,8 @@
         </div>
 
         <table id="dta" class="table table-borderless" style="width: 100%;">
-            {% for data in topic %}
+            
+			{% for data in topic %}
                 <tr>
                     {% if data.data_content != "" and data.data_content != " " %}
                         <td>
@@ -186,6 +187,14 @@
                             <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"
                                    value="Save">
                         </li>
+
+
+						<li class="nav-item" style="margin-left: 846px;">
+                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX"
+                                   value="Add Data">
+                        </li>
+
+
                     </ul>
 
                     <div class="tab-content">
@@ -194,6 +203,7 @@
                                 {{ form.media }} {{ form.as_p }}
                             </div>
                         </div>
+
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
                             <label>Select Image : </label>
@@ -216,8 +226,38 @@
         <br>
         </div>
         <script>
-            function show() {
-                document.getElementById("cc").style.display = "block";
-            }
+
+			var show = () =>{
+				$("#cc").toggle()
+			}
+
+			var addData = ()=>{
+
+				var data= window.CKEDITOR.instances.id_data_content.getData();
+				var xhttp = new XMLHttpRequest();
+				
+				var csrf_token=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+				xhttp.onreadystatechange = function() {
+
+					if (this.readyState == 4 && this.status == 200) {
+
+						var mainTable = document.getElementById("dta");
+						var row = mainTable.insertRow()
+						var cell1 = row.insertCell(0)
+						cell1.innerHTML =data
+					}
+				};
+
+				//console.log(csrf)
+
+
+				xhttp.open('post',"/intern_add_data/5",true);
+				xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+            	xhttp.setRequestHeader('Content-type',"application/x-www-form-urlencoded");
+            	xhttp.send("data_content="+data);
+
+			}
+
         </script>
 {% endblock %}
