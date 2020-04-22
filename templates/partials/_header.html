@@ -26,56 +26,33 @@
         <div class="collapse navbar-collapse serif" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link text-white" href="{% url 'index' %}">Home
+                    <a class="nav-link text-dark" href="{% url 'index' %}">Home
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'index' %}#topics">Topics</a>
+                    <a class="nav-link text-dark" href="{% url 'index' %}#topics">Topics</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="http://animations.fossee.in">About</a>
+                    <a class="nav-link text-dark" href="http://animations.fossee.in">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'internship' %}">Internship</a>
+                    <a class="nav-link text-dark" href="{% url 'internship' %}">Internship</a>
                 </li>
-                {% if user.is_authenticated %} {% if user.is_superuser %}
-                    <li class="nav-item dropdown">
-                        <a style="color: #ffffff;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.username }}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                        </div>
-                    </li>
-
-                    {% else %}{% if user.is_staff %}
-                        <li class="nav-item dropdown">
-                            <a style="color: #ffffff;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ user.username }}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                            </div>
-                        </li>
-                    {% else %}
-                        <li class="nav-item dropdown">
-                            <a style="color: #ffffff;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ user.username }}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                            </div>
-                        </li>
-                    {% endif %}{% endif %} {% else %}
+                {% if user.is_authenticated %}
+                          <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ user.username }}
+                              </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                </div>
+                            </li>
+                {% else %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link text-dark" href="{% url 'login' %}">Login</a>
                     </li>
                 {% endif %}
             </ul>
