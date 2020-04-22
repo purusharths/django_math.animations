@@ -1,27 +1,22 @@
-{% extends 'base.html' %} {% block title %}Intern View Internship{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
+{% extends 'base.html' %}
+{% block title %}Intern View Internship{% endblock %}
 
-                <li class="breadcrumb-item active">Internships</li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Internship" "intern_view_internship" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     <div class="container">
 
         <table class="table">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">Internship Name : {{ internship.topic_id.internship_id }}</th>
+                <th>Submission status</th>
             </tr>
             </thead>
             {% for j in topics %}
@@ -29,6 +24,7 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">Topic Name : {{ j.topic_name }}</th>
+                        <th></th>
                     </tr>
                     </thead>
                     {% for k in subtopics %}
@@ -36,6 +32,11 @@
                             <tbody>
                             <tr>
                                 <th scope="row">Subtopic : {{ k.subtopic_name }}</th>
+                                <th>
+                                    {% if internship.topic_id == k.topic_id %}
+                                        {{ k.subtopic_status }}
+                                    {% endif %}
+                                </th>
                             </tr>
                             </tbody>
                         {% endif %}
