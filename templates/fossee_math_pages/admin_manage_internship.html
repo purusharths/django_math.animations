@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}Intern View Internship{% endblock %}
 {% load crispy_forms_tags %}
+{% block title %}Admin Manage Internship{% endblock %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "admin_view_internship" %}
+    {% breadcrumb "Manage Internship" "admin_manage_internship" %}
 {% endblock %}
 
 {% block content %}
-    {% render_breadcrumbs %}
+        {% render_breadcrumbs %}
+    {% if user.is_authenticated %} {% if user.is_superuser %}
     <style>
         label {
             display: none;
