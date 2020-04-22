@@ -14,17 +14,13 @@
         <h2 style="font-weight: lighter;">Contents</h2>
         <p> Content for the internship. Status of your submission and remaining topics covered during the course of the internship.</p>
         <hr/>
-        <table class="table table-borderless">
-            <thead class="">
-            <tr>
-                <th scope="col" class="align-right">Your progress in {{ internship.topic_id.internship_id }} </th>
-            </tr>
-            </thead>
+                <b scope="col" class="align-right">Your progress in {{ internship.topic_id.internship_id }} </b>
+        <table class="table table-borderless table-sm ">
             {% for j in topics %}
                 {% if j.internship_id == internship.topic_id.internship_id %}
-                    <thead class="thead">
+                    <thead class="table-primary table-condensed">
                     <tr>
-                        <th scope="col">Topic Name: {{ j.topic_name }}</th>
+                        <th scope="col">{{forloop.counter}}. {{ j.topic_name }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -32,12 +28,20 @@
                         {% if k.topic_id.topic_name == j.topic_name %}
                             <tbody>
                             <tr>
-                                <th scope="row"> &nbsp;&nbsp;&nbsp;&nbsp;   {{ k.subtopic_name }}</th>
-                                <th>
+                                <td scope="row"> &nbsp;&nbsp;&nbsp;&nbsp;   {{  forloop.counter }}. {{ k.subtopic_name }}</td>
+                                <td>
                                     {% if internship.topic_id == k.topic_id %}
-                                        {{ k.subtopic_status|title }}
+                                        {% if k.subtopic_status == "ACCEPTED"%}
+                                            <div class="text-success">
+                                        {% elif k.subtopic_status == "REJECTED"%}
+                                            <div class="text-danger">
+                                        {% elif k.subtopic_status == "WAITING"%}                                 
+                                            <div class="text-warning">
+                                        {% endif %}
+                                        <b><i>{{ k.subtopic_status|title }}</i></b>
+                                        </div>
                                     {% endif %}
-                                </th>
+                                </td>
                             </tr>
                             </tbody>
                         {% endif %}
