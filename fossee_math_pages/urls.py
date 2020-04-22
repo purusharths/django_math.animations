@@ -19,7 +19,7 @@ urlpatterns = [
                   path('intern_add_data/<str:st_id>', views.intern_add_data, name='intern_add_data'),
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
-                  path('intern_delete_data/<int:id>', views.intern_delete_data, name='intern_delete_data'),
+                  path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
                   path('intern_view_internship/', views.intern_view_internship, name='intern_view_internship'),
                   path('intern_view_topic/', views.intern_view_topic, name='intern_view_topic'),
                   path('intern_update_image_size/<int:id>', views.intern_update_image_size,
