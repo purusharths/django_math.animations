@@ -17,7 +17,7 @@
         <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
         <br>
 
-        <form method="POST" action="{% url 'home_view_data' details.internship_topic %}">
+        <form method="POST" action="{% url 'home_view_data' details.internship_url %}">
             {% csrf_token %}
             <table>
                 <tr>
