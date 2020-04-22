@@ -48,22 +48,31 @@ def admin_add_internship(request):
 @login_required
 def admin_manage_internship(request):
     if request.user.is_superuser:
-        manage_internships = Internship.objects.order_by('-internship_start_date')
+
+        internship = None
         form = ManageInternship
+
         if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(Internship, id=int_id)
-            form = ManageInternship(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('admin_manage_internship')
+            if "search_internship" in request.POST:
+                internship = Internship.objects.get(pk=request.POST['search_internship'])
             else:
-                messages.error(request, "Error")
-                return redirect('admin_manage_internship')
+                int_id = request.POST["id"]
+                obj = get_object_or_404(Internship, id=int_id)
+                form = ManageInternship(request.POST or None, instance=obj)
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, "Changed")
+                    return redirect('admin_manage_internship')
+                else:
+                    messages.error(request, "Error")
+                    return redirect('admin_manage_internship')
+
+        internship_all = Internship.objects.all()
+
         context = {
-            'manage_internships': manage_internships,
+            'internship': internship,
+            'internship_all': internship_all,
             'form': form
         }
         return render(request, 'fossee_math_pages/admin_manage_internship.html', context)
@@ -132,13 +141,22 @@ def admin_view_intern(request, id):
 @login_required
 def admin_view_intership(request):
     if request.user.is_superuser:
-        internship = Internship.objects.all()
+
+        internship = None
+        topic = None
+        subtopic = None
+        internship_all = None
+        if "search_internship" in request.POST:
+            internship = Internship.objects.get(pk=request.POST['search_internship'])
+
+        internship_all = Internship.objects.all()
         topic = Topic.objects.all()
         subtopic = Subtopic.objects.all()
 
         context = {
             'internship': internship,
-            'topics': topic,
+            'internship_all': internship_all,
+            'topic': topic,
             'subtopic': subtopic,
         }
 
@@ -377,19 +395,8 @@ def home_search_results(request, search_contains_query):
 def intern_add_data(request, t_id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         user = request.user
-        e_data = Data.objects.filter(subtopic_id=t_id)
-        imagesize = ImageFormatting.objects.all()
-        subtopic = Subtopic.objects.get(id=t_id)
-        last_modified = sorted([data.data_post_date for data in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
-        #print(post_dates) NOT SURE IF WORKS CORRECTLY
-        form = data()
-        context = {
-            'topic': e_data,
-            'form': form,
-            'subtopic': subtopic,
-            'imagesize': imagesize,
-            'last_modified': last_modified,
-        }
+        form = data
+
         if request.method == 'POST':
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
@@ -398,7 +405,7 @@ def intern_add_data(request, t_id):
             if img is None and video is None:
                 if content == "" or content == " ":
                     messages.error(request, "Fill any one of the field")
-                    return render(request, "fossee_math_pages/intern_add_data.html", context)
+                    return redirect(intern_add_data, t_id)
 
             add_data = Data(data_content=content, data_image=img,
                             data_video=video, subtopic_id_id=t_id,
@@ -408,6 +415,19 @@ def intern_add_data(request, t_id):
             if img != "" or img != " ":
                 imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
                 imgformat.save()
+
+        e_data = Data.objects.filter(subtopic_id=t_id)
+        imagesize = ImageFormatting.objects.all()
+        subtopic = Subtopic.objects.get(id=t_id)
+        last_modified = sorted([data.data_post_date for data in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+
+        context = {
+            'topic': e_data,
+            'form': form,
+            'subtopic': subtopic,
+            'imagesize': imagesize,
+            'last_modified': last_modified,
+        }
 
         return render(request, 'fossee_math_pages/intern_add_data.html', context)
     else:
@@ -510,12 +530,12 @@ def intern_delete_data(request, id):
 @login_required
 def intern_view_internship(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id) # what is tghis???
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id)  # what is tghis???
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
-        #intern_subtopics = Subtopic.objects.fetch(user_id_id)
-        #internship_details = AssignedTopics.objects.filter(user_id_id=request.user.id)
-        #print(dir(internship), request.user.id)
+        # intern_subtopics = Subtopic.objects.fetch(user_id_id)
+        # internship_details = AssignedTopics.objects.filter(user_id_id=request.user.id)
+        # print(dir(internship), request.user.id)
 
         context = {
             'internship': internship,
