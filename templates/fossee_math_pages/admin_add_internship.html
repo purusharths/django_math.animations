@@ -1,22 +1,18 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Admin Add Internship{% endblock %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Admin Add Internship{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Add Internship" "" %}
+{% endblock %}
+
 {% block content %}
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
-            <section id="bc">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-white text-dark">
-                        <li class="breadcrumb-item">
-                            <a style="color:black" href="{% url 'index' %}">
-                                <i class="fa fa-home" style="color:black"></i> Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a style="color:black" href="{% url 'dashboard' %}">
-                                <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active"> Add Internship</li>
-                    </ol>
-                </nav>
-            </section>
+            {% render_breadcrumbs %}
 
             <div class="container">
                 {% include 'partials/_alerts.html' %}
@@ -41,7 +37,8 @@
                             <div class="col-md-10">
                                 <div class="card-body">
                                     <h5 class="card-title serif">
-                                        <b>{{ i.internship_topic }}</b> <span style="float:right;">{{ i.internship_status }} | {{ i.internship_start_date }}</span>
+                                        <b>{{ i.internship_topic }}</b> <span
+                                            style="float:right;">{{ i.internship_status }} | {{ i.internship_start_date }}</span>
                                     </h5>
                                     <span class="card-text serif"> <i>"{{ i.internship_quote }}"</i></span>
                                     <p class="card-text">

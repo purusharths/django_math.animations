@@ -1,4 +1,18 @@
-{% extends 'base.html' %}{% load staticfiles %} {% block title %}Intern Add Data{% endblock %}{% block content %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Intern Add Data{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Internship" "intern_view_topic" %}
+    {% breadcrumb "Add Submission" "" %}
+    {% breadcrumb "Update Image or Video" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
     <style>
@@ -7,7 +21,6 @@
             overflow: hidden;
             display: inline-block;
         }
-
 
         .upload-btn-wrapper input[type=file] {
             font-size: 100px;
@@ -22,29 +35,7 @@
         }
 
     </style>
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'intern_view_topic' %}">
-                        <i class="fa fa-pencil" style="color:black"></i>Internship
-                        - {{ subtopic.topic_id.internship_id }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> Edit Media : {{ subtopic.subtopic_name }}</li>
-            </ol>
-        </nav>
-    </section>
     <div class="container">
-        <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
         <script>
@@ -59,6 +50,9 @@
                 <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
             </div>
         </form>
+        <div>
+            <a href="{% url 'intern_add_data' subtopic.pk %}" class="btn btn-success">back</a>
+        </div>
         <br>
     </div>
 {% endblock %}

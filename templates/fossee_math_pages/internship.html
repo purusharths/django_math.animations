@@ -1,22 +1,22 @@
-{% extends 'base.html' %}{% block title %}Internship{% endblock %}{% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item active"> Internship</li>
-            </ol>
-        </nav>
-    </section>
+{% extends 'base.html' %}
+{% block title %}Internship{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Internship" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
 
     <!-- Page Content -->
     <div class="container">
-        <img src="{{ ROOT_URL }}/static/web-files/img/internship.png"/>
+        <img src="{{ ROOT_URL }}/static/web-files/img/internship.png" alt=""/>
         <br/>
         <br/>
     </div>
     <!-- row -->
 
-    <br/> {% endblock %}
+    <br/>
+{% endblock %}
