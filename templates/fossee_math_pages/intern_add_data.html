@@ -147,6 +147,7 @@
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
+                            <br>
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
@@ -188,39 +189,51 @@
                                     src="{% static '/web-files/img/video_library-24px.svg' %}" alt="Video"> </a>
                         </li>
                         <li class="nav-item" style="margin-left: 846px;">
-                            <input class="btn btn-success btn-md btn-block" type="submit" name="submit" id="submit"
-                                   value="Save">
                         </li>
-
-
                         <li class="nav-item" style="margin-left: 846px;">
-                            <input class="btn btn-success btn-md btn-block" type="button" onClick="addData()"
-                                   id="submitAJAX"
-                                   value="Add Data">
                         </li>
-
-
                     </ul>
 
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade show active" id="data">
                             <div class="ck center" align="center" id="cc">
-                                {{ form.media }} {{ form.as_p }}
+                                <div class="row" style="padding-bottom: 0px;">
+                                    <div class="col-auto mr-auto">&nbsp;</div>
+                                    <div class="col-auto" style="padding-top: 10px; \">
+                                        <input class="btn btn-outline-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX" value="Add Data">
+                                    </div>
+                                  </div>
+                                
+                                {{ form.media }} {{ form.as_p }}    
                             </div>
+                            <br>
+                            
                         </div>
 
                         <div role="tabpanel" class="tab-pane fade" id="image">
                             <br>
-                            <label>Select Image: </label>
-                            <input type="file" class="btn btn-dark" name="image"/>
-                            <br>
-                            <br>
+                            <div class="row ">
+                                <div class="col-auto mr-auto">
+                                    <label>Select Image: </label> <input type="file" class="btn" name="image"/>
+                                </div>
+                                <div class="col-auto">
+                                    <input class="btn btn-outline-secondary btn-md " type="submit" name="submit" id="submit"
+                                    value="Upload">
+                                </div>
+                              </div>
+                              <br>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="video">
                             <br>
-                            <label> Select Video: </label>
-                            <input type="file" class="btn btn-dark" name="video"/>
-                            <br>
+                            <div class="row ">
+                                <div class="col-auto mr-auto">
+                                    <label> Select Video: </label> <input type="file" class="btn " name="video"/>
+                                </div>
+                                <div class="col-auto">
+                                    <input class="btn btn-outline-secondary btn-md " type="submit" name="submit" id="submit"
+                                    value="Upload">
+                                </div>                                
+                            </div>
                             <br>
                         </div>
                     </div>
@@ -237,7 +250,6 @@
             }
 
             var addData = () => {
-
                 var data = window.CKEDITOR.instances.id_data_content.getData();
                 var xhttp = new XMLHttpRequest();
 
@@ -245,12 +257,16 @@
                 if (data == null || data.trim() === '') {
                     alert("Please enter data");
                 } else {
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
                             var mainTable = document.getElementById("dta");
                             var row = mainTable.insertRow()
                             var cell1 = row.insertCell(0)
+                            var cell2 = row.insertCell(1)
+                            cell1.innerHTML = '<div class="text-muted">'+ data+'</div>'
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
                             cell1.innerHTML = data
+                            window.CKEDITOR.instances.id_data_content.setData('');
+                            //cell2.innerHTML = 'Yo!';
                         }
                     };
                     xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
