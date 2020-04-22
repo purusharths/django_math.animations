@@ -399,6 +399,8 @@ def intern_add_data(request, t_id):
 
         if request.method == 'POST':
             content = request.POST.get('data_content')
+            print(request.POST)
+            print(content)
             img = request.FILES.get('image')
             video = request.FILES.get('video')
 
