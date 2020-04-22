@@ -47,23 +47,33 @@ def admin_add_internship(request):
 
 @login_required
 def admin_manage_internship(request):
+        
     if request.user.is_superuser:
-        manage_internships = Internship.objects.order_by('-internship_start_date')
+    
+        internship = Internship.objects.filter(internship_status='ACTIVE').first()
         form = ManageInternship
+        
         if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(Internship, id=int_id)
-            form = ManageInternship(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('admin_manage_internship')
+            if "search_internship" in request.POST:
+                internship = Internship.objects.get(pk=request.POST['search_internship'])
             else:
-                messages.error(request, "Error")
-                return redirect('admin_manage_internship')
+                int_id = request.POST["id"]
+                obj = get_object_or_404(Internship, id=int_id)
+                form = ManageInternship(request.POST or None, instance=obj)
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, "Changed")
+                    return redirect('admin_manage_internship')
+                else:
+                    messages.error(request, "Error")
+                    return redirect('admin_manage_internship')
+
+            internship_all = Internship.objects.all()
+
         context = {
-            'manage_internships': manage_internships,
+            'internship': internship,
+            'internship_all': internship_all,
             'form': form
         }
         return render(request, 'fossee_math_pages/admin_manage_internship.html', context)
