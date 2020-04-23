@@ -11,25 +11,7 @@
                 <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
             </div>
             <div class="col-lg-7">
-                {% for sl in images %}
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class=" carousel-item active" data-interval="500">
-                                <img src="{{ sl.image1.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
-                                     alt="slider data not  uploaded">
-                            </div>
-                            <div class="carousel-item" data-interval="500">
-                                <img src="{{ sl.image2.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
-                                     alt="slider data not  uploaded">
-                            </div>
-                             <div class="carousel-item" data-interval="500">
-                                <img src="{{ sl.image3.url }}" height="600" class="img-fluid rounded mb-4 mb-lg-0"
-                                     alt="slider data not  uploaded">
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                {#                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/logo.png' %}" alt="">#}
+                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/index-images/logo2.png' %}" alt="">
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -72,8 +54,7 @@
                 <div class="col-md-10">
                     <div class="card-body">
                         <h5 class="card-title serif">
-                            <b><a
-                                    href="{% url 'home_view_data' i.internship_topic %}">{{ i.internship_topic }}</a></b></h5>
+                            <b><a href="{% url 'contents' i.internship_url %}">{{ i.internship_topic }}</a></b></h5>
                         <span class="card-text serif"> <i>"{{ i.internship_quote }}"</i></span>
                         <p class="card-text">
                             <small class="text-muted">
