@@ -350,7 +350,7 @@ def home_details(request, internship, topic, subtopic):
 
 def index(request):
     search_contains_query = request.GET.get('title_contains')
-    images = HomeImages.objects.all() # change
+    images = HomeImages.objects.all()  # change
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
@@ -639,8 +639,8 @@ def staff_add_subtopic(request, id):
 
             data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
             data.save()
-            current_subtopic = Subtopic.objects.get(subtopic_name=subtopic,topic_id_id=topic_id, user_id_id=u_id)
-            hashtext = str(subtopic.pk)+'-'+str(request.user.pk)
+            current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+            hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
             hash_result = hashlib.md5(hashtext.encode())
             current_subtopic.subtopic_hash = hash_result.hexdigest()
             current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
@@ -700,19 +700,28 @@ def staff_aprove_contents(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
+        interns = AssignedTopics.objects.filter(topic_id__internship_id__internship_topic=first_internship)
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
 
         if "search_internship" in request.POST:
-            first_internship = Internship.objects.get(pk=request.POST['search_internship'])
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+            first_internship = Internship.objects.get(pk=request.POST['search_internship'])
+            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+
+        if "search_intern" in request.POST:
+            assigned_topic = AssignedTopics.objects.get(user_id_id=request.POST['search_intern'])
+            subtopic = Subtopic.objects.filter(topic_id_id=assigned_topic.topic_id)
+            first_internship = Internship.objects.get(pk=assigned_topic.topic_id.internship_id_id)
+            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=assigned_topic.topic_id.internship_id_id)
 
         context = {
             'assigned': assigned,
             'subtopic': subtopic,
             'internship': internship,
             'first_internship': first_internship,
+            'interns': interns,
         }
 
         return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
