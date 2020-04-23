@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% block title %} Staff Manage Submissions {% endblock %}
+{% block title %} Review Submissions {% endblock %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "Manage Submissions" "review-submissions" %}
 {% endblock %}
 
 {% block content %}

@@ -696,7 +696,7 @@ def add_topics(request):
 
 
 @login_required
-def staff_aprove_contents(request):
+def review_submissions(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
@@ -724,7 +724,7 @@ def staff_aprove_contents(request):
             'interns': interns,
         }
 
-        return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
+        return render(request, 'fossee_math_pages/review-submissions.html', context)
     else:
         return redirect('dashboard')
 
@@ -947,7 +947,7 @@ def staff_aprove_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        return redirect('staff_aprove_contents')
+        return redirect('review-submissions')
     else:
         return redirect('dashboard')
 
@@ -959,7 +959,7 @@ def staff_reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        return redirect('staff_aprove_contents')
+        return redirect('review-submissions')
     else:
         return redirect('dashboard')
 
