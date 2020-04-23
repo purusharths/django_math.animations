@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}Intern Add Data{% endblock %}
+{% block title %} Add Submission {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% breadcrumb "Internship" "add-submission" %}
-    {% breadcrumb "Add Submission" "intern_add_data" %}
+    {% breadcrumb "Add Submission" "add-submission-intern" %}
 {% endblock %}
 
 {% block content %}
@@ -270,7 +270,7 @@
                             width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
                         }
                     };
-                    xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
+                    xhttp.open('post', "/add-submission/{{ subtopic.subtopic_hash }}", true);
                     xhttp.setRequestHeader("X-CSRFToken", csrf_token);
                     xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
                     xhttp.send("data_content=" + data);
