@@ -1,6 +1,6 @@
 import random
 import re
-
+import hashlib
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -29,7 +29,11 @@ def admin_add_internship(request):
                 messages.error(request, 'That internship already exist')
                 return redirect('admin_add_internship')
             if form.is_valid():
-                form.save()
+                obj = form.save(commit=False)
+                obj.save()
+                current_instance = Internship.objects.get(internship_topic=internship_topic)
+                current_instance.internship_url = '-'.join(str(internship_topic).lower().split())
+                current_instance.save()
                 messages.success(request, 'Internship added')
                 return redirect('admin_add_internship')
             else:
@@ -295,7 +299,7 @@ def dashboard(request):
 
 
 def home_view_data(request, internship):
-    internship_details = Internship.objects.get(internship_topic=internship)
+    internship_details = Internship.objects.get(internship_url=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
     topics = Topic.objects.filter(internship_id_id=id)
@@ -314,10 +318,10 @@ def home_view_data(request, internship):
 
 
 def home_details(request, internship, topic, subtopic):
-    selected_internship = Internship.objects.get(internship_topic=internship)
+    selected_internship = Internship.objects.get(internship_url=internship)
     subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
-        topic_id__topic_name=topic).get(
-        subtopic_name=subtopic)
+        topic_id__topic_url=topic).get(
+        subtopic_url=subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
@@ -346,7 +350,7 @@ def home_details(request, internship, topic, subtopic):
 
 def index(request):
     search_contains_query = request.GET.get('title_contains')
-    images = HomeImages.objects.all()
+    images = HomeImages.objects.all()  # change
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
@@ -392,34 +396,44 @@ def home_search_results(request, search_contains_query):
 
 
 @login_required
-def intern_add_data(request, t_id):
+def intern_add_data(request, st_id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         user = request.user
         form = data
+
+        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+        t_id = subtopic.pk
 
         if request.method == 'POST':
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
+            assigned_topic = AssignedTopics.objects.get(topic_id=subtopic.topic_id_id)
 
-            if img is None and video is None:
-                if content == "" or content == " ":
-                    messages.error(request, "Fill any one of the field")
-                    return redirect(intern_add_data, t_id)
+            if assigned_topic:
+                if img is None and video is None:
+                    if content == "" or content == " ":
+                        if content.strip() == '':
+                            messages.error(request, "Fill any one of the field")
+                            return redirect(intern_add_data, st_id)
 
-            add_data = Data(data_content=content, data_image=img,
-                            data_video=video, subtopic_id_id=t_id,
-                            user_id_id=user.id)
-            add_data.save()
+                add_data = Data(data_content=content, data_image=img,
+                                data_video=video, subtopic_id_id=t_id,
+                                user_id_id=user.id)
+                add_data.save()
 
-            if img != "" or img != " ":
-                imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
-                imgformat.save()
+                if img != "" or img != " ":
+                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
+                    imgformat.save()
 
         e_data = Data.objects.filter(subtopic_id=t_id)
         imagesize = ImageFormatting.objects.all()
         subtopic = Subtopic.objects.get(id=t_id)
-        last_modified = sorted([data.data_post_date for data in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+
+        try:
+            last_modified = sorted([dta.data_post_date for dta in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+        except IndexError:
+            last_modified = "No modifications"
 
         context = {
             'topic': e_data,
@@ -439,12 +453,15 @@ def intern_update_data(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.pk
-        form = data(request.POST or None, instance=instance)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            return redirect('intern_add_data', t_id)
+        t_id = instance.subtopic_id.subtopic_hash
+        if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+            form = data(request.POST or None, instance=instance)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.save()
+                return redirect('intern_add_data', t_id)
+        else:
+            return redirect('dashboard')
 
         context = {
             'form': form,
@@ -461,7 +478,7 @@ def intern_update_media(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.pk
+        t_id = instance.subtopic_id.subtopic_hash
         form = EditMedia(request.POST or None, instance=instance)
         if request.POST:
             if form.is_valid():
@@ -503,7 +520,7 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, id)
+            return redirect(intern_update_image_size, image.subtopic_id.subtopic_hash)
 
         context = {
             'image': image,
@@ -520,9 +537,13 @@ def intern_update_image_size(request, id):
 def intern_delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.delete()
-        return redirect('intern_add_data', t_id)
+        if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.delete()
+            return redirect('intern_add_data', t_id)
+        else:
+            return redirect('dashboard')
+
     else:
         return redirect('dashboard')
 
@@ -530,12 +551,9 @@ def intern_delete_data(request, id):
 @login_required
 def intern_view_internship(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id)  # what is tghis???
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
-        # intern_subtopics = Subtopic.objects.fetch(user_id_id)
-        # internship_details = AssignedTopics.objects.filter(user_id_id=request.user.id)
-        # print(dir(internship), request.user.id)
 
         context = {
             'internship': internship,
@@ -618,8 +636,15 @@ def staff_add_subtopic(request, id):
             subtopic = request.POST['subtopic']
             topic_id = request.POST['id']
             u_id = request.user.id
+
             data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
             data.save()
+            current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+            hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+            hash_result = hashlib.md5(hashtext.encode())
+            current_subtopic.subtopic_hash = hash_result.hexdigest()
+            current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
+            current_subtopic.save()
             messages.success(request, 'Topic added with internship')
             i_topic = Topic.objects.get(id=id)
 
@@ -646,8 +671,12 @@ def staff_add_topics(request):
                 topic = request.POST['topic']
                 id = request.POST['id']
                 u_id = request.user.id
+
                 data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
                 data.save()
+                current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+                current_topic.topic_url = '-'.join(str(topic).lower().split())
+                current_topic.save()
                 messages.success(request, 'Topic added with internship')
                 internship = Internship.objects.filter(internship_status='ACTIVE').first()
 
@@ -671,19 +700,28 @@ def staff_aprove_contents(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
+        interns = AssignedTopics.objects.filter(topic_id__internship_id__internship_topic=first_internship)
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all()
         assigned = AssignedTopics.objects.all()
 
         if "search_internship" in request.POST:
-            first_internship = Internship.objects.get(pk=request.POST['search_internship'])
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+            first_internship = Internship.objects.get(pk=request.POST['search_internship'])
+            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+
+        if "search_intern" in request.POST:
+            assigned_topic = AssignedTopics.objects.get(user_id_id=request.POST['search_intern'])
+            subtopic = Subtopic.objects.filter(topic_id_id=assigned_topic.topic_id)
+            first_internship = Internship.objects.get(pk=assigned_topic.topic_id.internship_id_id)
+            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=assigned_topic.topic_id.internship_id_id)
 
         context = {
             'assigned': assigned,
             'subtopic': subtopic,
             'internship': internship,
             'first_internship': first_internship,
+            'interns': interns,
         }
 
         return render(request, 'fossee_math_pages/staff_aprove_contents.html', context)
