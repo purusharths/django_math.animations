@@ -24,29 +24,18 @@ urlpatterns = [
                   name='intern_update_image_size'),
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
-                  # CHANGING
+                  # CHANGED
                   path('add-submission/', views.add_submission , name='add-submission'),
-                  ##
-                  # CHANGING
                   path('add-submission/<str:st_id>', views.add_submission_intern, name='add-submission-intern'),
-                  ##
-                  # CHANGING
                   path('add-topics/', views.add_topics, name='add-topics'),
-                  ##
-                  # CHANGING
                   path('review-submissions/', views.review_submissions, name='review-submissions'),
-                  #CHANGING
                   path('add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
-                  ##
-                  path('staff_manage_intern/', views.staff_manage_intern, name='staff_manage_intern'),
-                  # CHANGING
                   path('interns/', views.interns, name='interns'),
-                  ##
-                  # CHANGING
                   path('assign-topics', views.assign_topics, name='assign-topics'),
                   ##
+                  path('review-submissions/<int:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
+                  path('staff_manage_intern/', views.staff_manage_intern, name='staff_manage_intern'),
                   path('staff_view_internship/', views.staff_view_internship, name='staff_view_internship'),
-                  path('staff_view_topic/<int:s_id>', views.staff_view_topic, name='staff_view_topic'),
                   path('staff_update_data/<int:id>', views.staff_update_data, name='staff_update_data'),
                   path('staff_delete_data/<int:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
