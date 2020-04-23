@@ -868,7 +868,7 @@ def staff_view_internship(request):
 
 
 @login_required
-def staff_view_topic(request, s_id):
+def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
         subtopic = Subtopic.objects.get(id=s_id)
         data = Data.objects.filter(subtopic_id=subtopic.pk)
@@ -880,7 +880,7 @@ def staff_view_topic(request, s_id):
             'imagesize': imageformat,
         }
 
-        return render(request, 'fossee_math_pages/staff_view_topic.html', context)
+        return render(request, 'fossee_math_pages/review-submissions-subtopic.html', context)
     else:
         return redirect('dashboard')
 
@@ -895,7 +895,7 @@ def staff_update_data(request, id):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.save()
-            return redirect('staff_view_topic', t_id)
+            return redirect('review-submissions-subtopic', t_id)
 
         context = {
             'form': form,
@@ -970,7 +970,7 @@ def staff_delete_data(request, id):
         instance = Data.objects.get(id=id)
         t_id = instance.subtopic_id.pk
         instance.delete()
-        return redirect('staff_view_topic', t_id)
+        return redirect('review-submissions-subtopic', t_id)
     else:
         return redirect('dashboard')
 

@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Manage Submissions" "review-submissions" %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
 {% endblock %}
 
 {% block content %}
@@ -65,7 +65,7 @@
                             <td>{{ k.topic_id }}</td>
                             <td>{{ k.subtopic_name }}</td>
                             <td>{{ k.subtopic_status }}</td>
-                            <td><a href="{% url 'staff_view_topic' k.id %}">View</a></td>
+                            <td><a href="{% url 'review-submissions-subtopic' k.id %}">View</a></td>
                         </tr>
                     {% endif %}
                 {% endfor %}
