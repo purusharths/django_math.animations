@@ -31,7 +31,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <ol>
+                            <ol id="subtopic_list">
                 {% for i in subtopics %}
                     {% if i.topic_id_id == i_topic.id %}
                                 <li>{{ i.subtopic_name }}</li>
@@ -43,12 +43,12 @@
                 <tr>
                     <td>
                         <div class="row">
-                            <form method="POST">
+                            <form action="javascript:addData()" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ i_topic.id }}">
                                 <label>New Sub topic: </label>{{ form.subtopic }}
-                                <input type="submit" class="btn btn-success" value="Add">
                             </form>
+                            <input class="btn btn-outline-success btn-sm" type="button" onClick="addData()" id="submitAJAX" value="Add">
                         </div>
 
                     </td>
@@ -58,6 +58,30 @@
             </table>
         </div>
     </div>
-
+<script>
+    var addData = () => {
+        var csrf_token = '{{ csrf_token }}';
+        var topic = document.getElementById('id_subtopic').value
+        console.log(topic)
+        if (topic == null || topic.trim() === '') {
+                alert("Please enter the topic name")
+        }else{
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var olist = document.getElementById("subtopic_list");
+                    var li_e = document.createElement("li");
+                    li_e.appendChild(document.createTextNode(topic))
+                    olist.appendChild(li_e)
+                    document.getElementById("id_subtopic").value = '';
+                }
+            };
+            xhttp.open('POST', "/staff_add_subtopic/6", true);
+            xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+            xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+            xhttp.send("subtopic="+topic+"&id={{ i_topic.id }}");
+        }
+    }
+</script>
     <!-- /.container -->
 {% endblock %}
