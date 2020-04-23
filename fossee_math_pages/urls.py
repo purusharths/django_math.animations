@@ -16,7 +16,8 @@ urlpatterns = [
                   path('dashboard/', views.dashboard, name='dashboard'),
                   path('contents/<str:internship>', views.home_view_data, name='contents'),
                   path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
-                  path('intern_add_data/<str:st_id>', views.intern_add_data, name='intern_add_data'),
+                  ## CHANGING
+                  path('add-submission/<str:st_id>', views.add_submission_intern, name='add-submission-intern'),
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
                   path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),

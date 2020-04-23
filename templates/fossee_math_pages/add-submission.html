@@ -30,7 +30,7 @@
                 {% if i.topic_id == assigned.topic_id %}
                     <tr>
                         <td>{{ forloop.counter }}. &nbsp; &nbsp; <b>{{ i.subtopic_name }}</b></td>
-                        <td><a href="{% url  'intern_add_data' i.subtopic_hash %}">Manage Submissions</a></td>
+                        <td><a href="{% url  'add-submission-intern' i.subtopic_hash %}">Manage Submissions</a></td>
                         <td>{{ i.subtopic_status|title }}</td>
                     </tr>
                 {% endif %}

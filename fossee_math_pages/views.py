@@ -396,7 +396,7 @@ def home_search_results(request, search_contains_query):
 
 
 @login_required
-def intern_add_data(request, st_id):
+def add_submission_intern(request, st_id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         user = request.user
         form = data
@@ -415,7 +415,7 @@ def intern_add_data(request, st_id):
                     if content == "" or content == " ":
                         if content.strip() == '':
                             messages.error(request, "Fill any one of the field")
-                            return redirect(intern_add_data, st_id)
+                            return redirect(add_submission_intern, st_id)
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id,
@@ -443,7 +443,7 @@ def intern_add_data(request, st_id):
             'last_modified': last_modified,
         }
 
-        return render(request, 'fossee_math_pages/intern_add_data.html', context)
+        return render(request, 'fossee_math_pages/add-submission-intern.html', context)
     else:
         return redirect('dashboard')
 
@@ -459,7 +459,7 @@ def intern_update_data(request, id):
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
-                return redirect('intern_add_data', t_id)
+                return redirect('add-submission-intern', t_id)
         else:
             return redirect('dashboard')
 
@@ -488,7 +488,7 @@ def intern_update_media(request, id):
                 instance.data_image = img
                 instance.data_video = video
                 instance.save()
-                return redirect('intern_add_data', t_id)
+                return redirect('add-submission-intern', t_id)
 
         context = {
             'form': form,
@@ -540,7 +540,7 @@ def intern_delete_data(request, id):
         if AssignedTopics.objects.get(user_id=request.user.id).topic_id_id == instance.subtopic_id.topic_id_id:
             t_id = instance.subtopic_id.subtopic_hash
             instance.delete()
-            return redirect('intern_add_data', t_id)
+            return redirect('add-submission-intern', t_id)
         else:
             return redirect('dashboard')
 
