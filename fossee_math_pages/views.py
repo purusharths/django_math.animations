@@ -566,7 +566,7 @@ def intern_view_internship(request):
 
 
 @login_required
-def intern_view_topic(request):
+def add_submission(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         assigned_topic = AssignedTopics.objects.get(user_id=request.user.id)
         subtopic = Subtopic.objects.filter(topic_id=assigned_topic.topic_id)
@@ -575,7 +575,7 @@ def intern_view_topic(request):
             'assigned': assigned_topic,
             'subtopic': subtopic,
         }
-        return render(request, 'fossee_math_pages/intern_view_topic.html', context)
+        return render(request, 'fossee_math_pages/add-submission.html', context)
     else:
         return redirect('dashboard')
 
@@ -659,7 +659,7 @@ def staff_add_subtopic(request, id):
 
 
 @login_required
-def staff_add_topics(request):
+def add_topics(request):
     if request.user.is_staff:
         form = add_topic()
         internship = Internship.objects.filter(internship_status='ACTIVE').first()
@@ -690,7 +690,7 @@ def staff_add_topics(request):
             'internship_all': internship_all,
             'topic': topic,
         }
-        return render(request, 'fossee_math_pages/staff_add_topics.html', context)
+        return render(request, 'fossee_math_pages/add-topics.html', context)
     else:
         return redirect('dashboard')
 
@@ -770,7 +770,7 @@ def staff_manage_intern(request):
 
 
 @login_required
-def staff_assign_topic(request):
+def assign_topics(request):
     if request.user.is_staff:
         user = User.objects.all()
         form = AssignTopic(user)
@@ -798,10 +798,10 @@ def staff_assign_topic(request):
                     temp2 = Topic.objects.get(id=topic)
                     if AssignedTopics.objects.filter(user_id=temp1).exists():
                         messages.error(request, 'That intern has an assigned topic')
-                        return redirect('staff_assign_topic')
+                        return redirect('assign-topics')
                     elif AssignedTopics.objects.filter(topic_id=temp2).exists():
                         messages.error(request, 'That topic is assigned alredy')
-                        return redirect('staff_assign_topic')
+                        return redirect('assign-topics')
                     else:
                         data = AssignedTopics(user_id=temp1, topic_id=temp2)
                         data.save()
@@ -815,13 +815,13 @@ def staff_assign_topic(request):
             'i_topic': i_topic,
             'chosen_inernship': first_internsip,
         }
-        return render(request, 'fossee_math_pages/staff_assign_topic.html', context)
+        return render(request, 'fossee_math_pages/assign-topics.html', context)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def staff_view_interns(request):
+def interns(request):
     if request.user.is_staff:
         topics = AssignedTopics.objects.all()
         internship_all = Internship.objects.all()
@@ -836,7 +836,7 @@ def staff_view_interns(request):
             'internship': internship,
             'internship_all': internship_all,
         }
-        return render(request, 'fossee_math_pages/staff_view_interns.html', conxext)
+        return render(request, 'fossee_math_pages/interns.html', conxext)
     else:
         return redirect('dashboard')
 
