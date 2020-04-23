@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Staff Add Subtopic {% endblock %}
+{% block title %} Add Subtopics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -7,7 +7,7 @@
     {{ block.super }}
     {% breadcrumb  "Dashboard" "dashboard" %}
     {% breadcrumb  "Add Topics" "add-topics" %}
-    {% breadcrumb  "Add Subtopics" "staff_add_subtopic" %}
+    {% breadcrumb  "Add Subtopics" "add-subtopics" %}
 {% endblock %}
 
 {% block content %}

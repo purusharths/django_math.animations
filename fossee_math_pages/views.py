@@ -626,7 +626,7 @@ def user_login(request):
 
 
 @login_required
-def staff_add_subtopic(request, id):
+def add_subtopics(request, id):
     if request.user.is_staff:
         form = add_subtopic()
         i_topic = Topic.objects.get(id=id)
@@ -653,7 +653,7 @@ def staff_add_subtopic(request, id):
             'i_topic': i_topic,
             'subtopics': subtopics,
         }
-        return render(request, 'fossee_math_pages/staff_add_subtopic.html', context)
+        return render(request, 'fossee_math_pages/add-subtopics.html', context)
     else:
         return redirect('dashboard')
 
