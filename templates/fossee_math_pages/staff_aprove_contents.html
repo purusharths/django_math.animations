@@ -4,8 +4,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Manage Submissions" "staff_aprove_contents" %}
 {% endblock %}
 
 {% block content %}
@@ -20,19 +20,32 @@
                 <label>Select Internship: </label>
                 <select name="search_internship" onchange="submit();">
                     {% if first_internship in internship %}
-                    <option>{{ first_internship }}</option>
+                        <option>{{ first_internship }}</option>
                     {% else %}
-                    <option>Select Internship</option>
+                        <option>Select Internship</option>
                     {% endif %}
                     {% for i in internship %}
-                    {% if i != first_internship %}
-                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
-                    {% endif %}
-                {% endfor %}
+                        {% if i != first_internship %}
+                            <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                        {% endif %}
+                    {% endfor %}
                 </select>
             </form>
         </div>
-<br/>
+        <hr/>
+        <div class="align-self-center">
+            <form method="POST">
+                {% csrf_token %}
+                <label>Select Intern: </label>
+                <select name="search_intern" onchange="submit();">
+                    <option>Select Intern</option>
+                    {% for i in interns %}
+                        <option value="{{ i.user_id_id }}">{{ i.user_id }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <hr/>
         <table class="table">
             <thead class="thead-light">
             <tr>
