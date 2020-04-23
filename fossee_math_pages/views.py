@@ -350,7 +350,7 @@ def home_details(request, internship, topic, subtopic):
 
 def index(request):
     search_contains_query = request.GET.get('title_contains')
-    images = HomeImages.objects.all()
+    images = HomeImages.objects.all() # change
 
     interships = Internship.objects.filter(internship_status='COMPLETED')
 
