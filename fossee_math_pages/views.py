@@ -1,6 +1,7 @@
 import random
 import re
 import hashlib
+import string
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -248,7 +249,8 @@ def admin_view_users(request):
                 return redirect('admin_view_users')
 
             try:
-                password = random.randint(0, 99999999)
+                password = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
+                
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname)
