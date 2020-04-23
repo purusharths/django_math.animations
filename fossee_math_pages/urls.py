@@ -28,9 +28,12 @@ urlpatterns = [
                        name='intern_update_image_size'),
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
-                  path('staff_add_subtopic/<int:id>', views.staff_add_subtopic, name='staff_add_subtopic'),
+                  #CHANGING
+                  path('add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
+                  ##
                   # CHANGING
                   path('add-topics/', views.add_topics, name='add-topics'),
+                  ##
                   path('staff_aprove_contents/', views.staff_aprove_contents, name='staff_aprove_contents'),
                   path('staff_manage_intern/', views.staff_manage_intern, name='staff_manage_intern'),
                   # CHANGING

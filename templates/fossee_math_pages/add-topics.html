@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Staff Add Topics {% endblock %}
+{% block title %} Add Topics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -53,7 +53,7 @@
                                     {{ tp.topic_name }}
                                 </td>
                                 <td>
-                                    <a href="{% url 'staff_add_subtopic' tp.id %}">Add / View Subtopics</a>
+                                    <a href="{% url 'add-subtopics' tp.id %}">Add / View Subtopics</a>
                                 </td>
                             </tr>
                         {% endif %}
