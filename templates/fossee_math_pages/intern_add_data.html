@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "intern_view_topic" %}
+    {% breadcrumb "Internship" "add-submission" %}
     {% breadcrumb "Add Submission" "intern_add_data" %}
 {% endblock %}
 
@@ -203,11 +203,11 @@
                                         <input class="btn btn-outline-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX" value="Add Data">
                                     </div>
                                   </div>
-                                
-                                {{ form.media }} {{ form.as_p }}    
+
+                                {{ form.media }} {{ form.as_p }}
                             </div>
                             <br>
-                            
+
                         </div>
 
                         <div role="tabpanel" class="tab-pane fade" id="image">
@@ -232,7 +232,7 @@
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit" id="submit"
                                     value="Upload">
-                                </div>                                
+                                </div>
                             </div>
                             <br>
                         </div>

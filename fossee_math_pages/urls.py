@@ -21,19 +21,26 @@ urlpatterns = [
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
                   path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
                   path('intern_view_internship/', views.intern_view_internship, name='intern_view_internship'),
-                  path('intern_view_topic/', views.intern_view_topic, name='intern_view_topic'),
+                  # CHANGING
+                  path('add-submission/', views.add_submission , name='add-submission'),
+                  ##
                   path('intern_update_image_size/<int:id>', views.intern_update_image_size,
                        name='intern_update_image_size'),
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
                   path('staff_add_subtopic/<int:id>', views.staff_add_subtopic, name='staff_add_subtopic'),
-                  path('staff_add_topics/', views.staff_add_topics, name='staff_add_topics'),
+                  # CHANGING
+                  path('add-topics/', views.add_topics, name='add-topics'),
                   path('staff_aprove_contents/', views.staff_aprove_contents, name='staff_aprove_contents'),
                   path('staff_manage_intern/', views.staff_manage_intern, name='staff_manage_intern'),
-                  path('staff_view_interns/', views.staff_view_interns, name='staff_view_interns'),
+                  # CHANGING
+                  path('interns/', views.interns, name='interns'),
+                  ##
                   path('staff_view_internship/', views.staff_view_internship, name='staff_view_internship'),
                   path('staff_view_topic/<int:s_id>', views.staff_view_topic, name='staff_view_topic'),
-                  path('staff_assign_topic', views.staff_assign_topic, name='staff_assign_topic'),
+                  # CHANGING
+                  path('assign-topics', views.assign_topics, name='assign-topics'),
+                  ##
                   path('staff_update_data/<int:id>', views.staff_update_data, name='staff_update_data'),
                   path('staff_delete_data/<int:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
