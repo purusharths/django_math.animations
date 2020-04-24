@@ -7,9 +7,6 @@ from . import views
 urlpatterns = [
                   path('admin_view_intern/<int:id>', views.admin_view_intern, name='admin_view_intern'),
                   path('admin_add_intern/', views.admin_add_intern, name='admin_add_intern'),
-                  path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
-                  path('intern_update_image_size/<int:id>', views.intern_update_image_size,
-                  name='intern_update_image_size'),
                   path('staff_update_data/<int:id>', views.staff_update_data, name='staff_update_data'),
                   path('staff_delete_data/<int:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
@@ -17,6 +14,9 @@ urlpatterns = [
                   path('staff_add_contribution/<int:id>', views.staff_add_contribution, name='staff_add_contribution'),
                   path('staff_update_image_size/<int:id>', views.staff_update_image_size, name='staff_update_image_size'),
 
+                  path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
+                  path('intern_update_image_size/<int:id>', views.intern_update_image_size,
+                  name='intern_update_image_size'),
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
                   # CHANGED
