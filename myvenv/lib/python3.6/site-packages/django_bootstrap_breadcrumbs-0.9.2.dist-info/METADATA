@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: django-bootstrap-breadcrumbs
+Version: 0.9.2
+Summary: Django breadcrumbs for Bootstrap 2, 3 or 4
+Home-page: http://prymitive.github.com/bootstrap-breadcrumbs
+Author: Łukasz Mierzwa
+Author-email: l.mierzwa@gmail.com
+License: MIT
+Platform: any
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: six
+
+Django template tags used to generate breadcrumbs html using bootstrap css classes or custom template
+
+
