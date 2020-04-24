@@ -1004,8 +1004,7 @@ def staff_add_contribution(request, id):
                 internname = request.POST['username']
                 mentorname = request.POST['mentor']
                 professorname = request.POST['professor']
-                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-                                  professor=professorname)
+                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname, professor=professorname)
                 obj.save()
         try:
             instance = Contributor.objects.get(topic_id=id)
