@@ -494,7 +494,7 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, image.subtopic_id.subtopic_hash)
+            return redirect(intern_update_image_size, id)
 
         context = {
             'image': image,
@@ -857,7 +857,7 @@ def staff_view_internship(request):
 @login_required
 def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
-        subtopic = Subtopic.objects.get(id=s_id)
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
         data = Data.objects.filter(subtopic_id=subtopic.pk)
         imageformat = ImageFormatting.objects.all()
 
