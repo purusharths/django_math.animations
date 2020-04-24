@@ -249,7 +249,7 @@ def admin_view_users(request):
                 return redirect('admin_view_users')
 
             try:
-                password = ''.join([random.choice(string.ascii_letters + string.digits  ) for K in range(10)])
+                password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname)
@@ -486,6 +486,8 @@ def intern_update_media(request, id):
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(id=id)
+                if img is None and video is None:
+                    return redirect('intern_add_data', t_id)
                 instance.data_image = img
                 instance.data_video = video
                 instance.save()
@@ -644,11 +646,12 @@ def staff_add_subtopic(request, id):
             else:
                 try:
                     Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
-                    messages.error(request,"Subtopic exists !")
+                    messages.error(request, "Subtopic exists !")
                 except:
                     data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
                     data.save()
-                    current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+                    current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id,
+                                                            user_id_id=u_id)
                     hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
                     hash_result = hashlib.md5(hashtext.encode())
                     current_subtopic.subtopic_hash = hash_result.hexdigest()
@@ -686,7 +689,7 @@ def staff_add_topics(request):
                 else:
                     try:
                         Topic.objects.get(topic_name=topic, internship_id_id=id, user_id_id=u_id)
-                        messages.error(request,"Topic alredy exists")
+                        messages.error(request, "Topic alredy exists")
                     except:
                         data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
                         data.save()
