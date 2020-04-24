@@ -34,7 +34,7 @@
                         <ol id="subtopic_list">
                             {% for i in subtopics %}
                             {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
-                            <li>{{ i.subtopic_name | safe }}</li>
+                            <li>{{ i.subtopic_name}}</li>
                             {% endif %}
                             {% endfor %}
                         </ol>
