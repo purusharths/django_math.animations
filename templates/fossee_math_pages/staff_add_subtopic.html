@@ -4,21 +4,21 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Add Topics" "staff_add_topics" %}
-    {% breadcrumb  "Add Subtopics" "staff_add_subtopic" %}
+{{ block.super }}
+{% breadcrumb  "Dashboard" "dashboard" %}
+{% breadcrumb  "Add Topics" "staff_add_topics" %}
+{% breadcrumb  "Add Subtopics" "staff_add_subtopic" %}
 {% endblock %}
 
 {% block content %}
-    {% render_breadcrumbs %}
+{% render_breadcrumbs %}
 
-    <!-- Page Content -->
-    <div class="container">
-        {% include 'partials/_alerts.html' %}
-        <div class="container" style="padding-top: 3%;">
-            <table class="table table-condensed">
-                <thead class="thead-light">
+<!-- Page Content -->
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <div class="container" style="padding-top: 3%;">
+        <table class="table table-condensed">
+            <thead class="thead-light">
                 <tr>
                     <h2>{{ i_topic.internship_id }}</h2>
                 </tr>
@@ -27,37 +27,62 @@
                         <h4>{{ i_topic.topic_name }}</h4>
                     </th>
                 </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <ol>
-                {% for i in subtopics %}
-                    {% if i.topic_id_id == i_topic.id %}
-                                <li>{{ i.subtopic_name }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ol>
-        </td>
-    </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ol id="subtopic_list">
+                            {% for i in subtopics %}
+                            {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
+                            <li>{{ i.subtopic_name }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <div class="row">
-                            <form method="POST">
+                            <form action="javascript:addData()" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ i_topic.id }}">
                                 <label>New Sub topic: </label>{{ form.subtopic }}
-                                <input type="submit" class="btn btn-success" value="Add">
                             </form>
+                            <input class="btn btn-outline-success btn-sm" type="button" onClick="addData()"
+                                id="submitAJAX" value="Add">
                         </div>
 
                     </td>
                 </tr>
 
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
-
-    <!-- /.container -->
+</div>
+<script>
+    var addData = () => {
+        var csrf_token = '{{ csrf_token }}';
+        var topic = document.getElementById('id_subtopic').value
+        console.log(topic)
+        if (topic == null || topic.trim() === '') {
+            alert("Please enter the topic name")
+        } else {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var olist = document.getElementById("subtopic_list");
+                    var li_e = document.createElement("li");
+                    li_e.appendChild(document.createTextNode(topic))
+                    olist.appendChild(li_e)
+                    document.getElementById("id_subtopic").value = '';
+                }
+            };
+            xhttp.open('POST', "/staff_add_subtopic/{{ i_topic.id }}", true);
+            xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+            xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+            xhttp.send("subtopic=" + topic + "&id={{ i_topic.id }}");
+        }
+    }
+</script>
+<!-- /.container -->
 {% endblock %}

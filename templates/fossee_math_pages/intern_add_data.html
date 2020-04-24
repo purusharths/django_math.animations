@@ -4,92 +4,93 @@
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "intern_view_topic" %}
-    {% breadcrumb "Add Submission" "intern_add_data" %}
+{{ block.super }}
+{% breadcrumb "Dashboard" "dashboard" %}
+{% breadcrumb "Internship" "intern_view_topic" %}
+{% breadcrumb "Add Submission" "intern_add_data" %}
 {% endblock %}
 
 {% block content %}
-    {% render_breadcrumbs %}
-    {% load static %} {{ form.media }} {% load crispy_forms_tags %}
+{% render_breadcrumbs %}
+{% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
-    <style>
-        .upload-btn-wrapper input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-        }
+<style>
+    .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
 
-        .ck {
-            display: none;
-        }
+    .ck {
+        display: none;
+    }
 
-        #add {
-            width: 92px;
-        }
+    #add {
+        width: 92px;
+    }
 
-        #dta tr:hover {
-            background-color: #fffafa;
-        }
-    </style>
+    #dta tr:hover {
+        background-color: #fffafa;
+    }
+</style>
 
-    <div class="container">
-        {% include 'partials/_alerts.html' %}
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
-        <script>
-            window.CKEDITOR_BASEPATH = '/static/ckeditor/';
-        </script>
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
+    <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+    <script>
+        window.CKEDITOR_BASEPATH = '/static/ckeditor/';
+    </script>
 
-        {% if subtopic.subtopic_status == "WAITING" %}
-            <div class="card border-warning" style="margin-bottom: 15px;">
-            <h4>
-                <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
-            </h4>
+    {% if subtopic.subtopic_status == "WAITING" %}
+    <div class="card border-warning" style="margin-bottom: 15px;">
+        <h4>
+            <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
+        </h4>
         {% elif subtopic.subtopic_status == "ACCEPTED" %}
-            <div class="card border-success">
+        <div class="card border-success">
             <h4>
                 <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
             </h4>
-        {% elif subtopic.subtopic_status == "REJECTED" %}
+            {% elif subtopic.subtopic_status == "REJECTED" %}
             <div class="card border-danger">
-            <h4>
-                <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
-            </h4>
-        {% else %}
-            <div class="card border-info">
-            <h4>
-                <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
-            </h4>
-        {% endif %}
+                <h4>
+                    <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
+                </h4>
+                {% else %}
+                <div class="card border-info">
+                    <h4>
+                        <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
+                    </h4>
+                    {% endif %}
 
-        <div class="card-body">
-            <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
-            <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
-            <h6><b>Last Modified: </b> {{ last_modified }}</h6>
-            <div align="center">
-                Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
-            </div>
-        </div>
-        </div>
-        <hr/>
-        <div class="d-flex justify-content-center">
-            <h5><u><i>{{ subtopic.subtopic_name }}</i></u></h5>
-        </div>
+                    <div class="card-body">
+                        <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+                        <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+                        <h6><b>Last Modified: </b> {{ last_modified }}</h6>
+                        <div align="center">
+                            Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-center">
+                    <h5><u><i>{{ subtopic.subtopic_name }}</i></u></h5>
+                </div>
 
-        <table id="dta" class="table table-borderless" style="width: 100%;">
+                <table id="dta" class="table table-borderless" style="width: 100%;">
 
-            {% for data in topic %}
-                <tr>
-                    {% if data.data_content != "" and data.data_content != " " %}
+                    {% for data in topic %}
+                    <tr>
+                        {% if data.data_content != "" and data.data_content != " " %}
                         <td>
                             <p></p>
                             {{ data.data_content |safe }}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
+<<<<<<< HEAD
                             <td>
                                 <a href="{% url 'intern_update_data' data.pk %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
@@ -105,42 +106,58 @@
 
 
                             </td>
+=======
+                        <td>
+                            <a href="{% url 'intern_update_data' data.pk %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                    title="Last Modified on {{ data.data_post_date }}" alt="Edit">
+                            </a>
+                            <hr>
+                            <a href="{% url 'intern_delete_data' data.pk %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
+                                    width="15px" alt="Delete">
+                            </a><br>
+                            <!--add option for cropping-->
+                        </td>
+>>>>>>> 9607ca57e0cbc526ee126b9714ebefa9d2d0f73d
                         {% endif %}
-                    {% endif %}
-                </tr>
-                <tr>
-                    {% if data.data_image.url != "NULL" %}
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        {% if data.data_image.url != "NULL" %}
                         <td>
                             <p></p>
                             {% for i in imagesize %}
-                                {% if i.data_id_id == data.pk %}
-                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
-                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
-                                {% endif %}
+                            {% if i.data_id_id == data.pk %}
+                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
+                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                            {% endif %}
                             {% endfor %}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
-                            <td>
-                                <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
-                                     title="Added on {{ data.data_post_date }}"
-                                     alt="Edit">
-                                </a><hr>
-                                <a href="{% url 'intern_delete_data' data.pk %}">
-                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image" width="15px"
-                                         alt="Delete">
-                                </a><hr/>
-                                <a href="{% url 'intern_update_image_size' data.pk %}"> <img
-                                        src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop" width="15px">
-                                </a><br/>
-                            </td>
+                        <td>
+                            <a href="{% url 'intern_update_media' data.pk %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
+                                    title="Added on {{ data.data_post_date }}" alt="Edit">
+                            </a>
+                            <hr>
+                            <a href="{% url 'intern_delete_data' data.pk %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image"
+                                    width="15px" alt="Delete">
+                            </a>
+                            <hr />
+                            <a href="{% url 'intern_update_image_size' data.pk %}"> <img
+                                    src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
+                                    width="15px">
+                            </a><br />
+                        </td>
                         {% endif %}
-                    {% endif %}
+                        {% endif %}
 
-                </tr>
-                <tr>
-                    {% if data.data_video.url != "NULL" %}
+                    </tr>
+                    <tr>
+                        {% if data.data_video.url != "NULL" %}
                         <td>
                             <p></p>
                             <video width='70%' style="display:block; margin:0 auto;" controls>
@@ -150,131 +167,138 @@
                             <br>
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
-                            <td>
-                                <a href="{% url 'intern_update_media' data.pk %}">
-                                    <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
+                        <td>
+                            <a href="{% url 'intern_update_media' data.pk %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
                                     width="15px" alt="Edit">
-                                </a><hr/>
-                                <a href="{% url 'intern_delete_data' data.pk %}"> <img
-                                        src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
-                                        width="15px" alt="Delete">
-                                </a>
+                            </a>
+                            <hr />
+                            <a href="{% url 'intern_delete_data' data.pk %}"> <img
+                                    src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
+                                    width="15px" alt="Delete">
+                            </a>
 
-                            </td>
+                        </td>
                         {% endif %}
-                    {% endif %}
-                </tr>
+                        {% endif %}
+                    </tr>
 
-            {% endfor %}
-        </table>
+                    {% endfor %}
+                </table>
 
-        {% if subtopic.subtopic_status != 'ACCEPTED' %}
-            <br>
-            <div class="container" style="background-color:#F5F5F5  ">
-                <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+                {% if subtopic.subtopic_status != 'ACCEPTED' %}
+                <br>
+                <div class="container" style="background-color:#F5F5F5  ">
+                    <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
-                               onclick="show()"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}" alt="Text">
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
-                                    src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image">
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
-                                    src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
-                        </li>
-                        <li class="nav-item" style="margin-left: 846px;">
-                        </li>
-                        <li class="nav-item" style="margin-left: 846px;">
-                        </li>
-                    </ul>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
+                                    onclick="show()"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                        alt="Text">
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
+                                        src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image">
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
+                                        src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
+                            </li>
+                            <li class="nav-item" style="margin-left: 846px;">
+                            </li>
+                            <li class="nav-item" style="margin-left: 846px;">
+                            </li>
+                        </ul>
 
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade show active" id="data">
-                            <div class="ck center" align="center" id="cc">
-                                <div class="row" style="padding-bottom: 0px;">
-                                    <div class="col-auto mr-auto">&nbsp;</div>
-                                    <div class="col-auto" style="padding-top: 10px; \">
-                                        <input class="btn btn-outline-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX" value="Add Data">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="data">
+                                <div class="ck center" align="center" id="cc">
+                                    <div class="row" style="padding-bottom: 0px;">
+                                        <div class="col-auto mr-auto">&nbsp;</div>
+                                        <div class="col-auto" style="padding-top: 10px; \">
+                                            <input class="btn btn-outline-success btn-md btn-block" type="button"
+                                                onClick="addData()" id="submitAJAX" value="Add Data">
+                                        </div>
                                     </div>
-                                  </div>
-                                
-                                {{ form.media }} {{ form.as_p }}    
-                            </div>
-                            <br>
-                            
-                        </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="image">
-                            <br>
-                            <div class="row ">
-                                <div class="col-auto mr-auto">
-                                    <label>Select Image: </label> <input type="file" class="btn" name="image"/>
+                                    {{ form.media }} {{ form.as_p }}
                                 </div>
-                                <div class="col-auto">
-                                    <input class="btn btn-outline-secondary btn-md " type="submit" name="submit" id="submit"
-                                    value="Upload">
-                                </div>
-                              </div>
-                              <br>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="video">
-                            <br>
-                            <div class="row ">
-                                <div class="col-auto mr-auto">
-                                    <label> Select Video: </label> <input type="file" class="btn " name="video"/>
-                                </div>
-                                <div class="col-auto">
-                                    <input class="btn btn-outline-secondary btn-md " type="submit" name="submit" id="submit"
-                                    value="Upload">
-                                </div>                                
+                                <br>
+
                             </div>
-                            <br>
+
+                            <div role="tabpanel" class="tab-pane fade" id="image">
+                                <br>
+                                <div class="row ">
+                                    <div class="col-auto mr-auto">
+                                        <label>Select Image: </label> <input type="file" class="btn" name="image" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                            id="submit" value="Upload">
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="video">
+                                <br>
+                                <div class="row ">
+                                    <div class="col-auto mr-auto">
+                                        <label> Select Video: </label> <input type="file" class="btn " name="video" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                            id="submit" value="Upload">
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                {% endif %}
+                <br>
+                <br>
             </div>
-        {% endif %}
-        <br>
-        <br>
-        </div>
 
-        <div class="container" style="margin-top:25%;"><hr/></div>
-
-        <script>
-            var show = () => {
-                $("#cc").toggle()
-            }
-            var addData = () => {
-                var data = window.CKEDITOR.instances.id_data_content.getData();
-                var xhttp = new XMLHttpRequest();
-                var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
-                if (data == null || data.trim() === '') {
-                    alert("Please enter data");
-                } else {
-                            var mainTable = document.getElementById("dta");
-                            var row = mainTable.insertRow()
-                            var cell1 = row.insertCell(0)
-                            var cell2 = row.insertCell(1)
-                            cell1.innerHTML = '<div class="text-muted">'+ data+'</div>'
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            cell1.innerHTML = data
-                            window.CKEDITOR.instances.id_data_content.setData('');
-                            cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
-                            width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
-                        }
-                    };
-                    xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
-                    xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-                    xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
-                    xhttp.send("data_content=" + data);
+            <script>
+                var show = () => {
+                    $("#cc").toggle()
                 }
+                var addData = () => {
+                    var data = window.CKEDITOR.instances.id_data_content.getData();
+                    var xhttp = new XMLHttpRequest();
+                    var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
+                    if (data == null || data.trim() === '') {
+                        alert("Please enter data");
+                    } else {
+                        var mainTable = document.getElementById("dta");
+                        var row = mainTable.insertRow()
+                        var cell1 = row.insertCell(0)
+                        var cell2 = row.insertCell(1)
+                        cell1.innerHTML = '<div class="text-muted">' + data + '</div>'
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                cell1.innerHTML = data
+                                window.CKEDITOR.instances.id_data_content.setData('');
+                                cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
+                            width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
+                            }
+                        };
+                        xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
+                        xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                        xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                        xhttp.send("data_content=" + data);
+                    }
+                }
+<<<<<<< HEAD
             }
         </script>
 {% endblock %}
+=======
+            </script>
+            {% endblock %}
+>>>>>>> 9607ca57e0cbc526ee126b9714ebefa9d2d0f73d
