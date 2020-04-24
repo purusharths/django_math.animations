@@ -6,12 +6,14 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Manage Interns" "staff_manage_intern" %}
+    {% breadcrumb  "Manage Interns" "manage-interns" %}
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
 
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.is_staff %}
     <style>
         label {
             display: none;
@@ -86,4 +88,6 @@
     <br>
     <br>
     <br>
+    {% endif %}
+    {% endif %}
 {% endblock %}

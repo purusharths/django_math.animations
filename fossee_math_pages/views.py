@@ -170,33 +170,6 @@ def admin_view_intership(request):
 
 
 @login_required
-def admin_manage_intern(request):
-    if request.user.is_superuser:
-        datas = UserDetails.objects.filter(user_role="INTERN")
-        form = ManageIntern
-        if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(UserDetails, id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('admin_manage_intern')
-            else:
-                messages.error(request, "Error")
-                return redirect('admin_manage_intern')
-
-        context = {
-            'datas': datas,
-            'form': form,
-        }
-        return render(request, 'fossee_math_pages/admin_manage_intern.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
 def admin_view_users(request):
     if request.user.is_superuser:
         datas = UserDetails.objects.all()
@@ -728,10 +701,10 @@ def review_submissions(request):
     else:
         return redirect('dashboard')
 
-
+# HERE
 @login_required
-def staff_manage_intern(request):
-    if request.user.is_staff:
+def manage_interns(request):
+    if request.user.is_staff or request.user.is_superuser:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
         form = ManageIntern()  # what's happening here?
@@ -751,10 +724,10 @@ def staff_manage_intern(request):
                     obj = form.save(commit=False)
                     obj.save()
                     messages.success(request, "Changed")
-                    return redirect('staff_manage_intern')
+                    return redirect('manage-interns')
                 else:
                     messages.error(request, "Error")
-                    return redirect('staff_manage_intern')
+                    return redirect('manage-interns')
 
         context = {
             'interns': interns,
@@ -764,10 +737,10 @@ def staff_manage_intern(request):
             'chosen_internship': internship
         }
         # print(context)
-        return render(request, 'fossee_math_pages/staff_manage_intern.html', context)
+        return render(request, 'fossee_math_pages/manage-interns.html', context)
     else:
         return redirect('dashboard')
-
+##
 
 @login_required
 def assign_topics(request):
