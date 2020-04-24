@@ -22,10 +22,7 @@ urlpatterns = [
                   path('admin_add_internship/', views.admin_add_internship, name='admin_add_internship'),
                   path('admin_minternshipanage_internship/', views.admin_manage_internship, name='admin_manage_internship'),
                   path('admin_view_users/', views.admin_view_users, name='admin_view_users'),
-                  path('intern_view_internship/', views.intern_view_internship, name='intern_view_internship'),
-                  path('admin_view_intership/', views.admin_view_intership, name='admin_view_internshp'),
-                  path('staff_view_internship/', views.staff_view_internship, name='staff_view_internship'),
-                  # CHANGED
+                   # CHANGED
                   path('add-topics/', views.add_topics, name='add-topics'),
                   path('add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
                   path('add-submission/', views.add_submission , name='add-submission'),
@@ -34,6 +31,7 @@ urlpatterns = [
                   path('contents/<str:internship>', views.contents, name='contents'),
                   path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
                   path('interns/', views.interns, name='interns'),
+                  path('internship-progress/', views.internship_progress, name='internship-progress'),
                   path('manage-interns/', views.manage_interns, name='manage-interns'),
                   path('review-submissions/', views.review_submissions, name='review-submissions'),
                   path('review-submissions/<str:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
