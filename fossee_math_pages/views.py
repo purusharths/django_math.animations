@@ -702,6 +702,7 @@ def staff_add_topics(request):
                         current_topic.topic_url = '-'.join(str(topic).lower().split())
                         current_topic.save()
                         messages.success(request, 'Topic added with internship')
+                        internship = Internship.objects.get(pk=current_topic.internship_id.pk)
 
         internship_all = Internship.objects.all()
         topic = Topic.objects.all()
