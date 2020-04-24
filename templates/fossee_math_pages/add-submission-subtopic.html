@@ -266,10 +266,10 @@
                             width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
                     }
                 };
-                xhttp.open('post', "dashboard/add-submission/{{ subtopic.subtopic_hash }}", true);
+                xhttp.open('post', "/dashboard/add-submission/{{ subtopic.subtopic_hash }}", true);
                 xhttp.setRequestHeader("X-CSRFToken", csrf_token);
                 xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
-                xhttp.send("data_content=" + data);
+                xhttp.send("data_content=" + encodeURIComponent(data));
             }
         }
     </script>
