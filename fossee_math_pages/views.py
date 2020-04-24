@@ -19,7 +19,7 @@ from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedT
 
 
 @login_required
-def admin_add_internship(request):
+def add_internship(request):
     if request.user.is_superuser:
         form = AddInternship()
         internship = Internship.objects.all()
@@ -28,7 +28,7 @@ def admin_add_internship(request):
             form = AddInternship(request.POST, request.FILES)
             if Internship.objects.filter(internship_topic=internship_topic).exists():
                 messages.error(request, 'That internship already exist')
-                return redirect('admin_add_internship')
+                return redirect('add-internship')
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
@@ -36,16 +36,16 @@ def admin_add_internship(request):
                 current_instance.internship_url = '-'.join(str(internship_topic).lower().split())
                 current_instance.save()
                 messages.success(request, 'Internship added')
-                return redirect('admin_add_internship')
+                return redirect('add-internship')
             else:
                 messages.error(request, 'Some error occured')
-                return redirect('admin_add_internship')
+                return redirect('add-internship')
         form = AddInternship()
         context = {
             'form': form,
             'internship': internship,
         }
-        return render(request, 'fossee_math_pages/admin_add_internship.html', context)
+        return render(request, 'fossee_math_pages/add-internship.html', context)
     else:
         return redirect('dashboard')
 

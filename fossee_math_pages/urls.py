@@ -19,9 +19,9 @@ urlpatterns = [
 
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
-                  path('admin_add_internship/', views.admin_add_internship, name='admin_add_internship'),
                   path('admin_minternshipanage_internship/', views.admin_manage_internship, name='admin_manage_internship'),
                   # CHANGED
+                  path('add-internship/', views.add_internship, name='add-internship'),
                   path('add-users/', views.add_users, name='add-users'),
                   path('add-topics/', views.add_topics, name='add-topics'),
                   path('add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
