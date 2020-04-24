@@ -77,7 +77,7 @@
                     document.getElementById("id_subtopic").value = '';
                 }
             };
-            xhttp.open('POST', "/staff_add_subtopic/{{ i_topic.id }}", true);
+            xhttp.open('POST', "/dashboard/staff_add_subtopic/{{ i_topic.id }}", true);
             xhttp.setRequestHeader("X-CSRFToken", csrf_token);
             xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
             xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.id }}");
