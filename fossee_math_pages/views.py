@@ -395,6 +395,10 @@ def add_submission_subtopic(request, st_id):
                                 data_video=video, subtopic_id_id=t_id,
                                 user_id_id=user.id)
                 add_data.save()
+                hashtext = str(add_data.pk) + '-' + str(request.user.pk)
+                hash_result = hashlib.md5(hashtext.encode())
+                add_data.subtopic_hash = hash_result.hexdigest()
+                add_data.save()
 
                 if img != "" or img != " ":
                     imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
@@ -613,7 +617,7 @@ def add_subtopics(request, id):
 
             if subtopic.strip() == '':
                 messages.error(request, "Fill the field")
-                return redirect(staff_add_subtopic, id)
+                return redirect(add_subtopics, id)
             else:
                 try:
                     Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
