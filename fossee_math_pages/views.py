@@ -604,7 +604,7 @@ def add_subtopics(request, id):
 
             if subtopic.strip() == '':
                 messages.error(request, "Fill the field")
-                return redirect(staff_add_subtopic, id)
+                return redirect('add-subtopics', id)
             else:
                 try:
                     Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)

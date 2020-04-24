@@ -62,7 +62,7 @@
 <script>
     var addData = () => {
         var csrf_token = '{{ csrf_token }}';
-        var topic = encodeURIComponent(document.getElementById('id_subtopic').value)
+        var topic = document.getElementById('id_subtopic').value
         console.log(topic)
         if (topic == null || topic.trim() === '') {
             alert("Please enter the topic name")
@@ -77,12 +77,12 @@
                     document.getElementById("id_subtopic").value = '';
                 }
             };
-            xhttp.open('POST', "/staff_add_subtopic/{{ i_topic.id }}", true);
-              xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-              xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
-              xhttp.send("subtopic=" + topic + "&id={{ i_topic.id }}");
-          }
-      }
-  </script>
+            xhttp.open('POST', "/dashboard/add-subtopics/{{ i_topic.id }}", true);
+            xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+            xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+            xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.id }}");
+        }
+    }
+</script>
   <!-- /.container -->
   {% endblock %}
