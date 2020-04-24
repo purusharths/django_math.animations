@@ -250,7 +250,6 @@ def admin_view_users(request):
 
             try:
                 password = ''.join([random.choice(string.ascii_letters + string.digits  ) for K in range(10)])
-                
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname)
