@@ -463,6 +463,8 @@ def intern_update_media(request, id):
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(id=id)
+                if img is None and video is None:
+                    return redirect('intern_add_data', t_id)
                 instance.data_image = img
                 instance.data_video = video
                 instance.save()
