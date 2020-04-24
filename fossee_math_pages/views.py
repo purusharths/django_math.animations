@@ -272,7 +272,7 @@ def dashboard(request):
     return render(request, 'fossee_math_pages/dashboard.html')
 
 
-def home_view_data(request, internship):
+def contents(request, internship):
     internship_details = Internship.objects.get(internship_url=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
@@ -288,7 +288,7 @@ def home_view_data(request, internship):
         'topics': topics,
         'subtopics': subtopics,
     }
-    return render(request, 'fossee_math_pages/home_view_data.html', context)
+    return render(request, 'fossee_math_pages/contents.html', context)
 
 
 def home_details(request, internship, topic, subtopic):
