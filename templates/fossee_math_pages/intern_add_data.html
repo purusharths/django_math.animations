@@ -90,6 +90,23 @@
                             {{ data.data_content |safe }}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
+<<<<<<< HEAD
+                            <td>
+                                <a href="{% url 'intern_update_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                     title="Last Modified on {{ data.data_post_date }}"
+                                     alt="Edit">
+                                </a><hr>
+                                <a href="{% url 'intern_delete_data' data.pk %}">
+                                    <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete" width="15px"
+                                         alt="Delete">
+                                </a><br>
+                                <!--add option for cropping-->
+
+
+
+                            </td>
+=======
                         <td>
                             <a href="{% url 'intern_update_data' data.pk %}">
                                 <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
@@ -102,6 +119,7 @@
                             </a><br>
                             <!--add option for cropping-->
                         </td>
+>>>>>>> 9607ca57e0cbc526ee126b9714ebefa9d2d0f73d
                         {% endif %}
                         {% endif %}
                     </tr>
@@ -276,5 +294,11 @@
                         xhttp.send("data_content=" + encodeURIComponent(data));
                         }
                 }
+<<<<<<< HEAD
+            }
+        </script>
+{% endblock %}
+=======
             </script>
             {% endblock %}
+>>>>>>> 9607ca57e0cbc526ee126b9714ebefa9d2d0f73d
