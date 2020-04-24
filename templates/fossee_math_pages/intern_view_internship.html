@@ -25,7 +25,7 @@
                     </tr>
                     </thead>
                     {% for k in subtopics %}
-                        {% if k.topic_id.topic_name == j.topic_name %}
+                        {% if k.topic_id.topic_name == j.topic_name and k.topic_id.internship_id == j.internship_id %}
                             <tbody>
                             <tr>
                                 <td scope="row"> &nbsp;&nbsp;&nbsp;&nbsp;   {{  forloop.counter }}. {{ k.subtopic_name }}</td>
