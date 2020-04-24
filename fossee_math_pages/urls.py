@@ -19,7 +19,6 @@ urlpatterns = [
 
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
-                  path('admin_minternshipanage_internship/', views.admin_manage_internship, name='admin_manage_internship'),
                   # CHANGED
                   path('add-internship/', views.add_internship, name='add-internship'),
                   path('add-users/', views.add_users, name='add-users'),
@@ -33,6 +32,7 @@ urlpatterns = [
                   path('interns/', views.interns, name='interns'),
                   path('internship-progress/', views.internship_progress, name='internship-progress'),
                   path('manage-interns/', views.manage_interns, name='manage-interns'),
+                  path('manage-internship/', views.manage_internship, name='manage-internship'),
                   path('review-submissions/', views.review_submissions, name='review-submissions'),
                   path('review-submissions/<str:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
                   ##

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Admin Manage Internship{% endblock %}
+{% block title %} Manage Internship {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Manage Internship" "admin_manage_internship" %}
+    {% breadcrumb "Manage Internship" "manage-internship" %}
 {% endblock %}
 
 {% block content %}
@@ -21,11 +21,11 @@
         {% include 'partials/_alerts.html' %}
         <form method="POST">
             {% csrf_token %}
-            Internship: 
+            Internship:
             <label>Select Internship: </label>
             <select name="search_internship" onchange="submit();">
-                {% if internship in internship_all %} 
-                    <option>{{ internship }}</option> 
+                {% if internship in internship_all %}
+                    <option>{{ internship }}</option>
                 {% else %}
                     <option>Select Internship</option>
                 {% endif %}
@@ -36,10 +36,10 @@
                 {% endfor %}
             </select>
         </form>
-        
+
         <div class="container" style="padding-top: 3%;">
             <h2>Manage Intership</h2>
-        
+
             <table class="table table-condensed">
                 <thead>
                 <tr>

@@ -51,7 +51,7 @@ def add_internship(request):
 
 
 @login_required
-def admin_manage_internship(request):
+def manage_internship(request):
     if request.user.is_superuser:
 
         internship = None
@@ -68,10 +68,10 @@ def admin_manage_internship(request):
                     obj = form.save(commit=False)
                     obj.save()
                     messages.success(request, "Changed")
-                    return redirect('admin_manage_internship')
+                    return redirect('manage-internship')
                 else:
                     messages.error(request, "Error")
-                    return redirect('admin_manage_internship')
+                    return redirect('manage-internship')
 
         internship_all = Internship.objects.all()
 
@@ -80,7 +80,7 @@ def admin_manage_internship(request):
             'internship_all': internship_all,
             'form': form
         }
-        return render(request, 'fossee_math_pages/admin_manage_internship.html', context)
+        return render(request, 'fossee_math_pages/manage-internship.html', context)
     else:
         return redirect('dashboard')
 
