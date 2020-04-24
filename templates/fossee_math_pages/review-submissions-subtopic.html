@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Staff View Topic{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
+    {% breadcrumb "View data" "" %}
+    <!-- WRONG CRUMBS -->
+{% endblock %}
+
+{% load static %} {{ form.media }} {% load crispy_forms_tags %}
+{% block content %}
+    {% render_breadcrumbs %}
+    <style>
+        tr:hover {
+            background-color: rgb(240, 240, 240);
+        }
+    </style>
+
+    <div class="container">
+
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+        <script>
+            window.CKEDITOR_BASEPATH = '/static/ckeditor/';
+        </script>
+
+        {% if subtopic.subtopic_status == "WAITING" %}
+            <div class="card border-warning" style="margin-bottom: 15px;">
+            <h4>
+                <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "ACCEPTED" %}
+            <div class="card border-success">
+            <h4>
+                <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
+            </h4>
+        {% elif subtopic.subtopic_status == "REJECTED" %}
+            <div class="card border-danger">
+            <h4>
+                <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
+            </h4>
+        {% else %}
+            <div class="card border-info">
+            <h4>
+                <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
+            </h4>
+        {% endif %}
+        <div class="card-body">
+            <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+            <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+            <h6><b>Last Modified: </b> FEATURE PENDING</h6>
+            <div align="center">
+                Current Status: <b>{{ subtopic.subtopic_status }}</b>
+                <br>
+            </div>
+            <div align="center">
+                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-success">Aprove</a>
+                &nbsp;
+                <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-outline-danger">Reject</a>
+            </div>
+        </div>
+        </div>
+        <br>
+        <table>
+            {% for data in datas %}
+                <tr>
+                    {% if data.data_content != "NULL" %}
+                        <td>
+                            <p></p>
+                            {{ data.data_content |safe }}
+                        </td>
+                        <td>
+                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            </a>
+                            <br>
+                            <br>
+                            <a href="{% url 'staff_update_data' data.pk %}">
+                                Edit
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_image.url != "NULL" %}
+                        <td>
+                            <p></p>
+                            {% for i in imagesize %}
+                                {% if i.data_id_id == data.pk %}
+                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            </a>
+                            <br>
+                            <br>
+                            <a href="{% url 'staff_update_image_size' data.pk %}">Format</a>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_video.url != "NULL" %}
+                        <td>
+                            <p></p>
+                            <video width='70%' style="display:block; margin:0 auto;" controls>
+                                <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                Your browser does not support the video tag.
+                            </video>
+                        </td>
+                        <td>
+                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <br>
+        </div>
+
+
+{% endblock %}
