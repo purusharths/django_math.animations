@@ -171,7 +171,7 @@ def admin_view_intern(request, id):
 
 
 @login_required
-def admin_view_users(request):
+def add_users(request):
     if request.user.is_superuser:
         datas = UserDetails.objects.all()
         user_contains_query = request.GET.get('title_contains')
@@ -198,28 +198,28 @@ def admin_view_users(request):
             regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'That email is being used')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             if User.objects.filter(username=username).exists():
                 messages.error(request, 'That username is being used')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             if firstname.isdigit():
                 messages.error(request, 'Firstname cannot have numbers')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             if regex.search(firstname):
                 messages.error(request, 'Firstname cannot have special characters')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             if lastname.isdigit():
                 messages.error(request, 'Lastname cannot have numbers')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             try:
                 v = validate_email(email)
                 val_email = v["email"]
             except EmailNotValidError as e:
                 messages.error(request, 'Invalid Email ID')
-                return redirect('admin_view_users')
+                return redirect('add-users')
 
             try:
                 password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
@@ -249,9 +249,9 @@ def admin_view_users(request):
                 usr = User.objects.get(username=email)
                 usr.delete()
                 messages.error(request, 'Some error occured !')
-                return redirect('admin_view_users')
+                return redirect('add-users')
             messages.success(request, 'User Added!')
-            return redirect('admin_view_users')
+            return redirect('add-users')
 
         paginator = Paginator(datas, 25)  # Show 25 contacts per page.
 
@@ -262,7 +262,7 @@ def admin_view_users(request):
             'form': form,
             'sub_form': sub_form,
         }
-        return render(request, 'fossee_math_pages/admin_view_users.html', context)
+        return render(request, 'fossee_math_pages/add-users.html', context)
     else:
         return redirect('dashboard')
 
