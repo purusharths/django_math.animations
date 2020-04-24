@@ -27,8 +27,6 @@ urlpatterns = [
                   path('dashboard/add-submission/', views.add_submission , name='add-submission'),
                   path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic, name='add-submission-subtopic'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
-                  path('contents/<str:internship>', views.contents, name='contents'),
-                  path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
                   path('dashboard/interns/', views.interns, name='interns'),
                   path('dashboard/internship-progress/', views.internship_progress, name='internship-progress'),
                   path('dashboard/manage-interns/', views.manage_interns, name='manage-interns'),
@@ -39,6 +37,8 @@ urlpatterns = [
 
                   # ALREADY OKAY
                   path('', views.index, name='index'),
+                  path('contents/<str:internship>', views.contents, name='contents'),
+                  path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
                   path('dashboard/', views.dashboard, name='dashboard'),
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
