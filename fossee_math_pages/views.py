@@ -12,6 +12,15 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
+from django.urls import reverse_lazy
+from django.views import generic
+from bootstrap_modal_forms.generic import (BSModalLoginView,
+                                           BSModalCreateView,
+                                           BSModalUpdateView,
+                                           BSModalReadView,
+                                           BSModalDeleteView)
+
+
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting, )
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
@@ -836,7 +845,6 @@ def staff_assign_topic(request):
     else:
         return redirect('dashboard')
 
-
 @login_required
 def staff_view_interns(request):
     if request.user.is_staff:
@@ -998,43 +1006,105 @@ def user_logout(request):
     return redirect('index')
 
 
-@login_required
-def staff_add_contribution(request, id):
-    if request.user.is_staff:
-        try:
-            instance = Contributor.objects.get(topic_id=id)
-            form = AddContributor(request.POST or None, instance=instance)
-        except:
-            instance = None
-            form = AddContributor()
+class staff_add_contribution(BSModalCreateView):
+    def get(self,request,id):
+        if request.user.is_staff:
+            try:
+                instance = Contributor.objects.get(topic_id=id)
+                form = AddContributor(request.POST or None, instance=instance)
+            except:
+                instance = None
+                form = AddContributor()
+            assigned = AssignedTopics.objects.get(topic_id=id)
+            try:
+                instance = Contributor.objects.get(topic_id=id)
+                form = AddContributor(request.POST or None, instance=instance)
+            except:
+                instance = None
+                form = AddContributor()
 
-        assigned = AssignedTopics.objects.get(topic_id=id)
+            context = {
+                'form': form,
+                'assigned': assigned,
+            }
+            return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
+        else:
+            return redirect('dashboard')
+    def post(self,request,id):
+        if request.user.is_staff:
+            try:
+                instance = Contributor.objects.get(topic_id=id)
+                form = AddContributor(request.POST or None, instance=instance)
+            except:
+                instance = None
+                form = AddContributor()
 
-        if request.POST:
-            if instance is not None:
-                obj = form.save(commit=False)
-                obj.save()
-            else:
-                internname = request.POST['username']
-                mentorname = request.POST['mentor']
-                professorname = request.POST['professor']
-                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-                                  professor=professorname)
-                obj.save()
-        try:
-            instance = Contributor.objects.get(topic_id=id)
-            form = AddContributor(request.POST or None, instance=instance)
-        except:
-            instance = None
-            form = AddContributor()
+            assigned = AssignedTopics.objects.get(topic_id=id)
 
-        context = {
-            'form': form,
-            'assigned': assigned,
-        }
-        return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
-    else:
-        return redirect('dashboard')
+            if request.POST:
+                if instance is not None:
+                    obj = form.save(commit=False)
+                    obj.save()
+                else:
+                    internname = request.POST['username']
+                    mentorname = request.POST['mentor']
+                    professorname = request.POST['professor']
+                    obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+                                      professor=professorname)
+                    obj.save()
+            try:
+                instance = Contributor.objects.get(topic_id=id)
+                form = AddContributor(request.POST or None, instance=instance)
+            except:
+                instance = None
+                form = AddContributor()
+
+            context = {
+                'form': form,
+                'assigned': assigned,
+            }
+            return render(request, 'fossee_math_pages/dashboard.html', context)
+        else:
+            return redirect('dashboard')
+
+#
+# @login_required
+# def staff_add_contribution(request, id):
+#     if request.user.is_staff:
+#         try:
+#             instance = Contributor.objects.get(topic_id=id)
+#             form = AddContributor(request.POST or None, instance=instance)
+#         except:
+#             instance = None
+#             form = AddContributor()
+#
+#         assigned = AssignedTopics.objects.get(topic_id=id)
+#
+#         if request.POST:
+#             if instance is not None:
+#                 obj = form.save(commit=False)
+#                 obj.save()
+#             else:
+#                 internname = request.POST['username']
+#                 mentorname = request.POST['mentor']
+#                 professorname = request.POST['professor']
+#                 obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+#                                   professor=professorname)
+#                 obj.save()
+#         try:
+#             instance = Contributor.objects.get(topic_id=id)
+#             form = AddContributor(request.POST or None, instance=instance)
+#         except:
+#             instance = None
+#             form = AddContributor()
+#
+#         context = {
+#             'form': form,
+#             'assigned': assigned,
+#         }
+#         return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
+#     else:
+#         return redirect('dashboard')
 
 
 def error_404_view(request, exception):
