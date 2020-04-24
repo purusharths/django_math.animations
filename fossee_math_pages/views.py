@@ -380,6 +380,7 @@ def add_submission_subtopic(request, st_id):
 
         if request.method == 'POST':
             content = request.POST.get('data_content')
+            print(content)
             img = request.FILES.get('image')
             video = request.FILES.get('video')
             assigned_topic = AssignedTopics.objects.get(topic_id=subtopic.topic_id_id)
@@ -659,6 +660,7 @@ def add_topics(request):
                         current_topic.topic_url = '-'.join(str(topic).lower().split())
                         current_topic.save()
                         messages.success(request, 'Topic added with internship')
+                        internship = Internship.objects.get(pk=current_topic.internship_id.pk)
 
         internship_all = Internship.objects.all()
         topic = Topic.objects.all()
