@@ -1,12 +1,12 @@
-certifi==2018.11.29
+certifi==2020.4.5.1
 chardet==3.0.4
-Django==2.2.7
+Django==2.2.10
 django-simple-history==2.7.0
 idna==2.8
-Pillow==5.4.1
+Pillow==6.2.0
 pytz==2018.9
 requests==2.21.0
-urllib3==1.24.1
+urllib3==1.24.2
 django-crispy-forms==1.8.1
 django-phonenumber-field==3.0.1
 phonenumbers==8.11.0
