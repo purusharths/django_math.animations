@@ -143,31 +143,31 @@ def admin_view_intern(request, id):
         return redirect('dashboard')
 
 
-@login_required
-def admin_view_intership(request):
-    if request.user.is_superuser:
-
-        internship = None
-        topic = None
-        subtopic = None
-        internship_all = None
-        if "search_internship" in request.POST:
-            internship = Internship.objects.get(pk=request.POST['search_internship'])
-
-        internship_all = Internship.objects.all()
-        topic = Topic.objects.all()
-        subtopic = Subtopic.objects.all()
-
-        context = {
-            'internship': internship,
-            'internship_all': internship_all,
-            'topic': topic,
-            'subtopic': subtopic,
-        }
-
-        return render(request, 'fossee_math_pages/admin_view_internship.html', context)
-    else:
-        return redirect('dashboard')
+# @login_required
+# def admin_view_internship(request):
+#     if request.user.is_superuser:
+#
+#         internship = None
+#         topic = None
+#         subtopic = None
+#         internship_all = None
+#         if "search_internship" in request.POST:
+#             internship = Internship.objects.get(pk=request.POST['search_internship'])
+#
+#         internship_all = Internship.objects.all()
+#         topic = Topic.objects.all()
+#         subtopic = Subtopic.objects.all()
+#
+#         context = {
+#             'internship': internship,
+#             'internship_all': internship_all,
+#             'topic': topic,
+#             'subtopic': subtopic,
+#         }
+#
+#         return render(request, 'fossee_math_pages/admin_view_internship.html', context)
+#     else:
+#         return redirect('dashboard')
 
 
 @login_required
@@ -522,22 +522,6 @@ def intern_delete_data(request, id):
         return redirect('dashboard')
 
 
-@login_required
-def intern_view_internship(request):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
-        topics = Topic.objects.all()
-        subtopics = Subtopic.objects.all()
-
-        context = {
-            'internship': internship,
-            'topics': topics,
-            'subtopics': subtopics,
-        }
-        return render(request, 'fossee_math_pages/intern_view_internship.html', context)
-    else:
-        return redirect('dashboard')
-
 
 @login_required
 def add_submission(request):
@@ -836,8 +820,8 @@ def interns(request):
 
 
 @login_required
-def staff_view_internship(request):
-    if request.user.is_staff:
+def internship_progress(request):
+    if request.user.is_staff or request.user.is_superuser:
         internship = Internship.objects.first()
         internship = Internship.objects.filter(pk=internship.pk)
         topics = Topic.objects.all()
@@ -856,10 +840,28 @@ def staff_view_internship(request):
             'internship_all': internship_all,
             'chosen_internship': internship[0],
         }
-        return render(request, 'fossee_math_pages/staff_view_internship.html', context)
+        return render(request, 'fossee_math_pages/internship-progress.html', context)
+
+    elif request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
+        topics = Topic.objects.all()
+        subtopics = Subtopic.objects.all()
+
+        context = {
+            'internship': internship,
+            'topics': topics,
+            'subtopics': subtopics,
+        }
+        return render(request, 'fossee_math_pages/internship-progress.html', context)
+
     else:
         return redirect('dashboard')
 
+# @login_required
+# def intern_view_internship(request):
+#
+#     else:
+#         return redirect('dashboard')
 
 @login_required
 def review_submissions_subtopic(request, s_id):
