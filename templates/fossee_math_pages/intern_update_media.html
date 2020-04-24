@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "intern_view_topic" %}
+    {% breadcrumb "Internship" "add-submission" %}
     {% breadcrumb "Add Submission" "" %}
     {% breadcrumb "Update Image or Video" "" %}
 {% endblock %}
@@ -51,7 +51,7 @@
             </div>
         </form>
         <div>
-            <a href="{% url 'intern_add_data' subtopic.subtopic_hash %}" class="btn btn-success">back</a>
+            <a href="{% url 'add-submission-subtopic' subtopic.subtopic_hash %}" class="btn btn-success">back</a>
         </div>
         <br>
     </div>
