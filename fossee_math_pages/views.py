@@ -1,6 +1,7 @@
 import random
 import re
 import hashlib
+import string
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -221,7 +222,7 @@ def admin_view_users(request):
                 return redirect('admin_view_users')
 
             try:
-                password = random.randint(0, 99999999)
+                password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname)
@@ -493,7 +494,7 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, image.subtopic_id.subtopic_hash)
+            return redirect(intern_update_image_size, id)
 
         context = {
             'image': image,
@@ -610,16 +611,25 @@ def add_subtopics(request, id):
             topic_id = request.POST['id']
             u_id = request.user.id
 
-            data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
-            data.save()
-            current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
-            hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
-            hash_result = hashlib.md5(hashtext.encode())
-            current_subtopic.subtopic_hash = hash_result.hexdigest()
-            current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
-            current_subtopic.save()
-            messages.success(request, 'Topic added with internship')
-            i_topic = Topic.objects.get(id=id)
+            if subtopic.strip() == '':
+                messages.error(request, "Fill the field")
+                return redirect(staff_add_subtopic, id)
+            else:
+                try:
+                    Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+                    messages.error(request, "Subtopic exists !")
+                except:
+                    data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, user_id_id=u_id)
+                    data.save()
+                    current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id,
+                                                            user_id_id=u_id)
+                    hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+                    hash_result = hashlib.md5(hashtext.encode())
+                    current_subtopic.subtopic_hash = hash_result.hexdigest()
+                    current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
+                    current_subtopic.save()
+                    messages.success(request, 'Topic added with subtopic')
+                    i_topic = Topic.objects.get(id=id)
 
         context = {
             'form': form,
@@ -644,17 +654,22 @@ def add_topics(request):
                 topic = request.POST['topic']
                 id = request.POST['id']
                 u_id = request.user.id
-
-                data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
-                data.save()
-                current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id, user_id_id=u_id)
-                current_topic.topic_url = '-'.join(str(topic).lower().split())
-                current_topic.save()
-                messages.success(request, 'Topic added with internship')
-                internship = Internship.objects.filter(internship_status='ACTIVE').first()
+                if topic.strip() == '':
+                    messages.error(request, "Fill the field")
+                    return redirect(staff_add_topics)
+                else:
+                    try:
+                        Topic.objects.get(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+                        messages.error(request, "Topic alredy exists")
+                    except:
+                        data = Topic(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+                        data.save()
+                        current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id, user_id_id=u_id)
+                        current_topic.topic_url = '-'.join(str(topic).lower().split())
+                        current_topic.save()
+                        messages.success(request, 'Topic added with internship')
 
         internship_all = Internship.objects.all()
-
         topic = Topic.objects.all()
 
         context = {
@@ -701,6 +716,7 @@ def review_submissions(request):
     else:
         return redirect('dashboard')
 
+
 # HERE
 @login_required
 def manage_interns(request):
@@ -710,6 +726,7 @@ def manage_interns(request):
         form = ManageIntern()  # what's happening here?
         internship = Internship.objects.first()
         interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
+        userdetails = UserDetails.objects.all()
         # print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
@@ -718,7 +735,8 @@ def manage_interns(request):
                 # print(interns_in)
             else:
                 int_id = request.POST["id"]
-                obj = get_object_or_404(UserDetails, id=int_id)
+                print(int_id)
+                obj = UserDetails.objects.get(user_id_id=int_id)
                 form = ManageIntern(request.POST or None, instance=obj)
                 if form.is_valid():
                     obj = form.save(commit=False)
@@ -734,12 +752,15 @@ def manage_interns(request):
             'form': form,
             'internship_all': internship_all,
             'interns_in': interns_in,
-            'chosen_internship': internship
+            'chosen_internship': internship,
+            'userdetails': userdetails,
         }
         # print(context)
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     else:
         return redirect('dashboard')
+
+
 ##
 
 @login_required
@@ -843,7 +864,7 @@ def staff_view_internship(request):
 @login_required
 def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
-        subtopic = Subtopic.objects.get(id=s_id)
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
         data = Data.objects.filter(subtopic_id=subtopic.pk)
         imageformat = ImageFormatting.objects.all()
 

@@ -36,7 +36,7 @@ urlpatterns = [
                   path('interns/', views.interns, name='interns'),
                   path('manage-interns/', views.manage_interns, name='manage-interns'),
                   path('review-submissions/', views.review_submissions, name='review-submissions'),
-                  path('review-submissions/<int:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
+                  path('review-submissions/<str:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
                   ##
 
                   # ALREADY OKAY
