@@ -25,15 +25,15 @@ urlpatterns = [
                   path('internship/', views.internship, name='internship'),
                   path('login/', views.user_login, name='login'),
                   # CHANGED
-                  path('add-submission/', views.add_submission , name='add-submission'),
-                  path('add-submission/<str:st_id>', views.add_submission_intern, name='add-submission-intern'),
                   path('add-topics/', views.add_topics, name='add-topics'),
-                  path('review-submissions/', views.review_submissions, name='review-submissions'),
                   path('add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
-                  path('interns/', views.interns, name='interns'),
+                  path('add-submission/', views.add_submission , name='add-submission'),
+                  path('add-submission/<str:st_id>', views.add_submission_subtopic, name='add-submission-subtopic'),
                   path('assign-topics', views.assign_topics, name='assign-topics'),
-                  ##
+                  path('interns/', views.interns, name='interns'),
+                  path('review-submissions/', views.review_submissions, name='review-submissions'),
                   path('review-submissions/<int:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
+                  ##
                   path('staff_manage_intern/', views.staff_manage_intern, name='staff_manage_intern'),
                   path('staff_view_internship/', views.staff_view_internship, name='staff_view_internship'),
                   path('staff_update_data/<int:id>', views.staff_update_data, name='staff_update_data'),
