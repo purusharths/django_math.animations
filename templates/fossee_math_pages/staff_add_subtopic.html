@@ -34,7 +34,7 @@
                         <ol id="subtopic_list">
                             {% for i in subtopics %}
                             {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
-                            <li>{{ i.subtopic_name }}</li>
+                            <li>{{ i.subtopic_name | safe }}</li>
                             {% endif %}
                             {% endfor %}
                         </ol>
@@ -62,7 +62,7 @@
 <script>
     var addData = () => {
         var csrf_token = '{{ csrf_token }}';
-        var topic = document.getElementById('id_subtopic').value
+        var topic = encodeURIComponent(document.getElementById('id_subtopic').value)
         console.log(topic)
         if (topic == null || topic.trim() === '') {
             alert("Please enter the topic name")
