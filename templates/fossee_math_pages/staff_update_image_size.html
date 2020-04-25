@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Manage Submissions" "staff_aprove_contents" %}
+    {% breadcrumb  "Review Submissions" "review-submissions" %}
     {% breadcrumb "View Data" "" %}
     {% breadcrumb "Update Image Size" "" %}
 {% endblock %}
@@ -51,7 +51,7 @@
         </div>
         <br>
         <div>
-            <a href="{% url 'staff_view_topic' image.subtopic_id.pk %}" class="btn btn-success">back</a>
+            <a href="{% url 'review-submissions-subtopic' image.subtopic_id.pk %}" class="btn btn-success">back</a>
         </div>
         <br>
     </div>
