@@ -10,7 +10,7 @@
 
 {% block content %}{% load static %}
     {% render_breadcrumbs %}
-    {% include '_modal.html' %}
+    {% include 'partials/_modal.html' %}
     {% if user.is_authenticated %}
 
         {% if user.is_superuser or user.is_staff %}
