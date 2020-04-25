@@ -33,7 +33,7 @@ def add_internship(request):
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
-                current_instance = Internship.objects.get(internship_topic=internship_topic)
+                current_instance = Internship.objects.get(pk=obj.pk)
                 current_instance.internship_url = '-'.join(str(internship_topic).lower().split())
                 current_instance.save()
                 messages.success(request, 'Internship added')
@@ -54,7 +54,6 @@ def add_internship(request):
 @login_required
 def manage_internship(request):
     if request.user.is_superuser:
-
         internship = None
         form = ManageInternship
 
@@ -231,13 +230,13 @@ def add_users(request):
 
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active)
+                                         user_temp_password=password, user_status=user_status_active, user_email=email)
                     addusr.save()
                 if user_role == 'STAFF':
                     user.is_staff = True
                     user.save()
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active)
+                                         user_temp_password=password, user_status=user_status_active, user_email=email)
                     addusr.save()
 
                 send_mail(
