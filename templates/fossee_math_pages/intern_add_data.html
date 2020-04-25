@@ -233,17 +233,8 @@
                                     <input type="button" onclick="cropper.getCroppedImageSrc()" value="Crop" />
                                     <input type="button" onclick="cropper.restore()" value="Restore" />
                                 </div>
-                                
-                                <script>
-                                    window.onload = function () {
-                                        var c = document.getElementById("testCanvas");
-                                        var ctx = c.getContext("2d");
-                                        var img = document.getElementById("img");
-                                        ctx.drawImage(img, 20, 20);
-                                    }
 
-                                    // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
-                                    cropper.start(document.getElementById("testCanvas"), 1);
+                                <script>
 
                                     function handleFileSelect() {
                                         // "{{ image.data_image.url }}"
@@ -265,9 +256,9 @@
                                         reader.readAsDataURL(file);
 
                                     }
-                                    
+
                                 </script>
-                                
+
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="video">
                                 <br>
@@ -318,7 +309,7 @@
                         xhttp.setRequestHeader("X-CSRFToken", csrf_token);
                         xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
                         xhttp.send("data_content=" + encodeURIComponent(data));
-                        }
+                    }
                 }
             </script>
             {% endblock %}
