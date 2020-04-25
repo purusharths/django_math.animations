@@ -19,6 +19,7 @@ urlpatterns = [
                   name='intern_update_image_size'),
                   path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
+
                   # CHANGED
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
