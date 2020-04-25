@@ -47,8 +47,6 @@
                     <th>Current status</th>
                     <th>Change Status</th>
                     <th></th>
-                    <th>Add Interns</th>
-                    <th>View Interns</th>
                 </tr>
                 </thead>
                 {% if internship %}
@@ -65,12 +63,6 @@
                                 <input class="btn btn-success" type="submit" name="submit" value="Submit">
                             </td>
                         </form>
-                        <td><a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-success" href="{% url 'admin_view_intern' internship.id %}">View
-                                Intern</a>
-                        </td>
                     </tr>
                     </tbody>
                 {% else %}
@@ -88,12 +80,6 @@
                                 <input class="btn btn-success" type="submit" name="submit" value="Submit">
                             </td>
                         </form>
-                        <td><a class="btn btn-success" href="{% url 'admin_add_intern' %}">Add Intern</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-success" href="{% url 'admin_view_intern' i.id %}">View
-                                Intern</a>
-                        </td>
                     </tr>
                     </tbody>
                     {%endfor%}
