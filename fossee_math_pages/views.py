@@ -722,7 +722,7 @@ def review_submissions(request):
 # HERE
 @login_required
 def manage_interns(request):
-    if request.user.is_staff or request.user.is_superuser:
+    if request.user.is_staff:
         interns = UserDetails.objects.filter(user_role="INTERN")
         internship_all = Internship.objects.all()
         form = ManageIntern()  # what's happening here?
@@ -757,7 +757,27 @@ def manage_interns(request):
             'chosen_internship': internship,
             'userdetails': userdetails,
         }
-        # print(context)
+        return render(request, 'fossee_math_pages/manage-interns.html', context)
+    elif request.user.is_superuser:
+        interns = UserDetails.objects.filter(user_role="INTERN")
+        interns_in = AssignedTopics.objects.all()
+        if request.method == 'POST':
+            int_id = request.POST["id"]
+            obj = UserDetails.objects.get(user_id_id=int_id)
+            form = ManageIntern(request.POST or None, instance=obj)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.save()
+                messages.success(request, "Changed")
+                return redirect('manage-interns')
+            else:
+                messages.error(request, "Error")
+                return redirect('manage-interns')
+
+        context = {
+            'interns': interns,
+            'interns_in': interns_in,
+        }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     else:
         return redirect('dashboard')
