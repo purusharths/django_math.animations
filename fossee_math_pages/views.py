@@ -1072,7 +1072,7 @@ class staff_add_contribution(BSModalCreateView):
                 'form': form,
                 'assigned': assigned,
             }
-            return render(request, 'fossee_math_pages/dashboard.html', context)
+            return redirect(internship_progress)
         else:
             return redirect('dashboard')
 
