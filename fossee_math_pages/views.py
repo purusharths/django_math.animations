@@ -1,7 +1,8 @@
+import hashlib
 import random
 import re
-import hashlib
 import string
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,18 +13,10 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from email_validator import validate_email, EmailNotValidError
 
-from django.urls import reverse_lazy
-from django.views import generic
-from bootstrap_modal_forms.generic import (BSModalLoginView,
-                                           BSModalCreateView,
-                                           BSModalUpdateView,
-                                           BSModalReadView,
-                                           BSModalDeleteView)
-
-from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
-                    ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting, )
-from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
-                     ImageFormatting, HomeImages)
+from bootstrap_modal_forms.generic import (BSModalCreateView)
+from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
+                    ManageIntern, add_subtopic, data, EditMedia, AddContributor, imageFormatting, )
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages)
 
 
 @login_required
@@ -1055,7 +1048,8 @@ class staff_add_contribution(BSModalCreateView):
                 internname = request.POST['username']
                 mentorname = request.POST['mentor']
                 professorname = request.POST['professor']
-                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname, professor=professorname)
+                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
+                                  professor=professorname)
                 obj.save()
         try:
             instance = Contributor.objects.get(topic_id=id)
