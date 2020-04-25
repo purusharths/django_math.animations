@@ -201,7 +201,7 @@ def add_users(request):
             email = request.POST['email']
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
-            user_status_inactive = 'INACTIVE'
+            user_status_active = 'ACTIVE'
             user_status_active = 'ACTIVE'
 
             regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
@@ -239,7 +239,7 @@ def add_users(request):
 
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_inactive)
+                                         user_temp_password=password, user_status=user_status_active)
                     addusr.save()
                 if user_role == 'STAFF':
                     user.is_staff = True
