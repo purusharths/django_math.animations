@@ -8,18 +8,10 @@
     {% breadcrumb "Internship" "internship-progress" %}
 {% endblock %}
 
-<<<<<<< HEAD
-
 {% block content %}{% load static %}
     {% render_breadcrumbs %}
-{% include '_modal.html' %}
-  {% if user.is_authenticated %}
-    {% render_breadcrumbs %}
-=======
-{% block content %}
+    {% include '_modal.html' %}
     {% if user.is_authenticated %}
-        {% render_breadcrumbs %}
->>>>>>> 608a06bfd614b257ffa5a36b5bf6ba2ed130f8d1
 
         {% if user.is_superuser or user.is_staff %}
             <div class="container">
@@ -41,64 +33,6 @@
                 </form>
                 <br/>
 
-<<<<<<< HEAD
-          <table class="table">
-              {% for i in internship %}
-                  <thead class="">
-                  <tr>
-                      <th scope="col"><h3>{{ i.internship_topic }}</h3></th>
-                      <th></th>
-                  </tr>
-                  </thead>
-                  {% for j in topics %}
-                      {% if j.internship_id_id == i.id %}
-                          <thead class="thead-light">
-                          <tr>
-                              <th scope="col"><h4>{{ j.topic_name }}</h4></th>
-                              <th>
-                                {% if user.is_staff and not user.is_superuser %}
-                                  {% for k in assigned %}
-                                      {% if k.topic_id_id == j.pk %}
-                                          {{ k.user_id }} -
-                                          <button class="submission"  data-id="{% url 'staff_add_contribution' j.pk %}">Contributor info</button>
-
-                                      {% else %}
-                                      {% endif %}
-                                  {% endfor %}
-                                    {% endif %}
-                              </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                              <th scope="row">
-                                  <ol>
-                                      {% for k in subtopics %}
-                                          {% if k.topic_id_id == j.id %}
-                                              <li>
-                                                  {% if k.subtopic_status == 'ACCEPTED' %}
-                                                      <span style="color: green"> {{ k.subtopic_name }}</span>
-                                                  {% elif k.subtopic_status == 'WAITING' %}
-                                                      <span style="color: yellow"> {{ k.subtopic_name }}</span>
-                                                  {% elif k.subtopic_status == 'REJECTED' %}
-                                                      <span style="color: red"> {{ k.subtopic_name }}</span>
-                                                  {% endif %}
-                                              </li>
-                                          {% endif %}
-                                      {% endfor %}
-                                  </ol>
-                              </th>
-                          </tr>
-                          </tbody>
-                      {% endif %}
-                  {% endfor %}
-              {% endfor %}
-          </table>
-      </div>
-      <br>
-      <hr/>
-      <br>
-=======
                 <table class="table">
                     {% for i in internship %}
                         <thead class="">
@@ -117,8 +51,10 @@
                                             {% for k in assigned %}
                                                 {% if k.topic_id_id == j.pk %}
                                                     {{ k.user_id }} -
-                                                    <a href="{% url 'staff_add_contribution' j.pk %}">Contributor
-                                                        Info</a>
+                                                    <button class="submission"
+                                                            data-id="{% url 'staff_add_contribution' j.pk %}">
+                                                        Contributor info
+                                                    </button>
                                                 {% else %}
                                                 {% endif %}
                                             {% endfor %}
@@ -155,8 +91,6 @@
             <br>
             <hr/>
             <br>
->>>>>>> 608a06bfd614b257ffa5a36b5bf6ba2ed130f8d1
-
 
         {% else %}
             <div class="container">
@@ -209,33 +143,31 @@
     {% endif %}
 {% endblock %}
 {% block extrascripts %}
-  <script type="text/javascript">
-  function func(vars){
-      alert(vars)
+    <script type="text/javascript">
+        function func(vars) {
+            alert(vars)
 
 
-  }
-    $(function () {
-      // Log in & Sign up buttons
-      // Create book button
-      // {#$(".create-book").modalForm({formURL: "{% url 'intern_update_data' vars%}", modalID: "#create-modal"});#}
+        }
 
-        $(".submission").each(function () {
-          $(this).modalForm({formURL: $(this).data('id')});
+        $(function () {
 
-      })  ;
+            $(".submission").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
 
-      // Hide message
-      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
-        $(".alert").slideUp(500);
-      });
+            });
 
-    });
+            // Hide message
+            $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+                $(".alert").slideUp(500);
+            });
 
-  </script>
-     <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
-      <script src="{% static 'assets/js/popper.min.js' %}"></script>
-      <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-      <!-- You can alternatively load the minified version -->
-      <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+        });
+
+    </script>
+    <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <!-- You can alternatively load the minified version -->
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
 {% endblock extrascripts %}
