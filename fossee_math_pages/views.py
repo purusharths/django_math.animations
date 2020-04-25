@@ -20,7 +20,6 @@ from bootstrap_modal_forms.generic import (BSModalLoginView,
                                            BSModalReadView,
                                            BSModalDeleteView)
 
-
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, AddIntern, add_topic,
                     ManageIntern, add_subtopic, AssignTopic, data, EditMedia, AddContributor, imageFormatting, )
 from .models import (UserDetails, Internship, Intern, Topic, Subtopic, AssignedTopics, Data, Contributor,
@@ -539,7 +538,6 @@ def intern_delete_data(request, id):
         return redirect('dashboard')
 
 
-
 @login_required
 def add_submission(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
@@ -835,6 +833,7 @@ def assign_topics(request):
     else:
         return redirect('dashboard')
 
+
 @login_required
 def interns(request):
     if request.user.is_staff:
@@ -893,6 +892,7 @@ def internship_progress(request):
 
     else:
         return redirect('dashboard')
+
 
 # @login_required
 # def intern_view_internship(request):
@@ -1015,7 +1015,7 @@ def user_logout(request):
 
 
 class staff_add_contribution(BSModalCreateView):
-    def get(self,request,id):
+    def get(self, request, id):
         if request.user.is_staff:
             try:
                 instance = Contributor.objects.get(topic_id=id)
@@ -1038,7 +1038,8 @@ class staff_add_contribution(BSModalCreateView):
             return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
         else:
             return redirect('dashboard')
-    def post(self,request,id):
+
+    def post(self, request, id):
         if request.user.is_staff:
             try:
                 instance = Contributor.objects.get(topic_id=id)
@@ -1071,48 +1072,9 @@ class staff_add_contribution(BSModalCreateView):
                 'form': form,
                 'assigned': assigned,
             }
-            return render(request, 'fossee_math_pages/dashboard.html', context)
+            return redirect(internship_progress)
         else:
             return redirect('dashboard')
-
-#
-# @login_required
-# def staff_add_contribution(request, id):
-#     if request.user.is_staff:
-#         try:
-#             instance = Contributor.objects.get(topic_id=id)
-#             form = AddContributor(request.POST or None, instance=instance)
-#         except:
-#             instance = None
-#             form = AddContributor()
-#
-#         assigned = AssignedTopics.objects.get(topic_id=id)
-#
-#         if request.POST:
-#             if instance is not None:
-#                 obj = form.save(commit=False)
-#                 obj.save()
-#             else:
-#                 internname = request.POST['username']
-#                 mentorname = request.POST['mentor']
-#                 professorname = request.POST['professor']
-#                 obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-#                                   professor=professorname)
-#                 obj.save()
-#         try:
-#             instance = Contributor.objects.get(topic_id=id)
-#             form = AddContributor(request.POST or None, instance=instance)
-#         except:
-#             instance = None
-#             form = AddContributor()
-#
-#         context = {
-#             'form': form,
-#             'assigned': assigned,
-#         }
-#         return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
-#     else:
-#         return redirect('dashboard')
 
 
 def error_404_view(request, exception):
