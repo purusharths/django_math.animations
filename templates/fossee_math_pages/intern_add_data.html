@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %} Add Submission {% endblock %}
+{% block title %}Intern Add Data{% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Dashboard" "dashboard" %}
-{% breadcrumb "Internship" "add-submission" %}
-{% breadcrumb "Add Submission" "add-submission-subtopic" %}
+{% breadcrumb "Internship" "intern_view_topic" %}
+{% breadcrumb "Add Submission" "intern_add_data" %}
 {% endblock %}
-<!-- WRONG CRUMBS -->
 
 {% block content %}
 {% render_breadcrumbs %}
@@ -36,11 +35,11 @@
         background-color: #fffafa;
     }
 </style>
-
+<script src="{% static 'web-files/javascript/cropper.js' %}"></script>
 <div class="container">
     {% include 'partials/_alerts.html' %}
-    <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-    <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script>
         window.CKEDITOR_BASEPATH = '/static/ckeditor/';
     </script>
@@ -102,7 +101,6 @@
                                     width="15px" alt="Delete">
                             </a><br>
                             <!--add option for cropping-->
-
                         </td>
                         {% endif %}
                         {% endif %}
@@ -191,6 +189,10 @@
                                 <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
                                         src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
                             </li>
+                            <li class="nav-item" style="margin-left: 846px;">
+                            </li>
+                            <li class="nav-item" style="margin-left: 846px;">
+                            </li>
                         </ul>
 
                         <div class="tab-content">
@@ -198,98 +200,62 @@
                                 <div class="ck center" align="center" id="cc">
                                     <div class="row" style="padding-bottom: 0px;">
                                         <div class="col-auto mr-auto">&nbsp;</div>
-                                        <div class="col-auto" style="padding-top: 10px;">
+                                        <div class="col-auto" style="padding-top: 10px; \">
                                             <input class="btn btn-outline-success btn-md btn-block" type="button"
                                                 onClick="addData()" id="submitAJAX" value="Add Data">
                                         </div>
                                     </div>
+
                                     {{ form.media }} {{ form.as_p }}
                                 </div>
                                 <br>
+
                             </div>
 
-                            <div role="tabpanel" class="tab-pane fade" id="image" style="padding-bottom: 2%;">
+                            <div role="tabpanel" class="tab-pane fade" id="image">
                                 <br>
                                 <div class="row ">
                                     <div class="col-auto mr-auto">
                                         <label>Select Image: </label> <input type="file" class="btn" name="image"
                                             id="fileInput" onchange="handleFileSelect()" />
-
                                     </div>
                                     <div class="col-auto">
                                         <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
                                             id="submit" value="Upload">
                                     </div>
-
                                 </div>
                                 <br>
                                 <div class="container">
-                                    <div class="row">
-                                        <div class="col">
-                                            <canvas id="testCanvas" width="400" height="350">
-                                                Your browser does not support canvas.
-                                            </canvas>
-                                        </div>
-                                        <!-- <div class="col">
-                                            <image id="theimage" name="theimage" width="400" height="350"></image>
-                                        </div> -->
-                                    </div>
-                                    <input class="btn btn-primary" type="button" onclick="cropper.startCropping()"
-                                        value="Start cropping" />
-                                    <input class="btn btn-primary" type="button" onclick="cropper.getCroppedImageSrc()"
-                                        value="Crop" />
-                                    <input class="btn btn-primary" type="button" onclick="cropper.restore()"
-                                        value="Restore" />
-                                    <input class="btn btn-primary" type="button" id="btnSave" onclick=""
-                                        value="Save To Server" />
+                                    <canvas id="testCanvas" width="600" height="450">
+                                        Your browser does not support canvas.
+                                    </canvas>
+                                    <input type="button" onclick="cropper.startCropping()" value="Start cropping" />
+                                    <input type="button" onclick="cropper.getCroppedImageSrc()" value="Crop" />
+                                    <input type="button" onclick="cropper.restore()" value="Restore" />
                                 </div>
-                                <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
+
                                 <script>
 
-                                    // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
-                                    cropper.start(document.getElementById("testCanvas"), 1);
-
                                     function handleFileSelect() {
-
-
+                                        // "{{ image.data_image.url }}"
                                         // this function will be called when the file input below is changed
+
                                         var file = document.getElementById("fileInput").files[0];  // get a reference to the selected file
 
+
                                         var reader = new FileReader(); // create a file reader
+
                                         // set an onload function to show the image in cropper once it has been loaded
                                         reader.onload = function (event) {
                                             var data = event.target.result; // the "data url" of the image
                                             cropper.showImage(data); // hand this to cropper, it will be displayed
+
                                         };
 
                                         // this loads the file as a data url calling the function above once done
                                         reader.readAsDataURL(file);
 
                                     }
-                                    /*//temp code
-                                    function to_image() {
-                                        var canvas = document.getElementById("testCanvas");
-                                        document.getElementById("theimage").src = canvas.toDataURL();
-                                        Canvas2Image.saveAsPNG(canvas);
-                                    }*/
-                                    
-                                    $(function() {
-                                        $("#btnSave").click(function() {
-                                            var image = document.getElementById("testCanvas").toDataURL("image/png");
-                                            image = image.replace('data:image/png;base64,', '');
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: 'CanvasSave.aspx/UploadImage',
-                                                data: '{ "imageData" : "' + image + '" }',
-                                                contentType: 'application/json; charset=utf-8',
-                                                dataType: 'json',
-                                                success: function(msg) {
-                                                    alert('Image saved successfully !');
-                                                }
-                                            });
-                                        });
-                                    });
-
 
                                 </script>
 
@@ -305,6 +271,7 @@
                                             id="submit" value="Upload">
                                     </div>
                                 </div>
+                                <br>
                             </div>
                         </div>
                     </form>
@@ -316,7 +283,7 @@
 
             <script>
                 var show = () => {
-                    $("#cc").toggle()
+                    $("#cc").toggle();
                 }
                 var addData = () => {
                     var data = window.CKEDITOR.instances.id_data_content.getData();
@@ -326,19 +293,19 @@
                         alert("Please enter data");
                     } else {
                         var mainTable = document.getElementById("dta");
-                        var row = mainTable.insertRow()
-                        var cell1 = row.insertCell(0)
-                        var cell2 = row.insertCell(1)
-                        cell1.innerHTML = '<div class="text-muted">' + data + '</div>'
+                        var row = mainTable.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        cell1.innerHTML = '<div class="text-muted">' + data + '</div>';
                         xhttp.onreadystatechange = function () {
                             if (this.readyState == 4 && this.status == 200) {
-                                cell1.innerHTML = data
+                                cell1.innerHTML = data;
                                 window.CKEDITOR.instances.id_data_content.setData('');
                                 cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
-                            width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
+                            width=\"15px\" title=\"Reload to get Edit/Delete Options\">";//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
                             }
                         };
-                        xhttp.open('post', "/dashboard/add-submission/{{ subtopic.subtopic_hash }}", true);
+                        xhttp.open('post', "/intern_add_data/{{ subtopic.subtopic_hash }}", true);
                         xhttp.setRequestHeader("X-CSRFToken", csrf_token);
                         xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
                         xhttp.send("data_content=" + encodeURIComponent(data));
