@@ -1047,8 +1047,22 @@ class staff_add_contribution(BSModalCreateView):
             except:
                 instance = None
                 form = AddContributor()
-
-            assigned = AssignedTopics.objects.get(topic_id=id)
+        if request.POST:
+            if instance is not None:
+                obj = form.save(commit=False)
+                obj.save()
+            else:
+                internname = request.POST['username']
+                mentorname = request.POST['mentor']
+                professorname = request.POST['professor']
+                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname, professor=professorname)
+                obj.save()
+        try:
+            instance = Contributor.objects.get(topic_id=id)
+            form = AddContributor(request.POST or None, instance=instance)
+        except:
+            instance = None
+            form = AddContributor()
 
             if request.POST:
                 if instance is not None:
