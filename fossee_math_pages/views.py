@@ -404,8 +404,8 @@ def add_submission_subtopic(request, st_id):
                                 data_video=video, subtopic_id_id=t_id,
                                 user_id_id=user.id)
                 add_data.save()
-
-                hashtext = str(add_data.pk) + '-' + str(request.user.pk)
+                current_data = Data.objects.get(pk=add_data.pk)
+                hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
                 add_data.subtopic_hash = hash_result.hexdigest()
                 add_data.save()
