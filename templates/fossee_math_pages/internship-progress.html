@@ -46,6 +46,7 @@
                           <tr>
                               <th scope="col"><h4>{{ j.topic_name }}</h4></th>
                               <th>
+                                {% if user.is_staff and not user.is_superuser %}
                                   {% for k in assigned %}
                                       {% if k.topic_id_id == j.pk %}
                                           {{ k.user_id }} -
@@ -53,6 +54,7 @@
                                       {% else %}
                                       {% endif %}
                                   {% endfor %}
+                                    {% endif %}
                               </th>
                           </tr>
                           </thead>
