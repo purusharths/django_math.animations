@@ -717,12 +717,10 @@ def manage_interns(request):
         internship_all = Internship.objects.all()
         form = ManageIntern()  # what's happening here?
         internship = Internship.objects.first()
-        interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=internship.pk)
         userdetails = UserDetails.objects.all()
         # print(form)
         if request.method == 'POST':
             if "search_internship" in request.POST:
-                interns_in = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
                 internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
                 # print(interns_in)
             else:
@@ -743,7 +741,6 @@ def manage_interns(request):
             'interns': interns,
             'form': form,
             'internship_all': internship_all,
-            'interns_in': interns_in,
             'chosen_internship': internship,
             'userdetails': userdetails,
         }
@@ -854,7 +851,6 @@ def internship_progress(request):
         internship = Internship.objects.filter(pk=internship.pk)
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
-        assigned = AssignedTopics.objects.all()
         internship_all = Internship.objects.all()
 
         if "search_internship" in request.POST:
@@ -864,14 +860,13 @@ def internship_progress(request):
             'internship': internship,
             'topics': topics,
             'subtopics': subtopics,
-            'assigned': assigned,
             'internship_all': internship_all,
             'chosen_internship': internship[0],
         }
         return render(request, 'fossee_math_pages/internship-progress.html', context)
 
     elif request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        internship = AssignedTopics.objects.get(user_id_id=request.user.id)
+        internship = Internship.objects.all()
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
 
