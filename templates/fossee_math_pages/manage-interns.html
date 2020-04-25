@@ -22,46 +22,48 @@
 
             <div class="container">
                 {% include 'partials/_alerts.html' %}
-
-                <div class="row">
-                    <h2>{{ chosen_internship }}</h2>
+                {% if user.is_staff and not user.is_superuser %}
+                    <div class="row">
+                        <h2>{{ chosen_internship }}</h2>
+                        <br/>
+                    </div>
+                    <hr/>
                     <br/>
-                </div>
-                <hr/>
-                <br/>
-                <div class="row">
-                    <form method="POST">
-                        {% csrf_token %}
-                        Select Internship:
-                        <select name="search_internship" onchange="submit();">
-                            {% if chosen_internship in internship_all %}
-                                <option>{{ chosen_internship }}</option>
-                            {% else %}
-                                <option> ----</option>
-                            {% endif %}
-                            {% for i in internship_all %}
-                                {% if i != chosen_internship %}
-                                    <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                    <div class="row">
+                        <form method="POST">
+                            {% csrf_token %}
+                            Select Internship:
+                            <select name="search_internship" onchange="submit();">
+                                {% if chosen_internship in internship_all %}
+                                    <option>{{ chosen_internship }}</option>
+                                {% else %}
+                                    <option> ----</option>
                                 {% endif %}
-                            {% endfor %}
-                        </select>
-                    </form>
-                </div>
+                                {% for i in internship_all %}
+                                    {% if i != chosen_internship %}
+                                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
 
-                <br/>
-                <div>
-
-                    <table class="table table-condensed ">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>Intern Name</th>
-                            <th>Status</th>
-                            <!--<th>Internship</th>-->
+                    <br/>
+                    <div>
+                {% endif %}
+                <table class="table table-condensed ">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Intern Name</th>
+                        <th>Status</th>
+                        {% if user.is_staff and not user.is_superuser %}
                             <th>Topic</th>
-                            <th>Set Status</th>
-                            <th></th>
-                        </tr>
-                        </thead>
+                        {% endif %}
+                        <th>Set Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    {% if user.is_staff and not user.is_superuser %}
                         <tbody>
                         {% for i in interns_in %}
                             <tr>
@@ -84,7 +86,26 @@
                             </tr>
                         {% endfor %}
                         </tbody>
-                    </table>
+                    {% else %}
+                        <tbody>
+                        {% for i in interns %}
+                            <tr>
+                                <td>{{ i.user_id }}</td>
+                                <td>{{ i.user_status }}</td>
+                                <td class="">
+                                    <form method="POST" class="form-group" name="ManageIntern">
+                                        <input type="hidden" value="{{ i.user_id_id }}" name="id">
+                                        {% csrf_token %} {{ form|crispy }}
+                                <td>
+                                    <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                                </td>
+                                </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% endif %}
+                </table>
                 </div>
             </div>
             <br>

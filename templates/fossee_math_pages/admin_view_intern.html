@@ -11,9 +11,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
         {% render_breadcrumbs %}
-        {% include 'partials/_alerts.html' %}
+    <div class="container">
         {% if user.is_authenticated %} {% if user.is_superuser %}
             <table class="table table-condensed">
                 <thead>
