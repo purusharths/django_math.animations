@@ -95,10 +95,10 @@ class Subtopic(models.Model):
 
 # Information storing the details of the contributor info
 class Contributor(models.Model):
-    topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     contributor = models.CharField(max_length=255, null=False)
-    mentor = models.CharField(max_length=255, null=False)
-    professor = models.CharField(max_length=255, null=False)
+    mentor = models.CharField(max_length=255, null=True, blank=True)
+    professor = models.CharField(max_length=255, null=True, blank=True)
     data_aproval_date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
@@ -136,8 +136,8 @@ class ImageFormatting(models.Model):
 class Messages(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    message = models.TextField(max_length=300)
-    message_send_date = models.DateField(default=datetime.now)
+    message = models.TextField(max_length=300, null=True, blank=True)
+    message_send_date = models.DateField(default=datetime.now, null=True, blank=True)
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
