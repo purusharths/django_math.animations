@@ -411,7 +411,8 @@ def add_submission_subtopic(request, st_id):
         subtopic = Subtopic.objects.get(id=t_id)
 
         try:
-            last_modified = sorted([dta.data_modification_date for dta in e_data])[-1].strftime('%B %d, %Y %H:%M:%S (%A)')
+            last_modified = sorted([dta.data_modification_date for dta in e_data])[-1].strftime(
+                '%B %d, %Y %H:%M:%S (%A)')
         except IndexError:
             last_modified = "No modifications"
 
@@ -464,7 +465,7 @@ def intern_update_media(request, id):
             if form.is_valid():
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
-                instance = Data.objects.get(id=id)
+                instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
                     return redirect('add-submission/', t_id)
                 instance.data_image = img
@@ -521,7 +522,12 @@ def intern_delete_data(request, id):
         instance = Data.objects.get(data_hash=id)
         if instance.subtopic_id.assigned_user_id.id == request.user.id:
             t_id = instance.subtopic_id.subtopic_hash
-            instance.delete()
+            try:
+                image = ImageFormatting.objects.get(data_id=instance.id)
+                image.delete()
+                instance.delete()
+            except:
+                instance.delete()
             return redirect('add-submission-subtopic', t_id)
         else:
             return redirect('dashboard')
@@ -560,7 +566,7 @@ def user_login(request):
                 if request.user.is_staff:
                     return redirect(dashboard)
                 else:
-                    return  redirect(dashboard)
+                    return redirect(dashboard)
 
             except:
                 form = UserLoginForm()
@@ -680,24 +686,20 @@ def review_submissions(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
-        interns = AssignedTopics.objects.filter(topic_id__internship_id__internship_topic=first_internship)
+        interns = User.objects.filter(userdetails__user_role='INTERN')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all()
-        assigned = AssignedTopics.objects.all()
+        subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id')
 
         if "search_internship" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by('subtopic_order').order_by('topic_id')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
-            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
+            interns = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
 
         if "search_intern" in request.POST:
-            assigned_topic = AssignedTopics.objects.get(user_id_id=request.POST['search_intern'])
-            subtopic = Subtopic.objects.filter(topic_id_id=assigned_topic.topic_id)
-            first_internship = Internship.objects.get(pk=assigned_topic.topic_id.internship_id_id)
-            interns = AssignedTopics.objects.filter(topic_id__internship_id_id=assigned_topic.topic_id.internship_id_id)
+            subtopic = Subtopic.objects.filter(assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by('topic_id')
+
 
         context = {
-            'assigned': assigned,
             'subtopic': subtopic,
             'internship': internship,
             'first_internship': first_internship,
@@ -727,7 +729,7 @@ def manage_interns(request):
                 current_user = UserDetails.objects.get(user_id=user.id)
                 current_user.user_status = request.POST['user_status']
                 current_user.save()
-                messages.success(request,"Intern Status Changed")
+                messages.success(request, "Intern Status Changed")
 
         context = {
             'form': form,
@@ -879,9 +881,9 @@ def review_submissions_subtopic(request, s_id):
 @login_required
 def staff_update_data(request, id):
     if request.user.is_staff:
-        instance = Data.objects.get(id=id)
+        instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.pk
+        t_id = instance.subtopic_id.subtopic_hash
         form = data(request.POST or None, instance=instance)
         if form.is_valid():
             obj = form.save(commit=False)
