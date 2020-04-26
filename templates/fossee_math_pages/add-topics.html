@@ -64,7 +64,7 @@
                                     {{ tp.topic_name }}
                                 </td>
                                 <td>
-                                    <a href="{% url 'add-subtopics' tp.topic_url %}">Add / View Subtopics</a>
+                                    <a href="{% url 'add-subtopics' tp.internship_id.internship_url tp.topic_url %}">Add / View Subtopics</a>
                                 </td>
                                 <td style="width: 100px">
                                     <form method="POST" class="form-group" name="RearrangeTopic">
