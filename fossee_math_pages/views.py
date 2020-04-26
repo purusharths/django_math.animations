@@ -741,28 +741,20 @@ def review_submissions(request):
 @login_required
 def manage_interns(request):
     if request.user.is_staff and not request.user.is_superuser:
-        form = ManageIntern()  # what's happening here?
-        userdetails = UserDetails.objects.filter(user_role='INTERN')
-        internship = Internship.objects.first()
-        internship_all = Internship.objects.all()
-        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=internship.pk)
+        form = ManageIntern()
+        subtopic = Subtopic.objects.all()
+        interns = UserDetails.objects.filter(user_role='INTERN')
 
         if request.method == 'POST':
-            if "search_internship" in request.POST:
-                internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
-            else:
-                user = User.objects.get(username=request.POST['assigneduserid'])
-                current_user = UserDetails.objects.get(user_id=user.id)
-                current_user.user_status = request.POST['user_status']
-                current_user.save()
-                messages.success(request, "Intern Status Changed")
+            current_user = UserDetails.objects.get(user_id_id=request.POST['assigneduserid'])
+            current_user.user_status = request.POST['user_status']
+            current_user.save()
+            messages.success(request, "Intern Status Changed")
 
         context = {
             'form': form,
+            'interns': interns,
             'subtopic': subtopic,
-            'userdetails': userdetails,
-            'internship_all': internship_all,
-            'chosen_internship': internship,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     elif request.user.is_superuser:
