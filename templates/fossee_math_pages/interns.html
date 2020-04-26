@@ -5,8 +5,8 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Interns" "interns" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Interns" "interns" %}
 {% endblock %}
 
 {% block content %}
@@ -31,23 +31,29 @@
             </select>
         </form>
 
-    <br/>
+        <br/>
         <table class="table table-light">
             <thead class="thead-light">
             <tr>
                 <th>Intern Name</th>
                 <th>Internship</th>
                 <th>Topic</th>
+                <th>Subtopic</th>
             </tr>
             </thead>
             <tbody>
             {% for i in topics %}
                 {% if internship.pk == i.topic_id.internship_id_id %}
-                <tr>
-                    <td>{{ i.assigned_user_id }}</td>
-                    <td>{{ i.topic_id.internship_id }}</td>
-                    <td>{{ i.topic_id }}</td>
-                </tr>
+                    <tr>
+                        {% if i.assigned_user_id_id != None %}
+                            <td>{{ i.assigned_user_id }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ i.topic_id.internship_id }}</td>
+                        <td>{{ i.topic_id }}</td>
+                        <td>{{ i.subtopic_name }}</td>
+                    </tr>
                 {% endif %}
             {% endfor %}
             </tbody>

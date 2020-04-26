@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %} Review Submissions {% endblock %}
 {% load django_bootstrap_breadcrumbs %}
 
@@ -10,6 +11,7 @@
 
 {% block content %}
     {% render_breadcrumbs %}
+    {% include 'partials/_modal.html' %}
     <div class="container">
         <h6>All Submissions: </h6>
         <h2>{{ first_internship.internship_topic }}</h2>
@@ -33,7 +35,7 @@
                     </select>
                 </form>
             </div>
-         OR
+            OR
             <div class="col-6 col-sm-4">
                 <form method="POST">
                     {% csrf_token %}
@@ -62,14 +64,14 @@
             <tbody>
             {% for k in subtopic %}
                 {% if k.assigned_user_id != None %}
-                <tr>
-                    <td>{{ k.assigned_user_id }}</td>
-                    <td>{{ k.topic_id }}</td>
-                    <td>{{ k.subtopic_name }}</td>
-                    <td>{{ k.subtopic_status }}</td>
-                    <td>{{ k.subtopic_modification_date }}</td>
-                    <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
-                </tr>
+                    <tr>
+                        <td>{{ k.assigned_user_id }}</td>
+                        <td>{{ k.topic_id }}</td>
+                        <td>{{ k.subtopic_name }}</td>
+                        <td>{{ k.subtopic_status }}</td>
+                        <td>{{ k.subtopic_modification_date }}</td>
+                        <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
+                    </tr>
                 {% endif %}
             {% endfor %}
             </tbody>
