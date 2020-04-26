@@ -345,7 +345,7 @@ def home_search_results(request, search_contains_query):
     datas = ""
     datass = ""
     page_obj = ""
-    topic = AssignedTopics.objects.all()
+    topic = Subtopic.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
