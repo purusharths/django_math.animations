@@ -97,14 +97,13 @@
                 <h2 style="font-weight: lighter;">Contents</h2>
                 <p style= "color: grey"> Content of the internships and the Status of your submissions</p>
                 <hr/>
-
-                <b class="align-right">Your progress in : </b>
-                <br/>
-                <br/>
-                <table class="table table-borderless table-sm ">
-                    <tbody>
-                    {% for j in subtopics %}
-                        {% if j.assigned_user_id_id == user.id %}
+                  <b class="align-right">Your progress in : </b>
+                  <br/>
+                  <br/>
+                  <table class="table table-borderless table-sm ">
+                          <tbody>
+                          {% for j in subtopics %}
+                            {% if j.assigned_user_id_id == user.id %}
                             <tr>
                                 <td>
                                     <b>{{ j.topic_id.internship_id }}</b> - {{ j.topic_id }}
@@ -132,6 +131,17 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {# {% for i in internship %} #}
+                {# {{ i.internship_topic }}<br> #}
+                  {# {% for k in topics %} #}
+                      {# {{ k.topic_name }}<br> #}
+                      {# {% for j in subtopics %} #}
+                          {# {% if i.internship_topic == j.topic_id.internship_id.internship_topic and j.topic_id.topic_name == k.topic_name %} #}
+                              {# {{ j.subtopic_name }} <br> #}
+                          {# {% endif %} #}
+                      {# {% endfor %} #}
+                  {# {% endfor %} #}
+              {# {% endfor %} #}
             </div>
             <br>
             <hr>
