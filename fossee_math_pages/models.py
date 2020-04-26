@@ -68,7 +68,7 @@ class Topic(models.Model):
     internship_id = models.ForeignKey(Internship, on_delete=models.CASCADE)
     topic_name = models.CharField(max_length=255, null=False)
     topic_url = models.CharField(max_length=255)
-    topic_order = models.IntegerField()
+    topic_order = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.topic_name
@@ -79,15 +79,15 @@ class Topic(models.Model):
 # Foregin key from the user table to store the assigned user details
 class Subtopic(models.Model):
     topic_id = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    assigned_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    assigned_user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     subtopic_name = models.CharField(max_length=255, null=False)
     subtopic_status = models.CharField(max_length=20,
                                        choices=DATA_STATUS,
                                        default='WAITING')
     subtopic_hash = models.CharField(max_length=50)
     subtopic_url = models.CharField(max_length=255)
-    subtopic_modificatoin_date = models.DateField(blank=True)
-    subtopic_order = models.IntegerField(blank=True)
+    subtopic_modification_date = models.DateField(default=datetime.now())
+    subtopic_order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.subtopic_name
@@ -112,7 +112,7 @@ class Data(models.Model):
     data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='media/', blank=True, null=True)
-    data_modification_date = models.DateTimeField(blank=True)
+    data_modification_date = models.DateTimeField(blank=True, null=True, default=datetime.now())
     data_hash = models.CharField(max_length=50)
 
     def __str__(self):

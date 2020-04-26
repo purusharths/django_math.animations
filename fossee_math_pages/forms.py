@@ -74,6 +74,18 @@ class ManageIntern(ModelForm):
         fields = ['user_status']
 
 
+class topicOrder(ModelForm):
+    class Meta:
+        model = Topic
+        fields = ['topic_order']
+
+
+class subtopicOrder(ModelForm):
+    class Meta:
+        model = Subtopic
+        fields = ['subtopic_order']
+
+
 # class AddIntern(ModelForm):
 #     class Meta:
 #         model = Intern
@@ -105,6 +117,16 @@ class ManageIntern(ModelForm):
 #         self.fields['user_id'].queryset = qs
 #         inner = AssignedTopics.objects.all().values_list('topic_id_id')
 #         self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
+
+class AssignTopic(ModelForm):
+    class Meta:
+        model = Subtopic
+        fields = ['assigned_user_id']
+
+    def __init__(self):
+        super().__init__()
+        self.fields['assigned_user_id'].queryset = User.objects.exclude(is_staff=True)
+
 
 
 class data(ModelForm):
