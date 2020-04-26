@@ -195,7 +195,6 @@ def add_users(request):
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
             user_status_active = 'ACTIVE'
-            user_status_active = 'ACTIVE'
 
             regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -215,6 +214,10 @@ def add_users(request):
                 return redirect('add-users')
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
+                return redirect('add-users')
+            Pattern = re.compile("(\+91)?[7-9][0-9]{9}")
+            if Pattern.match(user_phone):
+                messages.error(request, 'Phone number error')
                 return redirect('add-users')
             try:
                 v = validate_email(email)
@@ -568,7 +571,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request,"Contact Admin ! you are blocked")
+                        messages.error(request, "Contact Admin ! you are blocked")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -646,7 +649,7 @@ def add_topics(request):
     if request.user.is_staff:
         form = add_topic()
         topic_order = topicOrder()
-        internship = Internship.objects.filter(internship_status='ACTIVE').first()
+        internship = Internship.objects.filter().first()
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
