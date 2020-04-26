@@ -128,7 +128,6 @@ class AssignTopic(ModelForm):
         self.fields['assigned_user_id'].queryset = User.objects.exclude(is_staff=True)
 
 
-
 class data(ModelForm):
     class Meta:
         model = Data
@@ -183,3 +182,15 @@ class add_topic(forms.Form):
 
 class add_subtopic(forms.Form):
     subtopic = forms.CharField(max_length=255, widget=forms.TextInput())
+
+
+class addContributor(ModelForm):
+    class Meta:
+        model = Contributor
+        fields = ['mentor', 'professor']
+
+
+class sendMessage(ModelForm):
+    class Meta:
+        model = Messages
+        fields = ['message']
