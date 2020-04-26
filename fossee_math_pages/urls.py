@@ -11,28 +11,32 @@ urlpatterns = [
                   path('staff_delete_data/<str:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
                   path('staff_reject_subtopic/<int:id>', views.staff_reject_subtopic, name='staff_reject_subtopic'),
-                  path('staff_update_image_size/<str:id>', views.staff_update_image_size, name='staff_update_image_size'),
+                  path('staff_update_image_size/<str:id>', views.staff_update_image_size,
+                       name='staff_update_image_size'),
 
                   path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
                   path('intern_update_image_size/<str:id>', views.intern_update_image_size,
-                  name='intern_update_image_size'),
+                       name='intern_update_image_size'),
                   path('intern_update_data/<str:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<str:id>', views.intern_update_media, name='intern_update_media'),
 
                   # CHANGED
+                  path('dashboard/messages/', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),
                   path('dashboard/add-subtopics/<str:i_id>/<str:t_id>', views.add_subtopics, name='add-subtopics'),
-                  path('dashboard/add-submission/', views.add_submission , name='add-submission'),
-                  path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic, name='add-submission-subtopic'),
+                  path('dashboard/add-submission/', views.add_submission, name='add-submission'),
+                  path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic,
+                       name='add-submission-subtopic'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
                   path('dashboard/interns/', views.interns, name='interns'),
                   path('dashboard/internship-progress/', views.internship_progress, name='internship-progress'),
                   path('dashboard/manage-interns/', views.manage_interns, name='manage-interns'),
                   path('dashboard/manage-internship/', views.manage_internship, name='manage-internship'),
                   path('dashboard/review-submissions/', views.review_submissions, name='review-submissions'),
-                  path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic, name='review-submissions-subtopic'),
+                  path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic,
+                       name='review-submissions-subtopic'),
                   ##
 
                   # ALREADY OKAY

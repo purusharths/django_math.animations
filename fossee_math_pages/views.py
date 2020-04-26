@@ -1031,6 +1031,18 @@ def staff_delete_data(request, id):
 
 
 @login_required
+def view_messages(request):
+    if not request.user.is_staff and not request.user.is_superuser:
+        message = Messages.objects.all()
+        context = {
+            'message': message
+        }
+        return render(request, 'fossee_math_pages/messages.html', context)
+    else:
+        return redirect('dashboard')
+
+
+@login_required
 def user_logout(request):
     logout(request)
     return redirect('index')
