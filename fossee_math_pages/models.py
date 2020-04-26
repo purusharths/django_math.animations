@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.utils.timezone import now
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
@@ -22,24 +22,6 @@ DATA_STATUS = (
     ("REJECTED", "REJECTED"),
     ("WAITING", "WAITING"),
 )
-
-
-def validate_file_extension(value):
-    import os
-    from django.core.exceptions import ValidationError
-    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.mp4']
-    if not ext.lower() in valid_extensions:
-        raise ValidationError(u'Unsupported file extension.')
-
-
-def validate_img_extension(value):
-    import os
-    from django.core.exceptions import ValidationError
-    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.jpg', '.jpeg', '.png']
-    if not ext.lower() in valid_extensions:
-        raise ValidationError(u'Unsupported file extension.')
 
 
 # Additional table to store more details on the users.
@@ -104,7 +86,7 @@ class Subtopic(models.Model):
                                        default='WAITING')
     subtopic_hash = models.CharField(max_length=50)
     subtopic_url = models.CharField(max_length=255)
-    subtopic_modification_date = models.DateField(default=datetime.now())
+    subtopic_modification_date = models.DateField(default=now)
     subtopic_order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -128,9 +110,9 @@ class Contributor(models.Model):
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     data_content = RichTextUploadingField()
-    data_image = models.ImageField(upload_to='images/', blank=True, null=True,validators=[validate_img_extension])
-    data_video = models.FileField(upload_to='video/', blank=True, null=True, validators=[validate_file_extension])
-    data_modification_date = models.DateTimeField(blank=True, null=True, default=datetime.now())
+    data_image = models.ImageField(upload_to='images/', blank=True, null=True)
+    data_video = models.FileField(upload_to='video/', blank=True, null=True)
+    data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
 
     def __str__(self):
