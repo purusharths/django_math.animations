@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import UserDetails, Internship, Intern, AssignedTopics, Data, Contributor, ImageFormatting, Topic, Subtopic
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages, HomeImages)
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -74,37 +74,59 @@ class ManageIntern(ModelForm):
         fields = ['user_status']
 
 
-class AddIntern(ModelForm):
+class topicOrder(ModelForm):
     class Meta:
-        model = Intern
-        labels = {
-            'user_id': 'Intern Name',
-            'internship_id': 'Internship Name'
-        }
-        fields = ['user_id', 'internship_id']
+        model = Topic
+        fields = ['topic_order']
 
-    def __init__(self, user, *args, **kwargs):
-        super(AddIntern, self).__init__(*args, **kwargs)
-        self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
-        self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
 
+class subtopicOrder(ModelForm):
+    class Meta:
+        model = Subtopic
+        fields = ['subtopic_order']
+
+
+# class AddIntern(ModelForm):
+#     class Meta:
+#         model = Intern
+#         labels = {
+#             'user_id': 'Intern Name',
+#             'internship_id': 'Internship Name'
+#         }
+#         fields = ['user_id', 'internship_id']
+#
+#     def __init__(self, user, *args, **kwargs):
+#         super(AddIntern, self).__init__(*args, **kwargs)
+#         self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
+#         self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
+
+#
+# class AssignTopic(ModelForm):
+#     class Meta:
+#         model = AssignedTopics
+#         labels = {
+#             'user_id': 'User',
+#             'topic_d': 'Topic',
+#         }
+#         fields = ['user_id', 'topic_id']
+#
+#     def __init__(self, user, *args, **kwargs):
+#         super(AssignTopic, self).__init__(*args, **kwargs)
+#         assigned = AssignedTopics.objects.all().values_list('user_id_id')
+#         qs = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE").exclude(user_id_id__in=assigned)
+#         self.fields['user_id'].queryset = qs
+#         inner = AssignedTopics.objects.all().values_list('topic_id_id')
+#         self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
 
 class AssignTopic(ModelForm):
     class Meta:
-        model = AssignedTopics
-        labels = {
-            'user_id': 'User',
-            'topic_d': 'Topic',
-        }
-        fields = ['user_id', 'topic_id']
+        model = Subtopic
+        fields = ['assigned_user_id']
 
-    def __init__(self, user, *args, **kwargs):
-        super(AssignTopic, self).__init__(*args, **kwargs)
-        assigned = AssignedTopics.objects.all().values_list('user_id_id')
-        qs = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE").exclude(user_id_id__in=assigned)
-        self.fields['user_id'].queryset = qs
-        inner = AssignedTopics.objects.all().values_list('topic_id_id')
-        self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
+    def __init__(self):
+        super().__init__()
+        self.fields['assigned_user_id'].queryset = User.objects.exclude(is_staff=True)
+
 
 
 class data(ModelForm):
