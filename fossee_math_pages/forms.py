@@ -186,11 +186,16 @@ class add_subtopic(forms.Form):
 
 class addContributor(ModelForm):
     class Meta:
-        model = Contributor
+        model = Contributor 
+        #mentor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_mentor"}))
+        #professor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_professor"}))
         fields = ['mentor', 'professor']
 
 
 class sendMessage(ModelForm):
     class Meta:
         model = Messages
+        widgets = {
+          'message': forms.Textarea(attrs={'rows':4, 'cols':15}),
+        }
         fields = ['message']
