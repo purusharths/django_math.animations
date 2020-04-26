@@ -596,11 +596,11 @@ def user_login(request):
 
 
 @login_required
-def add_subtopics(request, t_id):
+def add_subtopics(request,i_id, t_id):
     if request.user.is_staff:
         form = add_subtopic()
         rearrange_subtopic = subtopicOrder()
-        i_topic = Topic.objects.get(topic_url=t_id)
+        i_topic = Topic.objects.get(topic_url=t_id,internship_id__internship_url=i_id)
         subtopics = Subtopic.objects.all().order_by('subtopic_order')
 
         if request.method == 'POST':
@@ -618,11 +618,17 @@ def add_subtopics(request, t_id):
                     messages.error(request, "Fill the field")
                     return redirect('add-subtopics', t_id)
                 else:
+                    obj = Subtopic.objects.filter(topic_id__topic_url=t_id,topic_id__internship_id_id=i_topic.internship_id).order_by('subtopic_order').last()
+                    if obj:
+                        order = obj.subtopic_order
+                    else:
+                        order = 0
                     try:
                         Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
                         messages.error(request, "Subtopic exists !")
                     except:
-                        data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=0)
+                        order = order+1
+                        data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
                         hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
@@ -631,7 +637,7 @@ def add_subtopics(request, t_id):
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
-                        i_topic = Topic.objects.get(topic_url=t_id)
+                        i_topic = Topic.objects.get(topic_url=t_id,internship_id__internship_url=i_id)
 
         context = {
             'form': form,
@@ -667,11 +673,17 @@ def add_topics(request):
                     messages.error(request, "Fill the field")
                     return redirect(add_topics)
                 else:
+                    obj = Topic.objects.filter(internship_id_id=id).order_by('topic_order').last()
+                    if obj:
+                        order = obj.topic_order
+                    else:
+                        order = 0
                     try:
                         Topic.objects.get(topic_name=topic, internship_id_id=id)
                         messages.error(request, "Topic alredy exists")
                     except:
-                        data = Topic(topic_name=topic, internship_id_id=id)
+                        order = order + 1
+                        data = Topic(topic_name=topic, internship_id_id=id,topic_order=order)
                         data.save()
                         current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id)
                         current_topic.topic_url = '-'.join(str(topic).lower().split())
