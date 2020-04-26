@@ -1,4 +1,3 @@
-import datetime
 import hashlib
 import random
 import re
@@ -12,13 +11,13 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
-from bootstrap_modal_forms.generic import (BSModalCreateView)
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, EditMedia, AddContributor, imageFormatting, topicOrder,
-                    subtopicOrder, AssignTopic, )
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages)
+                    subtopicOrder, AssignTopic, addContributor, sendMessage, )
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 
 
 @login_required
@@ -215,7 +214,7 @@ def add_users(request):
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
                 return redirect('add-users')
-            Pattern = re.compile("(\+91)?[7-9][0-9]{9}")
+            Pattern = re.compile("(/+91)?[7-9][0-9]{9}")
             if Pattern.match(user_phone):
                 messages.error(request, 'Phone number error')
                 return redirect('add-users')
@@ -385,7 +384,6 @@ def add_submission_subtopic(request, st_id):
 
         if request.method == 'POST':
             content = request.POST.get('data_content')
-            print(content)
             img = request.FILES.get('image')
             video = request.FILES.get('video')
 
@@ -399,6 +397,7 @@ def add_submission_subtopic(request, st_id):
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id)
                 add_data.save()
+                add_data.subtopic_id.subtopic_modification_date = now()
                 current_data = Data.objects.get(pk=add_data.pk)
                 hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
@@ -596,11 +595,11 @@ def user_login(request):
 
 
 @login_required
-def add_subtopics(request,i_id, t_id):
+def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
         form = add_subtopic()
         rearrange_subtopic = subtopicOrder()
-        i_topic = Topic.objects.get(topic_url=t_id,internship_id__internship_url=i_id)
+        i_topic = Topic.objects.get(topic_url=t_id, internship_id__internship_url=i_id)
         subtopics = Subtopic.objects.all().order_by('subtopic_order')
 
         if request.method == 'POST':
@@ -618,7 +617,9 @@ def add_subtopics(request,i_id, t_id):
                     messages.error(request, "Fill the field")
                     return redirect('add-subtopics', t_id)
                 else:
-                    obj = Subtopic.objects.filter(topic_id__topic_url=t_id,topic_id__internship_id_id=i_topic.internship_id).order_by('subtopic_order').last()
+                    obj = Subtopic.objects.filter(topic_id__topic_url=t_id,
+                                                  topic_id__internship_id_id=i_topic.internship_id).order_by(
+                        'subtopic_order').last()
                     if obj:
                         order = obj.subtopic_order
                     else:
@@ -627,7 +628,7 @@ def add_subtopics(request,i_id, t_id):
                         Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
                         messages.error(request, "Subtopic exists !")
                     except:
-                        order = order+1
+                        order = order + 1
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
@@ -637,7 +638,7 @@ def add_subtopics(request,i_id, t_id):
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
-                        i_topic = Topic.objects.get(topic_url=t_id,internship_id__internship_url=i_id)
+                        i_topic = Topic.objects.get(topic_url=t_id, internship_id__internship_url=i_id)
 
         context = {
             'form': form,
@@ -683,7 +684,7 @@ def add_topics(request):
                         messages.error(request, "Topic alredy exists")
                     except:
                         order = order + 1
-                        data = Topic(topic_name=topic, internship_id_id=id,topic_order=order)
+                        data = Topic(topic_name=topic, internship_id_id=id, topic_order=order)
                         data.save()
                         current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id)
                         current_topic.topic_url = '-'.join(str(topic).lower().split())
@@ -741,28 +742,20 @@ def review_submissions(request):
 @login_required
 def manage_interns(request):
     if request.user.is_staff and not request.user.is_superuser:
-        form = ManageIntern()  # what's happening here?
-        userdetails = UserDetails.objects.filter(user_role='INTERN')
-        internship = Internship.objects.first()
-        internship_all = Internship.objects.all()
-        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=internship.pk)
+        form = ManageIntern()
+        subtopic = Subtopic.objects.all()
+        interns = UserDetails.objects.filter(user_role='INTERN')
 
         if request.method == 'POST':
-            if "search_internship" in request.POST:
-                internship = Internship.objects.get(pk=request.POST['search_internship'])  # should be at
-            else:
-                user = User.objects.get(username=request.POST['assigneduserid'])
-                current_user = UserDetails.objects.get(user_id=user.id)
-                current_user.user_status = request.POST['user_status']
-                current_user.save()
-                messages.success(request, "Intern Status Changed")
+            current_user = UserDetails.objects.get(user_id_id=request.POST['assigneduserid'])
+            current_user.user_status = request.POST['user_status']
+            current_user.save()
+            messages.success(request, "Intern Status Changed")
 
         context = {
             'form': form,
+            'interns': interns,
             'subtopic': subtopic,
-            'userdetails': userdetails,
-            'internship_all': internship_all,
-            'chosen_internship': internship,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     elif request.user.is_superuser:
@@ -895,10 +888,51 @@ def review_submissions_subtopic(request, s_id):
         data = Data.objects.filter(subtopic_id=subtopic.pk)
         imageformat = ImageFormatting.objects.all()
 
+        if request.method == "POST":
+            if "message" in request.POST:
+                message = request.POST['message']
+                try:
+                    obj = Messages.objects.get(subtopic_id_id=subtopic.pk)
+                    obj.message = message
+                    obj.message_send_date = now()
+                    obj.save()
+                except:
+                    obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
+                                   message_send_date=now())
+                    obj.save()
+            else:
+                mentor = request.POST['mentor']
+                professor = request.POST['professor']
+
+                try:
+                    if mentor.strip() != '' and professor.strip() != "":
+                        obj = Contributor.objects.get(subtopic_id_id=subtopic.pk)
+                        obj.mentor = mentor
+                        obj.professor = professor
+                        obj.save()
+                except:
+                    obj = Contributor(subtopic_id_id=subtopic.pk, contributor=subtopic.assigned_user_id, mentor=mentor,
+                                      professor=professor, data_aproval_date=now())
+                    obj.save()
+
+        try:
+            instance = Messages.objects.get(subtopic_id_id=subtopic.pk)
+            form_message = sendMessage(request.POST or None, instance=instance)
+        except:
+            form_message = sendMessage()
+
+        try:
+            instance = Contributor.objects.get(subtopic_id_id=subtopic.pk)
+            form = addContributor(request.POST or None, instance=instance)
+        except:
+            form = addContributor()
+
         context = {
             'subtopic': subtopic,
             'datas': data,
             'imagesize': imageformat,
+            'form': form,
+            'form_message': form_message,
         }
 
         return render(request, 'fossee_math_pages/review-submissions-subtopic.html', context)
@@ -997,87 +1031,21 @@ def staff_delete_data(request, id):
 
 
 @login_required
+def view_messages(request):
+    if not request.user.is_staff and not request.user.is_superuser:
+        message = Messages.objects.all()
+        context = {
+            'message': message
+        }
+        return render(request, 'fossee_math_pages/messages.html', context)
+    else:
+        return redirect('dashboard')
+
+
+@login_required
 def user_logout(request):
     logout(request)
     return redirect('index')
-
-
-class staff_add_contribution(BSModalCreateView):
-    def get(self, request, id):
-        if request.user.is_staff:
-            try:
-                instance = Contributor.objects.get(topic_id=id)
-                form = AddContributor(request.POST or None, instance=instance)
-            except:
-                instance = None
-                form = AddContributor()
-            assigned = AssignedTopics.objects.get(topic_id=id)
-            try:
-                instance = Contributor.objects.get(topic_id=id)
-                form = AddContributor(request.POST or None, instance=instance)
-            except:
-                instance = None
-                form = AddContributor()
-
-            context = {
-                'form': form,
-                'assigned': assigned,
-            }
-            return render(request, 'fossee_math_pages/staff_add_contributor.html', context)
-        else:
-            return redirect('dashboard')
-
-    def post(self, request, id):
-        if request.user.is_staff:
-            try:
-                instance = Contributor.objects.get(topic_id=id)
-                form = AddContributor(request.POST or None, instance=instance)
-            except:
-                instance = None
-                form = AddContributor()
-        if request.POST:
-            if instance is not None:
-                obj = form.save(commit=False)
-                obj.save()
-            else:
-                internname = request.POST['username']
-                mentorname = request.POST['mentor']
-                professorname = request.POST['professor']
-                obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-                                  professor=professorname)
-                obj.save()
-        try:
-            instance = Contributor.objects.get(topic_id=id)
-            form = AddContributor(request.POST or None, instance=instance)
-        except:
-            instance = None
-            form = AddContributor()
-
-            if request.POST:
-                if instance is not None:
-                    obj = form.save(commit=False)
-                    obj.save()
-                else:
-                    internname = request.POST['username']
-                    mentorname = request.POST['mentor']
-                    professorname = request.POST['professor']
-                    obj = Contributor(topic_id=Topic.objects.get(id=id), contributor=internname, mentor=mentorname,
-                                      professor=professorname)
-                    obj.save()
-            try:
-                instance = Contributor.objects.get(topic_id=id)
-                form = AddContributor(request.POST or None, instance=instance)
-            except:
-                instance = None
-                form = AddContributor()
-
-            context = {
-                'form': form,
-                'assigned': assigned,
-            }
-            return redirect(internship_progress)
-        else:
-            return redirect('dashboard')
 
 
 def error_404_view(request, exception):
