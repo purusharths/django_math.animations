@@ -65,18 +65,19 @@
                     </thead>
                     {% if user.is_staff and not user.is_superuser %}
                         <tbody>
-                        {% for i in interns_in %}
+                        {% for i in subtopic %}
+                            {% if i.assigned_user_id and i.topic_id.internship_id == chosen_internship %}
                             <tr>
-                                <td>{{ i.user_id }}</td>
+                                <td>{{ i.assigned_user_id }}</td>
                                 {% for usr in userdetails %}
-                                    {% if usr.user_id == i.user_id %}
+                                    {% if usr.user_id == i.assigned_user_id %}
                                         <td>{{ usr.user_status }}</td>
                                     {% endif %}
                                 {% endfor %}
                                 <td>{{ i.topic_id }}</td>
                                 <td class="">
                                     <form method="POST" class="form-group" name="ManageIntern">
-                                        <input type="hidden" value="{{ i.user_id_id }}" name="id">
+                                        <input type="hidden" value="{{ i.assigned_user_id }}" name="assigneduserid">
                                         {% csrf_token %} {{ form|crispy }}
                                 <td>
                                     <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
@@ -84,6 +85,7 @@
                                 </form>
                                 </td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     {% else %}

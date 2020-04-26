@@ -15,16 +15,16 @@ urlpatterns = [
                   path('staff_update_image_size/<int:id>', views.staff_update_image_size, name='staff_update_image_size'),
 
                   path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
-                  path('intern_update_image_size/<int:id>', views.intern_update_image_size,
+                  path('intern_update_image_size/<str:id>', views.intern_update_image_size,
                   name='intern_update_image_size'),
-                  path('intern_update_data/<int:id>', views.intern_update_data, name='intern_update_data'),
-                  path('intern_update_media/<int:id>', views.intern_update_media, name='intern_update_media'),
+                  path('intern_update_data/<str:id>', views.intern_update_data, name='intern_update_data'),
+                  path('intern_update_media/<str:id>', views.intern_update_media, name='intern_update_media'),
 
                   # CHANGED
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),
-                  path('dashboard/add-subtopics/<int:id>', views.add_subtopics, name='add-subtopics'),
+                  path('dashboard/add-subtopics/<str:t_id>', views.add_subtopics, name='add-subtopics'),
                   path('dashboard/add-submission/', views.add_submission , name='add-submission'),
                   path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic, name='add-submission-subtopic'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
