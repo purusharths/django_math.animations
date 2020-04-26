@@ -111,7 +111,7 @@ class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
-    data_video = models.FileField(upload_to='media/', blank=True, null=True)
+    data_video = models.FileField(upload_to='video/', blank=True, null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=datetime.now())
     data_hash = models.CharField(max_length=50)
 

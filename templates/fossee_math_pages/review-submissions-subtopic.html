@@ -74,11 +74,11 @@
                             {{ data.data_content |safe }}
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
                             </a>
                             <br>
                             <br>
-                            <a href="{% url 'staff_update_data' data.pk %}">
+                            <a href="{% url 'staff_update_data' data.data_hash %}">
                                 Edit
                             </a>
                         </td>
@@ -97,11 +97,11 @@
                             {% endfor %}
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
                             </a>
                             <br>
                             <br>
-                            <a href="{% url 'staff_update_image_size' data.pk %}">Format</a>
+                            <a href="{% url 'staff_update_image_size' data.data_hash %}">Format</a>
                         </td>
                     {% endif %}
                 </tr>
@@ -115,7 +115,7 @@
                             </video>
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.pk %}">Delete
+                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
                             </a>
                         </td>
                     {% endif %}
