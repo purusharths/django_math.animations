@@ -1,33 +1,18 @@
-{% extends 'base.html' %}{% load crispy_forms_tags %} {% block title %}Staff View Topic{% endblock %}
+{% load crispy_forms_tags %}
 {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 {% block content %}
     <style>
         tr:hover {
             background-color: #ddd;
         }
+        .modal{
+            margin-left: 186px;
+        }
+        .modal-content{
+            width: 125%;
+        }
     </style>
 
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'dashboard' %}">
-                        <i class="fa fa-dashboard" style="color:black"></i> Dashboard</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'internship-progress' %}">
-                        <i class="fa fa-pencil" style="color:black"></i> View Insternship
-                    </a>
-                </li>
-                <li class="breadcrumb-item active"> Add Contributor Info : {{ subtopic.subtopic_name }}</li>
-            </ol>
-        </nav>
-    </section>
     <hr>
     <div class="container">
 
