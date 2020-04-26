@@ -345,7 +345,7 @@ def home_search_results(request, search_contains_query):
     datas = ""
     datass = ""
     page_obj = ""
-    topic = AssignedTopics.objects.all()
+    topic = Subtopic.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
@@ -566,7 +566,17 @@ def user_login(request):
                 if request.user.is_staff:
                     return redirect(dashboard)
                 else:
-                    return redirect(dashboard)
+                    user = UserDetails.objects.get(user_id=request.user.id)
+                    if user.user_status == 'INACTIVE':
+                        messages.error(request,"Contact Admin ! you are blocked")
+                        logout(request)
+                        form = UserLoginForm()
+                        context = {
+                            'form': form,
+                        }
+                        return render(request, "fossee_math_pages/login.html", context)
+                    else:
+                        return redirect(dashboard)
 
             except:
                 form = UserLoginForm()
@@ -691,13 +701,14 @@ def review_submissions(request):
         subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id')
 
         if "search_internship" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by('subtopic_order').order_by('topic_id')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
+                'subtopic_order').order_by('topic_id')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
             interns = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship'])
 
         if "search_intern" in request.POST:
-            subtopic = Subtopic.objects.filter(assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by('topic_id')
-
+            subtopic = Subtopic.objects.filter(assigned_user_id=request.POST['search_intern']).order_by(
+                'subtopic_order').order_by('topic_id')
 
         context = {
             'subtopic': subtopic,
@@ -714,7 +725,7 @@ def review_submissions(request):
 # HERE
 @login_required
 def manage_interns(request):
-    if request.user.is_staff:
+    if request.user.is_staff and not request.user.is_superuser:
         form = ManageIntern()  # what's happening here?
         userdetails = UserDetails.objects.filter(user_role='INTERN')
         internship = Internship.objects.first()
@@ -741,6 +752,7 @@ def manage_interns(request):
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     elif request.user.is_superuser:
         interns = UserDetails.objects.filter(user_role="INTERN")
+        form = ManageIntern()
         if request.method == 'POST':
             int_id = request.POST["id"]
             obj = UserDetails.objects.get(user_id_id=int_id)
@@ -756,6 +768,7 @@ def manage_interns(request):
 
         context = {
             'interns': interns,
+            'form': form,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     else:
