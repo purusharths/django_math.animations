@@ -432,12 +432,12 @@ def add_submission_subtopic(request, st_id):
 
 
 @login_required
-def intern_update_data(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def edit_text(request, t_id, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
         t_id = instance.subtopic_id.subtopic_hash
-        if subtopic.assigned_user_id.id == request.user.id:
+        if (subtopic.assigned_user_id.id == request.user.id) or request.user.is_staff:
             form = data(request.POST or None, instance=instance)
             if form.is_valid():
                 obj = form.save(commit=False)
@@ -451,7 +451,7 @@ def intern_update_data(request, id):
             'subtopic': subtopic,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_data.html', context)
+        return render(request, 'fossee_math_pages/edit-text.html', context)
     else:
         return redirect('dashboard')
 
@@ -940,26 +940,26 @@ def review_submissions_subtopic(request, s_id):
         return redirect('dashboard')
 
 
-@login_required
-def staff_update_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(data_hash=id)
-        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.subtopic_hash
-        form = data(request.POST or None, instance=instance)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            return redirect('review-submissions-subtopic', t_id)
-
-        context = {
-            'form': form,
-            'subtopic': subtopic,
-        }
-
-        return render(request, 'fossee_math_pages/staff_update_data.html', context)
-    else:
-        return redirect('dashboard')
+# @login_required
+# def edit_text_staff(request, id):
+#     if request.user.is_staff:
+#         instance = Data.objects.get(data_hash=id)
+#         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+#         t_id = instance.subtopic_id.subtopic_hash
+#         form = data(request.POST or None, instance=instance)
+#         if form.is_valid():
+#             obj = form.save(commit=False)
+#             obj.save()
+#             return redirect('review-submissions-subtopic', t_id)
+#
+#         context = {
+#             'form': form,
+#             'subtopic': subtopic,
+#         }
+#
+#         return render(request, 'fossee_math_pages/edit-text-staff.html', context)
+#     else:
+#         return redirect('dashboard')
 
 
 @login_required

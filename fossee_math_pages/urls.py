@@ -7,7 +7,6 @@ from . import views
 urlpatterns = [
                   path('admin_view_intern/<int:id>', views.admin_view_intern, name='admin_view_intern'),
                   path('admin_add_intern/', views.admin_add_intern, name='admin_add_intern'),
-                  path('staff_update_data/<str:id>', views.staff_update_data, name='staff_update_data'),
                   path('staff_delete_data/<str:id>', views.staff_delete_data, name='staff_delete_data'),
                   path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
                   path('staff_reject_subtopic/<int:id>', views.staff_reject_subtopic, name='staff_reject_subtopic'),
@@ -17,10 +16,11 @@ urlpatterns = [
                   path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
                   path('intern_update_image_size/<str:id>', views.intern_update_image_size,
                        name='intern_update_image_size'),
-                  path('intern_update_data/<str:id>', views.intern_update_data, name='intern_update_data'),
                   path('intern_update_media/<str:id>', views.intern_update_media, name='intern_update_media'),
 
                   # CHANGED
+                  path('dashboard/review-submissons/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text-staff'),
+                  path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
                   path('dashboard/messages/', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
