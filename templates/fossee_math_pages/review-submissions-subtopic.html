@@ -57,11 +57,11 @@
 
     <div align="center">
         Current Status: <b>{{ subtopic.subtopic_status }}</b>
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_table }}
-                <button class="btn btn-outline-success">Add</button>
-            </form>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <button class="btn btn-outline-success">Add</button>
+        </form>
     </div>
     <div align="center">
         <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-success">Aprove</a>
@@ -98,7 +98,9 @@
                         {% if i.data_id_id == data.pk %}
                             <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                  height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                            {% if data.data_caption != None %}
+                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -119,6 +121,9 @@
                         <source src="{{ data.data_video.url }}" type='video/mp4'>
                         Your browser does not support the video tag.
                     </video>
+                    {% if data.data_caption != None %}
+                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                    {% endif %}
                 </td>
                 <td>
                     <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
@@ -130,12 +135,12 @@
 </table>
 <br>
 <br>
-    <form method="POST">
+<form method="POST">
     {% csrf_token %}
     {{ form_message|crispy }}
-        <button type="submit" class="btn btn-success col-md-12">Send Message</button>
-    </form>
-    <br>
+    <button type="submit" class="btn btn-success col-md-12">Send Message</button>
+</form>
+<br>
 <br>
 </div>
 
