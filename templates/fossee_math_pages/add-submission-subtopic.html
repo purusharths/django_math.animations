@@ -92,7 +92,7 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_data' data.data_hash %}">
+                                <a href="{% url 'edit-text' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
                                          title="Last Modified on {{ data.data_post_date }}" alt="Edit">
                                 </a>
