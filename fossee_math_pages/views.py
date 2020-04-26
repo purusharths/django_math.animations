@@ -399,6 +399,7 @@ def add_submission_subtopic(request, st_id):
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id)
                 add_data.save()
+                add_data.subtopic_id.subtopic_modification_date = datetime.date
                 current_data = Data.objects.get(pk=add_data.pk)
                 hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
