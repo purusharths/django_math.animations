@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import os
 import random
 import re
 import string
@@ -12,6 +13,7 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
 from bootstrap_modal_forms.generic import (BSModalCreateView)
@@ -385,7 +387,6 @@ def add_submission_subtopic(request, st_id):
 
         if request.method == 'POST':
             content = request.POST.get('data_content')
-            print(content)
             img = request.FILES.get('image')
             video = request.FILES.get('video')
 
@@ -399,7 +400,7 @@ def add_submission_subtopic(request, st_id):
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, subtopic_id_id=t_id)
                 add_data.save()
-                add_data.subtopic_id.subtopic_modification_date = datetime.date
+                add_data.subtopic_id.subtopic_modification_date = now()
                 current_data = Data.objects.get(pk=add_data.pk)
                 hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
