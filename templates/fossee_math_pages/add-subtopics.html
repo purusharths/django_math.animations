@@ -65,7 +65,7 @@
                         <div class="row">
                             <form method="POST">
                                 {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ i_topic.pk }}">
+                                <input type="hidden" name="id" value="{{ i_topic.id }}">
                                 <span>New Sub topic: </span>{{ form.subtopic }}
                                 <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
                             </form>
