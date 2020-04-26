@@ -4,23 +4,23 @@
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Review Submissions" "review-submissions" %}
-    {% breadcrumb "View data" "" %}
-    <!-- WRONG CRUMBS -->
+{{ block.super }}
+{% breadcrumb "Dashboard" "dashboard" %}
+{% breadcrumb "Review Submissions" "review-submissions" %}
+{% breadcrumb "View data" "" %}
+<!-- WRONG CRUMBS -->
 {% endblock %}
 
 {% load static %} {{ form.media }}
 {% block content %}
-    {% render_breadcrumbs %}
-    <style>
-        tr:hover {
-            background-color: rgb(240, 240, 240);
-        }
-    </style>
+{% render_breadcrumbs %}
+<style>
+    tr:hover {
+        background-color: rgb(240, 240, 240);
+    }
+</style>
 
-    <div class="container">
+<div class="container">
 
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
@@ -29,114 +29,206 @@
     </script>
 
     {% if subtopic.subtopic_status == "WAITING" %}
-        <div class="card border-warning" style="margin-bottom: 15px;">
-        <h4>
-            <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
-        </h4>
-    {% elif subtopic.subtopic_status == "ACCEPTED" %}
+    <div class="card border-warning">
+       <div class="card-header text-white bg-warning">
+           <div class="row">
+               <div class="col-auto mr-auto">
+                <h4>{{ subtopic.subtopic_name }}</h4>
+                </div>
+                <div class="col-auto">
+                    <a class="nav-link" href="" role="tab" data-toggle="modal"
+                    data-target="#modalInfoForm"><img
+                        src="{% static '/web-files/img/multiuse-svgs/info.svg' %}" title="Send Message">
+                </a>
+                </div>
+            </div>
+        </div>
+        {% elif subtopic.subtopic_status == "ACCEPTED" %}
         <div class="card border-success">
-        <h4>
-            <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
-        </h4>
-    {% elif subtopic.subtopic_status == "REJECTED" %}
-        <div class="card border-danger">
-        <h4>
-            <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
-        </h4>
-    {% else %}
-        <div class="card border-info">
-        <h4>
-            <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
-        </h4>
-    {% endif %}
-<div class="card-body">
-    <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
-    <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
-    <h6><b>Intern: </b>{{ subtopic.assigned_user_id }}</h6>
-    <h6><b>Last Modified: </b> {{ subtopic.subtopic_modification_date }}</h6>
-
-    <div align="center">
-        Current Status: <b>{{ subtopic.subtopic_status }}</b>
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_table }}
-                <button class="btn btn-outline-success">Add</button>
-            </form>
-    </div>
-    <div align="center">
-        <a href="{% url 'staff_aprove_subtopic' subtopic.id %}" class="btn btn-outline-success">Aprove</a>
-        &nbsp;
-        <a href="{% url 'staff_reject_subtopic' subtopic.id %}" class="btn btn-outline-danger">Reject</a>
-    </div>
-</div>
-</div>
-<br>
-<table>
-    {% for data in datas %}
-        <tr>
-            {% if data.data_content != "NULL" %}
-                <td>
-                    <p></p>
-                    {{ data.data_content |safe }}
-                </td>
-                <td>
-                    <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
-                    </a>
+            <div class="card-header text-white bg-success">
+                <div class="row">
+                    <div class="col-auto mr-auto">
+                     <h4>{{ subtopic.subtopic_name }}</h4>
+                     </div>
+                     <div class="col-auto">
+                         <a class="nav-link" href="" role="tab" data-toggle="modal"
+                         data-target="#modalInfoForm"><img
+                             src="{% static '/web-files/img/multiuse-svgs/info.svg' %}" title="Send Message">
+                     </a>
+                     </div>
+                 </div>
+             </div>
+             {% elif subtopic.subtopic_status == "REJECTED" %}
+             <div class="card border-danger">
+                <div class="card-header text-white bg-danger">
+                    <div class="row">
+                        <div class="col-auto mr-auto">
+                         <h4>{{ subtopic.subtopic_name }}</h4>
+                         </div>
+                         <div class="col-auto">
+                             <a class="nav-link" href="" role="tab" data-toggle="modal"
+                             data-target="#modalInfoForm"><img
+                                 src="{% static '/web-files/img/multiuse-svgs/info.svg' %}" title="Send Message">
+                         </a>
+                         </div>
+                     </div>
+                 </div>
+                {% else %}
+                <div class="card border-info">
+                        <h4><div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}</div></h4>
+                </div>
+        </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-auto mr-auto">
+                            <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+                            <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+                            <h6><b>Intern: </b>{{ subtopic.assigned_user_id }}</h6>
+                            <h6><b>Last Modified: </b> {{ subtopic.subtopic_modification_date }}</h6>
+                        </div>
+                        <div class="col-auto">
+                            <a class="nav-link" href="" role="tab" data-toggle="modal"
+                                data-target="#modalContactForm"><img
+                                    src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" title="Send Message">
+                            </a>
+                           
+                        </div>
+                    </div>
+                    <div align="center">
+                        Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
+                        <!--<form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_table }}
+                            <button class="btn btn-outline-success">Add</button>
+                        </form>-->
+                    </div>
                     <br>
-                    <br>
-                    <a href="{% url 'staff_update_data' data.data_hash %}">
-                        Edit
-                    </a>
-                </td>
-            {% endif %}
-        </tr>
-        <tr>
-            {% if data.data_image.url != "NULL" %}
-                <td>
-                    <p></p>
-                    {% for i in imagesize %}
+                    <div align="center">
+                        <a href="{% url 'staff_aprove_subtopic' subtopic.id %}"
+                            class="btn btn-outline-success">Aprove</a>
+                        &nbsp;
+                        <a href="{% url 'staff_reject_subtopic' subtopic.id %}"
+                            class="btn btn-outline-danger">Reject</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <table>
+                {% for data in datas %}
+                <tr>
+                    {% if data.data_content != "NULL" %}
+                    <td>
+                        <p></p>
+                        {{ data.data_content |safe }}
+                    </td>
+                    <td>
+                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        </a>
+                        <br>
+                        <br>
+                        <a href="{% url 'staff_update_data' data.data_hash %}">
+                            Edit
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_image.url != "NULL" %}
+                    <td>
+                        <p></p>
+                        {% for i in imagesize %}
                         {% if i.data_id_id == data.pk %}
-                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                            <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                        <img src="{{ data.data_image.url }}" width="{{ i.image_width }}" height="{{ i.image_height }}"
+                            style="display:block; margin:0 auto;">
+                        <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
                         {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
-                    </a>
-                    <br>
-                    <br>
-                    <a href="{% url 'staff_update_image_size' data.data_hash %}">Format</a>
-                </td>
-            {% endif %}
-        </tr>
-        <tr>
-            {% if data.data_video.url != "NULL" %}
-                <td>
-                    <p></p>
-                    <video width='70%' style="display:block; margin:0 auto;" controls>
-                        <source src="{{ data.data_video.url }}" type='video/mp4'>
-                        Your browser does not support the video tag.
-                    </video>
-                </td>
-                <td>
-                    <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
-                    </a>
-                </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-</table>
-<br>
-<br>
-    <form method="POST">
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        </a>
+                        <br>
+                        <br>
+                        <a href="{% url 'staff_update_image_size' data.data_hash %}">Format</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if data.data_video.url != "NULL" %}
+                    <td>
+                        <p></p>
+                        <video width='70%' style="display:block; margin:0 auto;" controls>
+                            <source src="{{ data.data_video.url }}" type='video/mp4'>
+                            Your browser does not support the video tag.
+                        </video>
+                    </td>
+                    <td>
+                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <br>
+            <!--<form method="POST">
     {% csrf_token %}
     {{ form_message|crispy }}
         <button type="submit" class="btn btn-success col-md-12">Send Message</button>
-    </form>
-    <br>
-<br>
-</div>
+    </form>-->
+            <br>
+            <br>
+        </div>
 
-{% endblock %}
+
+        <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title">Send Message to {{ subtopic.assigned_user_id }}</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mx-3">
+                        <div class="md-form">
+                            <i class="fas fa-pencil prefix grey-text"></i>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form_message|crispy }}
+                                <button type="submit" class="btn btn-success col-md-12">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalInfoForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <p class="modal-title">Mentors for <i>{{ subtopic.subtopic_name }}</i></p><br/>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mx-3">
+                        <div class="md-form">
+                            <i class="fas fa-pencil prefix grey-text"></i>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button class="btn btn-outline-success">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        {% endblock %}
