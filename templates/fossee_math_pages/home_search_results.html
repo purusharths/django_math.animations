@@ -1,19 +1,14 @@
-{% extends 'base.html' %} {% block title %}Home View Data{% endblock %} {% block content %}
-    <section id="bc">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white text-dark">
-                <li class="breadcrumb-item">
-                    <a style="color:black" href="{% url 'index' %}">
-                        <i class="fa fa-home" style="color:black"></i> Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a style="color:black">
-                        <i style="color:black"></i> Search results </a>
-                </li>
-            </ol>
-        </nav>
-    </section>
-    <hr>
+{% extends 'base.html' %}
+{% block title %}Home View Data{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Search" "#Topic" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
     <div class="container">
         <div>
             <form method="GET" action=".">

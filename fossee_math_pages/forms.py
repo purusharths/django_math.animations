@@ -137,7 +137,7 @@ class data(ModelForm):
 class imageFormatting(ModelForm):
     class Meta:
         model = ImageFormatting
-        fields = ['image_height', 'image_width', 'image_caption']
+        fields = ['image_height', 'image_width']
 
 
 class UserLoginForm(forms.Form):
