@@ -5,11 +5,6 @@ from FOSSEE_math import settings
 from . import views
 
 urlpatterns = [
-                  path('staff_aprove_subtopic/<int:id>', views.staff_aprove_subtopic, name='staff_aprove_subtopic'),
-                  path('staff_reject_subtopic/<int:id>', views.staff_reject_subtopic, name='staff_reject_subtopic'),
-                  path('staff_delete_data/<str:id>', views.staff_delete_data, name='staff_delete_data'),
-                  path('intern_delete_data/<str:id>', views.intern_delete_data, name='intern_delete_data'),
-                  path('intern_update_media/<str:id>', views.intern_update_media, name='intern_update_media'),
 
                   # CHANGED
                   path('dashboard/messages/', views.view_messages, name='messages'),
@@ -22,6 +17,7 @@ urlpatterns = [
                        name='add-submission-subtopic'),
                   path('dashboard/add-submisson/<str:t_id>/edit-image/<str:id>', views.edit_image, name='edit-image'),
                   path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
+                  path('dashboard/add-submission/<str:t_id>/edit-media/<str:id>', views.edit_media, name='edit-media'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
                   path('dashboard/interns/', views.interns, name='interns'),
                   path('dashboard/internship-progress/', views.internship_progress, name='internship-progress'),
@@ -32,6 +28,9 @@ urlpatterns = [
                        name='review-submissions-subtopic'),
                   path('dashboard/review-submissons/<str:t_id>/edit-image/<str:id>', views.edit_image, name='edit-image-staff'),
                   path('dashboard/review-submissons/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text-staff'),
+                  path('delete-data/<str:id>', views.delete_data, name='delete-data'),
+                  path('approve-subtopic/<int:id>', views.approve_subtopic, name='approve-subtopic'),
+                  path('reject-subtopic/<int:id>', views.reject_subtopic, name='reject-subtopic'),
                   ##
 
                   # ALREADY OKAY

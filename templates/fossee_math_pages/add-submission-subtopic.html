@@ -97,7 +97,7 @@
                                          title="Last Modified on {{ data.data_post_date }}" alt="Edit">
                                 </a>
                                 <hr>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}">
+                                <a href="{% url 'delete-data' data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
                                          width="15px" alt="Delete">
                                 </a><br>
@@ -123,12 +123,12 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_media' data.data_hash %}">
+                                <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
                                          title="Added on {{ data.data_post_date }}" alt="Edit">
                                 </a>
                                 <hr>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}">
+                                <a href="{% url 'delete-data' data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                          title="Delete Image"
                                          width="15px" alt="Delete">
@@ -158,12 +158,12 @@
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_media' data.data_hash %}">
+                                <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
                                          width="15px" alt="Edit">
                                 </a>
                                 <hr/>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}"> <img
+                                <a href="{% url 'delete-data' data.data_hash %}"> <img
                                         src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
                                         width="15px" alt="Delete">
                                 </a>

@@ -106,10 +106,10 @@
                     <br>
 
                     <div align="center">
-                        <a href="{% url 'staff_aprove_subtopic' subtopic.id %}"
-                            class="btn btn-outline-success">Aprove</a>
+                        <a href="{% url 'approve-subtopic' subtopic.id %}"
+                            class="btn btn-outline-success">Approve</a>
                         &nbsp;
-                        <a href="{% url 'staff_reject_subtopic' subtopic.id %}"
+                        <a href="{% url 'reject-subtopic' subtopic.id %}"
                             class="btn btn-outline-danger">Reject</a>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                         {{ data.data_content |safe }}
                     </td>
                     <td>
-                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        <a href="{% url 'delete-data' data.data_hash %}">Delete
                         </a>
                         <br>
                         <br>
@@ -147,7 +147,7 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        <a href="{% url 'delete-data' data.data_hash %}">Delete
                         </a>
                         <br>
                         <br>
@@ -168,7 +168,7 @@
                     {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                        <a href="{% url 'delete-data' data.data_hash %}">Delete
                         </a>
                     </td>
                     {% endif %}
