@@ -116,7 +116,8 @@
                                     <img src="{{ data.data_image.url }}" width="100%" max-width="700px"
                                           max-height="500px" style="display:block; margin:0 auto;" alt="">
                                     {% if data.data_caption != None %}
-                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                    <br>
+                                        <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
@@ -152,7 +153,8 @@
                                 Your browser does not support the video tag.
                             </video>
                             {% if data.data_caption != None %}
-                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                            <br>
+                                <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
                             {% endif %}
                             <br>
                             &nbsp;
@@ -222,8 +224,7 @@
                                     <label>Select Image: </label> <input type="file" class="btn" name="image"
                                                                          id="fileInput" onchange="handleFileSelect()"/>
                                     <br>
-                                    <label>Image Caption: </label><input type="text" class="form-control"
-                                                                         name="caption_image">
+                                    
                                 </div>
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
@@ -235,22 +236,26 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
-                                        <canvas id="testCanvas" width="400" height="350">
+                                        <canvas id="testCanvas" width="600" height="300">
                                             Your browser does not support canvas.
                                         </canvas>
+                                        <input type="text" placeholder="Caption for the image" class=" md-form form-control" name="caption_image">
                                     </div>
+                                    
                                     <!-- <div class="col">
                                         <image id="theimage" name="theimage" width="400" height="350"></image>
                                     </div> -->
+                                    
                                 </div>
-                                <input class="btn btn-primary" type="button" onclick="cropper.startCropping()"
+                                <!--<input class="btn btn-primary" type="button" onclick="cropper.startCropping()"
                                        value="Start cropping"/>
                                 <input class="btn btn-primary" type="button" onclick="cropper.getCroppedImageSrc()"
                                        value="Crop"/>
                                 <input class="btn btn-primary" type="button" onclick="cropper.restore()"
                                        value="Restore"/>
                                 <input class="btn btn-primary" type="button" id="btnSave" onclick=""
-                                       value="Save To Server"/>
+                                       value="Save To Server"/>-->
+                                
                             </div>
                             <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
                             <script>
@@ -283,7 +288,7 @@
                                     Canvas2Image.saveAsPNG(canvas);
                                 }*/
 
-                                $(function () {
+                                /*$(function () {
                                     $("#btnSave").click(function () {
                                         var image = document.getElementById("testCanvas").toDataURL("image/png");
                                         image = image.replace('data:image/png;base64,', '');
@@ -298,7 +303,7 @@
                                             }
                                         });
                                     });
-                                });
+                                });*/
 
 
                             </script>
@@ -310,14 +315,16 @@
                                 <div class="col-auto mr-auto">
                                     <label> Select Video: </label> <input type="file" class="btn " name="video"/>
                                     <br><br>
-                                    <div class="text-muted"><label>Video Caption:</label><input type="text" class="form-control"
+                                    
+                                        <input type="text" placeholder="Video Caption" class="md-form form-control"
                                                                         name="caption_video"></div>
-                                </div>
+                                
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
                                            id="submit" value="Upload">
                                 </div>
                             </div>
+                            <br>
                         </div>
                     </div>
                 </form>
