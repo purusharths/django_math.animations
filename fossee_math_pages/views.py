@@ -332,8 +332,8 @@ def add_submission_subtopic(request, st_id):
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
-            caption_image = request.POST['caption_image']
-            caption_video = request.POST['caption_video']
+            caption_image = request.POST.get('caption_image')
+            caption_video = request.POST.get('caption_video')
 
             if subtopic.assigned_user_id.id == request.user.id:
                 if img is None and video is None:
