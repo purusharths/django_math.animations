@@ -5,10 +5,10 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "add-submission" %}
-    {% breadcrumb "Add Submission" "" %}
-    {% breadcrumb "Edit Submission" "intern_update_data" %}
+    {% breadcrumb  "Dashboard" "dashboard" %}
+    {% breadcrumb  "Review Submissions" "review-submissions" %}
+    {% breadcrumb "View Data" "" %}
+    {% breadcrumb "Edit Data" "" %}
 {% endblock %}
 
 {% block content %}
@@ -37,6 +37,7 @@
 
     </style>
     <div class="container">
+        <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
         <script>

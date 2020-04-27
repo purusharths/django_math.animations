@@ -6,24 +6,28 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Assign Topics" "assign-topics" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Assign Topics" "assign-topics" %}
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
-
+     <style>
+        label {
+            display: none;
+        }
+    </style>
     <!-- Page Content -->
     <div class="container">
         {% include 'partials/_alerts.html' %}
         <div class="row">
-        <h2>{{ chosen_inernship }}</h2> <br/>
-    </div>
+            <h2>{{ chosen_inernship }}</h2> <br/>
+        </div>
 
         <div class="row">
             <form method="POST">
                 {% csrf_token %}
-                <label>Select Internship: </label>
+                <span>Select Internship: </span>
                 <select name="search_internship" onchange="submit();">
                     {% if chosen_inernship in intern %}
                         <option>{{ chosen_inernship }}</option>
@@ -41,45 +45,43 @@
         </div>
         <hr/>
 
-        <div class="container">
+        <h4>Assign Sub Topic to interns</h4>
 
-
-            <h4>Assign Topic to interns</h4>
-            <form method="POST" class="form-group" name="AssignTopics">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
-            </form>
-        </div>
-        <hr/>
-
-
-        <br/>
-        <h2>{{ intern.internship_topic }}</h2>
-        <table class="table table-condensed">
+        <table class="table table-condensed table-sm">
             <thead class="thead-light">
             <tr>
-                <th>Intern Name</th>
                 <th>Topic</th>
-                <th>Internship</th>
+                <th>Subtopic</th>
+                <th colspan="2">Assigned Intern</th>
             </tr>
             </thead>
             <tbody>
-            {% if interns %}
-                {% for i in as_topic %}
-                    <tr>
-                        <td>
-                            {{ i.user_id }}
-                        </td>
-                        <td>
-                            {{ i.topic_id }}
-                        </td>
-                        <td>
-                            {{ i.topic_id.internship_id }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            {% endif %}
+            {% for i in subtopic %}
+                <tr>
+                    <td>
+                    {{ i.topic_id }}
+                    </td>
+                    <td>
+                        {{ i.subtopic_name   }}
+                    </td>
+
+                        {% if i.assigned_user_id %}
+                            <td colspan="2">
+                            {{ i.assigned_user_id }}
+                                  </td>
+                        {% else %}
+                             <td>
+                                    <form method="POST" class="form-group" name="RearrangeTopic">
+                                        <input type="hidden" value="{{ i.id }}" name="subtopicid">
+                                        {% csrf_token %} {{ form|crispy }}
+                                <td>
+                                    <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                                </td>
+                                </form>
+                        {% endif %}
+
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
         <hr>

@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %} Add Topics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Add Topics" "add-topics" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Add Topics" "add-topics" %}
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
+    <style>
+        label {
+            display: none;
+        }
+    </style>
+
     <!-- Page Content -->
     <div class="container">
         {% include 'partials/_alerts.html' %}
-      <div class="row">
+        <div class="row">
             <form method="POST">
                 {% csrf_token %}
                 <label>Internship: </label>
@@ -22,12 +29,12 @@
                     {% if internship in internship_all %}
                         <option>{{ internship }}</option>
                     {% else %}
-                    <option>Select Internship</option>
+                        <option>Select Internship</option>
                     {% endif %}
                     {% for i in internship_all %}
                         {% if i != internship %}
                             <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
-                         {% endif %}
+                        {% endif %}
                     {% endfor %}
                 </select>
             </form>
@@ -35,35 +42,47 @@
 
 
         <div class="" style="padding-top: 3%;">
-            <table class="table table-condensed">
+            {% if internship %}
+                <h3> {{ internship.internship_topic }}</h3>
+            {% endif %}
+            <table class="table table-condensed table-sm">
                 {% if internship %}
-                    <thead class="">
+                    <thead>
                     <tr>
-                        <th>
-                            <h3>{{ internship.internship_topic }}</h3>
-                        </th>
+                        <th>Order</th>
+                        <th>Topic</th>
                         <th></th>
+                        <th colspan="2">Rearrange</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for tp in topic %}
                         {% if tp.internship_id_id == internship.id %}
                             <tr>
+                                <td>{{ tp.topic_order }}</td>
                                 <td>
                                     {{ tp.topic_name }}
                                 </td>
                                 <td>
-                                    <a href="{% url 'add-subtopics' tp.id %}">Add / View Subtopics</a>
+                                    <a href="{% url 'add-subtopics' tp.internship_id.internship_url tp.topic_url %}">Add / View Subtopics</a>
                                 </td>
+                                <td style="width: 100px">
+                                    <form method="POST" class="form-group" name="RearrangeTopic">
+                                        <input type="hidden" value="{{ tp.id }}" name="topicid">
+                                        {% csrf_token %} {{ topic_order|crispy }}
+                                <td>
+                                    <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                                </td>
+                                </form>
                             </tr>
                         {% endif %}
                     {% endfor %}
                     <tr>
-                        <td>
+                        <td colspan="3">
                             <form method="POST" class="form-group" name="AddTopic">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ internship.id }}">
-                                <label>New topic: &nbsp;</label>{{ form.topic }}
+                                <span>New topic: &nbsp;</span>{{ form.topic }}
                                 <input type="submit" class="btn btn-success" value="Add">
                             </form>
                         </td>

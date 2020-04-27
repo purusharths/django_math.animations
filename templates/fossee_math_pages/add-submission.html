@@ -9,34 +9,34 @@
     <!-- WRONG CRUMBS -->
 {% endblock %}
 
+
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
         {% include 'partials/_alerts.html' %}
 
-        <h5 style="font-weight: lighter;"> {{ assigned.topic_id.internship_id }}</h5>
         <table class="table table-borderless">
-            <thead class="thead-light">
-            <tr>
-                <th>
-                    <h3>{{ assigned.topic_id }}</h3>
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
             <tbody>
-
-            {% for i in subtopic %}
-                {% if i.topic_id == assigned.topic_id %}
-                    <tr>
-                        <td>{{ forloop.counter }}. &nbsp; &nbsp; <b>{{ i.subtopic_name }}</b></td>
-                        <td><a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a></td>
-                        <td>{{ i.subtopic_status|title }}</td>
-                    </tr>
-                {% endif %}
+            {% for i in assigned_topic %}
+                <tr>
+                    {% if i.subtopic_status == "ACCEPTED" %}
+                        <div class="bs-callout bs-callout-success">
+                        {% elif i.subtopic_status == "REJECTED" %}
+                        <div class="bs-callout bs-callout-danger">
+                            {% elif i.subtopic_status == "WAITING" %}
+                            <div class="bs-callout bs-callout-warning">
+                            {% else %}
+                            <div class="bs-callout bs-callout-info">
+                                {% endif %}
+                        <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
+                        <h4>{{ i.subtopic_name }}</h4>
+                        &nbsp;
+                        <div class="float-right">
+                            <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a>
+                        </div>
+                    </div>
+                </tr>
             {% endfor %}
-
             </tbody>
         </table>
     </div>
