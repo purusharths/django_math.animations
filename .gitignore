@@ -3,6 +3,8 @@
 venv/*
 *.sqlite3
 *.png
+*.gif
+*.jpg
 *.mp4
 __pycache__/*
 FOSSEE_math/__pycache__/*
