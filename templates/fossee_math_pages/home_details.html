@@ -6,16 +6,16 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Topics" "/#topics" %}
-    {% breadcrumb  subtopic.topic_id.internship_id "contents" subtopic.topic_id.internship_id.internship_url %}
-    {% breadcrumb  subtopic.topic_id ""%}
-    {% breadcrumb  subtopic.subtopic_name "home_view_details" %}
+    {% breadcrumb "Topics" "/#topics" %}
+    {% breadcrumb subtopic.topic_id.internship_id "contents" subtopic.topic_id.internship_id.internship_url %}
+    {% breadcrumb subtopic.topic_id "" %}
+    {% breadcrumb subtopic.subtopic_name "home_view_details" %}
 
 
 {% endblock %}
 
 {% block content %}
-  {% render_breadcrumbs %}
+    {% render_breadcrumbs %}
     <hr>
     <div class="container">
         <thead class="thread-light">
@@ -45,7 +45,9 @@
                                 {% if i.data_id_id == data.pk %}
                                     <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                          height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                                    <p align="center" style="color: #6E6E6E; font-size: 13px;">{{ i.image_caption }}</p>
+                                    {% if data.data_caption != None %}
+                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </td>
@@ -59,6 +61,9 @@
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
+                            {% if data.data_caption != None %}
+                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                            {% endif %}
                         </td>
                     {% endif %}
                 </tr>
@@ -76,15 +81,24 @@
             <div style="background-color: #ffffff">
                 <hr>
                 <table>
-                    <tr><td><i>Contributor: {{ contributor.contributor }} </i></td></tr>
+                    <tr>
+                        <td><i>Contributor: {{ contributor.contributor }} </i></td>
+                    </tr>
                     <!--<tr> <td>Contributor Name: </td>  </tr>-->
-                    <tr><td> <i>Mentor & Editor: {{ contributor.mentor }}</i></td></tr>
-                    <tr><td><i>Verified by: {{ contributor.professor }}</i></td></tr>
-                    <tr><td>Aproved On: {{ contributor.data_aproval_date }}</td></tr>
+                    <tr>
+                        <td><i>Mentor & Editor: {{ contributor.mentor }}</i></td>
+                    </tr>
+                    <tr>
+                        <td><i>Verified by: {{ contributor.professor }}</i></td>
+                    </tr>
+                    <tr>
+                        <td>Approved On: {{ contributor.data_aproval_date }}</td>
+                    </tr>
                 </table>
                 <hr>
-                <i>The following notes and their corrosponding animations was created by the above-mentioned contributor and is freely avilable under CC licence.</i>
-                
+                <i>The following notes and their corrosponding animations was created by the above-mentioned contributor
+                    and is freely avilable under CC licence.</i>
+
             </div>
         {% endif %}
     </div>
