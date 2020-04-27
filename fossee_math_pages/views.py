@@ -143,34 +143,6 @@ def admin_view_intern(request, id):
     else:
         return redirect('dashboard')
 
-
-# @login_required
-# def admin_view_internship(request):
-#     if request.user.is_superuser:
-#
-#         internship = None
-#         topic = None
-#         subtopic = None
-#         internship_all = None
-#         if "search_internship" in request.POST:
-#             internship = Internship.objects.get(pk=request.POST['search_internship'])
-#
-#         internship_all = Internship.objects.all()
-#         topic = Topic.objects.all()
-#         subtopic = Subtopic.objects.all()
-#
-#         context = {
-#             'internship': internship,
-#             'internship_all': internship_all,
-#             'topic': topic,
-#             'subtopic': subtopic,
-#         }
-#
-#         return render(request, 'fossee_math_pages/admin_view_internship.html', context)
-#     else:
-#         return redirect('dashboard')
-
-
 @login_required
 def add_users(request):
     if request.user.is_superuser:
@@ -486,8 +458,8 @@ def intern_update_media(request, id):
 
 
 @login_required
-def intern_update_image_size(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def edit_image(request, t_id, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         image = Data.objects.get(data_hash=id)
         try:
             image_size = ImageFormatting.objects.get(data_id_id=image.pk)
@@ -505,7 +477,10 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, id)
+            if request.user.is_staff:
+                return redirect('edit-image-staff', t_id, id)
+            else:
+                return redirect('edit-image', t_id, id)
 
         context = {
             'image': image,
@@ -513,7 +488,7 @@ def intern_update_image_size(request, id):
             'form': form,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_image_size.html', context)
+        return render(request, 'fossee_math_pages/edit-image.html', context)
     else:
         return redirect('dashboard')
 
@@ -874,13 +849,6 @@ def internship_progress(request):
     else:
         return redirect('dashboard')
 
-
-# @login_required
-# def intern_view_internship(request):
-#
-#     else:
-#         return redirect('dashboard')
-
 @login_required
 def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
@@ -936,61 +904,6 @@ def review_submissions_subtopic(request, s_id):
         }
 
         return render(request, 'fossee_math_pages/review-submissions-subtopic.html', context)
-    else:
-        return redirect('dashboard')
-
-
-# @login_required
-# def edit_text_staff(request, id):
-#     if request.user.is_staff:
-#         instance = Data.objects.get(data_hash=id)
-#         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-#         t_id = instance.subtopic_id.subtopic_hash
-#         form = data(request.POST or None, instance=instance)
-#         if form.is_valid():
-#             obj = form.save(commit=False)
-#             obj.save()
-#             return redirect('review-submissions-subtopic', t_id)
-#
-#         context = {
-#             'form': form,
-#             'subtopic': subtopic,
-#         }
-#
-#         return render(request, 'fossee_math_pages/edit-text-staff.html', context)
-#     else:
-#         return redirect('dashboard')
-
-
-@login_required
-def staff_update_image_size(request, id):
-    if request.user.is_staff:
-        image = Data.objects.get(id=id)
-        try:
-            image_size = ImageFormatting.objects.get(data_id_id=image.pk)
-            form = imageFormatting(instance=image_size)
-        except:
-            image_size = None
-            form = imageFormatting()
-
-        if request.POST:
-            image_height = request.POST.get('image_height')
-            image_width = request.POST.get('image_width')
-            caption = request.POST.get('image_caption')
-            obj = ImageFormatting.objects.get(data_id_id=image.pk)
-            obj.image_height = image_height
-            obj.image_width = image_width
-            obj.image_caption = caption
-            obj.save()
-            return redirect(staff_update_image_size, id)
-
-        context = {
-            'image': image,
-            'image_size': image_size,
-            'form': form,
-        }
-
-        return render(request, 'fossee_math_pages/staff_update_image_size.html', context)
     else:
         return redirect('dashboard')
 
