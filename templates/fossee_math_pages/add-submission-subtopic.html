@@ -39,8 +39,8 @@
 
     <div class="container">
         {% include 'partials/_alerts.html' %}
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
@@ -308,9 +308,9 @@
                             <div class="row ">
                                 <div class="col-auto mr-auto">
                                     <label> Select Video: </label> <input type="file" class="btn " name="video"/>
-                                    <br>
-                                    <label>Video Caption:</label><input type="text" class="form-control"
-                                                                        name="caption_video">
+                                    <br><br>
+                                    <div class="text-muted"><label>Video Caption:</label><input type="text" class="form-control"
+                                                                        name="caption_video"></div>
                                 </div>
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
