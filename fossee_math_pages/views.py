@@ -358,6 +358,8 @@ def add_submission_subtopic(request, st_id):
             content = request.POST.get('data_content')
             img = request.FILES.get('image')
             video = request.FILES.get('video')
+            caption_image = request.POST.get('caption_image')
+            caption_video = request.POST.get('caption_video')
 
             if subtopic.assigned_user_id.id == request.user.id:
                 if img is None and video is None:
@@ -366,8 +368,17 @@ def add_submission_subtopic(request, st_id):
                             messages.error(request, "Fill any one of the field")
                             return redirect('add-submission-subtopic', st_id)
 
+                if img is None:
+                    caption = caption_video
+
+                if video is None:
+                    caption = caption_image
+
+                if img and video is not None:
+                    caption = caption_image
+
                 add_data = Data(data_content=content, data_image=img,
-                                data_video=video, subtopic_id_id=t_id)
+                                data_video=video, data_caption=caption, subtopic_id_id=t_id)
                 add_data.save()
                 add_data.subtopic_id.subtopic_modification_date = now()
                 current_data = Data.objects.get(pk=add_data.pk)
@@ -377,7 +388,7 @@ def add_submission_subtopic(request, st_id):
                 add_data.save()
 
                 if img != "" or img != " ":
-                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='100%', image_height='100%')
+                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
                     imgformat.save()
 
         e_data = Data.objects.filter(subtopic_id=t_id)
@@ -472,6 +483,13 @@ def edit_image(request, t_id, id):
             image_height = request.POST.get('image_height')
             image_width = request.POST.get('image_width')
             caption = request.POST.get('image_caption')
+
+            if image_height >= '100%' or image_height >= '500px':
+                image_height = "500px"
+
+            if image_width >= '100%' or image_width >= '900px':
+                image_width = "900px"
+
             obj = ImageFormatting.objects.get(data_id_id=image.pk)
             obj.image_height = image_height
             obj.image_width = image_width
