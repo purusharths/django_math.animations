@@ -28,7 +28,7 @@ DATA_STATUS = (
 # Foregin key from the default DJANGO User table
 class UserDetails(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_phone = PhoneNumberField(null=True, blank=False, unique=False, default='+91')
+    user_phone = PhoneNumberField(null=True, blank=True, unique=False, default='+91')
     INTERN = 'INTERN'
     STAFF = 'STAFF'
     ROLE_TYPE = (
