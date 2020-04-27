@@ -39,8 +39,8 @@
 
     <div class="container">
         {% include 'partials/_alerts.html' %}
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
@@ -115,7 +115,9 @@
                                 {% if i.data_id_id == data.pk %}
                                     <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                          height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
-                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                    {% if data.data_caption != None %}
+                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </td>
@@ -149,6 +151,9 @@
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
+                            {% if data.data_caption != None %}
+                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                            {% endif %}
                             <br>
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
@@ -215,7 +220,9 @@
                                 <div class="col-auto mr-auto">
                                     <label>Select Image: </label> <input type="file" class="btn" name="image"
                                                                          id="fileInput" onchange="handleFileSelect()"/>
-
+                                    <br>
+                                    <label>Image Caption: </label><input type="text" class="form-control"
+                                                                         name="caption_image">
                                 </div>
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
@@ -301,6 +308,9 @@
                             <div class="row ">
                                 <div class="col-auto mr-auto">
                                     <label> Select Video: </label> <input type="file" class="btn " name="video"/>
+                                    <br><br>
+                                    <div class="text-muted"><label>Video Caption:</label><input type="text" class="form-control"
+                                                                        name="caption_video"></div>
                                 </div>
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"

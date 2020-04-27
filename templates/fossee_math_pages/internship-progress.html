@@ -3,168 +3,176 @@
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "internship-progress" %}
+{{ block.super }}
+{% breadcrumb "Dashboard" "dashboard" %}
+{% breadcrumb "Internship" "internship-progress" %}
 {% endblock %}
 
 {% block content %}{% load static %}
-    {% render_breadcrumbs %}
-    {% include 'partials/_modal.html' %}
-    {% if user.is_authenticated %}
+{% render_breadcrumbs %}
+{% include 'partials/_modal.html' %}
+{% if user.is_authenticated %}
 
-        {% if user.is_superuser or user.is_staff %}
-            <div class="container">
-                <form method="POST">
-                    {% csrf_token %}
-                    <label>Select Internship: </label>
-                    <select name="search_internship" onchange="submit();">
-                        {% if chosen_internship in internship_all %}
-                            <option>{{ chosen_internship }}</option>
-                        {% else %}
-                            <option> ----</option>
-                        {% endif %}
-                        {% for i in internship_all %}
-                            {% if i != chosen_internship %}
-                                <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </form>
-                <br/>
+{% if user.is_superuser or user.is_staff %}
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <label>Select Internship: </label>
+        <select name="search_internship" onchange="submit();">
+            {% if chosen_internship in internship_all %}
+            <option>{{ chosen_internship }}</option>
+            {% else %}
+            <option> ----</option>
+            {% endif %}
+            {% for i in internship_all %}
+            {% if i != chosen_internship %}
+            <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+    <br />
 
-                <table class="table">
-                    {% for i in internship %}
-                        <thead class="">
-                        <tr>
-                            <th scope="col"><h3>{{ i.internship_topic }}</h3></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        {% for j in topics %}
-                            {% if j.internship_id_id == i.id %}
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col"><h4>{{ j.topic_name }}</h4></th>
-                                    <th>
-                                        {% if user.is_staff and not user.is_superuser %}
-                                            {% for k in assigned %}
-                                                {% if k.topic_id_id == j.pk %}
-                                                    {{ k.user_id }} -
-                                                    <button class="submission"
-                                                            data-id="{% url 'staff_add_contribution' j.pk %}">
-                                                        Contributor info
-                                                    </button>
-                                                {% else %}
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endif %}
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        <ol>
-                                            {% for k in subtopics %}
-                                                {% if k.topic_id_id == j.id %}
-                                                    <li>
-                                                        {% if k.subtopic_status == 'ACCEPTED' %}
-                                                            <span style="color: green"> {{ k.subtopic_name }}</span>
-                                                        {% elif k.subtopic_status == 'WAITING' %}
-                                                            <span style="color: yellow"> {{ k.subtopic_name }}</span>
-                                                        {% elif k.subtopic_status == 'REJECTED' %}
-                                                            <span style="color: red"> {{ k.subtopic_name }}</span>
-                                                        {% endif %}
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ol>
-                                    </th>
-                                </tr>
-                                </tbody>
-                            {% endif %}
-                        {% endfor %}
+    <table class="table">
+        {% for i in internship %}
+        <thead class="">
+            <tr>
+                <th scope="col">
+                    <h3>{{ i.internship_topic }}</h3>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        {% for j in topics %}
+        {% if j.internship_id_id == i.id %}
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">
+                    <h4>{{ j.topic_name }}</h4>
+                </th>
+                <th>
+                    {% if user.is_staff and not user.is_superuser %}
+                    {% for k in assigned %}
+                    {% if k.topic_id_id == j.pk %}
+                    {{ k.user_id }} -
+                    <button class="submission" data-id="{% url 'staff_add_contribution' j.pk %}">
+                        Contributor info
+                    </button>
+                    {% else %}
+                    {% endif %}
                     {% endfor %}
-                </table>
-            </div>
-            <br>
-            <hr/>
-            <br>
-
-        {% else %}
-            <div class="container">
-                <h2 style="font-weight: lighter;">Contents</h2>
-                <p style= "color: grey"> Content of the internships and the Status of your submissions</p>
-                <hr/>
-
-                <b class="align-right">Your progress in : </b>
-                <br/>
-                <br/>
-                <table class="table table-borderless table-sm ">
-                    <tbody>
-                    {% for j in subtopics %}
-                        {% if j.assigned_user_id_id == user.id %}
-                            <tr>
-                                <td>
-                                    <b>{{ j.topic_id.internship_id }}</b> - {{ j.topic_id }}
-                                </td>
-                                <td>
-                                    {{ j.subtopic_name }}
-                                </td>
-                                <td>
-                                    {% if j.subtopic_status == "ACCEPTED" %}
-                                        <span class="text-success">
-                                        ACCEPTED
-                                        </span>
-                                    {% elif j.subtopic_status == "REJECTED" %}
-                                        <span class="text-danger">
-                                        REJECTED
-                                        </span>
-                                    {% elif j.subtopic_status == "WAITING" %}
-                                        <span class="text-warning">
-                                        IN - PROGRESS
-                                        </span>
-                                    {% endif %}
-                                </td>
-                            </tr>
+                    {% endif %}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <ol>
+                        {% for k in subtopics %}
+                        {% if k.topic_id_id == j.id %}
+                        <li>
+                            {% if k.subtopic_status == 'ACCEPTED' %}
+                            <div><span class="text-success" style="font-weight: lighter;"> {{ k.subtopic_name }}</span>
+                            </div>
+                            {% elif k.subtopic_status == 'WAITING' %}
+                            <span class="text-warning" style="font-weight: lighter;"> {{ k.subtopic_name }}</span>
+                            {% elif k.subtopic_status == 'REJECTED' %}
+                            <span class="text-danger" style="font-weight: lighter;"> {{ k.subtopic_name }}</span>
+                            {% endif %}
+                        </li>
                         {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <br>
-            <hr>
-            <br>
+                        {% endfor %}
+                    </ol>
+                </th>
+            </tr>
+        </tbody>
         {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </table>
+</div>
+<br>
+<hr />
+<br>
 
-    {% endif %}
+{% else %}
+<div class="container">
+    <h2 style="font-weight: lighter;">Contents</h2>
+    <p> Content for the internship. Status of your submission and remaining topics covered during the course
+        of the internship.</p>
+    <hr />
+    <b class="align-right">Your progress in : </b>
+    <br />
+    <br />
+    <table class="table  table-sm ">
+        <tbody>
+            <thead class="table-primary">
+                <tr>
+                    <td>Submission</td>
+                    <td>Appendix</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            {% for j in subtopics %}
+            {% if j.assigned_user_id_id == user.id %}
+            <tr>
+                <td><i>{{ j.subtopic_name }}</i></td>
+                <td>{{ j.topic_id.internship_id }} &#8618; {{ j.topic_id }}</td>
+                <td>
+                    {% if j.subtopic_status == "ACCEPTED" %}
+                    <span class="text-success">
+                        Accepted
+                    </span>
+                    {% elif j.subtopic_status == "REJECTED" %}
+                    <span class="text-danger">
+                        Rejected
+                    </span>
+                    {% elif j.subtopic_status == "WAITING" %}
+                    <span class="text-warning">
+                        In - Progress
+                    </span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<hr>
+<br>
+{% endif %}
+
+{% endif %}
 {% endblock %}
 {% block extrascripts %}
-    <script type="text/javascript">
-        function func(vars) {
-            alert(vars)
-        }
+<script type="text/javascript">
+    /* function func(vars) {
+         alert(vars)
+     }
+     $(function () {
 
-        $(function () {
+         $(".submission").each(function () {
+             $(this).modalForm({formURL: $(this).data('id')});
+         });
 
-            $(".submission").each(function () {
-                $(this).modalForm({formURL: $(this).data('id')});
-            });
+         // Hide message
+         $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+             $(".alert").slideUp(500);
+         });
 
-            // Hide message
-            $(".alert").fadeTo(2000, 500).slideUp(500, function () {
-                $(".alert").slideUp(500);
-            });
+     });*/
 
-        });
-
-    </script>
-    {% if user.is_staff and not user.is_superuser %}
-        <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
-        <script src="{% static 'assets/js/popper.min.js' %}"></script>
-        <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-        <!-- You can alternatively load the minified version -->
-        <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
-    {% endif %}
+</script>
+{% if user.is_staff and not user.is_superuser %}
+<!--THESE NEEDS TO BE CROSS CHECKED AND PUT ON CDN-->
+<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
+<!--CDN FOR THIS!-->
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+<!-- You can alternatively load the minified version -->
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+{% endif %}
 {% endblock extrascripts %}
