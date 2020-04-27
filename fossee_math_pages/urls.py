@@ -5,8 +5,14 @@ from FOSSEE_math import settings
 from . import views
 
 urlpatterns = [
-
-                  # CHANGED
+                  path('', views.index, name='index'),
+                  path('contents/<str:internship>', views.contents, name='contents'),
+                  path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
+                  path('dashboard/', views.dashboard, name='dashboard'),
+                  path('internship/', views.internship, name='internship'),
+                  path('login/', views.user_login, name='login'),
+                  path('logout/', views.user_logout, name='logout'),
+                  
                   path('dashboard/messages/', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
@@ -31,15 +37,5 @@ urlpatterns = [
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
                   path('approve-subtopic/<int:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<int:id>', views.reject_subtopic, name='reject-subtopic'),
-                  ##
 
-                  # ALREADY OKAY
-                  path('', views.index, name='index'),
-                  path('contents/<str:internship>', views.contents, name='contents'),
-                  path('contents/<str:internship>/<str:topic>/<str:subtopic>', views.home_details, name='home_details'),
-                  path('dashboard/', views.dashboard, name='dashboard'),
-                  path('internship/', views.internship, name='internship'),
-                  path('login/', views.user_login, name='login'),
-                  path('logout/', views.user_logout, name='logout'),
-                  ##
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
