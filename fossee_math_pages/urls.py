@@ -5,7 +5,6 @@ from FOSSEE_math import settings
 from . import views
 
 urlpatterns = [
-                  path('admin_view_intern/<int:id>', views.admin_view_intern, name='admin_view_intern'),
                   path('admin_add_intern/', views.admin_add_intern, name='admin_add_intern'),
                   path('staff_update_data/<str:id>', views.staff_update_data, name='staff_update_data'),
                   path('staff_delete_data/<str:id>', views.staff_delete_data, name='staff_delete_data'),
