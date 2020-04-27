@@ -39,8 +39,8 @@
 
     <div class="container">
         {% include 'partials/_alerts.html' %}
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
@@ -92,12 +92,12 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_data' data.data_hash %}">
+                                <a href="{% url 'edit-text' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
                                          title="Last Modified on {{ data.data_post_date }}" alt="Edit">
                                 </a>
                                 <hr>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}">
+                                <a href="{% url 'delete-data' data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
                                          width="15px" alt="Delete">
                                 </a><br>
@@ -113,26 +113,29 @@
                             <p></p>
                             {% for i in imagesize %}
                                 {% if i.data_id_id == data.pk %}
-                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
-                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                    <img src="{{ data.data_image.url }}" width="100%" max-width="700px"
+                                          max-height="500px" style="display:block; margin:0 auto;" alt="">
+                                    {% if data.data_caption != None %}
+                                    <br>
+                                        <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_media' data.data_hash %}">
+                                <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
                                          title="Added on {{ data.data_post_date }}" alt="Edit">
                                 </a>
                                 <hr>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}">
+                                <a href="{% url 'delete-data' data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                          title="Delete Image"
                                          width="15px" alt="Delete">
                                 </a>
                                 <hr/>
-                                <a href="{% url 'intern_update_image_size' data.data_hash %}"> <img
+                                <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}"> <img
                                         src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
                                         width="15px">
                                 </a><br/>
@@ -149,20 +152,25 @@
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
+                            {% if data.data_caption != None %}
+                            <br>
+                                <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
+                            {% endif %}
+                            <br>
+                            &nbsp;
                             <br>
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'intern_update_media' data.data_hash %}">
+                                <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
                                          width="15px" alt="Edit">
                                 </a>
                                 <hr/>
-                                <a href="{% url 'intern_delete_data' data.data_hash %}"> <img
+                                <a href="{% url 'delete-data' data.data_hash %}"> <img
                                         src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
                                         width="15px" alt="Delete">
                                 </a>
-
                             </td>
                         {% endif %}
                     {% endif %}
@@ -215,7 +223,8 @@
                                 <div class="col-auto mr-auto">
                                     <label>Select Image: </label> <input type="file" class="btn" name="image"
                                                                          id="fileInput" onchange="handleFileSelect()"/>
-
+                                    <br>
+                                    
                                 </div>
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
@@ -227,22 +236,26 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
-                                        <canvas id="testCanvas" width="400" height="350">
+                                        <canvas id="testCanvas" width="600" height="300">
                                             Your browser does not support canvas.
                                         </canvas>
+                                        <input type="text" placeholder="Caption for the image" class=" md-form form-control" name="caption_image">
                                     </div>
+                                    
                                     <!-- <div class="col">
                                         <image id="theimage" name="theimage" width="400" height="350"></image>
                                     </div> -->
+                                    
                                 </div>
-                                <input class="btn btn-primary" type="button" onclick="cropper.startCropping()"
+                                <!--<input class="btn btn-primary" type="button" onclick="cropper.startCropping()"
                                        value="Start cropping"/>
                                 <input class="btn btn-primary" type="button" onclick="cropper.getCroppedImageSrc()"
                                        value="Crop"/>
                                 <input class="btn btn-primary" type="button" onclick="cropper.restore()"
                                        value="Restore"/>
                                 <input class="btn btn-primary" type="button" id="btnSave" onclick=""
-                                       value="Save To Server"/>
+                                       value="Save To Server"/>-->
+                                
                             </div>
                             <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
                             <script>
@@ -275,7 +288,7 @@
                                     Canvas2Image.saveAsPNG(canvas);
                                 }*/
 
-                                $(function () {
+                                /*$(function () {
                                     $("#btnSave").click(function () {
                                         var image = document.getElementById("testCanvas").toDataURL("image/png");
                                         image = image.replace('data:image/png;base64,', '');
@@ -290,7 +303,7 @@
                                             }
                                         });
                                     });
-                                });
+                                });*/
 
 
                             </script>
@@ -301,12 +314,17 @@
                             <div class="row ">
                                 <div class="col-auto mr-auto">
                                     <label> Select Video: </label> <input type="file" class="btn " name="video"/>
-                                </div>
+                                    <br><br>
+                                    
+                                        <input type="text" placeholder="Video Caption" class="md-form form-control"
+                                                                        name="caption_video"></div>
+                                
                                 <div class="col-auto">
                                     <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
                                            id="submit" value="Upload">
                                 </div>
                             </div>
+                            <br>
                         </div>
                     </div>
                 </form>

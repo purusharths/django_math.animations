@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}Intern Add Data{% endblock %}
+{% block title %} Edit Text {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Review Submissions" "review-submissions" %}
-    {% breadcrumb "View Data" "" %}
-    {% breadcrumb "Edit Data" "" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% if user.is_staff %}
+    {% breadcrumb "Review Submission" "review_submissions" %}
+    {% else %}
+
+    {% breadcrumb "Add Submission" "add-submission" %}
+    {% endif %}
+    {% breadcrumb "Edit Submission" "edit-text" %}
 {% endblock %}
 
 {% block content %}
@@ -36,9 +40,7 @@
         }
 
     </style>
-
     <div class="container">
-        <br>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
         <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
         <script>
