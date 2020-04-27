@@ -14,29 +14,15 @@
     <div class="container">
         {% include 'partials/_alerts.html' %}
 
-        <h5 style="font-weight: lighter;"> {{ assigned.topic_id.internship_id }}</h5>
         <table class="table table-borderless">
-            <thead class="thead-light">
-            <tr>
-                <th>
-                    <h3>{{ assigned.topic_id }}</h3>
-                </th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
             <tbody>
-
-            {% for i in subtopic %}
-                {% if i.topic_id == assigned.topic_id %}
-                    <tr>
-                        <td>{{ forloop.counter }}. &nbsp; &nbsp; <b>{{ i.subtopic_name }}</b></td>
-                        <td><a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a></td>
-                        <td>{{ i.subtopic_status|title }}</td>
-                    </tr>
-                {% endif %}
+            {% for i in assigned_topic %}
+                <tr>
+                    <td>{{ i.topic_id.internship_id }} - {{ i.topic_id }} -> <b>{{ i.subtopic_name }}</b></td>
+                    <td><a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a></td>
+                    <td>{{ i.subtopic_status|title }}</td>
+                </tr>
             {% endfor %}
-
             </tbody>
         </table>
     </div>
