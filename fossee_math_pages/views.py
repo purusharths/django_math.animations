@@ -368,7 +368,10 @@ def edit_text(request, t_id, id):
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
-                return redirect('add-submission-subtopic', t_id)
+                if request.user.is_staff:
+                    return redirect('review-submissions-subtopic', t_id)
+                else:
+                    return redirect('add-submission-subtopic', t_id)
         else:
             return redirect('dashboard')
 
