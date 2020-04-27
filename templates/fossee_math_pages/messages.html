@@ -15,15 +15,14 @@
         {% for i in message %}
             <div class="card">
                 {% if i.subtopic_id.assigned_user_id_id == user.id %}
-                    <div class="card-header">
-                        {{ i.subtopic_id.topic_id.internship_id }} - {{ i.subtopic_id.topic_id }} - {{ i.subtopic_id }}
+                    <div class="card-header bg-info">
+                         <h6 class="text-white"> <i><u>{{ i.subtopic_id }}</u></i> ({{ i.subtopic_id.topic_id.internship_id }} &rarr; {{ i.subtopic_id.topic_id }})</h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="padding-top: 0px;">
+                        <div class="bs-callout bs-callout-info">
                         <p>{{ i.message }}</p>
-
-                    </div>
-                    <div class="card-footer">
-                        {{ i.message_send_date }}
+                        </div>
+                        <span class="text-muted" style="font-size: small;">Sent on {{ i.message_send_date }}</span>
                     </div>
                 {% endif %}
             </div>
