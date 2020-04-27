@@ -162,6 +162,9 @@
                             <source src="{{ data.data_video.url }}" type='video/mp4'>
                             Your browser does not support the video tag.
                         </video>
+                        {% if data.data_caption != None %}
+                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                    {% endif %}                        
                     </td>
                     <td>
                         <a href="{% url 'staff_delete_data' data.data_hash %}">Delete

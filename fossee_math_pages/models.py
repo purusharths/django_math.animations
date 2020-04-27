@@ -112,6 +112,7 @@ class Data(models.Model):
     data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='video/', blank=True, null=True)
+    data_caption = models.CharField(max_length=1024, blank=True,null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
 
@@ -125,10 +126,6 @@ class ImageFormatting(models.Model):
     data_id = models.ForeignKey(Data, on_delete=models.CASCADE)
     image_height = models.CharField(max_length=5)
     image_width = models.CharField(max_length=5)
-    image_caption = models.CharField(max_length=1024, blank=True)
-
-    def __str__(self):
-        return self.image_caption if self.image_caption else self.data_id
 
 
 # table to stroe the data of the staff message to the interns
