@@ -113,8 +113,8 @@
                             <p></p>
                             {% for i in imagesize %}
                                 {% if i.data_id_id == data.pk %}
-                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                         height="{{ i.image_height }}" style="display:block; margin:0 auto;" alt="">
+                                    <img src="{{ data.data_image.url }}" width="100%" max-width="700px"
+                                          max-height="500px" style="display:block; margin:0 auto;" alt="">
                                     {% if data.data_caption != None %}
                                         <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                                     {% endif %}
@@ -155,6 +155,8 @@
                                 <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                             {% endif %}
                             <br>
+                            &nbsp;
+                            <br>
                         </td>
                         {% if data.data_status != "ACCEPTED" %}
                             <td>
@@ -167,7 +169,6 @@
                                         src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
                                         width="15px" alt="Delete">
                                 </a>
-
                             </td>
                         {% endif %}
                     {% endif %}
