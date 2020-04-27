@@ -128,7 +128,7 @@
                         </a>
                         <br>
                         <br>
-                        <a href="{% url 'staff_update_data' data.data_hash %}">
+                        <a href="{% url 'edit-text-staff' subtopic.subtopic_hash data.data_hash %}">
                             Edit
                         </a>
                     </td>
@@ -151,7 +151,7 @@
                         </a>
                         <br>
                         <br>
-                        <a href="{% url 'staff_update_image_size' data.data_hash %}">Format</a>
+                        <a href="{% url 'edit-image-staff' subtopic.subtopic_hash data.data_hash %}">Format</a>
                     </td>
                     {% endif %}
                 </tr>

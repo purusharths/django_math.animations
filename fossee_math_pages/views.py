@@ -87,63 +87,6 @@ def manage_internship(request):
 
 
 @login_required
-def admin_add_intern(request):
-    if request.user.is_superuser:
-        user = User.objects.all()
-        interns = Intern.objects.all()
-        form = AddIntern(user)
-        internships = Internship.objects.all()
-        if request.method == 'POST':
-            intern_name = request.POST['user_id']
-            topic = request.POST['internship_id']
-            usr = UserDetails.objects.get(id=intern_name)
-            temp1 = User.objects.get(username=usr)
-            temp2 = Internship.objects.get(id=topic)
-            if Intern.objects.filter(user_id=temp1).exists():
-                messages.error(request, 'That intern has an internship')
-                return redirect('admin_add_intern')
-            data = Intern(user_id=temp1, internship_id=temp2)
-            data.save()
-            messages.success(request, 'Intern added with internship')
-            return redirect('admin_add_intern')
-
-        context = {
-            'internships': internships,
-            'form': form,
-            'interns': interns,
-        }
-        return render(request, 'fossee_math_pages/admin_add_intern.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def admin_view_intern(request, id):
-    if request.user.is_superuser:
-        datas = Intern.objects.filter(internship_id=id)
-        form = ManageIntern
-        if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(UserDetails, id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('admin_view_intern')
-            else:
-                messages.error(request, "Error")
-                return redirect('admin_view_intern')
-
-        context = {
-            'datas': datas,
-            'form': form,
-        }
-        return render(request, 'fossee_math_pages/admin_view_intern.html', context)
-    else:
-        return redirect('dashboard')
-
-@login_required
 def add_users(request):
     if request.user.is_superuser:
         datas = UserDetails.objects.all()
