@@ -383,7 +383,7 @@ def edit_text(request, t_id, id):
 
 
 @login_required
-def intern_update_media(request, id):
+def edit_media(request, t_id, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
@@ -395,7 +395,7 @@ def intern_update_media(request, id):
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
-                    return redirect('add-submission/', t_id)
+                    return redirect('add-submission-subtopic', t_id)
                 instance.data_image = img
                 instance.data_video = video
                 instance.save()
@@ -406,7 +406,7 @@ def intern_update_media(request, id):
             'subtopic': subtopic,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_media.html', context)
+        return render(request, 'fossee_math_pages/edit-media.html', context)
     else:
         return redirect('dashboard')
 
@@ -455,8 +455,8 @@ def edit_image(request, t_id, id):
 
 
 @login_required
-def intern_delete_data(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def delete_data(request, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         if instance.subtopic_id.assigned_user_id.id == request.user.id:
             t_id = instance.subtopic_id.subtopic_hash
@@ -467,6 +467,17 @@ def intern_delete_data(request, id):
             except:
                 instance.delete()
             return redirect('add-submission-subtopic', t_id)
+
+        elif request.user.is_staff:
+            t_id = instance.subtopic_id.subtopic_hash
+            try:
+                image = ImageFormatting.objects.get(data_id=instance.id)
+                image.delete()
+                instance.delete()
+            except:
+                instance.delete()
+            return redirect('review-submissions-subtopic', t_id)
+
         else:
             return redirect('dashboard')
 
@@ -870,36 +881,25 @@ def review_submissions_subtopic(request, s_id):
 
 
 @login_required
-def staff_aprove_subtopic(request, id):
+def approve_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        return redirect('review-submissions')
+        return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def staff_reject_subtopic(request, id):
+def reject_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        return redirect('review-submissions')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_delete_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.delete()
-        return redirect('review-submissions-subtopic', t_id)
+        return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
