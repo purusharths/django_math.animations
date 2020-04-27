@@ -2,7 +2,7 @@
 
     <div class="container" align="justify" style="margin-top:100px;margin-bottom:100px;">
         <br> {% include 'partials/_alerts.html' %}
-   
+
         <center>
             <h1>Login</h1>
             <hr>
@@ -14,10 +14,12 @@
                     <table class="table" style="margin: auto; width: 50%;">
                         {{ form.as_table }}
                     </table>
-                    <a href="{% url 'password_reset' %}">Forgot Password?</a>
                     <button class="btn btn-success btn-sm" type="submit"
                             style="background-color:#e45700;color:white; border:0px">Login
                     </button>
+                    <br>
+                    <br>
+                    <a href="{% url 'password_reset' %}">Forgot Password?</a>
                 </form>
             </div>
         </center>
