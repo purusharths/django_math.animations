@@ -118,60 +118,6 @@ def admin_add_intern(request):
 
 
 @login_required
-def admin_view_intern(request, id):
-    if request.user.is_superuser:
-        datas = Intern.objects.filter(internship_id=id)
-        form = ManageIntern
-        if request.method == 'POST':
-            int_id = request.POST["id"]
-            obj = get_object_or_404(UserDetails, id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.save()
-                messages.success(request, "Changed")
-                return redirect('admin_view_intern')
-            else:
-                messages.error(request, "Error")
-                return redirect('admin_view_intern')
-
-        context = {
-            'datas': datas,
-            'form': form,
-        }
-        return render(request, 'fossee_math_pages/admin_view_intern.html', context)
-    else:
-        return redirect('dashboard')
-
-
-# @login_required
-# def admin_view_internship(request):
-#     if request.user.is_superuser:
-#
-#         internship = None
-#         topic = None
-#         subtopic = None
-#         internship_all = None
-#         if "search_internship" in request.POST:
-#             internship = Internship.objects.get(pk=request.POST['search_internship'])
-#
-#         internship_all = Internship.objects.all()
-#         topic = Topic.objects.all()
-#         subtopic = Subtopic.objects.all()
-#
-#         context = {
-#             'internship': internship,
-#             'internship_all': internship_all,
-#             'topic': topic,
-#             'subtopic': subtopic,
-#         }
-#
-#         return render(request, 'fossee_math_pages/admin_view_internship.html', context)
-#     else:
-#         return redirect('dashboard')
-
-
-@login_required
 def add_users(request):
     if request.user.is_superuser:
         datas = UserDetails.objects.all()
