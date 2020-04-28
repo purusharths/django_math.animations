@@ -974,7 +974,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('password-set')
+        return redirect('activate-account')
     else:
         messages.error(request, 'Activation link is invalid!')
         return redirect('login')
