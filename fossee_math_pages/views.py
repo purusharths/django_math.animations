@@ -6,11 +6,18 @@ import string
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
@@ -18,6 +25,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, data, EditMedia, AddContributor, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
+from .tokens import account_activation_token
 
 
 @login_required
@@ -108,7 +116,7 @@ def add_users(request):
             email = request.POST['email']
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
-            user_status_active = 'ACTIVE'
+            user_status = 'INACTIVE'
 
             regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -144,26 +152,32 @@ def add_users(request):
                 password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
+                                                last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
 
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email)
+                                         user_temp_password=password, user_status=user_status, user_email=email)
                     addusr.save()
                 if user_role == 'STAFF':
                     user.is_staff = True
                     user.save()
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email)
+                                         user_temp_password=password, user_status=user_status, user_email=email)
                     addusr.save()
 
-                send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your FOSSEE MATH USER account'
+                message = render_to_string('fossee_math_pages/activate_user.html', {
+                    'user': email,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                    'pass': password,
+                })
+                to_email = email
+                email = EmailMessage(mail_subject, message, to=[to_email])
+                email.send()
             except:
                 usr = User.objects.get(username=email)
                 usr.delete()
@@ -547,6 +561,22 @@ def internship(request):
     return render(request, 'fossee_math_pages/internship.html')
 
 
+def password_change(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password Changes Successfully !')
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "fossee_math_pages/password-change.html", context)
+
+
 def user_login(request):
     user = None
     user = request.user
@@ -789,8 +819,6 @@ def manage_interns(request):
         return redirect('dashboard')
 
 
-##
-
 @login_required
 def assign_topics(request):
     if request.user.is_staff:
@@ -1028,3 +1056,39 @@ def delete_subtopic(request, t_id, st_id):
                             subtopic.topic_id.topic_url)
     else:
         return redirect('dashboard')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        userdetails = UserDetails.objects.get(user_id=user.pk)
+        userdetails.user_status = 'ACTIVE'
+        userdetails.save()
+        return redirect('activate-account')
+    else:
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('login')
+
+
+def password_set(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password Changed Successfully !')
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "password_reset/password_set.html", context)
+

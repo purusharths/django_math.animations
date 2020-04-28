@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 {% block title %} Add Topics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -43,13 +44,20 @@
 
         <div class="" style="padding-top: 3%;">
             {% if internship %}
-                <h3> {{ internship.internship_topic }}</h3>
+                <h3 class="text-success"> {{ internship.internship_topic }}</h3>
+                <hr/>
             {% endif %}
-            <table class="table table-condensed table-sm">
+            <form method="POST" class="form-group" name="AddTopic">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ internship.id }}">
+                <span>New topic: &nbsp;</span>{{ form.topic }}
+                <input type="submit" class="btn btn-success" value="Add">
+            </form>
+            <table class="table  table-sm" id="topics_table">
                 {% if internship %}
-                    <thead>
+                    <thead class="table-success">
                     <tr>
-                        <th>Order</th>
+                        <th>#</th>
                         <th>Topic</th>
                         <th></th>
                         <th colspan="2">Rearrange</th>
@@ -72,7 +80,7 @@
                                         <input type="hidden" value="{{ tp.id }}" name="topicid">
                                         {% csrf_token %} {{ topic_order|crispy }}
                                 <td>
-                                    <input class="btn btn-outline-success " type="submit" name="submit" value="Submit">
+                                    <input class="btn btn-sm btn-outline-success" type="submit" name="submit" value="Change">
                                 </td>
                                 </form>
                             <td>
@@ -92,12 +100,49 @@
                         </td>
                         <td></td>
                     </tr>
-
                     </tbody>
                 {% endif %}
             </table>
         </div>
     </div>
-
+    {% endblock %}
     <!-- /.container -->
-{% endblock %}
+    <script>
+    /*    function resetImage(){
+            document.getElementById('status_image').src=""
+        }
+    
+        function addData() {
+            var csrf_token = '{{ csrf_token }}';
+            var topic = document.getElementById('id_topic').value
+            console.log(topic)
+            if (topic == null || topic.trim() === '') {
+                alert("Please enter the topic name")
+            } else {
+                var xhttp = new XMLHttpRequest();
+                var mainTable = document.getElementById("topics_table");
+                last_table_index_value = parseInt(mainTable.lastElementChild.lastElementChild.cells[0].textContent)+1;
+                var row = mainTable.insertRow()
+                var cell1 = row.insertCell(0)
+                var cell2 = row.insertCell(1)
+                var cell3 = row.insertCell(2)
+                var cell4 = row.insertCell(3)
+                cell1.innerHTML = last_table_index_value
+                cell2.innerHTML = '<div class="text-muted">' + topic + '</div>'
+                document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/wait.svg' %}"
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        last_row_index = mainTable.rows.length
+                        mainTable.rows[last_row_index-1]
+                        cell2.innerHTML = topic
+                        document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/check.svg' %}"
+                    }
+                };
+                xhttp.open('POST', "/dashboard/add-subtopics/{{ i_topic.internship_id.internship_url }}/{{ i_topic.topic_url }}", true);
+                xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.pk }}");
+            }
+        }*/
+    </script>
+

@@ -12,7 +12,7 @@
 
 {% block content %}
     {% render_breadcrumbs %}
-     <style>
+    <style>
         label {
             display: none;
         }
@@ -21,7 +21,7 @@
     <div class="container">
         {% include 'partials/_alerts.html' %}
         <div class="row">
-            <h2>{{ chosen_inernship }}</h2> <br/>
+            <h2 class="text-success">{{ chosen_inernship }}</h2> <br/>
         </div>
 
         <div class="row">
@@ -48,7 +48,7 @@
         <h4>Assign Sub Topic to interns</h4>
 
         <table class="table table-condensed table-sm">
-            <thead class="thead-light">
+            <thead class="table-success">
             <tr>
                 <th>Topic</th>
                 <th>Subtopic</th>
@@ -59,29 +59,30 @@
             {% for i in subtopic %}
                 <tr>
                     <td>
-                    {{ i.topic_id }}
+                        {{ i.topic_id }}
                     </td>
                     <td>
-                        {{ i.subtopic_name   }}
+                        {{ i.subtopic_name }}
                     </td>
 
-                        {% if i.assigned_user_id %}
-                            <td>
+                    {% if i.assigned_user_id %}
+                        <td>
                             {{ i.assigned_user_id }}
-                                  </td>
-                            <td>
-                            <a class="btn btn-outline-danger btn-sm" href="{% url 'delete-assign-topic' i.subtopic_hash %}">Delete</a>
-                            </td>
-                        {% else %}
-                             <td>
-                                    <form method="POST" class="form-group" name="RearrangeTopic">
-                                        <input type="hidden" value="{{ i.id }}" name="subtopicid">
-                                        {% csrf_token %} {{ form|crispy }}
-                                <td>
-                                    <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
-                                </td>
-                                </form>
-                        {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-danger btn-sm"
+                               href="{% url 'delete-assign-topic' i.subtopic_hash %}">Delete</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <form method="POST" class="form-group" name="RearrangeTopic">
+                                <input type="hidden" value="{{ i.id }}" name="subtopicid">
+                                {% csrf_token %} {{ form|crispy }}
+                        <td>
+                            <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                        </td>
+                        </form>
+                    {% endif %}
 
                 </tr>
             {% endfor %}
