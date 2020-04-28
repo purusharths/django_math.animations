@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %} Add Submission {% endblock %}
-
+{% block extrahead %}
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+{% endblock %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -39,11 +43,11 @@
 
     <div class="container">
     {% include 'partials/_alerts.html' %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <script>
-        window.CKEDITOR_BASEPATH = '/static/ckeditor/';
-    </script>
+{#    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>#}
+{#    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>#}
+{#    <script>#}
+{#        window.CKEDITOR_BASEPATH = '/static/ckeditor/';#}
+{#    </script>#}
 
     {% if subtopic.subtopic_status == "WAITING" %}
         <div class="card border-warning" style="margin-bottom: 15px;">
