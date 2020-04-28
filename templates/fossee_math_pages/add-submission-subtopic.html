@@ -134,13 +134,13 @@
                                  title="Added on {{ data.data_post_date }}" alt="Edit">
                         </a>
                         <hr>
-                        <a href="{% url 'delete-data' data.data_hash %}">
+                        <a href="{% url 'delete-data' data.data_hash %}" id="delete_image">
                             <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                  title="Delete Image"
                                  width="15px" alt="Delete">
                         </a>
                         <hr/>
-                        <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}" id="delete_image"> <img
+                        <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}" > <img
                                 src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
                                 width="15px">
                         </a><br/>

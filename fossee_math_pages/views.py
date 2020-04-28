@@ -331,8 +331,11 @@ def add_submission_subtopic(request, st_id):
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, data_caption=caption, subtopic_id_id=t_id)
+                add_data.data_modification_date = now()
                 add_data.save()
-                add_data.subtopic_id.subtopic_modification_date = now()
+                sub = Subtopic.objects.get(pk=t_id)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 current_data = Data.objects.get(pk=add_data.pk)
                 hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
@@ -432,7 +435,11 @@ def edit_media(request, t_id, id):
                 instance.data_image = img
                 instance.data_video = video
                 instance.data_caption = None
+                instance.data_modification_date = now()
                 instance.save()
+                sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 return redirect('add-submission-subtopic', t_id)
 
         context = {
@@ -1007,8 +1014,7 @@ def delete_subtopic(request, t_id, st_id):
     if request.user.is_staff and not request.user.is_superuser:
         subtopic = Subtopic.objects.get(subtopic_hash=st_id)
         try:
-            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id) is not None:
-                print(Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id))
+            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
                 messages.error(request, "Cant delete the Subtpoic data exists !!")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                                 subtopic.topic_id.topic_url)
