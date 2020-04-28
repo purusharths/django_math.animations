@@ -116,7 +116,7 @@ def add_users(request):
             email = request.POST['email']
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
-            user_status_active = 'ACTIVE'
+            user_status = 'INACTIVE'
 
             regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -157,13 +157,13 @@ def add_users(request):
 
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email)
+                                         user_temp_password=password, user_status=user_status, user_email=email)
                     addusr.save()
                 if user_role == 'STAFF':
                     user.is_staff = True
                     user.save()
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email)
+                                         user_temp_password=password, user_status=user_status, user_email=email)
                     addusr.save()
 
                 current_site = get_current_site(request)
@@ -526,7 +526,7 @@ def password_change(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            messages.success(request,'Password Changes Successfully !')
+            messages.success(request, 'Password Changes Successfully !')
             return redirect(dashboard)
 
     context = {
@@ -548,6 +548,14 @@ def user_login(request):
                 if user_request.last_login is None:
                     login(request, user)
                     return redirect('password-change')
+                elif user_request.is_active is False:
+                    messages.error(request, 'User failed to get active contact administrator')
+                    logout(request)
+                    form = UserLoginForm()
+                    context = {
+                        'form': form,
+                    }
+                    return render(request, "fossee_math_pages/login.html", context)
                 else:
                     login(request, user)
                     if request.user.is_staff:
@@ -975,6 +983,9 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
+        userdetails = UserDetails.objects.get(user_id=user.pk)
+        userdetails.user_status = 'ACTIVE'
+        userdetails.save()
         return redirect('activate-account')
     else:
         messages.error(request, 'Activation link is invalid!')
