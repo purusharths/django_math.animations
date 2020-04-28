@@ -6,7 +6,9 @@ import string
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
+from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
@@ -505,6 +507,21 @@ def internship(request):
     return render(request, 'fossee_math_pages/internship.html')
 
 
+def password_change(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "fossee_math_pages/password-change.html", context)
+
+
 def user_login(request):
     user = None
     user = request.user
@@ -514,21 +531,26 @@ def user_login(request):
         if form.is_valid():
             try:
                 user = form.authenticate_user()
-                login(request, user)
-                if request.user.is_staff:
-                    return redirect(dashboard)
+                user_request = User.objects.get(pk=user.id)
+                if user_request.last_login is None:
+                    login(request, user)
+                    return redirect('password-change')
                 else:
-                    user = UserDetails.objects.get(user_id=request.user.id)
-                    if user.user_status == 'INACTIVE':
-                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
-                        logout(request)
-                        form = UserLoginForm()
-                        context = {
-                            'form': form,
-                        }
-                        return render(request, "fossee_math_pages/login.html", context)
-                    else:
+                    login(request, user)
+                    if request.user.is_staff:
                         return redirect(dashboard)
+                    else:
+                        user = UserDetails.objects.get(user_id=request.user.id)
+                        if user.user_status == 'INACTIVE':
+                            messages.error(request, "Your login credentials are invalid! Please contact the admin")
+                            logout(request)
+                            form = UserLoginForm()
+                            context = {
+                                'form': form,
+                            }
+                            return render(request, "fossee_math_pages/login.html", context)
+                        else:
+                            return redirect(dashboard)
 
             except:
                 form = UserLoginForm()
@@ -823,6 +845,7 @@ def internship_progress(request):
 
     else:
         return redirect('dashboard')
+
 
 @login_required
 def review_submissions_subtopic(request, s_id):
