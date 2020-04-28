@@ -35,6 +35,7 @@
                     <th>Order</th>
                     <th>Subtopic</th>
                     <th colspan="2">Rearrange</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,6 +57,9 @@
                                 <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
                             </td>
                             </form>
+                        <td>
+                            <a href="{% url 'delete-subtopic' i.topic_id_id i.subtopic_hash %}" class="btn btn-outline-danger">Delete</a>
+                        </td>
                         </tr>
                     {% endif %}
                 {% endfor %}

@@ -418,7 +418,7 @@ def edit_media(request, t_id, id):
                     video_file = str(video)
                     if not video_file.lower().endswith(('.mp4', '.webm')):
                         messages.error(request, 'Inavalid File Type for Video')
-                        return redirect('edit-media',  t_id, id)
+                        return redirect('edit-media', t_id, id)
 
                 if video is None and content.strip() == '':
                     content = None
@@ -426,7 +426,7 @@ def edit_media(request, t_id, id):
                     image = str(img)
                     if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                         messages.error(request, 'Inavalid File Type for Image')
-                        return redirect('edit-media',  t_id, id)
+                        return redirect('edit-media', t_id, id)
 
                 instance.data_content = content
                 instance.data_image = img
@@ -808,7 +808,7 @@ def assign_topics(request):
                         selectd_subtopic.save()
                         messages.success(request, 'Intern assigned with topic')
                     except:
-                        messages.error(request,"Intern not selected")
+                        messages.error(request, "Intern not selected")
 
         context = {
             'form': form,
@@ -980,3 +980,45 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
+
+
+@login_required
+def delete_topic(request, t_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        try:
+            subtopic = Subtopic.objects.filter(topic_id=t_id)
+            if subtopic:
+                messages.error(request, "Subtopics exist !! delete subtopic firts")
+                return redirect('add-topics')
+            else:
+                topic = Topic.objects.get(pk=t_id)
+                topic.delete()
+                messages.success(request, "Topic removed !")
+                return redirect('add-topics')
+        except:
+            return redirect('add-topics')
+
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_subtopic(request, t_id, st_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+        try:
+            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id) is not None:
+                print(Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id))
+                messages.error(request, "Cant delete the Subtpoic data exists !!")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                                subtopic.topic_id.topic_url)
+            else:
+                subtopic.delete()
+                messages.success(request, "Subtopic deleted !")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+        except:
+            return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+    else:
+        return redirect('dashboard')
