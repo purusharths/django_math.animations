@@ -802,10 +802,13 @@ def assign_topics(request):
             else:
                 if request.method == "POST":
                     selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                    user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    selectd_subtopic.assigned_user_id_id = user.id
-                    selectd_subtopic.save()
-                    messages.success(request, 'Intern assigned with topic')
+                    try:
+                        user = User.objects.get(pk=request.POST["assigned_user_id"])
+                        selectd_subtopic.assigned_user_id_id = user.id
+                        selectd_subtopic.save()
+                        messages.success(request, 'Intern assigned with topic')
+                    except:
+                        messages.error(request,"Intern not selected")
 
         context = {
             'form': form,
