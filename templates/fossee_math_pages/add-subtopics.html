@@ -49,30 +49,34 @@
                     <th>#</th>
                     <th>Subtopic</th>
                     <th colspan="2">Rearrange</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
 
                 {% for i in subtopics %}
-                {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
-                <tr>
-                    <td>
-                        {{ i.subtopic_order }}
-                    </td>
-                    <td>
-                        {{ i.subtopic_name }}
-                    </td>
-                    <td style="width: 100px">
-                        <form method="POST" class="form-group" name="RearrangeSubTopic" style="margin-bottom: 0px;">
-                            <input type="hidden" value="{{ i.pk }}" name="subtopicid">
-                            {% csrf_token %} {{ rearrange_subtopic|crispy }}
-                    </td>
-                    <td>
-                        <input class="btn btn-sm btn-outline-info" type="submit" name="submit" value="Change">
-                    </td>
-                    </form>
-                </tr>
-                {% endif %}
+                    {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
+                        <tr>
+                            <td>
+                                {{ i.subtopic_order }}
+                            </td>
+                            <td>
+                                {{ i.subtopic_name }}
+                            </td>
+                            <td style="width: 100px">
+                                <form method="POST" class="form-group" name="RearrangeSubTopic">
+                                    <input type="hidden" value="{{ i.pk }}" name="subtopicid">
+                                    {% csrf_token %} {{ rearrange_subtopic|crispy }}</td>
+                            <td>
+                                <input class="btn btn-outline-success" type="submit" name="submit" value="Change">
+                            </td>
+                            </form>
+                        <td>
+                            <a href="{% url 'delete-subtopic' i.topic_id_id i.subtopic_hash %}" class="btn btn-outline-danger">Delete</a>
+                        </td>
+                        </tr>
+                    {% endif %}
+
                 {% endfor %}
 
             </tbody>

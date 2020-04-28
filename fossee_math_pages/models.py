@@ -86,7 +86,7 @@ class Subtopic(models.Model):
                                        default='WAITING')
     subtopic_hash = models.CharField(max_length=50)
     subtopic_url = models.CharField(max_length=255)
-    subtopic_modification_date = models.DateField(default=now)
+    subtopic_modification_date = models.DateTimeField(default=now)
     subtopic_order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -96,7 +96,7 @@ class Subtopic(models.Model):
 # Information storing the details of the contributor info
 class Contributor(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    contributor = models.CharField(max_length=255, null=False)
+    contributor = models.CharField(max_length=255, null=True, blank=True)
     mentor = models.CharField(max_length=255, null=True, blank=True)
     professor = models.CharField(max_length=255, null=True, blank=True)
     data_aproval_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -112,7 +112,7 @@ class Data(models.Model):
     data_content = RichTextUploadingField()
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='video/', blank=True, null=True)
-    data_caption = models.CharField(max_length=1024, blank=True,null=True)
+    data_caption = models.CharField(max_length=1024, blank=True, null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
 
@@ -134,7 +134,7 @@ class Messages(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
     message = models.TextField(max_length=300, null=True, blank=True)
-    message_send_date = models.DateField(default=datetime.now, null=True, blank=True)
+    message_send_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
