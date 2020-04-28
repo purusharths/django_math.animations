@@ -57,7 +57,8 @@
         {% elif user.is_staff %}
 
           <div class="container" style="margin-top:20px; margin-bottom:100px">
-              <h4 style="font-weight: lighter;"> Submissions: </h4>
+              <div class="bs-callout bs-callout-info">
+            <h4 style="font-weight: lighter;"> Submissions: </h4>
               <br>
               <div class="row justify-content-center">
                   <div class="col-md-6">
@@ -73,8 +74,10 @@
                       </div>
                   </div>
               </div>
+            </div>
               <br><hr>
               <br>
+              <div class="bs-callout bs-callout-success">
               <h4 style="font-weight: lighter;"> Content &amp; Assignments: </h4>
               <br>
 
@@ -93,9 +96,10 @@
                       </div>
                   </div>
               </div>
+              </div>
               <br><hr>
               <br>
-
+              <div class="bs-callout bs-callout-warning">
               <h4 style="font-weight: lighter;"> Access Control: </h4>
               <br>
               <div class="row">
@@ -112,6 +116,7 @@
                       <p class="card-text">View the interns in the internship progress.</p>
                       </div>
                   </div>
+              </div>
               </div>
           </div>
 
