@@ -194,10 +194,6 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Email config
-<<<<<<< HEAD
-=======
-
->>>>>>> 56ec24caf0751ea619e686e7009a4ea55ddc1d08
 EMAIL_HOST = EMAIL_HOST
 EMAIL_HOST_USER = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
@@ -207,9 +203,4 @@ EMAIL_TIMEOUT = 300
 SENDER_EMAIL = SENDER_EMAIL
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-<<<<<<< HEAD
 # EMAIL_USE_TLS = True
-=======
-# EMAIL_USE_TLS = True 
-
->>>>>>> 56ec24caf0751ea619e686e7009a4ea55ddc1d08
