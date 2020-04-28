@@ -11,6 +11,7 @@
 
 {% block content %}
 {% render_breadcrumbs %}
+        {% include 'partials/_alerts.html' %}
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             <div class="container" style="margin-top:20px; margin-bottom:50px">
