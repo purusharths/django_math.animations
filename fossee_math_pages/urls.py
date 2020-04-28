@@ -24,7 +24,7 @@ urlpatterns = [
                   path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic,
                        name='add-submission-subtopic'),
                   path('dashboard/add-submisson/<str:t_id>/edit-image/<str:id>', views.edit_image, name='edit-image'),
-                  path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
+                  # path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
                   path('dashboard/add-submission/<str:t_id>/edit-media/<str:id>', views.edit_media, name='edit-media'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
                   path('dashboard/interns/', views.interns, name='interns'),
@@ -41,5 +41,8 @@ urlpatterns = [
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
                   path('approve-subtopic/<int:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<int:id>', views.reject_subtopic, name='reject-subtopic'),
+                  path('delete-assign-topic/<str:s_id>', views.delete_assign_topic, name='delete-assign-topic'),
+                  path('delete-topic/<str:t_id>', views.delete_topic, name='delete-topic'),
+                  path('delete-subtopic/<int:t_id>/<str:st_id>', views.delete_subtopic, name='delete-subtopic'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
