@@ -14,3 +14,4 @@ fossee_math_pages/__pycache__
 https:/*
 fossee_math_pages/migrations/*
 __pycache__
+*.pyc
