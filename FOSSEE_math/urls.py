@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import handler404
 from django.contrib.auth import views as auth_views
+import fossee_math_pages.views as myview
 
 urlpatterns = [
     path('', include('fossee_math_pages.urls')),
@@ -36,6 +37,8 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
+    path('activate/<uidb64>/<token>/',
+         myview.activate, name='activate'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
