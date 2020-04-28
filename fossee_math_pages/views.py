@@ -9,10 +9,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
-from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
@@ -20,6 +25,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, data, EditMedia, AddContributor, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
+from .tokens import account_activation_token
 
 
 @login_required
@@ -146,7 +152,7 @@ def add_users(request):
                 password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
+                                                last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
 
                 if user_role == 'INTERN':
@@ -160,12 +166,18 @@ def add_users(request):
                                          user_temp_password=password, user_status=user_status_active, user_email=email)
                     addusr.save()
 
-                send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your FOSSEE MATH USER account'
+                message = render_to_string('fossee_math_pages/activate_user.html', {
+                    'user': email,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                    'pass': password,
+                })
+                to_email = email
+                email = EmailMessage(mail_subject, message, to=[to_email])
+                email.send()
             except:
                 usr = User.objects.get(username=email)
                 usr.delete()
@@ -950,3 +962,34 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return redirect('password-set')
+    else:
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('login')
+
+
+def password_set(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "password_reset/password_set.html", context)
