@@ -119,13 +119,14 @@
                             {{ data.data_content |safe }}
                         </td>
                         <td>
-                            <a href="{% url 'delete-data' data.data_hash %}">Delete
-                            </a>
-                            <br>
-                            <br>
                             <a href="{% url 'edit-text-staff' subtopic.subtopic_hash data.data_hash %}">
-                                Edit
+                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px" 
+                                title="Edit" alt="Edit Section">
                             </a>
+                            <hr/>
+                            <a href="{% url 'delete-data' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
+                                         title="Delete Section" width="15px" alt="Delete"></a>
                         </td>
                     {% endif %}
                 </tr>

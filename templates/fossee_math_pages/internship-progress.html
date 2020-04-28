@@ -32,23 +32,18 @@
         </select>
     </form>
     <br />
-
-    <table class="table">
+    
+    <table class="table table-sm  ">
         {% for i in internship %}
-        <thead class="">
-            <tr>
-                <th scope="col">
-                    <h3>{{ i.internship_topic }}</h3>
-                </th>
-                <th></th>
-            </tr>
-        </thead>
+
+                    <h3 class="text-info">{{ i.internship_topic }}</h3>
+   
         {% for j in topics %}
         {% if j.internship_id_id == i.id %}
-        <thead class="thead-light">
+        <thead class="-info">
             <tr>
                 <th scope="col">
-                    <h4>{{ j.topic_name }}</h4>
+                     <h4 style="font-weight: lighter;"> &bull; {{ j.topic_name }}</h4>
                 </th>
                 <th>
                     {% if user.is_staff and not user.is_superuser %}
