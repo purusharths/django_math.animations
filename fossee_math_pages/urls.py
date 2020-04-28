@@ -37,5 +37,6 @@ urlpatterns = [
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
                   path('approve-subtopic/<int:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<int:id>', views.reject_subtopic, name='reject-subtopic'),
+                  path('delete-assign-topic/<str:s_id>', views.delete_assign_topic, name='delete-assign-topic'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

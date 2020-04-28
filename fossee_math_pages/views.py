@@ -610,6 +610,19 @@ def add_subtopics(request, i_id, t_id):
 
 
 @login_required
+def delete_assign_topic(request,s_id):
+    if request.user.is_staff:
+        try:
+            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+            subtopic.assigned_user_id = None
+            subtopic.save()
+            return redirect('assign-topics')
+        except:
+            return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+@login_required
 def add_topics(request):
     if request.user.is_staff:
         form = add_topic()

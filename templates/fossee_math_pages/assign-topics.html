@@ -66,9 +66,12 @@
                     </td>
 
                         {% if i.assigned_user_id %}
-                            <td colspan="2">
+                            <td>
                             {{ i.assigned_user_id }}
                                   </td>
+                            <td>
+                            <a class="btn btn-outline-danger btn-sm" href="{% url 'delete-assign-topic' i.subtopic_hash %}">Delete</a>
+                            </td>
                         {% else %}
                              <td>
                                     <form method="POST" class="form-group" name="RearrangeTopic">
