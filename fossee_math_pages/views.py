@@ -303,6 +303,7 @@ def add_submission_subtopic(request, st_id):
             video = request.FILES.get('video')
             caption_image = request.POST.get('caption_image')
             caption_video = request.POST.get('caption_video')
+            caption = None
 
             if subtopic.assigned_user_id.id == request.user.id:
                 if img is None and video is None:
@@ -311,23 +312,22 @@ def add_submission_subtopic(request, st_id):
                             messages.error(request, "Fill any one of the field")
                             return redirect('add-submission-subtopic', st_id)
 
-                if img is None:
+                if img is None and content.strip() == '':
                     caption = caption_video
                     video_file = str(video)
                     if not video_file.lower().endswith(('.mp4', '.webm')):
                         messages.error(request, 'Inavalid File Type for Video')
                         return redirect('add-submission-subtopic', st_id)
 
-                if video is None:
+                if video is None and content.strip() == '':
                     caption = caption_image
                     image = str(img)
                     if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                         messages.error(request, 'Inavalid File Type for Image')
                         return redirect('add-submission-subtopic', st_id)
 
-                if img and video is not None:
-                    caption = caption_image
-
+                if img and video is None:
+                    caption = None
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, data_caption=caption, subtopic_id_id=t_id)
@@ -411,9 +411,27 @@ def edit_media(request, t_id, id):
                     if content.strip() == '':
                         messages.error(request, "Fill any one of the field")
                         return redirect('edit-media', t_id, id)
+
+                if img is None and content.strip() == '':
+                    content = None
+                    img = None
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('edit-media',  t_id, id)
+
+                if video is None and content.strip() == '':
+                    content = None
+                    video = None
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('edit-media',  t_id, id)
+
                 instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
+                instance.data_caption = None
                 instance.save()
                 return redirect('add-submission-subtopic', t_id)
 
