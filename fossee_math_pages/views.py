@@ -580,7 +580,6 @@ def password_change(request):
 def user_login(request):
     user = None
     user = request.user
-
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -592,7 +591,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request, "Your login credentials are invalid! Please contact the admin")
+                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -601,7 +600,6 @@ def user_login(request):
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
                         return redirect(dashboard)
-
             except:
                 form = UserLoginForm()
                 context = {
@@ -614,8 +612,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-
-
+      
+      
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -1091,4 +1089,3 @@ def password_set(request):
         'form': form,
     }
     return render(request, "password_reset/password_set.html", context)
-
