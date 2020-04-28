@@ -313,12 +313,21 @@ def add_submission_subtopic(request, st_id):
 
                 if img is None:
                     caption = caption_video
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('add-submission-subtopic', st_id)
 
                 if video is None:
                     caption = caption_image
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('add-submission-subtopic', st_id)
 
                 if img and video is not None:
                     caption = caption_image
+
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, data_caption=caption, subtopic_id_id=t_id)
@@ -401,7 +410,7 @@ def edit_media(request, t_id, id):
                 if img is None and video is None:
                     if content.strip() == '':
                         messages.error(request, "Fill any one of the field")
-                        return redirect('edit-media', t_id,id)
+                        return redirect('edit-media', t_id, id)
                 instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
@@ -528,7 +537,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
+                        messages.error(request, "Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -610,7 +619,7 @@ def add_subtopics(request, i_id, t_id):
 
 
 @login_required
-def delete_assign_topic(request,s_id):
+def delete_assign_topic(request, s_id):
     if request.user.is_staff:
         try:
             subtopic = Subtopic.objects.get(subtopic_hash=s_id)
@@ -621,6 +630,7 @@ def delete_assign_topic(request,s_id):
             return redirect('dashboard')
     else:
         return redirect('dashboard')
+
 
 @login_required
 def add_topics(request):
@@ -844,6 +854,7 @@ def internship_progress(request):
 
     else:
         return redirect('dashboard')
+
 
 @login_required
 def review_submissions_subtopic(request, s_id):
