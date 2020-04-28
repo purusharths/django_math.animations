@@ -526,6 +526,7 @@ def password_change(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
+            messages.success(request,'Password Changes Successfully !')
             return redirect(dashboard)
 
     context = {
@@ -987,6 +988,7 @@ def password_set(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password Changed Successfully !')
             return redirect(dashboard)
 
     context = {
