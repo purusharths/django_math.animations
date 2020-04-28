@@ -22,7 +22,7 @@ urlpatterns = [
                   path('dashboard/add-submission/<str:st_id>', views.add_submission_subtopic,
                        name='add-submission-subtopic'),
                   path('dashboard/add-submisson/<str:t_id>/edit-image/<str:id>', views.edit_image, name='edit-image'),
-                  path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
+                  # path('dashboard/add-submisson/<str:t_id>/edit-text/<str:id>', views.edit_text, name='edit-text'),
                   path('dashboard/add-submission/<str:t_id>/edit-media/<str:id>', views.edit_media, name='edit-media'),
                   path('dashboard/assign-topics', views.assign_topics, name='assign-topics'),
                   path('dashboard/interns/', views.interns, name='interns'),

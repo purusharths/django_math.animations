@@ -92,7 +92,7 @@
                         </td>
                         {% if  subtopic.subtopic_status != "ACCEPTED" %}
                             <td>
-                                <a href="{% url 'edit-text' subtopic.subtopic_hash data.data_hash %}">
+                                <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                     <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
                                          title="Last Modified on {{ data.data_post_date }}" alt="Edit">
                                 </a>
@@ -113,8 +113,9 @@
                             <p></p>
                             {% for i in imagesize %}
                                 {% if i.data_id_id == data.pk %}
-                                    <img src="{{ data.data_image.url }}" width="100%" max-width="700px"
-                                          max-height="500px" style="display:block; margin:0 auto;" alt="">
+                                   <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                         height="{{ i.image_height }}"
+                                         style="display:block; margin:0 auto;">
                                     {% if data.data_caption != None %}
                                     <br>
                                         <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>

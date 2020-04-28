@@ -394,11 +394,15 @@ def edit_media(request, t_id, id):
         form = EditMedia(request.POST or None, instance=instance)
         if request.POST:
             if form.is_valid():
+                content = request.POST.get('data_content')
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
-                    return redirect('add-submission-subtopic', t_id)
+                    if content.strip() == '':
+                        messages.error(request, "Fill any one of the field")
+                        return redirect('edit-media', t_id,id)
+                instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
                 instance.save()
@@ -430,10 +434,14 @@ def edit_image(request, t_id, id):
             image_width = request.POST.get('image_width')
             caption = request.POST.get('image_caption')
 
-            if image_height >= '100%' or image_height >= '500px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_height = "500px"
 
-            if image_width >= '100%' or image_width >= '900px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_width = "900px"
 
             obj = ImageFormatting.objects.get(data_id_id=image.pk)
