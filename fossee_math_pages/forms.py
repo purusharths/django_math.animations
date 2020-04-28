@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages, HomeImages)
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -132,6 +132,9 @@ class data(ModelForm):
     class Meta:
         model = Data
         fields = ['data_content']
+        labels = {
+            'data_content': '',
+        }
 
 
 class imageFormatting(ModelForm):
@@ -186,9 +189,9 @@ class add_subtopic(forms.Form):
 
 class addContributor(ModelForm):
     class Meta:
-        model = Contributor 
-        #mentor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_mentor"}))
-        #professor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_professor"}))
+        model = Contributor
+        # mentor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_mentor"}))
+        # professor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_professor"}))
         fields = ['mentor', 'professor']
 
 
@@ -196,6 +199,6 @@ class sendMessage(ModelForm):
     class Meta:
         model = Messages
         widgets = {
-          'message': forms.Textarea(attrs={'rows':4, 'cols':15}),
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }
         fields = ['message']
