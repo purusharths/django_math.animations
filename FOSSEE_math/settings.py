@@ -190,7 +190,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Email config
+
 EMAIL_HOST = EMAIL_HOST
 EMAIL_HOST_USER = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
@@ -201,3 +205,4 @@ SENDER_EMAIL = SENDER_EMAIL
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_TLS = True 
+
