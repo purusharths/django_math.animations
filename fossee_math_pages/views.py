@@ -317,6 +317,7 @@ def add_submission_subtopic(request, st_id):
             video = request.FILES.get('video')
             caption_image = request.POST.get('caption_image')
             caption_video = request.POST.get('caption_video')
+            caption = None
 
             if subtopic.assigned_user_id.id == request.user.id:
                 if img is None and video is None:
@@ -325,19 +326,30 @@ def add_submission_subtopic(request, st_id):
                             messages.error(request, "Fill any one of the field")
                             return redirect('add-submission-subtopic', st_id)
 
-                if img is None:
+                if img is None and content.strip() == '':
                     caption = caption_video
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('add-submission-subtopic', st_id)
 
-                if video is None:
+                if video is None and content.strip() == '':
                     caption = caption_image
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('add-submission-subtopic', st_id)
 
-                if img and video is not None:
-                    caption = caption_image
+                if img and video is None:
+                    caption = None
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, data_caption=caption, subtopic_id_id=t_id)
+                add_data.data_modification_date = now()
                 add_data.save()
-                add_data.subtopic_id.subtopic_modification_date = now()
+                sub = Subtopic.objects.get(pk=t_id)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 current_data = Data.objects.get(pk=add_data.pk)
                 hashtext = str(current_data.pk) + '-' + str(request.user.pk)
                 hash_result = hashlib.md5(hashtext.encode())
@@ -408,14 +420,40 @@ def edit_media(request, t_id, id):
         form = EditMedia(request.POST or None, instance=instance)
         if request.POST:
             if form.is_valid():
+                content = request.POST.get('data_content')
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
-                    return redirect('add-submission-subtopic', t_id)
+                    if content.strip() == '':
+                        messages.error(request, "Fill any one of the field")
+                        return redirect('edit-media', t_id, id)
+
+                if img is None and content.strip() == '':
+                    content = None
+                    img = None
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('edit-media', t_id, id)
+
+                if video is None and content.strip() == '':
+                    content = None
+                    video = None
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('edit-media', t_id, id)
+
+                instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
+                instance.data_caption = None
+                instance.data_modification_date = now()
                 instance.save()
+                sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 return redirect('add-submission-subtopic', t_id)
 
         context = {
@@ -444,10 +482,14 @@ def edit_image(request, t_id, id):
             image_width = request.POST.get('image_width')
             caption = request.POST.get('image_caption')
 
-            if image_height >= '100%' or image_height >= '500px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_height = "500px"
 
-            if image_width >= '100%' or image_width >= '900px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_width = "900px"
 
             obj = ImageFormatting.objects.get(data_id_id=image.pk)
@@ -538,41 +580,26 @@ def password_change(request):
 def user_login(request):
     user = None
     user = request.user
-
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
             try:
                 user = form.authenticate_user()
-                user_request = User.objects.get(pk=user.id)
-                if user_request.last_login is None:
-                    login(request, user)
-                    return redirect('password-change')
-                elif user_request.is_active is False:
-                    messages.error(request, 'User failed to get active contact administrator')
-                    logout(request)
-                    form = UserLoginForm()
-                    context = {
-                        'form': form,
-                    }
-                    return render(request, "fossee_math_pages/login.html", context)
+                login(request, user)
+                if request.user.is_staff:
+                    return redirect(dashboard)
                 else:
-                    login(request, user)
-                    if request.user.is_staff:
-                        return redirect(dashboard)
+                    user = UserDetails.objects.get(user_id=request.user.id)
+                    if user.user_status == 'INACTIVE':
+                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
+                        logout(request)
+                        form = UserLoginForm()
+                        context = {
+                            'form': form,
+                        }
+                        return render(request, "fossee_math_pages/login.html", context)
                     else:
-                        user = UserDetails.objects.get(user_id=request.user.id)
-                        if user.user_status == 'INACTIVE':
-                            messages.error(request, "Your login credentials are invalid! Please contact the admin")
-                            logout(request)
-                            form = UserLoginForm()
-                            context = {
-                                'form': form,
-                            }
-                            return render(request, "fossee_math_pages/login.html", context)
-                        else:
-                            return redirect(dashboard)
-
+                        return redirect(dashboard)
             except:
                 form = UserLoginForm()
                 context = {
@@ -585,8 +612,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-
-
+      
+      
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -640,6 +667,20 @@ def add_subtopics(request, i_id, t_id):
             'rearrange_subtopic': rearrange_subtopic,
         }
         return render(request, 'fossee_math_pages/add-subtopics.html', context)
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_assign_topic(request, s_id):
+    if request.user.is_staff:
+        try:
+            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+            subtopic.assigned_user_id = None
+            subtopic.save()
+            return redirect('assign-topics')
+        except:
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -776,8 +817,6 @@ def manage_interns(request):
         return redirect('dashboard')
 
 
-##
-
 @login_required
 def assign_topics(request):
     if request.user.is_staff:
@@ -796,10 +835,13 @@ def assign_topics(request):
             else:
                 if request.method == "POST":
                     selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                    user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    selectd_subtopic.assigned_user_id_id = user.id
-                    selectd_subtopic.save()
-                    messages.success(request, 'Intern assigned with topic')
+                    try:
+                        user = User.objects.get(pk=request.POST["assigned_user_id"])
+                        selectd_subtopic.assigned_user_id_id = user.id
+                        selectd_subtopic.save()
+                        messages.success(request, 'Intern assigned with topic')
+                    except:
+                        messages.error(request, "Intern not selected")
 
         context = {
             'form': form,
@@ -971,6 +1013,47 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
+
+
+@login_required
+def delete_topic(request, t_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        try:
+            subtopic = Subtopic.objects.filter(topic_id=t_id)
+            if subtopic:
+                messages.error(request, "Subtopics exist !! delete subtopic firts")
+                return redirect('add-topics')
+            else:
+                topic = Topic.objects.get(pk=t_id)
+                topic.delete()
+                messages.success(request, "Topic removed !")
+                return redirect('add-topics')
+        except:
+            return redirect('add-topics')
+
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_subtopic(request, t_id, st_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+        try:
+            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
+                messages.error(request, "Cant delete the Subtpoic data exists !!")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                                subtopic.topic_id.topic_url)
+            else:
+                subtopic.delete()
+                messages.success(request, "Subtopic deleted !")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+        except:
+            return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+    else:
+        return redirect('dashboard')
 
 
 def activate(request, uidb64, token):

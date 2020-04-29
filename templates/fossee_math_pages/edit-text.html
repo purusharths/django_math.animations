@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %} Edit Text {% endblock %}
-
+{% block extrahead %}
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+{% endblock %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% if user.is_staff %}
-    {% breadcrumb "Review Submission" "review_submissions" %}
-    {% else %}
-
-    {% breadcrumb "Add Submission" "add-submission" %}
-    {% endif %}
-    {% breadcrumb "Edit Submission" "edit-text" %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
+    {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
+    {% breadcrumb "Edit Text" "edit-text" %}
 {% endblock %}
 
 {% block content %}
@@ -41,11 +41,11 @@
 
     </style>
     <div class="container">
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>
-        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>
-        <script>
-            window.CKEDITOR_BASEPATH = '/static/ckeditor/';
-        </script>
+{#        <script type="text/javascript" src="{% static " ckeditor/ckeditor-init.js " %}"></script>#}
+{#        <script type="text/javascript" src="{% static " ckeditor/ckeditor/ckeditor.js " %}"></script>#}
+{#        <script>#}
+{#            window.CKEDITOR_BASEPATH = '/static/ckeditor/';#}
+{#        </script>#}
 
         <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
 

@@ -61,6 +61,7 @@
                         <th>Topic</th>
                         <th></th>
                         <th colspan="2">Rearrange</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,11 +83,23 @@
                                     <input class="btn btn-sm btn-outline-success" type="submit" name="submit" value="Change">
                                 </td>
                                 </form>
+                            <td>
+                                <a href="{% url 'delete-topic' tp.pk %}" class="btn btn-outline-danger" >Delete</a>
+                            </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
-
-
+                    <tr>
+                        <td colspan="5">
+                            <form method="POST" class="form-group" name="AddTopic">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ internship.id }}">
+                                <span>New topic: &nbsp;</span>{{ form.topic }}
+                                <input type="submit" class="btn btn-success" value="Add">
+                            </form>
+                        </td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 {% endif %}
             </table>
