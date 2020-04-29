@@ -109,7 +109,7 @@ class Contributor(models.Model):
 # foregin from the subtopic table
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    data_content = RichTextUploadingField()
+    data_content = RichTextUploadingField(blank=True, null=True)
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='video/', blank=True, null=True)
     data_caption = models.CharField(max_length=1024, blank=True, null=True)

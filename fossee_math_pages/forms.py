@@ -65,7 +65,7 @@ class AddContributor(ModelForm):
 class EditMedia(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content', 'data_image', 'data_video']
+        fields = ['data_content', 'data_image', 'data_video', 'data_caption']
 
 
 class ManageIntern(ModelForm):
@@ -133,8 +133,8 @@ class data(ModelForm):
         model = Data
         fields = ['data_content']
         labels = {
-            'data_content': '',
-        }
+                    'data_content': "",
+                }
 
 
 class imageFormatting(ModelForm):
