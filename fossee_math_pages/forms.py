@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages, HomeImages)
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -65,7 +65,7 @@ class AddContributor(ModelForm):
 class EditMedia(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content', 'data_image', 'data_video']
+        fields = ['data_content', 'data_image', 'data_video', 'data_caption']
 
 
 class ManageIntern(ModelForm):
@@ -135,7 +135,6 @@ class data(ModelForm):
         labels = {
                     'data_content': "",
                 }
-
 
 
 class imageFormatting(ModelForm):
