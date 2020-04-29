@@ -317,7 +317,7 @@ def add_submission_subtopic(request, st_id):
                 return redirect('dashboard')
 
             t_id = subtopic.pk
-            if subtopic.assigned_user_id.id == request.user.id:
+            if subtopic.assigned_user_id_id == request.user.id:
                 if request.method == 'POST':
                     content = request.POST.get('data_content')
                     img = request.FILES.get('image')
@@ -431,7 +431,7 @@ def edit_media(request, t_id, id):
         try:
             instance = Data.objects.get(data_hash=id)
             subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-            if request.user.id == subtopic.assigned_user_id.id:
+            if request.user.id == subtopic.assigned_user_id_id:
                 t_id = instance.subtopic_id.subtopic_hash
                 form = EditMedia(request.POST or None, instance=instance)
                 if request.POST:
