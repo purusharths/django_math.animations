@@ -44,7 +44,7 @@
 
         <div class="" style="padding-top: 3%;">
             {% if internship %}
-                <h3 class="text-success"> {{ internship.internship_topic }}</h3>
+                <h3 class="text-info"> {{ internship.internship_topic }}</h3>
                 <hr/>
             {% endif %}
             <form method="POST" class="form-group" name="AddTopic">
@@ -55,7 +55,7 @@
             </form>
             <table class="table  table-sm" id="topics_table">
                 {% if internship %}
-                    <thead class="table-success">
+                    <thead class="table-primary">
                     <tr>
                         <th>#</th>
                         <th>Topic</th>

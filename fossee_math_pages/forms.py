@@ -133,8 +133,8 @@ class data(ModelForm):
         model = Data
         fields = ['data_content']
         labels = {
-            'data_content': '',
-        }
+                    'data_content': "",
+                }
 
 
 class imageFormatting(ModelForm):
