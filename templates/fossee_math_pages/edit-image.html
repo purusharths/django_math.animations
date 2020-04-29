@@ -7,7 +7,11 @@
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% breadcrumb "Your Submissions" "add-submission" %}
-    {% breadcrumb image_size.data_id.subtopic_id "add-submission-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% if user.is_staff %}
+    {% breadcrumb image_size.data_id.subtopic_id "review-submissions-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% else %}
+      {% breadcrumb image_size.data_id.subtopic_id "add-submission-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% endif %}
     {% breadcrumb "Edit" "edit_image" %}
 {% endblock %}
 
