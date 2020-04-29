@@ -65,7 +65,7 @@ class AddContributor(ModelForm):
 class EditMedia(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_image', 'data_video']
+        fields = ['data_content', 'data_image', 'data_video']
 
 
 class ManageIntern(ModelForm):
@@ -190,8 +190,6 @@ class add_subtopic(forms.Form):
 class addContributor(ModelForm):
     class Meta:
         model = Contributor
-        # mentor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_mentor"}))
-        # professor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_professor"}))
         fields = ['mentor', 'professor']
 
 
