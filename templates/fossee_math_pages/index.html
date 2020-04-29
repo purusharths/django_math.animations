@@ -11,7 +11,7 @@
                 <p class="serif">Make complex mathematical topics feel more natural and approachable</p>
             </div>
             <div class="col-lg-7">
-                <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'web-files/img/index-images/logo2.png' %}" alt="">
+                 <img  id="imgRotator" class="img-fluid rounded mb-4 mb-lg-0" src=""   alt="">
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -67,5 +67,29 @@
     {% endfor %}
         <br>
     </div>
+     <script type="text/javascript">
+      ext ='.png'
+      img_1 ='{% static 'web-files/img/home_1'%}'
+      img_2 ='{% static 'web-files/img/home_2' %}'
+      img_3 ='{% static 'web-files/img/home_3' %}'
+      img_4 ='{% static 'web-files/img/home_4' %}'
+      home1 = img_1.concat(ext)
+      home2 = img_2.concat(ext)
+      home3 = img_3.concat(ext)
+      home4 = img_4.concat(ext)
+
+      {#ext = str(ext)#}
+            var picPaths = [home1,home2,home3];
+            var oPics = [];
+
+            for(i=0; i < picPaths.length; i++){
+                oPics[i] = new Image();
+                oPics[i].src = picPaths[i];
+            }
+            curPic = Math.floor(Math.random()*oPics.length);
+            window.onload=function(){
+                document.getElementById('imgRotator').src = oPics[curPic].src;
+            }
+        </script>
 
 {% endblock %}
