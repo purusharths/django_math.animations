@@ -10,13 +10,9 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% if user.is_staff %}
-    {% breadcrumb "Review Submission" "review_submissions" %}
-    {% else %}
-
-    {% breadcrumb "Add Submission" "add-submission" %}
-    {% endif %}
-    {% breadcrumb "Edit Submission" "edit-text" %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
+    {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
+    {% breadcrumb "Edit Text" "edit-text" %}
 {% endblock %}
 
 {% block content %}

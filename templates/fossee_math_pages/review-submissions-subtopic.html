@@ -6,7 +6,7 @@
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% breadcrumb "Review Submissions" "review-submissions" %}
-    {% breadcrumb "View data" "" %}
+    {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
 {% load static %} {{ form.media }}
@@ -120,7 +120,7 @@
                         </td>
                         <td>
                             <a href="{% url 'edit-text-staff' subtopic.subtopic_hash data.data_hash %}">
-                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px" 
+                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
                                 title="Edit" alt="Edit Section">
                             </a>
                             <hr/>
@@ -193,7 +193,7 @@
                         </button>
                     </div>
                     <div class="modal-body mx-3">
-                        
+
                         <div class="md-form">
                             <i class="fas fa-pencil prefix grey-text"></i>
                             <form method="POST">
