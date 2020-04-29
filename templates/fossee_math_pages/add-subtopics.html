@@ -2,16 +2,13 @@
 {% load crispy_forms_tags %}
 {% load staticfiles%}
 {% block title %} Add Subtopics {% endblock %}
-
 {% load django_bootstrap_breadcrumbs %}
-
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Dashboard" "dashboard" %}
 {% breadcrumb "Add Topics" "add-topics" %}
 {% breadcrumb "Add Subtopics" "add-subtopics" %}
 {% endblock %}
-
 {% block content %}
 {% render_breadcrumbs %}
 <style>
@@ -33,12 +30,11 @@
                 </tr>
                 <tr>
                     <hr>
-                    
                     <form action="javascript:addData()" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ i_topic.id }}">
                         <span>New Sub topic: </span>{{ form.subtopic }} &nbsp;
-                        <input class="btn btn-outline-info btn-sm" type="button" onClick="addData()" id="submitAJAX" value="Add Subtopic"> 
+                        <input class="btn btn-outline-info btn-sm" type="button" onClick="addData()" id="submitAJAX" value="Add Subtopic">
                         &nbsp;&nbsp;&nbsp;
                         <!--<input class="btn btn-outline-success" type="submit" name="submit" value="Submit">-->
                         <img id="status_image" src="" width="18px" onclick="resetImage()">
@@ -53,7 +49,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 {% for i in subtopics %}
                     {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
                         <tr>
@@ -66,32 +61,27 @@
                             <td style="width: 100px">
                                 <form method="POST" class="form-group" name="RearrangeSubTopic">
                                     <input type="hidden" value="{{ i.pk }}" name="subtopicid">
-                                    {% csrf_token %} {{ rearrange_subtopic|crispy }}</td>
+                                    {% csrf_token %} {{ rearrange_subtopic|crispy }}
+                                  </form>
+                            </td>
                             <td>
                                 <input class="btn btn-outline-success" type="submit" name="submit" value="Change">
                             </td>
-                            </form>
                         <td>
                             <a href="{% url 'delete-subtopic' i.topic_id_id i.subtopic_hash %}" class="btn btn-outline-danger">Delete</a>
                         </td>
                         </tr>
                     {% endif %}
-
                 {% endfor %}
-
             </tbody>
         </table>
-
     </div>
 </div>
 <!-- /.container -->
-
-
 <script>
     function resetImage(){
         document.getElementById('status_image').src=""
     }
-
     function addData() {
         var csrf_token = '{{ csrf_token }}';
         var topic = document.getElementById('id_subtopic').value
