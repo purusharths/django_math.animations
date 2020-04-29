@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %} Add Submission {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
+    {% if not user.is_staff %}
+    {% breadcrumb "Internship" "add-submission" %}
+    {% else %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
+    {% endif %}
     {% breadcrumb "Messages" "message" %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
@@ -12,22 +18,34 @@
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
+        <div class="card-header bg-info">
+            <h4 class="text-white"><i><u>{{ subtopic.subtopic_name }}</u></i></h4>
+                <h6 class="text-white">({{ subtopic.topic_id.internship_id }} &rarr; {{ subtopic.topic_id }}
+                &rarr; {{ subtopic.subtopic_name }})</h6>
+        </div>
+    <br/>
         {% for i in message %}
             <div class="card">
-                {% if i.subtopic_id.assigned_user_id_id == user.id %}
-                    <div class="card-header bg-info">
-                         <h6 class="text-white"> <i><u>{{ i.subtopic_id }}</u></i> ({{ i.subtopic_id.topic_id.internship_id }} &rarr; {{ i.subtopic_id.topic_id }})</h6>
-                    </div>
+                {% if i.subtopic_id_id == subtopic.pk %}
                     <div class="card-body" style="padding-top: 0px;">
                         <div class="bs-callout bs-callout-info">
-                        <p>{{ i.message }}</p>
+                            <p>{{ i.message }}</p>
                         </div>
-                        <span class="text-muted" style="font-size: small;">Sent on {{ i.message_send_date }}</span>
+                        <span class="text-muted" style="font-size: small;">Sent on : {{ i.message_send_date }} by : {{ i.user_id }}</span>
                     </div>
                 {% endif %}
             </div>
             <br>
         {% endfor %}
+
+        <hr/>
+        <div class="col-md-12">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success btn-lg">Send Message</button>
+            </form>
+        </div>
     </div>
     <hr>
     <br> {% endblock %}

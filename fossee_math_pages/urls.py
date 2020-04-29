@@ -15,7 +15,7 @@ urlpatterns = [
                   path('login/', views.user_login, name='login'),
                   path('logout/', views.user_logout, name='logout'),
 
-                  path('dashboard/messages/', views.view_messages, name='messages'),
+                  path('dashboard/messages/<str:s_id>', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),

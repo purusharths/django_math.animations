@@ -118,7 +118,7 @@ def add_users(request):
             user_phone = request.POST['user_phone']
             user_status = 'INACTIVE'
 
-            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+            regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'That email is being used')
                 return redirect('add-users')
@@ -137,7 +137,7 @@ def add_users(request):
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
                 return redirect('add-users')
-            Pattern = re.compile("(/+91)?[7-9][0-9]{9}")
+            Pattern = re.compile(r"(/+91)?[7-9][0-9]{9}")
             if Pattern.match(user_phone):
                 messages.error(request, 'Phone number error')
                 return redirect('add-users')
@@ -548,9 +548,10 @@ def delete_data(request, id):
 def add_submission(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         assigned_topic = Subtopic.objects.filter(assigned_user_id_id=request.user.id)
-
+        message = Messages.objects.filter(subtopic_id__assigned_user_id_id=request.user.id).last()
         context = {
             'assigned_topic': assigned_topic,
+            'message': message,
         }
         return render(request, 'fossee_math_pages/add-submission.html', context)
     else:
@@ -591,7 +592,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
+                        messages.error(request, "Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -612,8 +613,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-      
-      
+
+
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -749,6 +750,7 @@ def review_submissions(request):
         interns = User.objects.filter(userdetails__user_role='INTERN')
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id')
+        messages = Messages.objects.all()
 
         if "search_internship" in request.POST:
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
@@ -765,6 +767,7 @@ def review_submissions(request):
             'internship': internship,
             'first_internship': first_internship,
             'interns': interns,
+            'messages':messages,
         }
 
         return render(request, 'fossee_math_pages/review-submissions.html', context)
@@ -994,11 +997,54 @@ def reject_subtopic(request, id):
 
 
 @login_required
-def view_messages(request):
+def view_messages(request, s_id):
     if not request.user.is_staff and not request.user.is_superuser:
-        message = Messages.objects.all()
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+        form = sendMessage()
+        try:
+            m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
+            m.message_is_seen_intern = 1
+            m.save()
+        except:
+            m = None
+
+        if request.POST:
+            mess = request.POST['message']
+            save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                 user_id_id=request.user.pk)
+            save_mess.message_is_seen_intern = 1
+            save_mess.message_is_seen_staff = 0
+            save_mess.save()
+
         context = {
-            'message': message
+            'message': message,
+            'form': form,
+            'subtopic': subtopic,
+        }
+        return render(request, 'fossee_math_pages/messages.html', context)
+    elif request.user.is_staff:
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        form = sendMessage()
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+        try:
+            m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
+            m.message_is_seen_staff = 1
+            m.save()
+        except:
+            m=None
+        if request.POST:
+            mess = request.POST['message']
+            save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                     user_id_id=request.user.pk)
+            save_mess.message_is_seen_staff = 1
+            save_mess.message_is_seen_intern = 0
+            save_mess.save()
+
+        context = {
+            'message': message,
+            'form': form,
+            'subtopic': subtopic,
         }
         return render(request, 'fossee_math_pages/messages.html', context)
     else:
@@ -1048,7 +1094,7 @@ def delete_subtopic(request, t_id, st_id):
                 subtopic.delete()
                 messages.success(request, "Subtopic deleted !")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                            subtopic.topic_id.topic_url)
+                                subtopic.topic_id.topic_url)
         except:
             return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                             subtopic.topic_id.topic_url)
