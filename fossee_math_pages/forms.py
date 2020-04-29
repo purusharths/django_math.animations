@@ -132,6 +132,10 @@ class data(ModelForm):
     class Meta:
         model = Data
         fields = ['data_content']
+        labels = {
+                    'data_content': "",
+                }
+
 
 
 class imageFormatting(ModelForm):
