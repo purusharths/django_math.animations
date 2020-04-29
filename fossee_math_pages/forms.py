@@ -197,6 +197,8 @@ class sendMessage(ModelForm):
     class Meta:
         model = Messages
         widgets = {
-            'message': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 80, 'placeholder' : "Send Message"}),
+            
         }
         fields = ['message']
+        labels = {"message":""}

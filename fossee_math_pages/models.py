@@ -133,7 +133,7 @@ class ImageFormatting(models.Model):
 class Messages(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    message = models.TextField(max_length=300, null=True, blank=True)
+    message = models.TextField(max_length=1000, null=True, blank=True)
     message_send_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     message_is_seen_staff = models.BooleanField(default=1)
     message_is_seen_intern = models.BooleanField(default=1)
