@@ -309,7 +309,13 @@ def add_submission_subtopic(request, st_id):
         try:
             user = request.user
             form = data
-            subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+
+            try:
+                subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+            except Exception:
+                messages.error(request, 'Subtopic doesnot exist !')
+                return redirect('dashboard')
+
             t_id = subtopic.pk
             if subtopic.assigned_user_id.id == request.user.id:
                 if request.method == 'POST':
