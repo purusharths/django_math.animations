@@ -3,6 +3,8 @@ import uuid
 import random
 import re
 import string
+import pytz
+
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -368,8 +370,10 @@ def add_submission_subtopic(request, st_id):
         subtopic = Subtopic.objects.get(id=t_id)
 
         try:
-            last_modified = sorted([dta.data_modification_date for dta in e_data])[-1].strftime(
-                '%B %d, %Y %H:%M:%S (%A)')
+            last_modified_UTC = sorted([dta.data_modification_date for dta in e_data])[-1]
+            tz = pytz.timezone("Asia/Kolkata")
+            last_modified_IST = last_modified_UTC.astimezone(tz)
+            last_modified = last_modified_IST.strftime('%B %d, %Y %H:%M:%S (%A) %z')
         except IndexError:
             last_modified = "No modifications"
 
