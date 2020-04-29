@@ -1,4 +1,5 @@
-def auth_token_message(firstname, lastname val):
+'''
+def auth_token_message(firstname, lastname, val):
     return ''' Dear {} {}, \n\n
                Greetings from FOSEE Animations (math).\n
                Your account has been created, it will be activated when you click on the following link \n
@@ -20,3 +21,4 @@ send_mail(
             'fossee_math',
             [email, 'fossee_math@gmail.com'],
             fail_silently=True, )
+'''
