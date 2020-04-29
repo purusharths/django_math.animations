@@ -89,6 +89,7 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
+
 {#                    <tr>#}
 {#                        <td colspan="5">#}
 {#                            <form method="POST" class="form-group" name="AddTopic">#}
@@ -100,6 +101,7 @@
 {#                        </td>#}
 {#                        <td></td>#}
 {#                    </tr>#}
+
                     </tbody>
                 {% endif %}
             </table>
@@ -111,7 +113,7 @@
     /*    function resetImage(){
             document.getElementById('status_image').src=""
         }
-    
+
         function addData() {
             var csrf_token = '{{ csrf_token }}';
             var topic = document.getElementById('id_topic').value
@@ -145,4 +147,3 @@
             }
         }*/
     </script>
-

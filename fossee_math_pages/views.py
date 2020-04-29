@@ -1,4 +1,5 @@
 import hashlib
+import uuid
 import random
 import re
 import string
@@ -351,9 +352,11 @@ def add_submission_subtopic(request, st_id):
                 sub.subtopic_modification_date = now()
                 sub.save()
                 current_data = Data.objects.get(pk=add_data.pk)
-                hashtext = str(current_data.pk) + '-' + str(request.user.pk)
-                hash_result = hashlib.md5(hashtext.encode())
-                add_data.data_hash = hash_result.hexdigest()
+                # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
+                # hash_result = hashlib.md5(hashtext.encode())
+                # add_data.data_hash = hash_result.hexdigest()
+                uuid_hash = uuid.uuid4()
+                add_data.data_hash = str(uuid_hash)
                 add_data.save()
 
                 if img != "" or img != " ":
@@ -653,9 +656,9 @@ def add_subtopics(request, i_id, t_id):
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
-                        hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
-                        hash_result = hashlib.md5(hashtext.encode())
-                        current_subtopic.subtopic_hash = hash_result.hexdigest()
+                        #hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+                        #hash_result = hashlib.md5(hashtext.encode())
+                        current_subtopic.subtopic_hash = str(uuid.uuid1())#hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
