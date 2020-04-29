@@ -426,6 +426,7 @@ def edit_media(request, t_id, id):
                 content = request.POST.get('data_content')
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
+                data_caption = request.POST.get('data_caption')
                 instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
                     if content.strip() == '':
@@ -441,8 +442,8 @@ def edit_media(request, t_id, id):
                         return redirect('edit-media', t_id, id)
 
                 if video is None and content.strip() == '':
-                    content = None
-                    video = None
+                    content = ""
+                    video = ""
                     image = str(img)
                     if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                         messages.error(request, 'Inavalid File Type for Image')
@@ -451,7 +452,7 @@ def edit_media(request, t_id, id):
                 instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
-                instance.data_caption = None
+                instance.data_caption = data_caption
                 instance.data_modification_date = now()
                 instance.save()
                 sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
