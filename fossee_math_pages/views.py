@@ -306,85 +306,87 @@ def home_search_results(request, search_contains_query):
 @login_required
 def add_submission_subtopic(request, st_id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        user = request.user
-        form = data
+        try:
+            user = request.user
+            form = data
+            subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+            t_id = subtopic.pk
+            if subtopic.assigned_user_id.id == request.user.id:
+                if request.method == 'POST':
+                    content = request.POST.get('data_content')
+                    img = request.FILES.get('image')
+                    video = request.FILES.get('video')
+                    caption_image = request.POST.get('caption_image')
+                    caption_video = request.POST.get('caption_video')
+                    caption = None
 
-        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
-        t_id = subtopic.pk
-        if subtopic.assigned_user_id.id == request.user.id:
-            if request.method == 'POST':
-                content = request.POST.get('data_content')
-                img = request.FILES.get('image')
-                video = request.FILES.get('video')
-                caption_image = request.POST.get('caption_image')
-                caption_video = request.POST.get('caption_video')
-                caption = None
+                    if subtopic.assigned_user_id.id == request.user.id:
+                        if img is None and video is None:
+                            if content == "" or content == " ":
+                                if content.strip() == '':
+                                    messages.error(request, "Fill any one of the field")
+                                    return redirect('add-submission-subtopic', st_id)
 
-                if subtopic.assigned_user_id.id == request.user.id:
-                    if img is None and video is None:
-                        if content == "" or content == " ":
-                            if content.strip() == '':
-                                messages.error(request, "Fill any one of the field")
+                        if img is None and content.strip() == '':
+                            caption = caption_video
+                            video_file = str(video)
+                            if not video_file.lower().endswith(('.mp4', '.webm')):
+                                messages.error(request, 'Inavalid File Type for Video')
                                 return redirect('add-submission-subtopic', st_id)
 
-                    if img is None and content.strip() == '':
-                        caption = caption_video
-                        video_file = str(video)
-                        if not video_file.lower().endswith(('.mp4', '.webm')):
-                            messages.error(request, 'Inavalid File Type for Video')
-                            return redirect('add-submission-subtopic', st_id)
+                        if video is None and content.strip() == '':
+                            caption = caption_image
+                            image = str(img)
+                            if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                                messages.error(request, 'Inavalid File Type for Image')
+                                return redirect('add-submission-subtopic', st_id)
 
-                    if video is None and content.strip() == '':
-                        caption = caption_image
-                        image = str(img)
-                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                            messages.error(request, 'Inavalid File Type for Image')
-                            return redirect('add-submission-subtopic', st_id)
+                        if img and video is None:
+                            caption = None
 
-                    if img and video is None:
-                        caption = None
+                        add_data = Data(data_content=content, data_image=img,
+                                        data_video=video, data_caption=caption, subtopic_id_id=t_id)
+                        add_data.data_modification_date = now()
+                        add_data.save()
+                        sub = Subtopic.objects.get(pk=t_id)
+                        sub.subtopic_modification_date = now()
+                        sub.save()
+                        current_data = Data.objects.get(pk=add_data.pk)
+                        # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
+                        # hash_result = hashlib.md5(hashtext.encode())
+                        # add_data.data_hash = hash_result.hexdigest()
+                        uuid_hash = uuid.uuid4()
+                        add_data.data_hash = str(uuid_hash)
+                        add_data.save()
 
-                    add_data = Data(data_content=content, data_image=img,
-                                    data_video=video, data_caption=caption, subtopic_id_id=t_id)
-                    add_data.data_modification_date = now()
-                    add_data.save()
-                    sub = Subtopic.objects.get(pk=t_id)
-                    sub.subtopic_modification_date = now()
-                    sub.save()
-                    current_data = Data.objects.get(pk=add_data.pk)
-                    # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
-                    # hash_result = hashlib.md5(hashtext.encode())
-                    # add_data.data_hash = hash_result.hexdigest()
-                    uuid_hash = uuid.uuid4()
-                    add_data.data_hash = str(uuid_hash)
-                    add_data.save()
+                        if img != "" or img != " ":
+                            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
+                            imgformat.save()
 
-                    if img != "" or img != " ":
-                        imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
-                        imgformat.save()
+                e_data = Data.objects.filter(subtopic_id=t_id)
+                imagesize = ImageFormatting.objects.all()
+                subtopic = Subtopic.objects.get(id=t_id)
 
-            e_data = Data.objects.filter(subtopic_id=t_id)
-            imagesize = ImageFormatting.objects.all()
-            subtopic = Subtopic.objects.get(id=t_id)
+                try:
+                    last_modified = sorted([dta.data_modification_date for dta in e_data])[-1].strftime(
+                        '%B %d, %Y %H:%M:%S (%A)')
+                except IndexError:
+                    last_modified = "No modifications"
 
-            try:
-                last_modified = sorted([dta.data_modification_date for dta in e_data])[-1].strftime(
-                    '%B %d, %Y %H:%M:%S (%A)')
-            except IndexError:
-                last_modified = "No modifications"
+                context = {
+                    'topic': e_data,
+                    'form': form,
+                    'subtopic': subtopic,
+                    'imagesize': imagesize,
+                    'last_modified': last_modified,
+                }
 
-            context = {
-                'topic': e_data,
-                'form': form,
-                'subtopic': subtopic,
-                'imagesize': imagesize,
-                'last_modified': last_modified,
-            }
-
-            return render(request, 'fossee_math_pages/add-submission-subtopic.html', context)
-        else:
-            messages.error(request,'Illegal action')
-            return redirect('dashboard')
+                return render(request, 'fossee_math_pages/add-submission-subtopic.html', context)
+            else:
+                messages.error(request, 'Illegal action')
+                return redirect('dashboard')
+        except Exception:
+            return request('dashboard')
     else:
         return redirect('dashboard')
 
@@ -420,56 +422,59 @@ def edit_text(request, t_id, id):
 @login_required
 def edit_media(request, t_id, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
-        instance = Data.objects.get(data_hash=id)
-        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        if request.user.id == subtopic.assigned_user_id.id:
-            t_id = instance.subtopic_id.subtopic_hash
-            form = EditMedia(request.POST or None, instance=instance)
-            if request.POST:
-                if form.is_valid():
-                    content = request.POST.get('data_content')
-                    img = request.FILES.get('data_image')
-                    video = request.FILES.get('data_video')
-                    instance = Data.objects.get(data_hash=id)
-                    if img is None and video is None:
-                        if content.strip() == '':
-                            messages.error(request, "Fill any one of the field")
-                            return redirect('edit-media', t_id, id)
+        try:
+            instance = Data.objects.get(data_hash=id)
+            subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
+            if request.user.id == subtopic.assigned_user_id.id:
+                t_id = instance.subtopic_id.subtopic_hash
+                form = EditMedia(request.POST or None, instance=instance)
+                if request.POST:
+                    if form.is_valid():
+                        content = request.POST.get('data_content')
+                        img = request.FILES.get('data_image')
+                        video = request.FILES.get('data_video')
+                        instance = Data.objects.get(data_hash=id)
+                        if img is None and video is None:
+                            if content.strip() == '':
+                                messages.error(request, "Fill any one of the field")
+                                return redirect('edit-media', t_id, id)
 
-                    if img is None and content.strip() == '':
-                        content = ""
-                        img = ""
-                        video_file = str(video)
-                        if not video_file.lower().endswith(('.mp4', '.webm')):
-                            messages.error(request, 'Inavalid File Type for Video')
-                            return redirect('edit-media', t_id, id)
+                        if img is None and content.strip() == '':
+                            content = ""
+                            img = ""
+                            video_file = str(video)
+                            if not video_file.lower().endswith(('.mp4', '.webm')):
+                                messages.error(request, 'Inavalid File Type for Video')
+                                return redirect('edit-media', t_id, id)
 
-                    if video is None and content.strip() == '':
-                        content = ""
-                        video = ""
-                        image = str(img)
-                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                            messages.error(request, 'Inavalid File Type for Image')
-                            return redirect('edit-media', t_id, id)
+                        if video is None and content.strip() == '':
+                            content = ""
+                            video = ""
+                            image = str(img)
+                            if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                                messages.error(request, 'Inavalid File Type for Image')
+                                return redirect('edit-media', t_id, id)
 
-                    instance.data_content = content
-                    instance.data_image = img
-                    instance.data_video = video
-                    instance.data_caption = ""
-                    instance.data_modification_date = now()
-                    instance.save()
-                    sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
-                    sub.subtopic_modification_date = now()
-                    sub.save()
-                    return redirect('add-submission-subtopic', t_id)
+                        instance.data_content = content
+                        instance.data_image = img
+                        instance.data_video = video
+                        instance.data_caption = ""
+                        instance.data_modification_date = now()
+                        instance.save()
+                        sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                        sub.subtopic_modification_date = now()
+                        sub.save()
+                        return redirect('add-submission-subtopic', t_id)
 
-            context = {
-                'form': form,
-                'subtopic': subtopic,
-            }
-            return render(request, 'fossee_math_pages/edit-media.html', context)
-        else:
-            messages.error(request,'Illegal action')
+                context = {
+                    'form': form,
+                    'subtopic': subtopic,
+                }
+                return render(request, 'fossee_math_pages/edit-media.html', context)
+            else:
+                messages.error(request, 'Illegal action')
+                return redirect('dashboard')
+        except Exception:
             return redirect('dashboard')
     else:
         return redirect('dashboard')
@@ -600,7 +605,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
+                        messages.error(request, "Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -621,8 +626,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-      
-      
+
+
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -661,9 +666,9 @@ def add_subtopics(request, i_id, t_id):
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
-                        #hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
-                        #hash_result = hashlib.md5(hashtext.encode())
-                        current_subtopic.subtopic_hash = str(uuid.uuid1())#hash_result.hexdigest()
+                        # hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+                        # hash_result = hashlib.md5(hashtext.encode())
+                        current_subtopic.subtopic_hash = str(uuid.uuid1())  # hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
@@ -1057,7 +1062,7 @@ def delete_subtopic(request, t_id, st_id):
                 subtopic.delete()
                 messages.success(request, "Subtopic deleted !")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                            subtopic.topic_id.topic_url)
+                                subtopic.topic_id.topic_url)
         except:
             return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                             subtopic.topic_id.topic_url)
