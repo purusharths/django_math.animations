@@ -84,14 +84,12 @@
                         <td>{{ k.subtopic_modification_date }}</td>
                         <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
                         <td><a href="{% url 'messages' k.subtopic_hash %}"><img
-                        {% for mess in messages %}
-                                {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
-                                    src="{% static '/web-files/img/multiuse-svgs/notification.svg' %}" height="40px"
-                                {% else %}
-                                     src="{% static '/web-files/img/multiuse-svgs/message.svg' %}"
-                                {% endif %}
-                        {% endfor %}
-                                    alt="message" title="Send Message"></a></td>
+                                {% for mess in messages %}
+                                    {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
+                                        src="{% static '/web-files/img/multiuse-svgs/notification.svg' %}" height="40px"
+                                    {% endif %}
+                                {% endfor %}     src="{% static '/web-files/img/multiuse-svgs/message.svg' %}"
+                                        alt="message" title="Send Message"></a></td>
                     </tr>
                 {% endif %}
             {% endfor %}
