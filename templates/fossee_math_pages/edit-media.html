@@ -10,9 +10,9 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "add-submission" %}
-    {% breadcrumb "Add Submission" "" %}
-    {% breadcrumb "Update Image or Video" "" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
+    {% breadcrumb subtopic.subtopic_name "add-submission-subtopic" subtopic.subtopic_hash %}
+    {% breadcrumb "Edit" "edit_media" %}
 {% endblock %}
 
 {% block content %}
