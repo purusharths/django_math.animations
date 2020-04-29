@@ -1004,6 +1004,7 @@ def view_messages(request, s_id):
                 mess = request.POST['message']
                 save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
                                      user_id_id=request.user.pk)
+                save_mess.message_is_seen_intern = True
                 save_mess.save()
         except:
             messages.error(request, 'Some error occured !')
@@ -1011,7 +1012,7 @@ def view_messages(request, s_id):
         context = {
             'message': message,
             'form': form,
-            'subtopic':subtopic,
+            'subtopic': subtopic,
         }
         return render(request, 'fossee_math_pages/messages.html', context)
     elif request.user.is_staff:
@@ -1023,6 +1024,7 @@ def view_messages(request, s_id):
                 mess = request.POST['message']
                 save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
                                      user_id_id=request.user.pk)
+                save_mess.message_is_seen_staff = True
                 save_mess.save()
         except:
             messages.error(request, 'Some error occured !')
