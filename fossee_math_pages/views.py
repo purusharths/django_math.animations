@@ -118,7 +118,7 @@ def add_users(request):
             user_phone = request.POST['user_phone']
             user_status = 'INACTIVE'
 
-            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+            regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'That email is being used')
                 return redirect('add-users')
@@ -137,7 +137,7 @@ def add_users(request):
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
                 return redirect('add-users')
-            Pattern = re.compile("(/+91)?[7-9][0-9]{9}")
+            Pattern = re.compile(r"(/+91)?[7-9][0-9]{9}")
             if Pattern.match(user_phone):
                 messages.error(request, 'Phone number error')
                 return redirect('add-users')
