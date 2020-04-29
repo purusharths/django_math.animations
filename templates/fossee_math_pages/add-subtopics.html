@@ -102,7 +102,11 @@
         } else {
             var xhttp = new XMLHttpRequest();
             var mainTable = document.getElementById("subtopics_table");
-            last_table_index_value = parseInt(mainTable.lastElementChild.lastElementChild.cells[0].textContent)+1;
+            if (mainTable.lastElementChild.lastElementChild == null) {
+              last_table_index_value=0
+            } else {
+              last_table_index_value = parseInt(mainTable.lastElementChild.lastElementChild.cells[0].textContent)+1;
+            }
             var row = mainTable.insertRow()
             var cell1 = row.insertCell(0)
             var cell2 = row.insertCell(1)
