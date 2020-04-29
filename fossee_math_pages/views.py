@@ -49,7 +49,7 @@ def add_internship(request):
                 messages.success(request, 'Internship added')
                 return redirect('add-internship')
             else:
-                messages.error(request, 'An error occured! Contact the admin!') #What is this for?
+                messages.error(request, 'An error occured! Contact the admin!')  # What is this for?
                 return redirect('add-internship')
         form = AddInternship()
         context = {
@@ -182,7 +182,7 @@ def add_users(request):
             except:
                 usr = User.objects.get(username=email)
                 usr.delete()
-                messages.error(request, 'Some error occured !')#What is this for?
+                messages.error(request, 'Some error occured !')  # What is this for?
                 return redirect('add-users')
             messages.success(request, 'User Added!')
             return redirect('add-users')
@@ -502,15 +502,31 @@ def edit_image(request, t_id, id):
             image_width = request.POST.get('image_width')
             caption = request.POST.get('image_caption')
 
-            temp = re.findall(r'\d+', image_height)
-            res = list(map(int, temp))
-            if res[0] >= 100:
+            if re.match(r"\d+px$", image_height):
+                temp = re.findall(r'\d+', image_height)
+                res = list(map(int, temp))
+                if res[0] >= 500:
+                    image_height = "500px"
+            elif re.match(r"\d+%$", image_height):
+                temp = re.findall(r'\d+', image_height)
+                res = list(map(int, temp))
+                if res[0] >= 100:
+                    image_height = "100%"
+            else:
                 image_height = "500px"
 
-            temp = re.findall(r'\d+', image_height)
-            res = list(map(int, temp))
-            if res[0] >= 100:
-                image_width = "900px"
+            if re.match(r"\d+px$", image_width):
+                temp = re.findall(r'\d+', image_width)
+                res = list(map(int, temp))
+                if res[0] >= 900:
+                    image_width = "900px"
+            elif re.match(r"\d+%$", image_width):
+                temp = re.findall(r'\d+', image_width)
+                res = list(map(int, temp))
+                if res[0] >= 100:
+                    image_width = "100%"
+            else:
+                image_width = "500px"
 
             obj = ImageFormatting.objects.get(data_id_id=image.pk)
             obj.image_height = image_height
@@ -654,7 +670,7 @@ def add_subtopics(request, i_id, t_id):
                 topic_id = request.POST['id']
 
                 if subtopic.strip() == '':
-                    messages.error(request, "Fill the field")#What is this?
+                    messages.error(request, "Fill the field")  # What is this?
                     return redirect('add-subtopics', t_id)
                 else:
                     obj = Subtopic.objects.filter(topic_id__topic_url=t_id,
@@ -677,7 +693,7 @@ def add_subtopics(request, i_id, t_id):
                         current_subtopic.subtopic_hash = str(uuid.uuid1())  # hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
-                        messages.success(request, 'Topic added with subtopic')#What is this for?
+                        messages.success(request, 'Topic added with subtopic')  # What is this for?
                         i_topic = Topic.objects.get(topic_url=t_id, internship_id__internship_url=i_id)
 
         context = {
