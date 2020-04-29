@@ -49,7 +49,7 @@ def add_internship(request):
                 messages.success(request, 'Internship added')
                 return redirect('add-internship')
             else:
-                messages.error(request, 'Some error occured')
+                messages.error(request, 'An error occured! Contact the admin!')
                 return redirect('add-internship')
         form = AddInternship()
         context = {
@@ -615,8 +615,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-      
-      
+
+
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -1044,12 +1044,12 @@ def delete_subtopic(request, t_id, st_id):
         subtopic = Subtopic.objects.get(subtopic_hash=st_id)
         try:
             if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
-                messages.error(request, "Cant delete the Subtpoic data exists !!")
+                messages.error(request, "Data exists for this subtopic, cannot delete!!")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                                 subtopic.topic_id.topic_url)
             else:
                 subtopic.delete()
-                messages.success(request, "Subtopic deleted !")
+                messages.success(request, "Subtopic deleted!")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                             subtopic.topic_id.topic_url)
         except:
