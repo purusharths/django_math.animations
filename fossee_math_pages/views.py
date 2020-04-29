@@ -25,7 +25,7 @@ from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
-                    ManageIntern, add_subtopic, data, EditMedia, AddContributor, imageFormatting, topicOrder,
+                    ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
@@ -119,7 +119,9 @@ def add_users(request):
             email = request.POST['email']
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
-            user_status = 'INACTIVE'
+            user_college = request.POST['user_college']
+            user_status_active = 'ACTIVE'
+
 
             regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -160,13 +162,15 @@ def add_users(request):
 
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status, user_email=email)
+                                         user_temp_password=password, user_status=user_status_active, user_email=email,
+                                         user_college=user_college)
                     addusr.save()
                 if user_role == 'STAFF':
                     user.is_staff = True
                     user.save()
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status, user_email=email)
+                                         user_temp_password=password, user_status=user_status_active, user_email=email,
+                                         user_college=user_college)
                     addusr.save()
 
                 current_site = get_current_site(request)

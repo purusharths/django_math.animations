@@ -34,7 +34,7 @@ class AddUserForm1(ModelForm):
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
-        fields = ['user_phone', 'user_role']
+        fields = ['user_phone', 'user_role', 'user_college']
 
 
 class AddInternship(ModelForm):
