@@ -591,7 +591,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
+                        messages.error(request, "Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -612,8 +612,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-      
-      
+
+
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -994,11 +994,43 @@ def reject_subtopic(request, id):
 
 
 @login_required
-def view_messages(request):
+def view_messages(request, s_id):
     if not request.user.is_staff and not request.user.is_superuser:
-        message = Messages.objects.all()
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        form = sendMessage()
+        try:
+            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+            if request.POST:
+                mess = request.POST['message']
+                save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                     user_id_id=request.user.pk)
+                save_mess.save()
+        except:
+            messages.error(request, 'Some error occured !')
+            return redirect('dashboard')
         context = {
-            'message': message
+            'message': message,
+            'form': form,
+            'subtopic':subtopic,
+        }
+        return render(request, 'fossee_math_pages/messages.html', context)
+    elif request.user.is_staff:
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        form = sendMessage()
+        try:
+            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+            if request.POST:
+                mess = request.POST['message']
+                save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                     user_id_id=request.user.pk)
+                save_mess.save()
+        except:
+            messages.error(request, 'Some error occured !')
+            return redirect('dashboard')
+        context = {
+            'message': message,
+            'form': form,
+            'subtopic': subtopic,
         }
         return render(request, 'fossee_math_pages/messages.html', context)
     else:
@@ -1048,7 +1080,7 @@ def delete_subtopic(request, t_id, st_id):
                 subtopic.delete()
                 messages.success(request, "Subtopic deleted !")
                 return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                            subtopic.topic_id.topic_url)
+                                subtopic.topic_id.topic_url)
         except:
             return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
                             subtopic.topic_id.topic_url)
