@@ -32,9 +32,9 @@
                         &nbsp;<a href="{% url 'messages' i.subtopic_hash %}">
                         <img
                                 {% if not message.message_is_seen_intern and message.subtopic_id_id == i.pk %}
-                                      src="{% static '/web-files/img/multiuse-svgs/notification.svg' %}" height="40px"
+                                      src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}" size="20px"
                                 {% else %}
-                                           src="{% static '/web-files/img/multiuse-svgs/message.svg' %}"
+                                           src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" size="20px"
                                 {% endif %}
                                     alt="message" title="Send Message">
                     </a>

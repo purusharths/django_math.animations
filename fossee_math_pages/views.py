@@ -2,6 +2,7 @@ import hashlib
 import random
 import re
 import string
+import textwrap
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -1011,6 +1012,10 @@ def view_messages(request, s_id):
 
         if request.POST:
             mess = request.POST['message']
+            wrap_text = textwrap.TextWrapper(width=80)
+            wrap_list = wrap_text.wrap(text=mess)
+            mess = "\n".join(wrap_list)
+            print(mess)
             save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
                                  user_id_id=request.user.pk)
             save_mess.message_is_seen_intern = 1
