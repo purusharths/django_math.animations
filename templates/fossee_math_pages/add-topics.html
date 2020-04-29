@@ -89,17 +89,17 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
-                    <tr>
-                        <!-- <td colspan="5">
-                            <form method="POST" class="form-group" name="AddTopic">
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ internship.id }}">
-                                <span>New topic: &nbsp;</span>{{ form.topic }}
-                                <input type="submit" class="btn btn-success" value="Add">
-                            </form>
-                        </td> -->
-                        <td></td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td colspan="5">#}
+{#                            <form method="POST" class="form-group" name="AddTopic">#}
+{#                                {% csrf_token %}#}
+{#                                <input type="hidden" name="id" value="{{ internship.id }}">#}
+{#                                <span>New topic: &nbsp;</span>{{ form.topic }}#}
+{#                                <input type="submit" class="btn btn-success" value="Add">#}
+{#                            </form>#}
+{#                        </td>#}
+{#                        <td></td>#}
+{#                    </tr>#}
                     </tbody>
                 {% endif %}
             </table>
