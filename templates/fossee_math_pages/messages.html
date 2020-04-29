@@ -18,6 +18,7 @@
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
+        {% include 'partials/_alerts.html' %}
         <div class="card-header bg-info">
             <h4 class="text-white"><i><u>{{ subtopic.subtopic_name }}</u></i></h4>
                 <h6 class="text-white">({{ subtopic.topic_id.internship_id }} &rarr; {{ subtopic.topic_id }}
