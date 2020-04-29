@@ -38,7 +38,7 @@ def add_internship(request):
             internship_topic = request.POST['internship_topic']
             form = AddInternship(request.POST, request.FILES)
             if Internship.objects.filter(internship_topic=internship_topic).exists():
-                messages.error(request, 'That internship already exist')
+                messages.error(request, 'That internship already exists!')
                 return redirect('add-internship')
             if form.is_valid():
                 obj = form.save(commit=False)
@@ -49,7 +49,7 @@ def add_internship(request):
                 messages.success(request, 'Internship added')
                 return redirect('add-internship')
             else:
-                messages.error(request, 'An error occured! Contact the admin!')
+                messages.error(request, 'An error occured! Contact the admin!') #What is this for?
                 return redirect('add-internship')
         form = AddInternship()
         context = {
@@ -182,7 +182,7 @@ def add_users(request):
             except:
                 usr = User.objects.get(username=email)
                 usr.delete()
-                messages.error(request, 'Some error occured !')
+                messages.error(request, 'Some error occured !')#What is this for?
                 return redirect('add-users')
             messages.success(request, 'User Added!')
             return redirect('add-users')
@@ -313,7 +313,7 @@ def add_submission_subtopic(request, st_id):
             try:
                 subtopic = Subtopic.objects.get(subtopic_hash=st_id)
             except Exception:
-                messages.error(request, 'Subtopic doesnot exist !')
+                messages.error(request, 'This subtopic does not exist!')
                 return redirect('dashboard')
 
             t_id = subtopic.pk
@@ -330,7 +330,7 @@ def add_submission_subtopic(request, st_id):
                         if img is None and video is None:
                             if content == "" or content == " ":
                                 if content.strip() == '':
-                                    messages.error(request, "Fill any one of the field")
+                                    messages.error(request, "Fill any one of the fields.")
                                     return redirect('add-submission-subtopic', st_id)
 
                         if img is None and content.strip() == '':
@@ -389,7 +389,7 @@ def add_submission_subtopic(request, st_id):
 
                 return render(request, 'fossee_math_pages/add-submission-subtopic.html', context)
             else:
-                messages.error(request, 'Illegal action')
+                messages.error(request, 'You do not have access to that subtopic submission!')
                 return redirect('dashboard')
         except Exception:
             return request('dashboard')
@@ -478,7 +478,7 @@ def edit_media(request, t_id, id):
                 }
                 return render(request, 'fossee_math_pages/edit-media.html', context)
             else:
-                messages.error(request, 'Illegal action')
+                messages.error(request, 'You do not have access to that page!')
                 return redirect('dashboard')
         except Exception:
             return redirect('dashboard')
@@ -588,7 +588,7 @@ def password_change(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            messages.success(request, 'Password Changes Successfully !')
+            messages.success(request, 'Password Changed Successfully!')
             return redirect(dashboard)
 
     context = {
@@ -654,7 +654,7 @@ def add_subtopics(request, i_id, t_id):
                 topic_id = request.POST['id']
 
                 if subtopic.strip() == '':
-                    messages.error(request, "Fill the field")
+                    messages.error(request, "Fill the field")#What is this?
                     return redirect('add-subtopics', t_id)
                 else:
                     obj = Subtopic.objects.filter(topic_id__topic_url=t_id,
@@ -666,7 +666,7 @@ def add_subtopics(request, i_id, t_id):
                         order = 0
                     try:
                         Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
-                        messages.error(request, "Subtopic exists !")
+                        messages.error(request, "This subtopic already exists!")
                     except:
                         order = order + 1
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
@@ -677,7 +677,7 @@ def add_subtopics(request, i_id, t_id):
                         current_subtopic.subtopic_hash = str(uuid.uuid1())  # hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
-                        messages.success(request, 'Topic added with subtopic')
+                        messages.success(request, 'Topic added with subtopic')#What is this for?
                         i_topic = Topic.objects.get(topic_url=t_id, internship_id__internship_url=i_id)
 
         context = {
@@ -725,7 +725,7 @@ def add_topics(request):
                 topic = request.POST['topic']
                 id = request.POST['id']
                 if topic.strip() == '':
-                    messages.error(request, "Fill the field")
+                    messages.error(request, "Fill in the topic name")
                     return redirect(add_topics)
                 else:
                     obj = Topic.objects.filter(internship_id_id=id).order_by('topic_order').last()
@@ -735,7 +735,7 @@ def add_topics(request):
                         order = 0
                     try:
                         Topic.objects.get(topic_name=topic, internship_id_id=id)
-                        messages.error(request, "Topic alredy exists")
+                        messages.error(request, "This Topic alredy exists!")
                     except:
                         order = order + 1
                         data = Topic(topic_name=topic, internship_id_id=id, topic_order=order)
@@ -743,7 +743,7 @@ def add_topics(request):
                         current_topic = Topic.objects.get(topic_name=topic, internship_id_id=id)
                         current_topic.topic_url = '-'.join(str(topic).lower().split())
                         current_topic.save()
-                        messages.success(request, 'Topic added with internship')
+                        messages.success(request, 'Topic added!')
                         internship = Internship.objects.get(pk=current_topic.internship_id.pk)
 
         internship_all = Internship.objects.all()
@@ -859,7 +859,7 @@ def assign_topics(request):
                         user = User.objects.get(pk=request.POST["assigned_user_id"])
                         selectd_subtopic.assigned_user_id_id = user.id
                         selectd_subtopic.save()
-                        messages.success(request, 'Intern assigned with topic')
+                        messages.success(request, 'Topic assigned to the intern')
                     except:
                         messages.error(request, "Intern not selected")
 
@@ -1041,12 +1041,12 @@ def delete_topic(request, t_id):
         try:
             subtopic = Subtopic.objects.filter(topic_id=t_id)
             if subtopic:
-                messages.error(request, "Subtopics exist !! delete subtopic firts")
+                messages.error(request, "Subtopics exist for this topic; cannot delete!")
                 return redirect('add-topics')
             else:
                 topic = Topic.objects.get(pk=t_id)
                 topic.delete()
-                messages.success(request, "Topic removed !")
+                messages.success(request, "Topic deleted!")
                 return redirect('add-topics')
         except:
             return redirect('add-topics')
@@ -1102,7 +1102,7 @@ def password_set(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            messages.success(request, 'Password Changed Successfully !')
+            messages.success(request, 'Password Changed Successfully!')
             return redirect(dashboard)
 
     context = {
