@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}Intern Add Data{% endblock %}
+{% block title %}Edit Image{% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard" %}
-    {% breadcrumb  "Review Submissions" "review-submissions" %}
-    {% breadcrumb "View Data" "" %}
-    {% breadcrumb "Update Image Size" "" %}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
+    {% if user.is_staff %}
+    {% breadcrumb image_size.data_id.subtopic_id "review-submissions-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% else %}
+      {% breadcrumb image_size.data_id.subtopic_id "add-submission-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% endif %}
+    {% breadcrumb "Edit" "edit_image" %}
 {% endblock %}
 
 {% block content %}
@@ -31,8 +35,11 @@
             opacity: 0;
         }
 
-    </style>
+        .mleft {
+            margin-left: 415px;
+        }
 
+    </style>
     <div class="container">
         <div>
             <img src="{{ image.data_image.url }}" width="{{ image_size.image_width }}"
@@ -51,7 +58,11 @@
         </div>
         <br>
         <div>
-            <a href="{% url 'review-submissions-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
+          {% if user.is_staff %}
+          <a href="{% url 'review-submissions-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
+          {% else %}
+          <a href="{% url 'add-submission-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
+          {% endif %}
         </div>
         <br>
     </div>

@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "add-submission" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
 
@@ -32,7 +32,7 @@
                         <h4>{{ i.subtopic_name }}</h4>
                         &nbsp;
                         <div class="float-right">
-                            <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a>
+                            <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Edit Submission</a>
                         </div>
                     </div>
                 </tr>

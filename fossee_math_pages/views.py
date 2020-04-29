@@ -1,4 +1,5 @@
 import hashlib
+import uuid
 import random
 import re
 import string
@@ -6,11 +7,18 @@ import string
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
@@ -18,6 +26,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
+from .tokens import account_activation_token
 
 
 @login_required
@@ -87,37 +96,6 @@ def manage_internship(request):
 
 
 @login_required
-def admin_add_intern(request):
-    if request.user.is_superuser:
-        user = User.objects.all()
-        interns = Intern.objects.all()
-        form = AddIntern(user)
-        internships = Internship.objects.all()
-        if request.method == 'POST':
-            intern_name = request.POST['user_id']
-            topic = request.POST['internship_id']
-            usr = UserDetails.objects.get(id=intern_name)
-            temp1 = User.objects.get(username=usr)
-            temp2 = Internship.objects.get(id=topic)
-            if Intern.objects.filter(user_id=temp1).exists():
-                messages.error(request, 'That intern has an internship')
-                return redirect('admin_add_intern')
-            data = Intern(user_id=temp1, internship_id=temp2)
-            data.save()
-            messages.success(request, 'Intern added with internship')
-            return redirect('admin_add_intern')
-
-        context = {
-            'internships': internships,
-            'form': form,
-            'interns': interns,
-        }
-        return render(request, 'fossee_math_pages/admin_add_intern.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
 def add_users(request):
     if request.user.is_superuser:
         datas = UserDetails.objects.all()
@@ -142,7 +120,8 @@ def add_users(request):
             user_college = request.POST['user_college']
             user_status_active = 'ACTIVE'
 
-            regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+
+            regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'That email is being used')
                 return redirect('add-users')
@@ -161,7 +140,7 @@ def add_users(request):
             if regex.search(lastname):
                 messages.error(request, 'Lastname cannot have special characters')
                 return redirect('add-users')
-            Pattern = re.compile("(/+91)?[7-9][0-9]{9}")
+            Pattern = re.compile(r"(/+91)?[7-9][0-9]{9}")
             if Pattern.match(user_phone):
                 messages.error(request, 'Phone number error')
                 return redirect('add-users')
@@ -176,7 +155,7 @@ def add_users(request):
                 password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 passwordstr = str(password)
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
-                                                last_name=lastname)
+                                                last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
 
                 if user_role == 'INTERN':
@@ -192,12 +171,18 @@ def add_users(request):
                                          user_college=user_college)
                     addusr.save()
 
-                send_mail(
-                    'FOSSEE ANIMATION MATH',
-                    'Thank you for registering with fossee_math. Your password is ' + passwordstr,
-                    'fossee_math',
-                    [email, 'fossee_math@gmail.com'],
-                    fail_silently=True, )
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your FOSSEE MATH USER account'
+                message = render_to_string('fossee_math_pages/activate_user.html', {
+                    'user': email,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                    'pass': password,
+                })
+                to_email = email
+                email = EmailMessage(mail_subject, message, to=[to_email])
+                email.send()
             except:
                 usr = User.objects.get(username=email)
                 usr.delete()
@@ -337,6 +322,7 @@ def add_submission_subtopic(request, st_id):
             video = request.FILES.get('video')
             caption_image = request.POST.get('caption_image')
             caption_video = request.POST.get('caption_video')
+            caption = None
 
             if subtopic.assigned_user_id.id == request.user.id:
                 if img is None and video is None:
@@ -345,23 +331,36 @@ def add_submission_subtopic(request, st_id):
                             messages.error(request, "Fill any one of the field")
                             return redirect('add-submission-subtopic', st_id)
 
-                if img is None:
+                if img is None and content.strip() == '':
                     caption = caption_video
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('add-submission-subtopic', st_id)
 
-                if video is None:
+                if video is None and content.strip() == '':
                     caption = caption_image
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('add-submission-subtopic', st_id)
 
-                if img and video is not None:
-                    caption = caption_image
+                if img and video is None:
+                    caption = None
 
                 add_data = Data(data_content=content, data_image=img,
                                 data_video=video, data_caption=caption, subtopic_id_id=t_id)
+                add_data.data_modification_date = now()
                 add_data.save()
-                add_data.subtopic_id.subtopic_modification_date = now()
+                sub = Subtopic.objects.get(pk=t_id)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 current_data = Data.objects.get(pk=add_data.pk)
-                hashtext = str(current_data.pk) + '-' + str(request.user.pk)
-                hash_result = hashlib.md5(hashtext.encode())
-                add_data.data_hash = hash_result.hexdigest()
+                # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
+                # hash_result = hashlib.md5(hashtext.encode())
+                # add_data.data_hash = hash_result.hexdigest()
+                uuid_hash = uuid.uuid4()
+                add_data.data_hash = str(uuid_hash)
                 add_data.save()
 
                 if img != "" or img != " ":
@@ -392,17 +391,20 @@ def add_submission_subtopic(request, st_id):
 
 
 @login_required
-def intern_update_data(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def edit_text(request, t_id, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
         t_id = instance.subtopic_id.subtopic_hash
-        if subtopic.assigned_user_id.id == request.user.id:
+        if (subtopic.assigned_user_id.id == request.user.id) or request.user.is_staff:
             form = data(request.POST or None, instance=instance)
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.save()
-                return redirect('add-submission-subtopic', t_id)
+                if request.user.is_staff:
+                    return redirect('review-submissions-subtopic', t_id)
+                else:
+                    return redirect('add-submission-subtopic', t_id)
         else:
             return redirect('dashboard')
 
@@ -411,13 +413,13 @@ def intern_update_data(request, id):
             'subtopic': subtopic,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_data.html', context)
+        return render(request, 'fossee_math_pages/edit-text.html', context)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def intern_update_media(request, id):
+def edit_media(request, t_id, id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
@@ -425,14 +427,40 @@ def intern_update_media(request, id):
         form = EditMedia(request.POST or None, instance=instance)
         if request.POST:
             if form.is_valid():
+                content = request.POST.get('data_content')
                 img = request.FILES.get('data_image')
                 video = request.FILES.get('data_video')
                 instance = Data.objects.get(data_hash=id)
                 if img is None and video is None:
-                    return redirect('add-submission/', t_id)
+                    if content.strip() == '':
+                        messages.error(request, "Fill any one of the field")
+                        return redirect('edit-media', t_id, id)
+
+                if img is None and content.strip() == '':
+                    content = None
+                    img = None
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Inavalid File Type for Video')
+                        return redirect('edit-media', t_id, id)
+
+                if video is None and content.strip() == '':
+                    content = None
+                    video = None
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Inavalid File Type for Image')
+                        return redirect('edit-media', t_id, id)
+
+                instance.data_content = content
                 instance.data_image = img
                 instance.data_video = video
+                instance.data_caption = None
+                instance.data_modification_date = now()
                 instance.save()
+                sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                sub.subtopic_modification_date = now()
+                sub.save()
                 return redirect('add-submission-subtopic', t_id)
 
         context = {
@@ -440,14 +468,14 @@ def intern_update_media(request, id):
             'subtopic': subtopic,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_media.html', context)
+        return render(request, 'fossee_math_pages/edit-media.html', context)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def intern_update_image_size(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def edit_image(request, t_id, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         image = Data.objects.get(data_hash=id)
         try:
             image_size = ImageFormatting.objects.get(data_id_id=image.pk)
@@ -461,10 +489,14 @@ def intern_update_image_size(request, id):
             image_width = request.POST.get('image_width')
             caption = request.POST.get('image_caption')
 
-            if image_height >= '100%' or image_height >= '500px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_height = "500px"
 
-            if image_width >= '100%' or image_width >= '900px':
+            temp = re.findall(r'\d+', image_height)
+            res = list(map(int, temp))
+            if res[0] >= 100:
                 image_width = "900px"
 
             obj = ImageFormatting.objects.get(data_id_id=image.pk)
@@ -472,7 +504,10 @@ def intern_update_image_size(request, id):
             obj.image_width = image_width
             obj.image_caption = caption
             obj.save()
-            return redirect(intern_update_image_size, id)
+            if request.user.is_staff:
+                return redirect('edit-image-staff', t_id, id)
+            else:
+                return redirect('edit-image', t_id, id)
 
         context = {
             'image': image,
@@ -480,14 +515,14 @@ def intern_update_image_size(request, id):
             'form': form,
         }
 
-        return render(request, 'fossee_math_pages/intern_update_image_size.html', context)
+        return render(request, 'fossee_math_pages/edit-image.html', context)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def intern_delete_data(request, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+def delete_data(request, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         if instance.subtopic_id.assigned_user_id.id == request.user.id:
             t_id = instance.subtopic_id.subtopic_hash
@@ -498,6 +533,17 @@ def intern_delete_data(request, id):
             except:
                 instance.delete()
             return redirect('add-submission-subtopic', t_id)
+
+        elif request.user.is_staff:
+            t_id = instance.subtopic_id.subtopic_hash
+            try:
+                image = ImageFormatting.objects.get(data_id=instance.id)
+                image.delete()
+                instance.delete()
+            except:
+                instance.delete()
+            return redirect('review-submissions-subtopic', t_id)
+
         else:
             return redirect('dashboard')
 
@@ -522,10 +568,25 @@ def internship(request):
     return render(request, 'fossee_math_pages/internship.html')
 
 
+def password_change(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password Changes Successfully !')
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "fossee_math_pages/password-change.html", context)
+
+
 def user_login(request):
     user = None
     user = request.user
-
     if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -537,7 +598,7 @@ def user_login(request):
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
-                        messages.error(request, "Contact Admin ! you are blocked")
+                        messages.error(request,"Your login credentials are invalid! Please contact the admin")
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -546,7 +607,6 @@ def user_login(request):
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
                         return redirect(dashboard)
-
             except:
                 form = UserLoginForm()
                 context = {
@@ -559,8 +619,8 @@ def user_login(request):
     else:
         form = UserLoginForm()
         return render(request, "fossee_math_pages/login.html", {"form": form})
-
-
+      
+      
 @login_required
 def add_subtopics(request, i_id, t_id):
     if request.user.is_staff:
@@ -599,9 +659,9 @@ def add_subtopics(request, i_id, t_id):
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
-                        hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
-                        hash_result = hashlib.md5(hashtext.encode())
-                        current_subtopic.subtopic_hash = hash_result.hexdigest()
+                        #hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+                        #hash_result = hashlib.md5(hashtext.encode())
+                        current_subtopic.subtopic_hash = str(uuid.uuid1())#hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
@@ -614,6 +674,20 @@ def add_subtopics(request, i_id, t_id):
             'rearrange_subtopic': rearrange_subtopic,
         }
         return render(request, 'fossee_math_pages/add-subtopics.html', context)
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_assign_topic(request, s_id):
+    if request.user.is_staff:
+        try:
+            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+            subtopic.assigned_user_id = None
+            subtopic.save()
+            return redirect('assign-topics')
+        except:
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -750,8 +824,6 @@ def manage_interns(request):
         return redirect('dashboard')
 
 
-##
-
 @login_required
 def assign_topics(request):
     if request.user.is_staff:
@@ -770,10 +842,13 @@ def assign_topics(request):
             else:
                 if request.method == "POST":
                     selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                    user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    selectd_subtopic.assigned_user_id_id = user.id
-                    selectd_subtopic.save()
-                    messages.success(request, 'Intern assigned with topic')
+                    try:
+                        user = User.objects.get(pk=request.POST["assigned_user_id"])
+                        selectd_subtopic.assigned_user_id_id = user.id
+                        selectd_subtopic.save()
+                        messages.success(request, 'Intern assigned with topic')
+                    except:
+                        messages.error(request, "Intern not selected")
 
         context = {
             'form': form,
@@ -842,12 +917,6 @@ def internship_progress(request):
         return redirect('dashboard')
 
 
-# @login_required
-# def intern_view_internship(request):
-#
-#     else:
-#         return redirect('dashboard')
-
 @login_required
 def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
@@ -908,91 +977,25 @@ def review_submissions_subtopic(request, s_id):
 
 
 @login_required
-def staff_update_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(data_hash=id)
-        subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        t_id = instance.subtopic_id.subtopic_hash
-        form = data(request.POST or None, instance=instance)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            return redirect('review-submissions-subtopic', t_id)
-
-        context = {
-            'form': form,
-            'subtopic': subtopic,
-        }
-
-        return render(request, 'fossee_math_pages/staff_update_data.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_update_image_size(request, id):
-    if request.user.is_staff:
-        image = Data.objects.get(id=id)
-        try:
-            image_size = ImageFormatting.objects.get(data_id_id=image.pk)
-            form = imageFormatting(instance=image_size)
-        except:
-            image_size = None
-            form = imageFormatting()
-
-        if request.POST:
-            image_height = request.POST.get('image_height')
-            image_width = request.POST.get('image_width')
-            caption = request.POST.get('image_caption')
-            obj = ImageFormatting.objects.get(data_id_id=image.pk)
-            obj.image_height = image_height
-            obj.image_width = image_width
-            obj.image_caption = caption
-            obj.save()
-            return redirect(staff_update_image_size, id)
-
-        context = {
-            'image': image,
-            'image_size': image_size,
-            'form': form,
-        }
-
-        return render(request, 'fossee_math_pages/staff_update_image_size.html', context)
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_aprove_subtopic(request, id):
+def approve_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
-        return redirect('review-submissions')
+        return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
 
 @login_required
-def staff_reject_subtopic(request, id):
+def reject_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        return redirect('review-submissions')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def staff_delete_data(request, id):
-    if request.user.is_staff:
-        instance = Data.objects.get(id=id)
-        t_id = instance.subtopic_id.pk
-        instance.delete()
-        return redirect('review-submissions-subtopic', t_id)
+        return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
@@ -1017,3 +1020,79 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
+
+
+@login_required
+def delete_topic(request, t_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        try:
+            subtopic = Subtopic.objects.filter(topic_id=t_id)
+            if subtopic:
+                messages.error(request, "Subtopics exist !! delete subtopic firts")
+                return redirect('add-topics')
+            else:
+                topic = Topic.objects.get(pk=t_id)
+                topic.delete()
+                messages.success(request, "Topic removed !")
+                return redirect('add-topics')
+        except:
+            return redirect('add-topics')
+
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_subtopic(request, t_id, st_id):
+    if request.user.is_staff and not request.user.is_superuser:
+        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+        try:
+            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
+                messages.error(request, "Cant delete the Subtpoic data exists !!")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                                subtopic.topic_id.topic_url)
+            else:
+                subtopic.delete()
+                messages.success(request, "Subtopic deleted !")
+                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+        except:
+            return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
+                            subtopic.topic_id.topic_url)
+    else:
+        return redirect('dashboard')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        userdetails = UserDetails.objects.get(user_id=user.pk)
+        userdetails.user_status = 'ACTIVE'
+        userdetails.save()
+        return redirect('activate-account')
+    else:
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('login')
+
+
+def password_set(request):
+    form = PasswordChangeForm(user=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password Changed Successfully !')
+            return redirect(dashboard)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "password_reset/password_set.html", context)

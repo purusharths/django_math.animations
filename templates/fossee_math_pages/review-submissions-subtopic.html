@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Staff View Topic{% endblock %}
-
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% breadcrumb "Review Submissions" "review-submissions" %}
-    {% breadcrumb "View data" "" %}
+    {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
-
 {% load static %} {{ form.media }}
 {% block content %}
     {% render_breadcrumbs %}
@@ -19,15 +17,12 @@
             background-color: rgb(240, 240, 240);
         }
     </style>
-
     <div class="container">
-
         <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
         <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
         <script>
             window.CKEDITOR_BASEPATH = '/static/ckeditor/';
         </script>
-
         {% if subtopic.subtopic_status == "WAITING" %}
             <div class="card border-warning">
             <div class="card-header text-white bg-warning">
@@ -94,7 +89,6 @@
                        data-target="#modalContactForm"><img
                             src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" title="Send Message">
                     </a>
-
                 </div>
             </div>
             <div align="center">
@@ -107,10 +101,10 @@
             </div>
             <br>
             <div align="center">
-                <a href="{% url 'staff_aprove_subtopic' subtopic.id %}"
+                <a href="{% url 'approve-subtopic' subtopic.id %}"
                    class="btn btn-outline-success">Aprove</a>
                 &nbsp;
-                <a href="{% url 'staff_reject_subtopic' subtopic.id %}"
+                <a href="{% url 'reject-subtopic' subtopic.id %}"
                    class="btn btn-outline-danger">Reject</a>
             </div>
         </div>
@@ -125,13 +119,14 @@
                             {{ data.data_content |safe }}
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                            <a href="{% url 'edit-text-staff' subtopic.subtopic_hash data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                title="Edit" alt="Edit Section">
                             </a>
-                            <br>
-                            <br>
-                            <a href="{% url 'staff_update_data' data.data_hash %}">
-                                Edit
-                            </a>
+                            <hr/>
+                            <a href="{% url 'delete-data' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
+                                         title="Delete Section" width="15px" alt="Delete"></a>
                         </td>
                     {% endif %}
                 </tr>
@@ -149,11 +144,11 @@
                             {% endfor %}
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                            <a href="{% url 'delete-data' data.data_hash %}">Delete
                             </a>
                             <br>
                             <br>
-                            <a href="{% url 'staff_update_image_size' data.data_hash %}">Format</a>
+                            <a href="{% url 'edit-image-staff' subtopic.subtopic_hash data.data_hash %}">Format</a>
                         </td>
                     {% endif %}
                 </tr>
@@ -170,7 +165,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'staff_delete_data' data.data_hash %}">Delete
+                            <a href="{% url 'delete-data' data.data_hash %}">Delete
                             </a>
                         </td>
                     {% endif %}
@@ -187,8 +182,6 @@
         <br>
         <br>
         </div>
-
-
         <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -200,6 +193,7 @@
                         </button>
                     </div>
                     <div class="modal-body mx-3">
+
                         <div class="md-form">
                             <i class="fas fa-pencil prefix grey-text"></i>
                             <form method="POST">
@@ -208,12 +202,11 @@
                                 <button type="submit" class="btn btn-success col-md-12">Send Message</button>
                             </form>
                         </div>
+                        <span style="font-size: small;" class="text-muted"> <b>Note:</b> Messages are specific to subtopic</span>
                     </div>
                 </div>
             </div>
         </div>
-
-
         <div class="modal fade" id="modalInfoForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -238,3 +231,4 @@
             </div>
         </div>
 {% endblock %}
+12:53
