@@ -1,51 +1,99 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %} Add Submission {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% if not user.is_staff %}
-    {% breadcrumb "Internship" "add-submission" %}
-    {% else %}
-    {% breadcrumb "Review Submissions" "review-submissions" %}
-    {% endif %}
-    {% breadcrumb "Messages" "message" %}
-    <!-- WRONG CRUMBS -->
+{{ block.super }}
+{% breadcrumb "Dashboard" "dashboard" %}
+{% if not user.is_staff %}
+{% breadcrumb "Internship" "add-submission" %}
+{% else %}
+{% breadcrumb "Review Submissions" "review-submissions" %}
+{% endif %}
+{% breadcrumb "Messages" "message" %}
+<!-- WRONG CRUMBS -->
 {% endblock %}
 
 {% block content %}
-    {% render_breadcrumbs %}
-    <div class="container">
-        <div class="card-header bg-info">
-            <h4 class="text-white"><i><u>{{ subtopic.subtopic_name }}</u></i></h4>
-                <h6 class="text-white">({{ subtopic.topic_id.internship_id }} &rarr; {{ subtopic.topic_id }}
-                &rarr; {{ subtopic.subtopic_name }})</h6>
-        </div>
-    <br/>
-        {% for i in message %}
-            <div class="card">
-                {% if i.subtopic_id_id == subtopic.pk %}
-                    <div class="card-body" style="padding-top: 0px;">
-                        <div class="bs-callout bs-callout-info">
-                            <p>{{ i.message }}</p>
-                        </div>
-                        <span class="text-muted" style="font-size: small;">Sent on : {{ i.message_send_date }} by : {{ i.user_id }}</span>
-                    </div>
-                {% endif %}
-            </div>
-            <br>
-        {% endfor %}
+{% render_breadcrumbs %}
 
-        <hr/>
-        <div class="col-md-12">
-            <form method="post">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <button type="submit" class="btn btn-success btn-lg">Send Message</button>
-            </form>
+<div class="container">
+    <div class="card-header bg-warning">
+        <!-- if subtopic status -->
+        <h3 class="text-white"><u><b>{{ subtopic.subtopic_name }}</b></u></h3>
+        <h6 class="text-white">({{ subtopic.topic_id.internship_id }} &rarr; {{ subtopic.topic_id }}
+            &rarr; {{ subtopic.subtopic_name }})</h6>
+    </div>
+    <br />
+    <hr />
+    <div class="row">
+
+        <div class="col-md-10 offset-md-1">
+            <div class="scrollable" style="height: 600px; overflow-y: auto;" id="table-chat" onload="scrollToBottom()">
+                <table class="table  table-sm">
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+                        {% for i in message %}
+                        {% if i.subtopic_id_id == subtopic.pk %}
+                        <tr>
+                            <td> <span class="text-muted" style="font-size: smaller;">Sent on :
+                                    {{ i.message_send_date }} by :
+                                    <b>{{ i.user_id }}</b></span>
+                                <div class="bs-callout bs-callout-info" style="margin-top:5px">
+                                    <p>{{ i.message }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+              
+            </div>
+            <hr/>
         </div>
     </div>
-    <hr>
-    <br> {% endblock %}
+
+    
+        <form method="post">
+            <div class="input-group offset-md-1">
+                {% csrf_token %}{{ form|crispy }}
+                <div class="input-group-append">
+                    <button class="btn btn-light" type="send">
+                        <span class=""><img src="{% static '/web-files/img/multiuse-svgs/send.svg' %}"
+                                width=18px></span>
+                        Send</button>
+                </div>
+            </div>
+        </form>
+ 
+
+  <hr>  
+</div>
+
+<br>
+
+
+<script>
+    function scrollToBottom() {
+        var element = document.getElementById("table-chat");
+        window.scrollTo(0, element.offsetHeight);
+    }
+
+
+
+    $(function () { // for send action
+        $('form').on('submit', function (event) {
+            event.preventDefault();
+            var message = $('.message').first().clone();
+            message.find('p').text($('input').val());
+            message.prependTo('.chat-container');
+            $('input').val('');
+        });
+    });
+</script>
+{% endblock %}
