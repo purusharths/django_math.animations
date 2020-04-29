@@ -17,7 +17,7 @@
         <h2 class="text-info">{{ first_internship.internship_topic }}</h2>
         <hr>
         <div class="row">
-            <div class="col-6 col-sm-4">
+            <div class="col-6 col-sm-6">
                 <form method="POST">
                     {% csrf_token %}
                     <label>Select Internship: </label>
@@ -35,8 +35,8 @@
                     </select>
                 </form>
             </div>
-            
-            <div class="col-6 col-sm-4">
+
+            <div class="col-6 col-sm-6">
                 <form method="POST">
                     {% csrf_token %}
                     <label>Select Contributor: </label>
@@ -59,6 +59,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">Modified Date</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -69,16 +70,28 @@
                         <td>{{ k.topic_id }}</td>
                         <td>{{ k.subtopic_name }}</td>
                         <td>
-                        {% if k.subtopic_status == "WAITING" %}
-                        <img src="{% static '/web-files/img/multiuse-svgs/waiting-yellow.svg' %}" width="18px" title="{{ k.subtopic_status|title }}">
-                        {% elif k.subtopic_status == "ACCEPTED" %}
-                        <img src="{% static '/web-files/img/multiuse-svgs/accepted.svg' %}" width="18px" title="{{ k.subtopic_status|title }}">
-                        {% elif k.subtopic_status == "REJECTED" %}
-                        <img src="{% static '/web-files/img/multiuse-svgs/rejected.svg' %}" width="18px" title="{{ k.subtopic_status|title }}">
-                        {% else %}
-                        {{ k.subtopic_status|title }} {% endif %}</td>
+                            {% if k.subtopic_status == "WAITING" %}
+                                <img src="{% static '/web-files/img/multiuse-svgs/waiting-yellow.svg' %}" width="18px"
+                                     title="{{ k.subtopic_status|title }}">
+                            {% elif k.subtopic_status == "ACCEPTED" %}
+                                <img src="{% static '/web-files/img/multiuse-svgs/accepted.svg' %}" width="18px"
+                                     title="{{ k.subtopic_status|title }}">
+                            {% elif k.subtopic_status == "REJECTED" %}
+                                <img src="{% static '/web-files/img/multiuse-svgs/rejected.svg' %}" width="18px"
+                                     title="{{ k.subtopic_status|title }}">
+                            {% else %}
+                                {{ k.subtopic_status|title }} {% endif %}</td>
                         <td>{{ k.subtopic_modification_date }}</td>
                         <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
+                        <td><a href="{% url 'messages' k.subtopic_hash %}"><img
+                        {% for mess in messages %}
+                                {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
+                                    src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}" size="40px"
+                                {% else %}
+                                     src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" size="20px"
+                                {% endif %}
+                        {% endfor %}
+                                    alt="message" title="Send Message"></a></td>
                     </tr>
                 {% endif %}
             {% endfor %}

@@ -2,16 +2,13 @@
 {% load crispy_forms_tags %}
 {% load staticfiles%}
 {% block title %} Add Subtopics {% endblock %}
-
 {% load django_bootstrap_breadcrumbs %}
-
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Dashboard" "dashboard" %}
 {% breadcrumb "Add Topics" "add-topics" %}
 {% breadcrumb "Add Subtopics" "add-subtopics" %}
 {% endblock %}
-
 {% block content %}
 {% render_breadcrumbs %}
 <style>
@@ -53,7 +50,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 {% for i in subtopics %}
                     {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
                         <tr>
@@ -77,22 +73,16 @@
                         </td>
                         </tr>
                     {% endif %}
-
                 {% endfor %}
-
             </tbody>
         </table>
-
     </div>
 </div>
 <!-- /.container -->
-
-
 <script>
     function resetImage(){
         document.getElementById('status_image').src=""
     }
-
     function addData() {
         var csrf_token = '{{ csrf_token }}';
         var topic = document.getElementById('id_subtopic').value

@@ -4,7 +4,7 @@ import random
 import re
 import string
 import pytz
-
+import textwrap
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -572,9 +572,10 @@ def delete_data(request, id):
 def add_submission(request):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         assigned_topic = Subtopic.objects.filter(assigned_user_id_id=request.user.id)
-
+        message = Messages.objects.filter(subtopic_id__assigned_user_id_id=request.user.id).last()
         context = {
             'assigned_topic': assigned_topic,
+            'message': message,
         }
         return render(request, 'fossee_math_pages/add-submission.html', context)
     else:
@@ -773,6 +774,7 @@ def review_submissions(request):
         interns = User.objects.filter(userdetails__user_role='INTERN')
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id')
+        messages = Messages.objects.all()
 
         if "search_internship" in request.POST:
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
@@ -789,6 +791,7 @@ def review_submissions(request):
             'internship': internship,
             'first_internship': first_internship,
             'interns': interns,
+            'messages':messages,
         }
 
         return render(request, 'fossee_math_pages/review-submissions.html', context)
@@ -1018,11 +1021,58 @@ def reject_subtopic(request, id):
 
 
 @login_required
-def view_messages(request):
+def view_messages(request, s_id):
     if not request.user.is_staff and not request.user.is_superuser:
-        message = Messages.objects.all()
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+        form = sendMessage()
+        try:
+            m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
+            m.message_is_seen_intern = 1
+            m.save()
+        except:
+            m = None
+
+        if request.POST:
+            mess = request.POST['message']
+            wrap_text = textwrap.TextWrapper(width=80)
+            wrap_list = wrap_text.wrap(text=mess)
+            mess = "\n".join(wrap_list)
+            print(mess)
+            save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                 user_id_id=request.user.pk)
+            save_mess.message_is_seen_intern = 1
+            save_mess.message_is_seen_staff = 0
+            save_mess.save()
+
         context = {
-            'message': message
+            'message': message,
+            'form': form,
+            'subtopic': subtopic,
+        }
+        return render(request, 'fossee_math_pages/messages.html', context)
+    elif request.user.is_staff:
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        form = sendMessage()
+        subtopic = Subtopic.objects.get(subtopic_hash=s_id)
+        try:
+            m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
+            m.message_is_seen_staff = 1
+            m.save()
+        except:
+            m=None
+        if request.POST:
+            mess = request.POST['message']
+            save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                     user_id_id=request.user.pk)
+            save_mess.message_is_seen_staff = 1
+            save_mess.message_is_seen_intern = 0
+            save_mess.save()
+
+        context = {
+            'message': message,
+            'form': form,
+            'subtopic': subtopic,
         }
         return render(request, 'fossee_math_pages/messages.html', context)
     else:

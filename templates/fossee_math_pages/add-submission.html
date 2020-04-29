@@ -9,7 +9,7 @@
     <!-- WRONG CRUMBS -->
 {% endblock %}
 
-
+{% load static %} {{ form.media }}
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
@@ -21,19 +21,31 @@
                 <tr>
                     {% if i.subtopic_status == "ACCEPTED" %}
                         <div class="bs-callout bs-callout-success">
-                        {% elif i.subtopic_status == "REJECTED" %}
+                    {% elif i.subtopic_status == "REJECTED" %}
                         <div class="bs-callout bs-callout-danger">
-                            {% elif i.subtopic_status == "WAITING" %}
-                            <div class="bs-callout bs-callout-warning">
-                            {% else %}
-                            <div class="bs-callout bs-callout-info">
+                    {% elif i.subtopic_status == "WAITING" %}
+                        <div class="bs-callout bs-callout-warning">
+                    {% else %}
+                        <div class="bs-callout bs-callout-info">
+                    {% endif %}
+                    <div class="float-right">
+                        &nbsp;<a href="{% url 'messages' i.subtopic_hash %}">
+                        <img
+                                {% if not message.message_is_seen_intern and message.subtopic_id_id == i.pk %}
+                                      src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}" size="20px"
+                                {% else %}
+                                           src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" size="20px"
                                 {% endif %}
-                        <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
-                        <h4>{{ i.subtopic_name }}</h4>
-                        &nbsp;
-                        <div class="float-right">
-                            <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Edit Submission</a>
-                        </div>
+                                    alt="message" title="Send Message">
+                    </a>
+                    </div>
+                    <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
+                    <h4>{{ i.subtopic_name }}</h4>
+                    <div class="float-right">
+                        <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a>
+                    </div>
+                    <br/>
+
                     </div>
                 </tr>
             {% endfor %}
