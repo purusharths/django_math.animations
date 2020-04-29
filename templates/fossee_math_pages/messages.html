@@ -6,7 +6,11 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
+    {% if not user.is_staff %}
     {% breadcrumb "Internship" "add-submission" %}
+    {% else %}
+    {% breadcrumb "Review Submissions" "review-submissions" %}
+    {% endif %}
     {% breadcrumb "Messages" "message" %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
