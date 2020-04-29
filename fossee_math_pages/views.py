@@ -1,4 +1,5 @@
 import hashlib
+import uuid
 import random
 import re
 import string
@@ -352,9 +353,11 @@ def add_submission_subtopic(request, st_id):
                 sub.subtopic_modification_date = now()
                 sub.save()
                 current_data = Data.objects.get(pk=add_data.pk)
-                hashtext = str(current_data.pk) + '-' + str(request.user.pk)
-                hash_result = hashlib.md5(hashtext.encode())
-                add_data.data_hash = hash_result.hexdigest()
+                # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
+                # hash_result = hashlib.md5(hashtext.encode())
+                # add_data.data_hash = hash_result.hexdigest()
+                uuid_hash = uuid.uuid4()
+                add_data.data_hash = str(uuid_hash)
                 add_data.save()
 
                 if img != "" or img != " ":
@@ -654,9 +657,9 @@ def add_subtopics(request, i_id, t_id):
                         data = Subtopic(subtopic_name=subtopic, topic_id_id=topic_id, subtopic_order=order)
                         data.save()
                         current_subtopic = Subtopic.objects.get(subtopic_name=subtopic, topic_id_id=topic_id)
-                        hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
-                        hash_result = hashlib.md5(hashtext.encode())
-                        current_subtopic.subtopic_hash = hash_result.hexdigest()
+                        #hashtext = str(current_subtopic.pk) + '-' + str(request.user.pk)
+                        #hash_result = hashlib.md5(hashtext.encode())
+                        current_subtopic.subtopic_hash = str(uuid.uuid1())#hash_result.hexdigest()
                         current_subtopic.subtopic_url = '-'.join(str(subtopic).lower().split())
                         current_subtopic.save()
                         messages.success(request, 'Topic added with subtopic')
@@ -1000,7 +1003,7 @@ def reject_subtopic(request, id):
 @login_required
 def view_messages(request, s_id):
     if not request.user.is_staff and not request.user.is_superuser:
-        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)[0:200]
         subtopic = Subtopic.objects.get(subtopic_hash=s_id)
         form = sendMessage()
         try:
@@ -1012,6 +1015,9 @@ def view_messages(request, s_id):
 
         if request.POST:
             mess = request.POST['message']
+            if mess.strip() == '':
+                messages.error(request, "Add message to submit")
+                return redirect('messages', s_id)
             wrap_text = textwrap.TextWrapper(width=80)
             wrap_list = wrap_text.wrap(text=mess)
             mess = "\n".join(wrap_list)
@@ -1029,7 +1035,7 @@ def view_messages(request, s_id):
         }
         return render(request, 'fossee_math_pages/messages.html', context)
     elif request.user.is_staff:
-        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
+        message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)[0:200]
         form = sendMessage()
         subtopic = Subtopic.objects.get(subtopic_hash=s_id)
         try:
@@ -1040,6 +1046,10 @@ def view_messages(request, s_id):
             m=None
         if request.POST:
             mess = request.POST['message']
+            if mess.strip() == '':
+                messages.error(request, "Add message to submit")
+                return redirect('messages', s_id)
+
             save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
                                      user_id_id=request.user.pk)
             save_mess.message_is_seen_staff = 1
