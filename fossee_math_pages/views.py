@@ -1129,6 +1129,7 @@ def view_messages(request, s_id):
             save_mess.message_is_seen_staff = 1
             save_mess.message_is_seen_intern = 0
             save_mess.save()
+            current_site = get_current_site(request)
             message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, subtopic.subtopic_hash)
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
