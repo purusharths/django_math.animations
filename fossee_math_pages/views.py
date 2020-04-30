@@ -25,7 +25,9 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
-from FOSSEE_math.email_config import EMAIL_HOST_USER
+from FOSSEE_math.email_config import SENDER_EMAIL
+
+print(SENDER_EMAIL)
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
@@ -1043,7 +1045,7 @@ def approve_subtopic(request, id):
                                                            instance.assigned_user_id.last_name,
                                                            instance.subtopic_name, instance.subtopic_status,
                                                            message_link, subtopic_link)
-        send_mail(subject, email_message, EMAIL_HOST_USER, [instance.assigned_user_id.email], fail_silently=True)
+        send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1063,7 +1065,7 @@ def reject_subtopic(request, id):
                                                            instance.assigned_user_id.last_name,
                                                            instance.subtopic_name, instance.subtopic_status,
                                                            message_link, subtopic_link)
-        send_mail(subject, email_message, EMAIL_HOST_USER, [instance.assigned_user_id.email], fail_silently=True)
+        send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1126,7 +1128,7 @@ def view_messages(request, s_id):
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
                                                 subtopic.subtopic_name, request.user.id, mess, message_link)
-            send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
+            send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
         context = {
             'message': message,
