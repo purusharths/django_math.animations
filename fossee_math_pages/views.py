@@ -1193,7 +1193,8 @@ def delete_subtopic(request, t_id, st_id):
 
 def activate(request, uidb64, token):
     try:
-        uid = force_text(urlsafe_base64_decode(uidb64.decode("utf-8") ))
+        # uidb64 = uidb64.decode('utf-8')
+        uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
