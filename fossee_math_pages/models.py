@@ -3,7 +3,7 @@ from django.utils.timezone import now
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 
 # default choices
 INTERN_STATUS = (
@@ -28,7 +28,7 @@ DATA_STATUS = (
 # Foregin key from the default DJANGO User table
 class UserDetails(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_phone = PhoneNumberField(null=True, blank=True, unique=False, default='+91')
+    user_phone = models.CharField(null=True, blank=True, unique=False, max_length=15)
     INTERN = 'INTERN'
     STAFF = 'STAFF'
     ROLE_TYPE = (

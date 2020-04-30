@@ -25,13 +25,14 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
+from FOSSEE_math.email_config import EMAIL_HOST_USER
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
-
+from .email_messages import (auth_token_message, got_a_message, submission_status_changed)
 
 @login_required
 def add_internship(request):
@@ -127,7 +128,7 @@ def add_users(request):
 
             regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
-                messages.error(request, 'That email is being used')
+                messages.error(request, 'The email already exists')
                 return redirect('add-users')
             if User.objects.filter(username=username).exists():
                 messages.error(request, 'That username is being used')
@@ -156,17 +157,16 @@ def add_users(request):
                 return redirect('add-users')
 
             try:
-                # password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
                 password = str(uuid.uuid1())[:16]
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
-
                 if user_role == 'INTERN':
                     addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
                                          user_temp_password=password, user_status=user_status_active, user_email=email,
                                          user_college=user_college)
                     addusr.save()
+
                 if user_role == 'STAFF':
                     user.is_staff = True
                     user.save()
@@ -176,20 +176,22 @@ def add_users(request):
                     addusr.save()
 
                 current_site = get_current_site(request)
-                mail_subject = 'Activate your FOSSEE MATH USER account'
+                mail_subject = "[Activate Account] FOSSEE Animations Mathematics";
                 message = render_to_string('fossee_math_pages/activate_user.html', {
                     'user': email,
+                    'firstname': firstname,
+                    'lastname': lastname,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': account_activation_token.make_token(user),
                     'pass': password,
                 })
-                to_email = email
-                email = EmailMessage(mail_subject, message, to=[to_email])
+                email = EmailMessage(mail_subject, message, to=[email])
                 email.send()
             except:
-                usr = User.objects.get(username=email)
-                usr.delete()
+                u_id = User.objects.get(username=username)
+                # usr = User.objects.get(username=email)
+                u_id.delete()
                 messages.error(request, 'Some error occured !')  # What is this for?
                 return redirect('add-users')
             messages.success(request, 'User Added!')
@@ -1030,6 +1032,11 @@ def approve_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
+        message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
+        subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
+        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name, instance.assigned_user_id.last_name,
+                                                           instance.subtopic_name, instance.subtopic_status)
+        send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1042,6 +1049,11 @@ def reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
+        message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
+        subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
+        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name, instance.assigned_user_id.last_name,
+                                                           instance.subtopic_name, instance.subtopic_status)
+        send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1052,32 +1064,37 @@ def view_messages(request, s_id):
     if not request.user.is_staff and not request.user.is_superuser:
         message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
         subtopic = Subtopic.objects.get(subtopic_hash=s_id)
-        form = sendMessage()
-        try:
-            m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
-            m.message_is_seen_intern = 1
-            m.save()
-        except:
-            m = None
+        if request.user.id == subtopic.assigned_user_id_id:
+            form = sendMessage()
 
-        if request.POST:
-            mess = request.POST['message']
-            wrap_text = textwrap.TextWrapper(width=80)
-            wrap_list = wrap_text.wrap(text=mess)
-            mess = "\n".join(wrap_list)
-            print(mess)
-            save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
-                                 user_id_id=request.user.pk)
-            save_mess.message_is_seen_intern = 1
-            save_mess.message_is_seen_staff = 0
-            save_mess.save()
+            try:
+                m = Messages.objects.filter(subtopic_id__subtopic_hash=s_id).order_by('subtopic_id').last()
+                m.message_is_seen_intern = 1
+                m.save()
+            except:
+                m = None
 
-        context = {
-            'message': message,
-            'form': form,
-            'subtopic': subtopic,
-        }
-        return render(request, 'fossee_math_pages/messages.html', context)
+            if request.POST:
+                mess = request.POST['message']
+                wrap_text = textwrap.TextWrapper(width=80)
+                wrap_list = wrap_text.wrap(text=mess)
+                mess = "\n".join(wrap_list)
+                print(mess)
+                save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
+                                    user_id_id=request.user.pk)
+                save_mess.message_is_seen_intern = 1
+                save_mess.message_is_seen_staff = 0
+                save_mess.save()
+
+            context = {
+                'message': message,
+                'form': form,
+                'subtopic': subtopic,
+            }
+            return render(request, 'fossee_math_pages/messages.html', context)
+        else:
+            messages.error(request, "Stop snooping around! Don't you have an assignment or something?")
+            return redirect('dashboard')
     elif request.user.is_staff:
         message = Messages.objects.filter(subtopic_id__subtopic_hash=s_id)
         form = sendMessage()
@@ -1095,6 +1112,10 @@ def view_messages(request, s_id):
             save_mess.message_is_seen_staff = 1
             save_mess.message_is_seen_intern = 0
             save_mess.save()
+            message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, subtopic.subtopic_hash)
+            subject, email_body = got_a_message(subtopic.assigned_user_id.first_name, subtopic.assigned_user_id.last_name,
+                                                subtopic.subtopic_name, request.user.id, mess, message_link)
+            send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
 
         context = {
             'message': message,
