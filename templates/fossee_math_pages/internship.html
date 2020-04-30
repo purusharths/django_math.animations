@@ -4,15 +4,21 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Internship" "" %}
+    {% breadcrumb "Internship" "internship" %}
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
+    <style >
+      .responsive {
+        width: 100%;
+        height: auto;
+      }
+    </style>
 
     <!-- Page Content -->
     <div class="container">
-        <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt=""/>
+        <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive"/>
         <br/>
         <br/>
     </div>
