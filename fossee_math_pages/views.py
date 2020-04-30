@@ -34,6 +34,7 @@ from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data
 from .tokens import account_activation_token
 from .email_messages import (auth_token_message, got_a_message, submission_status_changed)
 
+
 @login_required
 def add_internship(request):
     if request.user.is_superuser:
@@ -124,7 +125,6 @@ def add_users(request):
             user_phone = request.POST['user_phone']
             user_college = request.POST['user_college']
             user_status_active = 'ACTIVE'
-
 
             regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -730,9 +730,13 @@ def delete_assign_topic(request, s_id):
     if request.user.is_staff:
         try:
             subtopic = Subtopic.objects.get(subtopic_hash=s_id)
-            subtopic.assigned_user_id = None
-            subtopic.save()
-            return redirect('assign-topics')
+            if subtopic.subtopic_status == 'ACCEPTED':
+                messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
+                return redirect('assign-topics')
+            else:
+                subtopic.assigned_user_id = None
+                subtopic.save()
+                return redirect('assign-topics')
         except:
             return redirect('dashboard')
     else:
@@ -820,7 +824,7 @@ def review_submissions(request):
             'internship': internship,
             'first_internship': first_internship,
             'interns': interns,
-            'messages':messages,
+            'messages': messages,
         }
 
         return render(request, 'fossee_math_pages/review-submissions.html', context)
@@ -1032,11 +1036,14 @@ def approve_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
         instance.save()
+        current_site = get_current_site(request)
         message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
         subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
-        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name, instance.assigned_user_id.last_name,
-                                                           instance.subtopic_name, instance.subtopic_status)
-        send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
+        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                           instance.assigned_user_id.last_name,
+                                                           instance.subtopic_name, instance.subtopic_status,
+                                                           message_link, subtopic_link)
+        send_mail(subject, email_message, EMAIL_HOST_USER, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1049,11 +1056,14 @@ def reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
+        current_site = get_current_site(request)
         message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
         subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
-        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name, instance.assigned_user_id.last_name,
-                                                           instance.subtopic_name, instance.subtopic_status)
-        send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
+        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                           instance.assigned_user_id.last_name,
+                                                           instance.subtopic_name, instance.subtopic_status,
+                                                           message_link, subtopic_link)
+        send_mail(subject, email_message, EMAIL_HOST_USER, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
@@ -1081,7 +1091,7 @@ def view_messages(request, s_id):
                 mess = "\n".join(wrap_list)
                 print(mess)
                 save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
-                                    user_id_id=request.user.pk)
+                                     user_id_id=request.user.pk)
                 save_mess.message_is_seen_intern = 1
                 save_mess.message_is_seen_staff = 0
                 save_mess.save()
@@ -1104,16 +1114,17 @@ def view_messages(request, s_id):
             m.message_is_seen_staff = 1
             m.save()
         except:
-            m=None
+            m = None
         if request.POST:
             mess = request.POST['message']
             save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
-                                     user_id_id=request.user.pk)
+                                 user_id_id=request.user.pk)
             save_mess.message_is_seen_staff = 1
             save_mess.message_is_seen_intern = 0
             save_mess.save()
             message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, subtopic.subtopic_hash)
-            subject, email_body = got_a_message(subtopic.assigned_user_id.first_name, subtopic.assigned_user_id.last_name,
+            subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
+                                                subtopic.assigned_user_id.last_name,
                                                 subtopic.subtopic_name, request.user.id, mess, message_link)
             send_mail(subject, email_body, EMAIL_HOST_USER, [subtopic.assigned_user_id.email], fail_silently=True)
 
