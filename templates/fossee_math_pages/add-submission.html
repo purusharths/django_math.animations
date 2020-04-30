@@ -14,7 +14,6 @@
     {% render_breadcrumbs %}
     <div class="container">
         {% include 'partials/_alerts.html' %}
-
         <table class="table table-borderless">
             <tbody>
             {% for i in assigned_topic %}
@@ -48,9 +47,34 @@
 
                     </div>
                 </tr>
+             {% empty %}
+                <h3 class="text-muted text-center">
+                    Hmm! it looks like you've not been assigned any topic yet. <br>
+                    If you think there has been some mistake please contact the mentor.
+                </h3>
+                <span> Meanwhile, enjoy a <i>random</i> <b>xkcd</b> comic! </span>
+                <div class="text-center" style="padding-top:10%">
+                    #{{ xkcd_img_num }}<br/>
+                    <img src=" {{ xkcd_img_url}} " />
+                </div>
             {% endfor %}
             </tbody>
         </table>
     </div>
     <hr>
-    <br> {% endblock %}
+    <br> 
+    
+<script>
+    function getXkcd(){
+        var comicNum = Math.floor((Math.random() * 2298) + 1);
+        var comicJSONUrl = "http://xkcd.com/"+comicNum.toString()+"/info.0.json"
+        console.log(comicJSONUrl)
+        var xhttp = new XMLHttpRequest();
+        xhttp.open( "GET", "http://xkcd.com/614/info.0.json", true );
+        xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhttp.send( null );
+        console.log(xhttp.responseText);
+    }
+</script>
+    
+    {% endblock %}

@@ -3,7 +3,7 @@
 {% block title %} Assign Topics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
-
+{% load static %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
@@ -70,8 +70,9 @@
                             {{ i.assigned_user_id }}
                         </td>
                         <td>
-                            <a class="btn btn-outline-danger btn-sm"
-                               href="{% url 'delete-assign-topic' i.subtopic_hash %}">Delete</a>
+                            <a href="{% url 'delete-assign-topic' i.subtopic_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/trash-grey-2.svg' %}" height="18px"/>
+                            </a>
                         </td>
                     {% else %}
                         <td>
@@ -79,7 +80,7 @@
                                 <input type="hidden" value="{{ i.id }}" name="subtopicid">
                                 {% csrf_token %} {{ form|crispy }}
                         <td>
-                            <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                            <input class="btn btn-outline-success" type="submit" name="submit" value="Assign">
                         </td>
                         </form>
                     {% endif %}

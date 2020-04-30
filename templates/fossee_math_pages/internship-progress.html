@@ -131,6 +131,10 @@
                 </td>
             </tr>
             {% endif %}
+            {% empty %}
+                <h4 class="text-center">
+                    Details will be updated after the topics have been assigned.
+                </h4>
             {% endfor %}
         </tbody>
     </table>
@@ -143,24 +147,7 @@
 {% endif %}
 {% endblock %}
 {% block extrascripts %}
-<script type="text/javascript">
-    /* function func(vars) {
-         alert(vars)
-     }
-     $(function () {
 
-         $(".submission").each(function () {
-             $(this).modalForm({formURL: $(this).data('id')});
-         });
-
-         // Hide message
-         $(".alert").fadeTo(2000, 500).slideUp(500, function () {
-             $(".alert").slideUp(500);
-         });
-
-     });*/
-
-</script>
 {% if user.is_staff and not user.is_superuser %}
 <!--THESE NEEDS TO BE CROSS CHECKED AND PUT ON CDN-->
 <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>

@@ -82,7 +82,7 @@
                     <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
                     <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
                     <h6><b>Intern: </b>{{ subtopic.assigned_user_id }}</h6>
-                    <h6><b>Last Modified: </b> {{ subtopic.subtopic_modification_date }}</h6>
+                    <h6><b>Last Modified: </b> {{ subtopic.subtopic_modification_date|date:'d M, Y H:i:s (l)' }}</h6>
                 </div>
                 <div class="col-auto">
                     <a class="nav-link" href="" role="tab" data-toggle="modal"
@@ -121,7 +121,7 @@
                         <td>
                             <a href="{% url 'edit-text-staff' subtopic.subtopic_hash data.data_hash %}">
                                 <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
-                                title="Edit" alt="Edit Section">
+                                title="Last Modified on {{ data.data_modification_date|date:'D d M Y H:i' }}" alt="Edit Section">
                             </a>
                             <hr/>
                             <a href="{% url 'delete-data' data.data_hash %}">

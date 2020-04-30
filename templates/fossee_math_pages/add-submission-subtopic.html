@@ -92,7 +92,7 @@
                         <td>
                             <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                 <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
-                                    title="Last Modified on {{ data.data_post_date }}" alt="Edit">
+                                    title="Last Modified on {{ data.data_modification_date|date:'D d M Y H:i' }}" alt="Edit">
                             </a>
                             <hr>
                             <a href="{% url 'delete-data' data.data_hash %}" id="delete_text">
@@ -221,13 +221,11 @@
                                         <label>Select Image: </label> <input type="file" class="btn" name="image"
                                             id="fileInput" onchange="handleFileSelect()" />
                                         <br>
-
                                     </div>
                                     <div class="col-auto">
                                         <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
                                             id="submit" value="Upload">
                                     </div>
-
                                 </div>
                                 <br>
                                 <div class="container">
@@ -244,23 +242,17 @@
                                 </div>
                                 <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
                                 <script>
-
                                     // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
                                     cropper.start(document.getElementById("testCanvas"), 1);
-
                                     function handleFileSelect() {
-
-
                                         // this function will be called when the file input below is changed
                                         var file = document.getElementById("fileInput").files[0];  // get a reference to the selected file
-
                                         var reader = new FileReader(); // create a file reader
                                         // set an onload function to show the image in cropper once it has been loaded
                                         reader.onload = function (event) {
                                             var data = event.target.result; // the "data url" of the image
                                             cropper.showImage(data); // hand this to cropper, it will be displayed
                                         };
-
                                         // this loads the file as a data url calling the function above once done
                                         reader.readAsDataURL(file);
 
@@ -294,7 +286,7 @@
             </div>
             <script type="text/javascript">
                 document.getElementById('delete_text').onclick = function (e) {
-                    if (!confirm('Are you sure to delete the data?')) {
+                    if (!confirm('Are you sure to delete this submission?')) {
                         e.preventDefault();
                     }
                 }

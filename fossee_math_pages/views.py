@@ -5,6 +5,8 @@ import re
 import string
 import pytz
 import textwrap
+import urllib
+import json
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -104,9 +106,9 @@ def add_users(request):
         user_contains_query = request.GET.get('title_contains')
         if user_contains_query != '' and user_contains_query is not None:
             datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
-        if user_contains_query == "STAFF" or user_contains_query == "staff":
+        if user_contains_query in ('STAFF', 'staff'):
             datas = UserDetails.objects.filter(user_role="STAFF")
-        if user_contains_query == "INTERN" or user_contains_query == "intern":
+        if user_contains_query in ('INTERN', 'intern'):
             datas = UserDetails.objects.filter(user_role="INTERN")
 
         form = AddUserForm1()
@@ -154,8 +156,8 @@ def add_users(request):
                 return redirect('add-users')
 
             try:
-                password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
-                passwordstr = str(password)
+                # password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
+                password = str(uuid.uuid1())[:16]
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
@@ -334,7 +336,7 @@ def add_submission_subtopic(request, st_id):
 
                     if subtopic.assigned_user_id.id == request.user.id:
                         if img is None and video is None:
-                            if content == "" or content == " ":
+                            if content in ('', ' '):
                                 if content.strip() == '':
                                     messages.error(request, "Fill any one of the fields.")
                                     return redirect('add-submission-subtopic', st_id)
@@ -383,7 +385,7 @@ def add_submission_subtopic(request, st_id):
                     last_modified_UTC = sorted([dta.data_modification_date for dta in e_data])[-1]
                     tz = pytz.timezone("Asia/Kolkata")
                     last_modified_IST = last_modified_UTC.astimezone(tz)
-                    last_modified = last_modified_IST.strftime('%B %d, %Y %H:%M:%S (%A) %z')
+                    last_modified = last_modified_IST.strftime('%d %B, %Y %H:%M:%S (%A)')
                 except IndexError:
                     last_modified = "No modifications"
 
@@ -597,6 +599,11 @@ def add_submission(request):
             'assigned_topic': assigned_topic,
             'message': message,
         }
+        if not assigned_topic is True:
+            comic = random.randint(1, 2299)
+            json_data = json.loads(urllib.request.urlopen("https://xkcd.com/{}/info.0.json".format(comic)).read())
+            context["xkcd_img_url"] = json_data['img']
+            context['xkcd_img_num'] = json_data['num']
         return render(request, 'fossee_math_pages/add-submission.html', context)
     else:
         return redirect('dashboard')
