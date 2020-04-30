@@ -127,7 +127,7 @@ def add_users(request):
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
             user_college = request.POST['user_college']
-            user_status_active = 'ACTIVE'
+            user_status = 'INACTIVE'
 
             regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
             if User.objects.filter(email=email).exists():
@@ -163,21 +163,28 @@ def add_users(request):
                 password = str(uuid.uuid1())[:16]
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
-                u_id = User.objects.get(username=username)
-                if user_role == 'INTERN':
-                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email,
-                                         user_college=user_college)
-                    addusr.save()
-
                 if user_role == 'STAFF':
                     user.is_staff = True
-                    user.save()
-                    addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
-                                         user_temp_password=password, user_status=user_status_active, user_email=email,
-                                         user_college=user_college)
-                    addusr.save()
 
+                user.save()
+            except Exception:
+                messages.error(request, 'error in creating the User with the given details')
+                return redirect('add-users')
+
+            try:
+                u_id = User.objects.get(username=username)
+
+                addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
+                                     user_temp_password=password, user_status=user_status, user_email=email,
+                                     user_college=user_college)
+                addusr.save()
+            except Exception:
+                u_id = User.objects.get(username=username)
+                u_id.delete()
+                messages.error(request, 'error in creating user with the other details')
+                return redirect('add-users')
+
+            try:
                 current_site = get_current_site(request)
                 mail_subject = "[Activate Account] FOSSEE Animations Mathematics";
                 message = render_to_string('fossee_math_pages/activate_user.html', {
@@ -192,16 +199,13 @@ def add_users(request):
                 email = EmailMessage(mail_subject, message, to=[email])
                 email.send()
             except:
-                u_id = User.objects.get(username=username)
-                # usr = User.objects.get(username=email)
-                u_id.delete()
-                messages.error(request, 'Some error occured !')  # What is this for?
+                messages.error(request, 'Some error occured while sending email!')  # What is this for?
                 return redirect('add-users')
+
             messages.success(request, 'User Added!')
             return redirect('add-users')
 
         paginator = Paginator(datas, 25)  # Show 25 contacts per page.
-
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context = {
@@ -1194,6 +1198,7 @@ def delete_subtopic(request, t_id, st_id):
 
 def activate(request, uidb64, token):
     try:
+        # uidb64 = uidb64.decode('utf-8')
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
