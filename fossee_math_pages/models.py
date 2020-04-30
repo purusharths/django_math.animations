@@ -38,7 +38,7 @@ class UserDetails(models.Model):
     user_role = models.CharField(max_length=20,
                                  choices=ROLE_TYPE,
                                  default=INTERN)
-    user_temp_password = models.CharField(max_length=10, blank=True)
+    user_temp_password = models.CharField(max_length=20, blank=True)
     user_email = models.CharField(max_length=128)
     user_status = models.CharField(max_length=255, choices=INTERN_STATUS, default='INACTIVE')
     user_college = models.CharField(max_length=255, blank=True, null=True)
