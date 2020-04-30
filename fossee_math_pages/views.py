@@ -106,7 +106,7 @@ def add_users(request):
         user_contains_query = request.GET.get('title_contains')
         if user_contains_query != '' and user_contains_query is not None:
             datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
-        if user_contains_query in ('STAFF', 'staff')
+        if user_contains_query in ('STAFF', 'staff'):
             datas = UserDetails.objects.filter(user_role="STAFF")
         if user_contains_query in ('INTERN', 'intern'):
             datas = UserDetails.objects.filter(user_role="INTERN")
