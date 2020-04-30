@@ -5,6 +5,9 @@ import re
 import string
 import pytz
 import textwrap
+import random
+import urllib
+import json
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -383,7 +386,7 @@ def add_submission_subtopic(request, st_id):
                     last_modified_UTC = sorted([dta.data_modification_date for dta in e_data])[-1]
                     tz = pytz.timezone("Asia/Kolkata")
                     last_modified_IST = last_modified_UTC.astimezone(tz)
-                    last_modified = last_modified_IST.strftime('%B %d, %Y %H:%M:%S (%A) %z')
+                    last_modified = last_modified_IST.strftime('%d %B, %Y %H:%M:%S (%A)')
                 except IndexError:
                     last_modified = "No modifications"
 
@@ -597,6 +600,11 @@ def add_submission(request):
             'assigned_topic': assigned_topic,
             'message': message,
         }
+        if not assigned_topic is True:
+            comic = random.randint(1, 2299)
+            json_data = json.loads(urllib.request.urlopen("https://xkcd.com/{}/info.0.json".format(comic)).read())
+            context["xkcd_img_url"] = json_data['img']
+            context['xkcd_img_num'] = json_data['num']
         return render(request, 'fossee_math_pages/add-submission.html', context)
     else:
         return redirect('dashboard')
