@@ -7,9 +7,12 @@ def auth_token_message(firstname, lastname, username, activation_link, password_
 def got_a_message(firstname, lastname, subtopic_name, from_user, message, messages_link):
     subject = "[FOSSEE Animations | Math] New Message Recived"
     message = """Dear {} {}, \n\n
-    You have recived a message for {} by {}. Please find the message below: \n\n
-    {}\n\n
-    __________________\n\n You can reply to this message at: {}""".format(firstname, lastname, subtopic_name, from_user,
+    You have recived a message for {} by {}. Please find the message below: \n
+    ____________________
+    \n
+    {}
+    \n
+    ____________________\n\n You can reply to this message at: {}""".format(firstname, lastname, subtopic_name, from_user,
                                                                           message, messages_link)
     return subject, message
 

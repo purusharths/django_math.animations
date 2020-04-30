@@ -16,6 +16,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
+# from django.contrib.sites.models import Site
 from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
 from django.http import HttpResponse
@@ -1044,8 +1045,10 @@ def approve_subtopic(request, id):
         instance.subtopic_status = "ACCEPTED"
         instance.save()
         current_site = get_current_site(request)
-        message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
-        subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
+        current_site = Site.objects.get_current()
+        scheme = request.is_secure() and "https" or "http"
+        message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
+        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
                                                            instance.assigned_user_id.last_name,
                                                            instance.subtopic_name, instance.subtopic_status,
@@ -1063,9 +1066,9 @@ def reject_subtopic(request, id):
         t_id = instance.pk
         instance.subtopic_status = "REJECTED"
         instance.save()
-        current_site = get_current_site(request)
-        message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, instance.subtopic_hash)
-        subtopic_link = "http://{}/add-submission/{}".format(current_site.domain, instance.subtopic_hash)
+        scheme = request.is_secure() and "https" or "http"
+        message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
+        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
                                                            instance.assigned_user_id.last_name,
                                                            instance.subtopic_name, instance.subtopic_status,
@@ -1129,11 +1132,12 @@ def view_messages(request, s_id):
             save_mess.message_is_seen_staff = 1
             save_mess.message_is_seen_intern = 0
             save_mess.save()
-            current_site = get_current_site(request)
-            message_link = "http://{}/dashboard/messages/{}".format(current_site.domain, subtopic.subtopic_hash)
+            scheme = request.is_secure() and "https" or "http"
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], subtopic.subtopic_hash)
+            print(message_link)
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
-                                                subtopic.subtopic_name, request.user.id, mess, message_link)
+                                                subtopic.subtopic_name, request.user.username, mess, message_link)
             send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
         context = {
