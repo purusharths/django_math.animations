@@ -1,4 +1,3 @@
-'''
 def auth_token_message(firstname, lastname, val):
     return ''' Dear {} {}, \n\n
                Greetings from FOSEE Animations (math).\n
@@ -21,4 +20,9 @@ send_mail(
             'fossee_math',
             [email, 'fossee_math@gmail.com'],
             fail_silently=True, )
-'''
+
+# submission_accept
+# submission_reject
+# Received a new message <- new message
+# password_reset_link
+# assigned_subtopic
