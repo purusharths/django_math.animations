@@ -5,7 +5,6 @@ import re
 import string
 import pytz
 import textwrap
-import random
 import urllib
 import json
 
@@ -157,8 +156,8 @@ def add_users(request):
                 return redirect('add-users')
 
             try:
-                password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
-                passwordstr = str(password)
+                # password = ''.join([random.choice(string.ascii_letters + string.digits) for K in range(10)])
+                password = str(uuid.uuid1())[:16]
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
                 u_id = User.objects.get(username=username)
