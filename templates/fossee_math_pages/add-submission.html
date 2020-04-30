@@ -41,7 +41,7 @@
                     <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
                     <h4>{{ i.subtopic_name }}</h4>
                     <div class="float-right">
-                        <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a>
+                        <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Edit submission</a>
                     </div>
                     <br/>
 
@@ -62,8 +62,8 @@
         </table>
     </div>
     <hr>
-    <br> 
-    
+    <br>
+
 <script>
     function getXkcd(){
         var comicNum = Math.floor((Math.random() * 2298) + 1);
@@ -76,5 +76,5 @@
         console.log(xhttp.responseText);
     }
 </script>
-    
+
     {% endblock %}
