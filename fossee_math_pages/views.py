@@ -7,6 +7,7 @@ import pytz
 import textwrap
 import urllib
 import json
+import requests
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -605,7 +606,7 @@ def add_submission(request):
         }
         if not assigned_topic is True:
             comic = random.randint(1, 2299)
-            json_data = json.loads(urllib.request.urlopen("https://xkcd.com/{}/info.0.json".format(comic)).read())
+            json_data = json.loads(requests.get("https://xkcd.com/{}/info.0.json".format(comic)).text)
             context["xkcd_img_url"] = json_data['img']
             context['xkcd_img_num'] = json_data['num']
         return render(request, 'fossee_math_pages/add-submission.html', context)
