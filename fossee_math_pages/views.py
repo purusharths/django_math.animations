@@ -106,9 +106,9 @@ def add_users(request):
         user_contains_query = request.GET.get('title_contains')
         if user_contains_query != '' and user_contains_query is not None:
             datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
-        if user_contains_query == "STAFF" or user_contains_query == "staff":
+        if user_contains_query in ('STAFF', 'staff')
             datas = UserDetails.objects.filter(user_role="STAFF")
-        if user_contains_query == "INTERN" or user_contains_query == "intern":
+        if user_contains_query in ('INTERN', 'intern'):
             datas = UserDetails.objects.filter(user_role="INTERN")
 
         form = AddUserForm1()
@@ -336,7 +336,7 @@ def add_submission_subtopic(request, st_id):
 
                     if subtopic.assigned_user_id.id == request.user.id:
                         if img is None and video is None:
-                            if content == "" or content == " ":
+                            if content in ('', ' '):
                                 if content.strip() == '':
                                     messages.error(request, "Fill any one of the fields.")
                                     return redirect('add-submission-subtopic', st_id)
