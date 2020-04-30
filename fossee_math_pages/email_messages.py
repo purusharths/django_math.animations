@@ -12,8 +12,10 @@ def got_a_message(firstname, lastname, subtopic_name, from_user, message, messag
     \n
     {}
     \n
-    ____________________\n\n You can reply to this message at: {}""".format(firstname, lastname, subtopic_name, from_user,
-                                                                          message, messages_link)
+    ____________________\n\n You can reply to this message at: {}
+    \n
+    Best Regards,
+    FOSSEE Animations Team""".format(firstname, lastname, subtopic_name, from_user, message, messages_link)
     return subject, message
 
 
@@ -22,5 +24,7 @@ def submission_status_changed(firstname, lastname, subtopic, submission_status, 
     message = """Dear {} {}\n\n
     The status for your submission {} has been changed to {} \n
     Please go through the recent messages for more details: {}.\n\n
-    Submission Link: {}""".format(firstname, lastname, subtopic, submission_status, message_link, submission_link)
+    Submission Link: {}\n
+    Best Regards,
+    FOSSEE Animations Team""".format(firstname, lastname, subtopic, submission_status, message_link, submission_link)
     return subject, message
