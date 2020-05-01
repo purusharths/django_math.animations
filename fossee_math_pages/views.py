@@ -416,7 +416,7 @@ def add_submission_subtopic(request, st_id):
 
 @login_required
 def edit_text(request, t_id, id):
-    if request.user.is_authenticated and not request.user.is_superuser:
+    if request.user.is_authenticated and not request.user.is_superuser and request.user.is_staff:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
         t_id = instance.subtopic_id.subtopic_hash
@@ -448,7 +448,7 @@ def edit_media(request, t_id, id):
         try:
             instance = Data.objects.get(data_hash=id)
             subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-            if request.user.id == subtopic.assigned_user_id_id:
+            if request.user.id == subtopic.assigned_user_id_id and subtopic.subtopic_status != 'ACCEPTED':
                 t_id = instance.subtopic_id.subtopic_hash
                 form = EditMedia(request.POST or None, instance=instance)
                 if request.POST:
@@ -518,47 +518,50 @@ def edit_image(request, t_id, id):
         except:
             image_size = None
             form = imageFormatting()
+        if image.subtopic_id.subtopic_status != 'ACCEPTED' or request.user.is_staff:
+            if request.POST:
+                image_height = request.POST.get('image_height')
+                image_width = request.POST.get('image_width')
+                caption = request.POST.get('image_caption')
 
-        if request.POST:
-            image_height = request.POST.get('image_height')
-            image_width = request.POST.get('image_width')
-            caption = request.POST.get('image_caption')
-
-            if re.match(r"\d+px$", image_height):
-                temp = re.findall(r'\d+', image_height)
-                res = list(map(int, temp))
-                if res[0] >= 500:
+                if re.match(r"\d+px$", image_height):
+                    temp = re.findall(r'\d+', image_height)
+                    res = list(map(int, temp))
+                    if res[0] >= 500:
+                        image_height = "500px"
+                elif re.match(r"\d+%$", image_height):
+                    temp = re.findall(r'\d+', image_height)
+                    res = list(map(int, temp))
+                    if res[0] >= 100:
+                        image_height = "100%"
+                else:
                     image_height = "500px"
-            elif re.match(r"\d+%$", image_height):
-                temp = re.findall(r'\d+', image_height)
-                res = list(map(int, temp))
-                if res[0] >= 100:
-                    image_height = "100%"
-            else:
-                image_height = "500px"
 
-            if re.match(r"\d+px$", image_width):
-                temp = re.findall(r'\d+', image_width)
-                res = list(map(int, temp))
-                if res[0] >= 900:
-                    image_width = "900px"
-            elif re.match(r"\d+%$", image_width):
-                temp = re.findall(r'\d+', image_width)
-                res = list(map(int, temp))
-                if res[0] >= 100:
-                    image_width = "100%"
-            else:
-                image_width = "500px"
+                if re.match(r"\d+px$", image_width):
+                    temp = re.findall(r'\d+', image_width)
+                    res = list(map(int, temp))
+                    if res[0] >= 900:
+                        image_width = "900px"
+                elif re.match(r"\d+%$", image_width):
+                    temp = re.findall(r'\d+', image_width)
+                    res = list(map(int, temp))
+                    if res[0] >= 100:
+                        image_width = "100%"
+                else:
+                    image_width = "500px"
 
-            obj = ImageFormatting.objects.get(data_id_id=image.pk)
-            obj.image_height = image_height
-            obj.image_width = image_width
-            obj.image_caption = caption
-            obj.save()
-            if request.user.is_staff:
-                return redirect('edit-image-staff', t_id, id)
+                obj = ImageFormatting.objects.get(data_id_id=image.pk)
+                obj.image_height = image_height
+                obj.image_width = image_width
+                obj.image_caption = caption
+                obj.save()
+                if request.user.is_staff:
+                    return redirect('edit-image-staff', t_id, id)
+                else:
+                    return redirect('edit-image', t_id, id)
             else:
-                return redirect('edit-image', t_id, id)
+                messages.error(request, 'You dont have the access to this page !')
+                return redirect('dashboard')
 
         context = {
             'image': image,
@@ -575,7 +578,7 @@ def edit_image(request, t_id, id):
 def delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
-        if instance.subtopic_id.assigned_user_id.id == request.user.id:
+        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED' or request.user.is_staff:
             t_id = instance.subtopic_id.subtopic_hash
             try:
                 image = ImageFormatting.objects.get(data_id=instance.id)
@@ -822,17 +825,23 @@ def review_submissions(request):
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.filter(
-            topic_id__internship_id__internship_topic=first_internship).order_by('topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
+            topic_id__internship_id__internship_topic=first_internship).order_by('topic_id__topic_order').order_by(
+            'subtopic_order').order_by('-subtopic_modification_date')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
         if "search_internship" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by('topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
+                'topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
-            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(userdetails__user_status='ACTIVE').filter(subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
+            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                userdetails__user_status='ACTIVE').filter(
+                subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
 
         if "search_intern" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['selected_internship']).filter(assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by('-subtopic_modification_date')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['selected_internship']).filter(
+                assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by(
+                '-subtopic_modification_date')
             first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
             interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
                 userdetails__user_status='ACTIVE').filter(
