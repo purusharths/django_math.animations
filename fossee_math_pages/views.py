@@ -1,25 +1,21 @@
-import hashlib
-import uuid
+import json
 import random
 import re
-import string
-import pytz
 import textwrap
-import urllib
-import json
-import requests
+import uuid
 
+import pytz
+import requests
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
 # from django.contrib.sites.models import Site
 from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -27,7 +23,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
-from django.db import IntegrityError
+
 from FOSSEE_math.email_config import SENDER_EMAIL
 
 print(SENDER_EMAIL)
@@ -37,7 +33,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     subtopicOrder, AssignTopic, addContributor, sendMessage, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
-from .email_messages import (auth_token_message, got_a_message, submission_status_changed)
+from .email_messages import (got_a_message, submission_status_changed)
 
 
 @login_required
@@ -849,6 +845,13 @@ def manage_interns(request):
         subtopic = Subtopic.objects.all()
         interns = UserDetails.objects.filter(user_role='INTERN')
 
+        search_query = request.GET.get('title_contains')
+        if search_query is None or search_query == '.':
+            interns = UserDetails.objects.filter(user_role='INTERN')
+        else:
+            interns = UserDetails.objects.filter(user_role='INTERN',
+                                                 user_id__username__icontains=search_query)
+
         if request.method == 'POST':
             current_user = UserDetails.objects.get(user_id_id=request.POST['assigneduserid'])
             current_user.user_status = request.POST['user_status']
@@ -861,6 +864,7 @@ def manage_interns(request):
             'subtopic': subtopic,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
+
     elif request.user.is_superuser:
         interns = UserDetails.objects.filter(user_role="INTERN")
         form = ManageIntern()
@@ -907,7 +911,7 @@ def assign_topics(request):
                     try:
                         user = User.objects.get(pk=request.POST["assigned_user_id"])
                         selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save() #add email here
+                        selectd_subtopic.save()  # add email here
                         messages.success(request, 'Topic assigned to the intern')
                     except:
                         messages.error(request, "Intern not selected")
@@ -1050,9 +1054,9 @@ def approve_subtopic(request, id):
         message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
-                                                        instance.assigned_user_id.last_name,
-                                                        instance.subtopic_name, instance.subtopic_status,
-                                                        message_link, subtopic_link)
+                                                           instance.assigned_user_id.last_name,
+                                                           instance.subtopic_name, instance.subtopic_status,
+                                                           message_link, subtopic_link)
         send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
         # except IntegrityError:
@@ -1135,7 +1139,8 @@ def view_messages(request, s_id):
             save_mess.message_is_seen_intern = 0
             save_mess.save()
             scheme = request.is_secure() and "https" or "http"
-            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], subtopic.subtopic_hash)
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  subtopic.subtopic_hash)
             print(message_link)
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
