@@ -821,14 +821,14 @@ def add_topics(request):
 @login_required
 def review_submissions(request):
     if request.user.is_staff:
-        first_internship = ""
+        selected_intern = ""
         first_internship = ""
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
         subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
             'topic_id__topic_order').order_by(
             'subtopic_order')
-        messages = Messages.objects.all()
+        messag = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
         if "search_internship" in request.POST:
@@ -840,13 +840,19 @@ def review_submissions(request):
                 subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
 
         if "search_intern" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['selected_internship']).filter(
-                assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by(
-                '-subtopic_modification_date')
-            first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
-            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
-                userdetails__user_status='ACTIVE').filter(
-                subtopic__topic_id__internship_id_id=request.POST['selected_internship']).distinct
+            if request.POST['selected_internship'] != "":
+                subtopic = Subtopic.objects.filter(
+                    topic_id__internship_id_id=request.POST['selected_internship']).filter(
+                    assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by(
+                    '-subtopic_modification_date')
+                first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
+                interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                    userdetails__user_status='ACTIVE').filter(
+                    subtopic__topic_id__internship_id_id=request.POST['selected_internship']).distinct
+                selected_intern = User.objects.get(pk=request.POST['search_intern'])
+            else:
+                messages.error(request, 'Select an Internship First')
+                return redirect('review-submissions')
 
         context = {
             'subtopic': subtopic,
@@ -854,7 +860,8 @@ def review_submissions(request):
             'first_internship': first_internship,
             'interns': interns,
             'userdetails': userdetails,
-            'messages': messages,
+            'messages': messag,
+            'selected_intern': selected_intern,
         }
 
         return render(request, 'fossee_math_pages/review-submissions.html', context)
@@ -944,10 +951,13 @@ def assign_topics(request):
                     st.save()
             else:
                 selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                user = User.objects.get(pk=request.POST["assigned_user_id"])
-                selectd_subtopic.assigned_user_id_id = user.id
-                selectd_subtopic.save()  # add email here
-                messages.success(request, 'Topic assigned to the intern')
+                if request.POST["assigned_user_id"] != "":
+                    user = User.objects.get(pk=request.POST["assigned_user_id"])
+                    selectd_subtopic.assigned_user_id_id = user.id
+                    selectd_subtopic.save()  # add email here
+                    messages.success(request, 'Topic assigned to the intern')
+                else:
+                    messages.error(request, 'Select an Intern to Assign')
                 first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
                 subtopic = Subtopic.objects.filter(
                     topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
@@ -1083,13 +1093,13 @@ def approve_subtopic(request, id):
             instance.save()
             scheme = request.is_secure() and "https" or "http"
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
-                                                                      instance.subtopic_hash)
+                                                                  instance.subtopic_hash)
             subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
-                                                                   instance.subtopic_hash)
+                                                               instance.subtopic_hash)
             subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
-                                                                   instance.assigned_user_id.last_name,
-                                                                   instance.subtopic_name, instance.subtopic_status,
-                                                                   message_link, subtopic_link)
+                                                               instance.assigned_user_id.last_name,
+                                                               instance.subtopic_name, instance.subtopic_status,
+                                                               message_link, subtopic_link)
             send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
             return redirect('review-submissions-subtopic', instance.subtopic_hash)
         else:
@@ -1113,8 +1123,10 @@ def reject_subtopic(request, id):
             instance.subtopic_status = "REJECTED"
             instance.save()
             scheme = request.is_secure() and "https" or "http"
-            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
-            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  instance.subtopic_hash)
+            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                               instance.subtopic_hash)
             subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
                                                                instance.assigned_user_id.last_name,
                                                                instance.subtopic_name, instance.subtopic_status,
