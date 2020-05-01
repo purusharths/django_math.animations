@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-{% block extrahead %}
+    {% block extrahead %}
     {% endblock %}
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -31,13 +31,27 @@
     <!-- Style sheets -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+          rel="stylesheet">
 
     <style>
-        html * {font-family: 'Lora', serif;}
-    /* breadcrumb */.breadcrumb {background-color: #f2f2f2;font-size: 10pt;}
-    .breadcrumb-item + .breadcrumb-item::before {content: ">";}
-    .breadcrumb-item{font-family: 'Open Sans', sans-serif}
+        html * {
+            font-family: 'Lora', serif;
+        }
+
+        /* breadcrumb */
+        .breadcrumb {
+            background-color: #f2f2f2;
+            font-size: 10pt;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+        }
+
+        .breadcrumb-item {
+            font-family: 'Open Sans', sans-serif
+        }
     </style>
 
 </head>
@@ -53,7 +67,7 @@
 
 {% block breadcrumbs %}
     {% clear_breadcrumbs %}
-      {% breadcrumb "Home" "/" %}
+    {% breadcrumb "Home" "/" %}
 {% endblock %}
 
 {% block content %}
@@ -73,7 +87,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script> <!-- why twice??? -->
-
 
 
 {% block extrascripts %}{% endblock extrascripts %}

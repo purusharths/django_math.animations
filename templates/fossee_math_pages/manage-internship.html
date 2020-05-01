@@ -10,81 +10,81 @@
 {% endblock %}
 
 {% block content %}
-        {% render_breadcrumbs %}
+    {% render_breadcrumbs %}
     {% if user.is_authenticated %} {% if user.is_superuser %}
-    <style>
-        label {
-            display: none;
-        }
-    </style>
-    <div class="container">
-        {% include 'partials/_alerts.html' %}
-        <form method="POST">
-            {% csrf_token %}
-            Internship:
-            <label>Select Internship: </label>
-            <select name="search_internship" onchange="submit();">
-                {% if internship in internship_all %}
-                    <option>{{ internship }}</option>
-                {% else %}
-                    <option>Select Internship</option>
-                {% endif %}
-                {% for i in internship_all %}
-                    {% if i != internship %}
-                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+        <style>
+            label {
+                display: none;
+            }
+        </style>
+        <div class="container">
+            {% include 'partials/_alerts.html' %}
+            <form method="POST">
+                {% csrf_token %}
+                Internship:
+                <label>Select Internship: </label>
+                <select name="search_internship" onchange="submit();">
+                    {% if internship in internship_all %}
+                        <option>{{ internship }}</option>
+                    {% else %}
+                        <option>Select Internship</option>
                     {% endif %}
-                {% endfor %}
-            </select>
-        </form>
+                    {% for i in internship_all %}
+                        {% if i != internship %}
+                            <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </form>
 
-        <div class="container" style="padding-top: 3%;">
-            <h2>Manage Intership</h2>
+            <div class="container" style="padding-top: 3%;">
+                <h2>Manage Intership</h2>
 
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th>Topic</th>
-                    <th>Current status</th>
-                    <th>Change Status</th>
-                    <th></th>
-                </tr>
-                </thead>
-                {% if internship %}
-                    <tbody>
+                <table class="table table-condensed">
+                    <thead>
                     <tr>
-                        <td>{{ internship.internship_topic }}</td>
-                        <td>{{ internship.internship_status }}</td>
-                        <form method="POST" class="form-group" name="AddInternship">
-                            <td>
-                                <input type="hidden" value="{{ internship.id }}"
-                                       name="id"> {% csrf_token %} {{ form|crispy }}
-                            </td>
-                            <td>
-                                <input class="btn btn-success" type="submit" name="submit" value="Submit">
-                            </td>
-                        </form>
+                        <th>Topic</th>
+                        <th>Current status</th>
+                        <th>Change Status</th>
+                        <th></th>
                     </tr>
-                    </tbody>
-                {% else %}
-                {% for i in internship_all %}
-                <tbody>
-                    <tr>
-                        <td>{{ i.internship_topic }}</td>
-                        <td>{{ i.internship_status }}</td>
-                        <form method="POST" class="form-group" name="AddInternship">
-                            <td>
-                                <input type="hidden" value="{{ i.id }}"
-                                       name="id"> {% csrf_token %} {{ form|crispy }}
-                            </td>
-                            <td>
-                                <input class="btn btn-success" type="submit" name="submit" value="Submit">
-                            </td>
-                        </form>
-                    </tr>
-                    </tbody>
-                    {%endfor%}
-                {% endif %}
-            </table>
+                    </thead>
+                    {% if internship %}
+                        <tbody>
+                        <tr>
+                            <td>{{ internship.internship_topic }}</td>
+                            <td>{{ internship.internship_status }}</td>
+                            <form method="POST" class="form-group" name="AddInternship">
+                                <td>
+                                    <input type="hidden" value="{{ internship.id }}"
+                                           name="id"> {% csrf_token %} {{ form|crispy }}
+                                </td>
+                                <td>
+                                    <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                                </td>
+                            </form>
+                        </tr>
+                        </tbody>
+                    {% else %}
+                        {% for i in internship_all %}
+                            <tbody>
+                            <tr>
+                                <td>{{ i.internship_topic }}</td>
+                                <td>{{ i.internship_status }}</td>
+                                <form method="POST" class="form-group" name="AddInternship">
+                                    <td>
+                                        <input type="hidden" value="{{ i.id }}"
+                                               name="id"> {% csrf_token %} {{ form|crispy }}
+                                    </td>
+                                    <td>
+                                        <input class="btn btn-success" type="submit" name="submit" value="Submit">
+                                    </td>
+                                </form>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    {% endif %}
+                </table>
+            </div>
         </div>
-    </div>
-{% endif %} {% endif %} {% endblock %}
+    {% endif %} {% endif %} {% endblock %}

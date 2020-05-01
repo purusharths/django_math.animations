@@ -26,19 +26,19 @@
                 <h3 class="text-warning">Contributor Info</h3>
                 {% include 'partials/_alerts.html' %}
                 {% if user.is_staff and not user.is_superuser %}
-                <div class="container">
-                    <br>
-                    <form method="GET" action=".">
-                        <div class="row">
-                            <h5>Search:</h5> &nbsp;
-                            <input class="form-control py-2 border col-sm-6" type="search" name="title_contains"
-                                   placeholder="Search (Interns, Topics, Subtopics)"/> &nbsp;&nbsp;
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </div>
-                    </form>
-                    <br>
-                </div>
-                    {% endif %}
+                    <div class="container">
+                        <br>
+                        <form method="GET" action=".">
+                            <div class="row">
+                                <h5>Search:</h5> &nbsp;
+                                <input class="form-control py-2 border col-sm-6" type="search" name="title_contains"
+                                       placeholder="Search (Interns, Topics, Subtopics)"/> &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
+                {% endif %}
                 <table class="table table-sm ">
                     <thead class="table-warning">
                     <tr>
@@ -55,7 +55,9 @@
                         <tbody>
                         {% for i in interns %}
                             <tr>
-                                <td>{{ i.user_id }}</td>
+                                {% if searchq != '' %}
+                                    <td><b>{{ i.user_id }}</b></td>
+                                {% endif %}
                                 <td>
                                     {% for st in subtopic %}
                                         {% if i.user_id_id == st.assigned_user_id_id %}

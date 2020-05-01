@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
-from datetime import datetime
+
 from .models import *
 
 
@@ -65,5 +64,3 @@ class FosseeMathTest(TestCase):
                                            subtopic_url=self.subtopic_url, subtopic_status=self.subtopic_status,
                                            subtopic_modification_date=self.subtopic_modification_date,
                                            assigned_user_id=assigned_user.id)
-
-

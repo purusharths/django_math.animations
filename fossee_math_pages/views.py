@@ -578,7 +578,8 @@ def edit_image(request, t_id, id):
 def delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
-        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED' or request.user.is_staff:
+        if (
+                instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED') or request.user.is_staff:
             t_id = instance.subtopic_id.subtopic_hash
             try:
                 image = ImageFormatting.objects.get(data_id=instance.id)
@@ -886,6 +887,7 @@ def manage_interns(request):
             'form': form,
             'interns': interns,
             'subtopic': subtopic,
+            'searchq': search_query,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
 
