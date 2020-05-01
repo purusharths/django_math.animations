@@ -40,7 +40,6 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                {#                <button class="btn btn-primary">Search</button>#}
             </form>
         </div>
         <hr/>
@@ -70,9 +69,11 @@
                             {{ i.assigned_user_id }}
                         </td>
                         <td>
-                            <a href="{% url 'delete-assign-topic' i.subtopic_hash %}">
-                                <img src="{% static '/web-files/img/multiuse-svgs/trash-grey-2.svg' %}" height="18px"/>
-                            </a>
+                        <form method="POST" class="form-group" name="DeleteAssign">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ i.subtopic_hash }}" name="deletetheassign">
+                            <button name="Delete" class="btn btn-outline-danger">Delete</button>
+                        </form>
                         </td>
                     {% else %}
                         <td>

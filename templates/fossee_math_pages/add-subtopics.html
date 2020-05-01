@@ -69,7 +69,12 @@
                                    </form>
                             </td>
                         <td>
-                            <a href="{% url 'delete-subtopic' i.topic_id_id i.subtopic_hash %}" class="btn btn-outline-danger">Delete</a>
+                            <form method="POST" class="form-group" name="DeleteSubtopic">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ i.topic_id_id }}" name="deletesubtopictopic">
+                                <input type="hidden" value="{{ i.subtopic_hash }}" name="subtopic">
+                            <button class="btn btn-outline-danger">Delete</button>
+                            </form>
                         </td>
                         </tr>
                     {% endif %}

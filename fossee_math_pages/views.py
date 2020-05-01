@@ -688,6 +688,16 @@ def add_subtopics(request, i_id, t_id):
                 obj = Subtopic.objects.get(pk=subtopic_id)
                 obj.subtopic_order = subtopicoder
                 obj.save()
+            elif "deletesubtopictopic" in request.POST:
+                subtopic_id = request.POST['subtopic']
+                topic_id = request.POST['deletesubtopictopic']
+                subtopic = Subtopic.objects.get(subtopic_hash=subtopic_id)
+                if Data.objects.filter(subtopic_id__topic_id_id=topic_id,
+                                       subtopic_id__subtopic_hash=subtopic_id).exists():
+                    messages.error(request, "Data exists for this subtopic, cannot delete!!")
+                else:
+                    subtopic.delete()
+                    messages.success(request, "Subtopic deleted!")
             else:
                 subtopic = request.POST['subtopic']
                 topic_id = request.POST['id']
@@ -731,24 +741,6 @@ def add_subtopics(request, i_id, t_id):
 
 
 @login_required
-def delete_assign_topic(request, s_id):
-    if request.user.is_staff:
-        try:
-            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
-            if subtopic.subtopic_status == 'ACCEPTED':
-                messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
-                return redirect('assign-topics')
-            else:
-                subtopic.assigned_user_id = None
-                subtopic.save()
-                return redirect('assign-topics')
-        except:
-            return redirect('dashboard')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
 def add_topics(request):
     if request.user.is_staff:
         form = add_topic()
@@ -764,6 +756,19 @@ def add_topics(request):
                 obj = Topic.objects.get(pk=topic_id)
                 obj.topic_order = topoder
                 obj.save()
+            elif "deletetopic" in request.POST:
+                topic_id = request.POST['deletetopic']
+                internship_id = request.POST['internshipid']
+
+                subtopic = Subtopic.objects.filter(topic_id=topic_id)
+                if subtopic:
+                    messages.error(request, "Subtopics exist for this topic; cannot delete!")
+                    internship = Internship.objects.get(pk=internship_id)
+                else:
+                    topic = Topic.objects.get(pk=topic_id)
+                    topic.delete()
+                    messages.success(request, "Topic deleted!")
+                    internship = Internship.objects.get(pk=internship_id)
             else:
                 topic = request.POST['topic']
                 id = request.POST['id']
@@ -809,9 +814,11 @@ def review_submissions(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
-        interns = User.objects.filter(userdetails__user_role='INTERN').filter(subtopic__topic_id__internship_id=first_internship.id)
+        interns = User.objects.filter(userdetails__user_role='INTERN').filter(
+            subtopic__topic_id__internship_id=first_internship.id)
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id').filter(topic_id__internship_id__internship_topic=first_internship).order_by('subtopic_modification_date')
+        subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id').filter(
+            topic_id__internship_id__internship_topic=first_internship).order_by('subtopic_modification_date')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
@@ -830,7 +837,7 @@ def review_submissions(request):
             'internship': internship,
             'first_internship': first_internship,
             'interns': interns,
-            'userdetails':userdetails,
+            'userdetails': userdetails,
             'messages': messages,
         }
 
@@ -894,11 +901,12 @@ def manage_interns(request):
 
 @login_required
 def assign_topics(request):
-    if request.user.is_staff:
+    if request.user.is_staff and not request.user.is_superuser:
         form = AssignTopic()
         internship = Internship.objects.all()
         first_internsip = Internship.objects.filter(internship_status='ACTIVE').first()
-        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(topic_id__internship_id_id=first_internsip.pk)
+        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
+            topic_id__internship_id_id=first_internsip.pk)
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
@@ -907,18 +915,25 @@ def assign_topics(request):
                     subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
                 except:
                     subtopic = None
+            elif "deletetheassign" in request.POST:
+                s_id = request.POST['deletetheassign']
+                st = Subtopic.objects.get(subtopic_hash=s_id)
+                first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
+                subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
+                if st.subtopic_status == 'ACCEPTED':
+                    messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
+                else:
+                    st.assigned_user_id = None
+                    st.save()
             else:
-                if request.method == "POST":
-                    selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                    try:
-                        user = User.objects.get(pk=request.POST["assigned_user_id"])
-                        selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save()  # add email here
-                        messages.success(request, 'Topic assigned to the intern')
-                        first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
-                        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
-                    except:
-                        messages.error(request, "Intern not selected")
+                selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
+                user = User.objects.get(pk=request.POST["assigned_user_id"])
+                selectd_subtopic.assigned_user_id_id = user.id
+                selectd_subtopic.save()  # add email here
+                messages.success(request, 'Topic assigned to the intern')
+                first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
+                subtopic = Subtopic.objects.filter(
+                    topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
 
         context = {
             'form': form,
@@ -1169,47 +1184,6 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
-
-
-@login_required
-def delete_topic(request, t_id):
-    if request.user.is_staff and not request.user.is_superuser:
-        try:
-            subtopic = Subtopic.objects.filter(topic_id=t_id)
-            if subtopic:
-                messages.error(request, "Subtopics exist for this topic; cannot delete!")
-                return redirect('add-topics')
-            else:
-                topic = Topic.objects.get(pk=t_id)
-                topic.delete()
-                messages.success(request, "Topic deleted!")
-                return redirect('add-topics')
-        except:
-            return redirect('add-topics')
-
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def delete_subtopic(request, t_id, st_id):
-    if request.user.is_staff and not request.user.is_superuser:
-        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
-        try:
-            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
-                messages.error(request, "Data exists for this subtopic, cannot delete!!")
-                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                                subtopic.topic_id.topic_url)
-            else:
-                subtopic.delete()
-                messages.success(request, "Subtopic deleted!")
-                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                                subtopic.topic_id.topic_url)
-        except:
-            return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                            subtopic.topic_id.topic_url)
-    else:
-        return redirect('dashboard')
 
 
 def activate(request, uidb64, token):
