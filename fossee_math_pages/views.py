@@ -362,7 +362,7 @@ def add_submission_subtopic(request, st_id):
                                 messages.error(request, 'Inavalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
 
-                        if img and video is None:
+                        if content.strip() !='':
                             caption = None
 
                         add_data = Data(data_content=content, data_image=img,
