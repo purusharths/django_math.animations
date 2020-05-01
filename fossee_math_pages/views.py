@@ -821,13 +821,12 @@ def add_topics(request):
 @login_required
 def review_submissions(request):
     if request.user.is_staff:
-        first_internship = Internship.objects.first()
-        first_internship = Internship.objects.get(internship_topic=first_internship)
+        first_internship = ""
+        first_internship = ""
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.filter(
-            topic_id__internship_id__internship_topic=first_internship).order_by('topic_id__topic_order').order_by(
-            'subtopic_order').order_by('-subtopic_modification_date')
+        subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by('topic_id__topic_order').order_by(
+            'subtopic_order')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
