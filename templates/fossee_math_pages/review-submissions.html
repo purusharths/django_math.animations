@@ -13,6 +13,7 @@
     {% render_breadcrumbs %}
     {% include 'partials/_modal.html' %}
     <div class="container">
+            {% include 'partials/_alerts.html' %}
         <h6>All Submissions: </h6>
         <h2 class="text-info">{{ first_internship.internship_topic }}</h2>
         <hr>
@@ -21,7 +22,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     <label>Select Internship: </label>
-                    <select name="search_internship" onchange="submit();">
+                    <select name="search_internship" onchange="submit();" class="form-control">
                         {% if first_internship in internship %}
                             <option>{{ first_internship }}</option>
                         {% else %}
@@ -35,18 +36,26 @@
                     </select>
                 </form>
             </div>
-
             <div class="col-6 col-sm-6">
+            {% if first_internship %}
                 <form method="POST">
                     {% csrf_token %}
+                    <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
                     <label>Select Contributor: </label>
-                    <select name="search_intern" onchange="submit();">
-                        <option>Select Contributor</option>
+                    <select name="search_intern" onchange="submit();" class="form-control">
+                        {% if selected_intern in interns %}
+                            <option>{{ selected_intern.username }}</option>
+                        {% else %}
+                            <option>Select Interns</option>
+                        {% endif %}
                         {% for i in interns %}
-                            <option value="{{ i.pk }}">{{ i.username }}</option>
+                            {% if i.id != selected_intern.id %}
+                                <option value="{{ i.pk }}">{{ i.username }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </form>
+            {% endif %}
             </div>
         </div>
         <hr/>
@@ -66,7 +75,15 @@
             {% for k in subtopic %}
                 {% if k.assigned_user_id != None %}
                     <tr>
-                        <td>{{ k.assigned_user_id }}</td>
+                        {% for detail in userdetails %}
+                            {% if k.assigned_user_id == detail.user_id %}
+                                {% if detail.user_status == "INACTIVE" %}
+                                    <td><span style="color: red">{{ k.assigned_user_id }}</span></td>
+                                {% else %}
+                                    <td><span style="color: green"> {{ k.assigned_user_id }}</span></td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
                         <td>{{ k.topic_id }}</td>
                         <td>{{ k.subtopic_name }}</td>
                         <td>
@@ -84,12 +101,14 @@
                         <td>{{ k.subtopic_modification_date|date:'d M Y H:i' }}</td>
                         <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
                         <td><a href="{% url 'messages' k.subtopic_hash %}"><img
-                            {% for mess in messages %}
-                                {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
-                                    src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}" height="20px"
-                                {% endif %}
-                            {% endfor %}     src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" height="20px"
-                                    alt="message" title="Send Message"></a></td>
+                                {% for mess in messages %}
+                                    {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
+                                        src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}"
+                                        height="20px"
+                                    {% endif %}
+                                {% endfor %}     src="{% static '/web-files/img/multiuse-svgs/message.svg' %}"
+                                        height="20px"
+                                        alt="message" title="Send Message"></a></td>
                     </tr>
                 {% endif %}
             {% endfor %}

@@ -2,336 +2,338 @@
 {% load staticfiles %}
 {% block title %} Add Submission {% endblock %}
 {% block extrahead %}
-<script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 {% endblock %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "Dashboard" "dashboard" %}
-{% breadcrumb "Your Submissions" "add-submission" %}
-{% breadcrumb subtopic.subtopic_name "add-submission-subtopic" subtopic.subtopic_hash %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
+    {% breadcrumb subtopic.subtopic_name "add-submission-subtopic" subtopic.subtopic_hash %}
 {% endblock %}
 <!-- WRONG CRUMBS -->
 
 {% block content %}
-{% render_breadcrumbs %}
-{% load static %} {{ form.media }} {% load crispy_forms_tags %}
+    {% render_breadcrumbs %}
+    {% load static %} {{ form.media }} {% load crispy_forms_tags %}
 
-<style>
-    .upload-btn-wrapper input[type=file] {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-    }
+    <style>
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
 
-    .ck {
-        display: none;
-    }
+        .ck {
+            display: none;
+        }
 
-    #add {
-        width: 92px;
-    }
+        #add {
+            width: 92px;
+        }
 
-    #dta tr:hover {
-        background-color: #fffafa;
-    }
-</style>
+        #dta tr:hover {
+            background-color: #fffafa;
+        }
+    </style>
 
-<div class="container">
+    <div class="container">
     {% include 'partials/_alerts.html' %}
     {% if subtopic.subtopic_status == "WAITING" %}
-    <div class="card border-warning" style="margin-bottom: 15px;">
+        <div class="card border-warning" style="margin-bottom: 15px;">
         <h4>
             <div class="card-header text-white bg-warning">{{ subtopic.subtopic_name }}
         </h4>
-        {% elif subtopic.subtopic_status == "ACCEPTED" %}
+    {% elif subtopic.subtopic_status == "ACCEPTED" %}
         <div class="card border-success">
-            <h4>
-                <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
-            </h4>
-            {% elif subtopic.subtopic_status == "REJECTED" %}
-            <div class="card border-danger">
-                <h4>
-                    <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
-                </h4>
-                {% else %}
-                <div class="card border-info">
-                    <h4>
-                        <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
-                    </h4>
-                    {% endif %}
+        <h4>
+            <div class="card-header text-white bg-success">{{ subtopic.subtopic_name }}
+        </h4>
+    {% elif subtopic.subtopic_status == "REJECTED" %}
+        <div class="card border-danger">
+        <h4>
+            <div class="card-header text-white bg-danger">{{ subtopic.subtopic_name }}
+        </h4>
+    {% else %}
+        <div class="card border-info">
+        <h4>
+            <div class="card-header text-white bg-info">{{ subtopic.subtopic_name }}
+        </h4>
+    {% endif %}
 
-                    <div class="card-body">
-                        <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
-                        <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
-                        <h6><b>Last Modified: </b> {{ last_modified }}</h6>
-                        <div align="center">
-                            Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
+<div class="card-body">
+    <h6><b>Internship: </b>{{ subtopic.topic_id.internship_id }}</h6>
+    <h6><b>Topic: </b>{{ subtopic.topic_id }}</h6>
+    <h6><b>Last Modified: </b> {{ last_modified }}</h6>
+    <div align="center">
+        Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
+    </div>
+</div>
+</div>
+<hr/>
+<div class="d-flex justify-content-center">
+    <h5><u><i>{{ subtopic.subtopic_name }}</i></u></h5>
+</div>
+
+<table id="dta" class="table table-borderless" style="width: 100%;">
+
+    {% for data in topic %}
+        <tr>
+            {% if data.data_content != "" and data.data_content != " " %}
+                <td>
+                    <p></p>
+                    {{ data.data_content |safe }}
+                </td>
+                {% if  subtopic.subtopic_status != "ACCEPTED" %}
+                    <td>
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                            <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
+                                 title="Last Modified on {{ data.data_modification_date|date:'D d M Y H:i' }}"
+                                 alt="Edit">
+                        </a>
+                        <hr>
+                        <a href="{% url 'delete-data' data.data_hash %}" id="delete_text">
+                            <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
+                                 width="15px" alt="Delete">
+                        </a><br>
+                        <!--add option for cropping-->
+
+                    </td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        <tr>
+            {% if data.data_image.url != "NULL" %}
+                <td>
+                    <p></p>
+                    {% for i in imagesize %}
+                        {% if i.data_id_id == data.pk %}
+                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                            {% if data.data_caption != NULL %}
+                                <br>
+                                <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% if  subtopic.subtopic_status != "ACCEPTED" %}
+                    <td>
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                            <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
+                                 title="Added on {{ data.data_post_date }}" alt="Edit">
+                        </a>
+                        <hr>
+                        <a href="{% url 'delete-data' data.data_hash %}" id="delete_image">
+                            <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image"
+                                 width="15px" alt="Delete">
+                        </a>
+                        <hr/>
+                        <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}"> <img
+                                src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
+                                width="15px">
+                        </a><br/>
+                    </td>
+                {% endif %}
+            {% endif %}
+
+        </tr>
+        <tr>
+            {% if data.data_video.url != "NULL" %}
+                <td>
+                    <p></p>
+                    <video width='70%' style="display:block; margin:0 auto;" controls>
+                        <source src="{{ data.data_video.url }}" type='video/mp4'>
+                        Your browser does not support the video tag.
+                    </video>
+                    {% if data.data_caption != NULL %}
+                        <br>
+                        <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
+                    {% endif %}
+                    <br>
+                    &nbsp;
+                    <br>
+                </td>
+                {% if subtopic.subtopic_status != "ACCEPTED" %}
+                    <td>
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                            <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
+                                 width="15px" alt="Edit">
+                        </a>
+                        <hr/>
+                        <a href="{% url 'delete-data' data.data_hash %}" id="delete_video"> <img
+                                src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
+                                width="15px" alt="Delete">
+                        </a>
+                    </td>
+                {% endif %}
+            {% endif %}
+        </tr>
+
+    {% endfor %}
+</table>
+
+{% if subtopic.subtopic_status != 'ACCEPTED' %}
+    <br>
+    <div class="container" style="background-color:#F5F5F5  ">
+        <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
+                       onclick="show()"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                             alt="Text">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
+                            src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
+                            src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade show active" id="data">
+                    <div class="ck center" align="center" id="cc">
+                        <div class="row" style="padding-bottom: 0px;">
+                            <div class="col-auto mr-auto">&nbsp;</div>
+                            <div class="col-auto" style="padding-top: 10px;">
+                                <input class="btn btn-outline-success btn-md btn-block" type="button"
+                                       onClick="addData()" id="submitAJAX" value="Add Data">
+                            </div>
+                        </div>
+                        {{ form.media }} {{ form.as_p }}
+                    </div>
+                    <br>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="image" style="padding-bottom: 2%;">
+                    <br>
+                    <div class="row ">
+                        <div class="col-auto mr-auto">
+                            <label>Select Image: </label> <input type="file" class="btn" name="image"
+                                                                 id="fileInput" onchange="handleFileSelect()"/>
+                            <br>
+                        </div>
+                        <div class="col-auto">
+                            <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                   id="submit" value="Upload">
                         </div>
                     </div>
-                </div>
-                <hr />
-                <div class="d-flex justify-content-center">
-                    <h5><u><i>{{ subtopic.subtopic_name }}</i></u></h5>
-                </div>
-
-                <table id="dta" class="table table-borderless" style="width: 100%;">
-
-                    {% for data in topic %}
-                    <tr>
-                        {% if data.data_content != "" and data.data_content != " " %}
-                        <td>
-                            <p></p>
-                            {{ data.data_content |safe }}
-                        </td>
-                        {% if  subtopic.subtopic_status != "ACCEPTED" %}
-                        <td>
-                            <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
-                                <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
-                                    title="Last Modified on {{ data.data_modification_date|date:'D d M Y H:i' }}" alt="Edit">
-                            </a>
-                            <hr>
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_text">
-                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
-                                    width="15px" alt="Delete">
-                            </a><br>
-                            <!--add option for cropping-->
-
-                        </td>
-                        {% endif %}
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if data.data_image.url != "NULL" %}
-                        <td>
-                            <p></p>
-                            {% for i in imagesize %}
-                            {% if i.data_id_id == data.pk %}
-                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                            {% if data.data_caption != None %}
-                            <br>
-                            <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
-                            {% endif %}
-                            {% endif %}
-                            {% endfor %}
-                        </td>
-                        {% if  subtopic.subtopic_status != "ACCEPTED" %}
-                        <td>
-                            <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
-                                <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
-                                    title="Added on {{ data.data_post_date }}" alt="Edit">
-                            </a>
-                            <hr>
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_image">
-                                <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Image"
-                                    width="15px" alt="Delete">
-                            </a>
-                            <hr />
-                            <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}"> <img
-                                    src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
-                                    width="15px">
-                            </a><br />
-                        </td>
-                        {% endif %}
-                        {% endif %}
-
-                    </tr>
-                    <tr>
-                        {% if data.data_video.url != "NULL" %}
-                        <td>
-                            <p></p>
-                            <video width='70%' style="display:block; margin:0 auto;" controls>
-                                <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                Your browser does not support the video tag.
-                            </video>
-                            {% if data.data_caption != None %}
-                            <br>
-                            <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
-                            {% endif %}
-                            <br>
-                            &nbsp;
-                            <br>
-                        </td>
-                        {% if data.data_status != "ACCEPTED" %}
-                        <td>
-                            <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
-                                <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
-                                    width="15px" alt="Edit">
-                            </a>
-                            <hr />
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_video"> <img
-                                    src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete Video"
-                                    width="15px" alt="Delete">
-                            </a>
-                        </td>
-                        {% endif %}
-                        {% endif %}
-                    </tr>
-
-                    {% endfor %}
-                </table>
-
-                {% if subtopic.subtopic_status != 'ACCEPTED' %}
-                <br>
-                <div class="container" style="background-color:#F5F5F5  ">
-                    <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
-
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
-                                    onclick="show()"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
-                                        alt="Text">
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
-                                        src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image">
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
-                                        src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade show active" id="data">
-                                <div class="ck center" align="center" id="cc">
-                                    <div class="row" style="padding-bottom: 0px;">
-                                        <div class="col-auto mr-auto">&nbsp;</div>
-                                        <div class="col-auto" style="padding-top: 10px;">
-                                            <input class="btn btn-outline-success btn-md btn-block" type="button"
-                                                onClick="addData()" id="submitAJAX" value="Add Data">
-                                        </div>
-                                    </div>
-                                    {{ form.media }} {{ form.as_p }}
-                                </div>
-                                <br>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane fade" id="image" style="padding-bottom: 2%;">
-                                <br>
-                                <div class="row ">
-                                    <div class="col-auto mr-auto">
-                                        <label>Select Image: </label> <input type="file" class="btn" name="image"
-                                            id="fileInput" onchange="handleFileSelect()" />
-                                        <br>
-                                    </div>
-                                    <div class="col-auto">
-                                        <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
-                                            id="submit" value="Upload">
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col">
-                                            <canvas id="testCanvas" width="600" height="300">
-                                                Your browser does not support canvas.
-                                            </canvas>
-                                            <input type="text" placeholder="Caption for the image"
-                                                class=" md-form form-control" name="caption_image">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
-                                <script>
-                                    // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
-                                    cropper.start(document.getElementById("testCanvas"), 1);
-                                    function handleFileSelect() {
-                                        // this function will be called when the file input below is changed
-                                        var file = document.getElementById("fileInput").files[0];  // get a reference to the selected file
-                                        var reader = new FileReader(); // create a file reader
-                                        // set an onload function to show the image in cropper once it has been loaded
-                                        reader.onload = function (event) {
-                                            var data = event.target.result; // the "data url" of the image
-                                            cropper.showImage(data); // hand this to cropper, it will be displayed
-                                        };
-                                        // this loads the file as a data url calling the function above once done
-                                        reader.readAsDataURL(file);
-
-                                    }
-                                </script>
-
-                            </div>
-                            <div role="tabpanel" class="tab-pane fade" id="video">
-                                <br>
-                                <div class="row ">
-                                    <div class="col-auto mr-auto">
-                                        <label> Select Video: </label> <input type="file" class="btn " name="video" />
-                                        <br><br>
-
-                                        <input type="text" placeholder="Video Caption" class="md-form form-control"
-                                            name="caption_video"></div>
-
-                                    <div class="col-auto">
-                                        <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
-                                            id="submit" value="Upload">
-                                    </div>
-                                </div>
-                                <br>
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="testCanvas" width="600" height="300">
+                                    Your browser does not support canvas.
+                                </canvas>
+                                <input type="text" placeholder="Caption for the image"
+                                       class=" md-form form-control" name="caption_image">
                             </div>
                         </div>
-                    </form>
+
+                    </div>
+                    <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
+                    <script>
+                        // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
+                        cropper.start(document.getElementById("testCanvas"), 1);
+
+                        function handleFileSelect() {
+                            // this function will be called when the file input below is changed
+                            var file = document.getElementById("fileInput").files[0];  // get a reference to the selected file
+                            var reader = new FileReader(); // create a file reader
+                            // set an onload function to show the image in cropper once it has been loaded
+                            reader.onload = function (event) {
+                                var data = event.target.result; // the "data url" of the image
+                                cropper.showImage(data); // hand this to cropper, it will be displayed
+                            };
+                            // this loads the file as a data url calling the function above once done
+                            reader.readAsDataURL(file);
+
+                        }
+                    </script>
+
                 </div>
-                {% endif %}
-                <br>
-                <br>
+                <div role="tabpanel" class="tab-pane fade" id="video">
+                    <br>
+                    <div class="row ">
+                        <div class="col-auto mr-auto">
+                            <label> Select Video: </label> <input type="file" class="btn " name="video"/>
+                            <br><br>
+
+                            <input type="text" placeholder="Video Caption" class="md-form form-control"
+                                   name="caption_video"></div>
+
+                        <div class="col-auto">
+                            <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                   id="submit" value="Upload">
+                        </div>
+                    </div>
+                    <br>
+                </div>
             </div>
-            <script type="text/javascript">
-                document.getElementById('delete_text').onclick = function (e) {
-                    if (!confirm('Are you sure to delete this submission?')) {
-                        e.preventDefault();
-                    }
-                }
-                document.getElementById('delete_image').onclick = function (e) {
-                    if (!confirm('Are you sure to delete the image?')) {
-                        e.preventDefault();
-                    }
-                }
-                document.getElementById('delete_video').onclick = function (e) {
-                    if (!confirm('Are you sure to delete the video?')) {
-                        e.preventDefault();
-                    }
-                }
-            </script>
-            <script>
-                var show = () => {
-                    $("#cc").toggle()
-                }
+        </form>
+    </div>
+{% endif %}
+<br>
+<br>
+</div>
+    <script type="text/javascript">
+        document.getElementById('delete_text').onclick = function (e) {
+            if (!confirm('Are you sure to delete this submission?')) {
+                e.preventDefault();
+            }
+        }
+        document.getElementById('delete_image').onclick = function (e) {
+            if (!confirm('Are you sure to delete the image?')) {
+                e.preventDefault();
+            }
+        }
+        document.getElementById('delete_video').onclick = function (e) {
+            if (!confirm('Are you sure to delete the video?')) {
+                e.preventDefault();
+            }
+        }
+    </script>
+    <script>
+        var show = () => {
+            $("#cc").toggle()
+        }
 
-                var addData = () => {
-                    var data = window.CKEDITOR.instances.id_data_content.getData();
-                    var xhttp = new XMLHttpRequest();
-                    var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
-                    if (data == null || data.trim() === '') {
-                        alert("Please enter data");
-                    } else {
-                        var mainTable = document.getElementById("dta");
-                        var row = mainTable.insertRow()
-                        var cell1 = row.insertCell(0)
-                        var cell2 = row.insertCell(1)
-                        cell1.innerHTML = '<div class="text-muted">' + data + '</div>'
-                        xhttp.onreadystatechange = function () {
-                            if (this.readyState == 4 && this.status == 200) {
-                                cell1.innerHTML = data
-                                window.CKEDITOR.instances.id_data_content.setData('');
-                                cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
+        var addData = () => {
+            var data = window.CKEDITOR.instances.id_data_content.getData();
+            var xhttp = new XMLHttpRequest();
+            var csrf_token = '{{ csrf_token }}'; //document.getElementsByName("csrfmiddlewaretoken")[0].value;
+            if (data == null || data.trim() === '') {
+                alert("Please enter data");
+            } else {
+                var mainTable = document.getElementById("dta");
+                var row = mainTable.insertRow()
+                var cell1 = row.insertCell(0)
+                var cell2 = row.insertCell(1)
+                cell1.innerHTML = '<div class="text-muted">' + data + '</div>'
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        cell1.innerHTML = data
+                        window.CKEDITOR.instances.id_data_content.setData('');
+                        cell2.innerHTML = " <img src=\"{% static '/web-files/img/multiuse-svgs/slash.svg' %}\" \
                             width=\"15px\" title=\"Reload to get Edit/Delete Options\">"//"<div class=\"text-muted\" alt=\"Reload for edit options\"> - </div>"
-                            }
-                        };
-                        xhttp.open('post', "/dashboard/add-submission/{{ subtopic.subtopic_hash }}", true);
-                        xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-                        xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
-                        xhttp.send("data_content=" + encodeURIComponent(data));
                     }
-                }
+                };
+                xhttp.open('post', "/dashboard/add-submission/{{ subtopic.subtopic_hash }}", true);
+                xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                xhttp.send("data_content=" + encodeURIComponent(data));
+            }
+        }
 
-            </script>
-            {% endblock %}
+    </script>
+{% endblock %}

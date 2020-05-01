@@ -16,3 +16,4 @@ fossee_math_pages/migrations/*
 __pycache__
 *.pyc
 static/web-files/img/multiuse-svgs/*
+.coverate_report

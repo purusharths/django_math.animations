@@ -73,19 +73,25 @@
                                     {{ tp.topic_name }}
                                 </td>
                                 <td>
-                                    <a href="{% url 'add-subtopics' tp.internship_id.internship_url tp.topic_url %}">Add / View Subtopics</a>
+                                    <a href="{% url 'add-subtopics' tp.internship_id.internship_url tp.topic_url %}">Add
+                                        / View Subtopics</a>
                                 </td>
                                 <td style="width: 100px">
                                     <form method="POST" class="form-group" name="RearrangeTopic">
                                         <input type="hidden" value="{{ tp.id }}" name="topicid">
                                         {% csrf_token %} {{ topic_order|crispy }}
                                 <td>
-                                    <input class="btn btn-sm btn-outline-success" type="submit" name="submit" value="Change">
+                                    <input class="btn btn-sm btn-outline-success" type="submit" name="submit"
+                                           value="Change">
                                 </td>
                                 </form>
-                            <td>
-                                <a href="{% url 'delete-topic' tp.pk %}" class="btn btn-outline-danger" >Delete</a>
-                            </td>
+                                <td>
+                                    <form method="POST" class="form-group" name="DeleteTopic">{% csrf_token %}
+                                        <input type="hidden" value="{{ internship.id }}" name="internshipid">
+                                        <input type="hidden" value="{{ tp.id }}" name="deletetopic">
+                                        <button class="btn btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -95,9 +101,9 @@
             </table>
         </div>
     </div>
-    {% endblock %}
-    <!-- /.container -->
-    <script>
+{% endblock %}
+<!-- /.container -->
+<script>
     /*    function resetImage(){
             document.getElementById('status_image').src=""
         }
@@ -134,4 +140,4 @@
                 xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.pk }}");
             }
         }*/
-    </script>
+</script>

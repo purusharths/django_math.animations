@@ -125,7 +125,8 @@ class AssignTopic(ModelForm):
 
     def __init__(self):
         super().__init__()
-        self.fields['assigned_user_id'].queryset = User.objects.exclude(is_staff=True)
+        self.fields['assigned_user_id'].queryset = User.objects.filter(userdetails__user_role='INTERN',
+                                                                       userdetails__user_status='ACTIVE')
 
 
 class data(ModelForm):
@@ -133,8 +134,8 @@ class data(ModelForm):
         model = Data
         fields = ['data_content']
         labels = {
-                    'data_content': "",
-                }
+            'data_content': "",
+        }
 
 
 class imageFormatting(ModelForm):
@@ -197,8 +198,8 @@ class sendMessage(ModelForm):
     class Meta:
         model = Messages
         widgets = {
-            'message': forms.Textarea(attrs={'rows': 4, 'cols': 80, 'placeholder' : "Send Message"}),
-            
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 80, 'placeholder': "Send Message"}),
+
         }
         fields = ['message']
-        labels = {"message":""}
+        labels = {"message": ""}
