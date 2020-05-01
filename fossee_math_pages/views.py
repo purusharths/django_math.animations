@@ -1012,15 +1012,9 @@ def review_submissions_subtopic(request, s_id):
         if request.method == "POST":
             if "message" in request.POST:
                 message = request.POST['message']
-                try:
-                    obj = Messages.objects.get(subtopic_id_id=subtopic.pk)
-                    obj.message = message
-                    obj.message_send_date = now()
-                    obj.save()
-                except:
-                    obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
+                obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
                                    message_send_date=now())
-                    obj.save()
+                obj.save()
             else:
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
@@ -1036,11 +1030,7 @@ def review_submissions_subtopic(request, s_id):
                                       professor=professor, data_aproval_date=now())
                     obj.save()
 
-        try:
-            instance = Messages.objects.get(subtopic_id_id=subtopic.pk)
-            form_message = sendMessage(request.POST or None, instance=instance)
-        except:
-            form_message = sendMessage()
+        form_message = sendMessage()
 
         try:
             instance = Contributor.objects.get(subtopic_id_id=subtopic.pk)
