@@ -896,9 +896,9 @@ def manage_interns(request):
 def assign_topics(request):
     if request.user.is_staff:
         form = AssignTopic()
-        subtopic = Subtopic.objects.all().order_by('topic_id')
         internship = Internship.objects.all()
         first_internsip = Internship.objects.filter(internship_status='ACTIVE').first()
+        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(topic_id__internship_id_id=first_internsip.pk)
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
@@ -915,6 +915,8 @@ def assign_topics(request):
                         selectd_subtopic.assigned_user_id_id = user.id
                         selectd_subtopic.save()  # add email here
                         messages.success(request, 'Topic assigned to the intern')
+                        first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
+                        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
                     except:
                         messages.error(request, "Intern not selected")
 
