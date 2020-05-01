@@ -27,6 +27,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
+from django.db import IntegrityError
 from FOSSEE_math.email_config import SENDER_EMAIL
 
 print(SENDER_EMAIL)
@@ -197,7 +198,7 @@ def add_users(request):
                     'token': account_activation_token.make_token(user),
                     'pass': password,
                 })
-                email = EmailMessage(mail_subject, message, to=[email])
+                email = EmailMessage(mail_subject, message, SENDER_EMAIL, to=[email])
                 email.send()
             except:
                 messages.error(request, 'Some error occured while sending email!')  # What is this for?
@@ -906,7 +907,7 @@ def assign_topics(request):
                     try:
                         user = User.objects.get(pk=request.POST["assigned_user_id"])
                         selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save()
+                        selectd_subtopic.save() #add email here
                         messages.success(request, 'Topic assigned to the intern')
                     except:
                         messages.error(request, "Intern not selected")
@@ -1043,18 +1044,19 @@ def approve_subtopic(request, id):
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
         instance.subtopic_status = "ACCEPTED"
+        # try:
         instance.save()
-        current_site = get_current_site(request)
-        current_site = Site.objects.get_current()
         scheme = request.is_secure() and "https" or "http"
         message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
         subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
-                                                           instance.assigned_user_id.last_name,
-                                                           instance.subtopic_name, instance.subtopic_status,
-                                                           message_link, subtopic_link)
+                                                        instance.assigned_user_id.last_name,
+                                                        instance.subtopic_name, instance.subtopic_status,
+                                                        message_link, subtopic_link)
         send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
         return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        # except IntegrityError:
+        #    messages.error(request, "An empty submission cannot be accepted!")
     else:
         return redirect('dashboard')
 

@@ -28,3 +28,7 @@ def submission_status_changed(firstname, lastname, subtopic, submission_status, 
     Best Regards,
     FOSSEE Animations Team""".format(firstname, lastname, subtopic, submission_status, message_link, submission_link)
     return subject, message
+
+
+def topic_assigned():
+    pass
