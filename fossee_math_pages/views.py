@@ -462,6 +462,10 @@ def edit_media(request, t_id, id):
                             if content.strip() == '':
                                 messages.error(request, "Fill any one of the field")
                                 return redirect('edit-media', t_id, id)
+                            else:
+                                img = ""
+                                video = ""
+                                caption = ""
 
                         if img is None and content.strip() == '':
                             content = ""
@@ -1014,7 +1018,7 @@ def review_submissions_subtopic(request, s_id):
             if "message" in request.POST:
                 message = request.POST['message']
                 obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
-                                   message_send_date=now())
+                               message_send_date=now())
                 obj.save()
             else:
                 mentor = request.POST['mentor']
