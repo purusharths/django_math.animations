@@ -362,7 +362,7 @@ def add_submission_subtopic(request, st_id):
                                 messages.error(request, 'Inavalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
 
-                        if content.strip() !='':
+                        if content.strip() != '':
                             caption = None
 
                         add_data = Data(data_content=content, data_image=img,
@@ -819,23 +819,24 @@ def review_submissions(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
-        interns = User.objects.filter(userdetails__user_role='INTERN').filter(
-            subtopic__topic_id__internship_id=first_internship.id)
+        interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id').filter(
-            topic_id__internship_id__internship_topic=first_internship).order_by('subtopic_modification_date')
+        subtopic = Subtopic.objects.filter(
+            topic_id__internship_id__internship_topic=first_internship).order_by('topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
         if "search_internship" in request.POST:
-            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
-                'subtopic_order').order_by('topic_id')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by('topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
-            interns = User.objects.filter(subtopic__topic_id__internship_id=request.POST['search_internship'])
+            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(userdetails__user_status='ACTIVE').filter(subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
 
         if "search_intern" in request.POST:
-            subtopic = Subtopic.objects.filter(assigned_user_id=request.POST['search_intern']).order_by(
-                'subtopic_order').order_by('topic_id')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['selected_internship']).filter(assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by('-subtopic_modification_date')
+            first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
+            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                userdetails__user_status='ACTIVE').filter(
+                subtopic__topic_id__internship_id_id=request.POST['selected_internship']).distinct
 
         context = {
             'subtopic': subtopic,
