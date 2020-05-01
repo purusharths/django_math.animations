@@ -157,7 +157,7 @@
                             &nbsp;
                             <br>
                         </td>
-                        {% if data.data_status != "ACCEPTED" %}
+                        {% if subtopic.subtopic_status != "ACCEPTED" %}
                         <td>
                             <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                                 <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
