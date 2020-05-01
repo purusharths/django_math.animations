@@ -84,7 +84,11 @@
                                 </td>
                                 </form>
                             <td>
-                                <a href="{% url 'delete-topic' tp.pk %}" class="btn btn-outline-danger" >Delete</a>
+                                <form method="POST" class="form-group" name="DeleteTopic">{% csrf_token %}
+                                        <input type="hidden" value="{{ internship.id }}" name="internshipid">
+                                    <input type="hidden" value="{{ tp.id }}" name="deletetopic">
+                                <button class="btn btn-outline-danger" >Delete</button>
+                                </form>
                             </td>
                             </tr>
                         {% endif %}

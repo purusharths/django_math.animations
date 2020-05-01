@@ -38,6 +38,7 @@
             <div class="col-6 col-sm-6">
                 <form method="POST">
                     {% csrf_token %}
+                    <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
                     <label>Select Contributor: </label>
                     <select name="search_intern" onchange="submit();" class="form-control">
                         <option>Select Contributor</option>

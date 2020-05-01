@@ -362,7 +362,7 @@ def add_submission_subtopic(request, st_id):
                                 messages.error(request, 'Inavalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
 
-                        if img and video is None:
+                        if content.strip() != '':
                             caption = None
 
                         add_data = Data(data_content=content, data_image=img,
@@ -416,7 +416,7 @@ def add_submission_subtopic(request, st_id):
 
 @login_required
 def edit_text(request, t_id, id):
-    if request.user.is_authenticated and not request.user.is_superuser:
+    if request.user.is_authenticated and not request.user.is_superuser and request.user.is_staff:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
         t_id = instance.subtopic_id.subtopic_hash
@@ -448,7 +448,7 @@ def edit_media(request, t_id, id):
         try:
             instance = Data.objects.get(data_hash=id)
             subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-            if request.user.id == subtopic.assigned_user_id_id:
+            if request.user.id == subtopic.assigned_user_id_id and subtopic.subtopic_status != 'ACCEPTED':
                 t_id = instance.subtopic_id.subtopic_hash
                 form = EditMedia(request.POST or None, instance=instance)
                 if request.POST:
@@ -456,11 +456,16 @@ def edit_media(request, t_id, id):
                         content = request.POST.get('data_content')
                         img = request.FILES.get('data_image')
                         video = request.FILES.get('data_video')
+                        caption = request.POST.get('data_caption')
                         instance = Data.objects.get(data_hash=id)
                         if img is None and video is None:
                             if content.strip() == '':
                                 messages.error(request, "Fill any one of the field")
                                 return redirect('edit-media', t_id, id)
+                            else:
+                                img = ""
+                                video = ""
+                                caption = ""
 
                         if img is None and content.strip() == '':
                             content = ""
@@ -481,7 +486,7 @@ def edit_media(request, t_id, id):
                         instance.data_content = content
                         instance.data_image = img
                         instance.data_video = video
-                        instance.data_caption = ""
+                        instance.data_caption = caption
                         instance.data_modification_date = now()
                         instance.save()
                         sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
@@ -513,47 +518,50 @@ def edit_image(request, t_id, id):
         except:
             image_size = None
             form = imageFormatting()
+        if image.subtopic_id.subtopic_status != 'ACCEPTED' or request.user.is_staff:
+            if request.POST:
+                image_height = request.POST.get('image_height')
+                image_width = request.POST.get('image_width')
+                caption = request.POST.get('image_caption')
 
-        if request.POST:
-            image_height = request.POST.get('image_height')
-            image_width = request.POST.get('image_width')
-            caption = request.POST.get('image_caption')
-
-            if re.match(r"\d+px$", image_height):
-                temp = re.findall(r'\d+', image_height)
-                res = list(map(int, temp))
-                if res[0] >= 500:
+                if re.match(r"\d+px$", image_height):
+                    temp = re.findall(r'\d+', image_height)
+                    res = list(map(int, temp))
+                    if res[0] >= 500:
+                        image_height = "500px"
+                elif re.match(r"\d+%$", image_height):
+                    temp = re.findall(r'\d+', image_height)
+                    res = list(map(int, temp))
+                    if res[0] >= 100:
+                        image_height = "100%"
+                else:
                     image_height = "500px"
-            elif re.match(r"\d+%$", image_height):
-                temp = re.findall(r'\d+', image_height)
-                res = list(map(int, temp))
-                if res[0] >= 100:
-                    image_height = "100%"
-            else:
-                image_height = "500px"
 
-            if re.match(r"\d+px$", image_width):
-                temp = re.findall(r'\d+', image_width)
-                res = list(map(int, temp))
-                if res[0] >= 900:
-                    image_width = "900px"
-            elif re.match(r"\d+%$", image_width):
-                temp = re.findall(r'\d+', image_width)
-                res = list(map(int, temp))
-                if res[0] >= 100:
-                    image_width = "100%"
-            else:
-                image_width = "500px"
+                if re.match(r"\d+px$", image_width):
+                    temp = re.findall(r'\d+', image_width)
+                    res = list(map(int, temp))
+                    if res[0] >= 900:
+                        image_width = "900px"
+                elif re.match(r"\d+%$", image_width):
+                    temp = re.findall(r'\d+', image_width)
+                    res = list(map(int, temp))
+                    if res[0] >= 100:
+                        image_width = "100%"
+                else:
+                    image_width = "500px"
 
-            obj = ImageFormatting.objects.get(data_id_id=image.pk)
-            obj.image_height = image_height
-            obj.image_width = image_width
-            obj.image_caption = caption
-            obj.save()
-            if request.user.is_staff:
-                return redirect('edit-image-staff', t_id, id)
+                obj = ImageFormatting.objects.get(data_id_id=image.pk)
+                obj.image_height = image_height
+                obj.image_width = image_width
+                obj.image_caption = caption
+                obj.save()
+                if request.user.is_staff:
+                    return redirect('edit-image-staff', t_id, id)
+                else:
+                    return redirect('edit-image', t_id, id)
             else:
-                return redirect('edit-image', t_id, id)
+                messages.error(request, 'You dont have the access to this page !')
+                return redirect('dashboard')
 
         context = {
             'image': image,
@@ -570,7 +578,7 @@ def edit_image(request, t_id, id):
 def delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
-        if instance.subtopic_id.assigned_user_id.id == request.user.id:
+        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED' or request.user.is_staff:
             t_id = instance.subtopic_id.subtopic_hash
             try:
                 image = ImageFormatting.objects.get(data_id=instance.id)
@@ -688,6 +696,16 @@ def add_subtopics(request, i_id, t_id):
                 obj = Subtopic.objects.get(pk=subtopic_id)
                 obj.subtopic_order = subtopicoder
                 obj.save()
+            elif "deletesubtopictopic" in request.POST:
+                subtopic_id = request.POST['subtopic']
+                topic_id = request.POST['deletesubtopictopic']
+                subtopic = Subtopic.objects.get(subtopic_hash=subtopic_id)
+                if Data.objects.filter(subtopic_id__topic_id_id=topic_id,
+                                       subtopic_id__subtopic_hash=subtopic_id).exists():
+                    messages.error(request, "Data exists for this subtopic, cannot delete!!")
+                else:
+                    subtopic.delete()
+                    messages.success(request, "Subtopic deleted!")
             else:
                 subtopic = request.POST['subtopic']
                 topic_id = request.POST['id']
@@ -731,24 +749,6 @@ def add_subtopics(request, i_id, t_id):
 
 
 @login_required
-def delete_assign_topic(request, s_id):
-    if request.user.is_staff:
-        try:
-            subtopic = Subtopic.objects.get(subtopic_hash=s_id)
-            if subtopic.subtopic_status == 'ACCEPTED':
-                messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
-                return redirect('assign-topics')
-            else:
-                subtopic.assigned_user_id = None
-                subtopic.save()
-                return redirect('assign-topics')
-        except:
-            return redirect('dashboard')
-    else:
-        return redirect('dashboard')
-
-
-@login_required
 def add_topics(request):
     if request.user.is_staff:
         form = add_topic()
@@ -764,6 +764,19 @@ def add_topics(request):
                 obj = Topic.objects.get(pk=topic_id)
                 obj.topic_order = topoder
                 obj.save()
+            elif "deletetopic" in request.POST:
+                topic_id = request.POST['deletetopic']
+                internship_id = request.POST['internshipid']
+
+                subtopic = Subtopic.objects.filter(topic_id=topic_id)
+                if subtopic:
+                    messages.error(request, "Subtopics exist for this topic; cannot delete!")
+                    internship = Internship.objects.get(pk=internship_id)
+                else:
+                    topic = Topic.objects.get(pk=topic_id)
+                    topic.delete()
+                    messages.success(request, "Topic deleted!")
+                    internship = Internship.objects.get(pk=internship_id)
             else:
                 topic = request.POST['topic']
                 id = request.POST['id']
@@ -809,28 +822,37 @@ def review_submissions(request):
     if request.user.is_staff:
         first_internship = Internship.objects.first()
         first_internship = Internship.objects.get(internship_topic=first_internship)
-        interns = User.objects.filter(userdetails__user_role='INTERN').filter(subtopic__topic_id__internship_id=first_internship.id)
+        interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('subtopic_order').order_by('topic_id').filter(topic_id__internship_id__internship_topic=first_internship).order_by('subtopic_modification_date')
+        subtopic = Subtopic.objects.filter(
+            topic_id__internship_id__internship_topic=first_internship).order_by('topic_id__topic_order').order_by(
+            'subtopic_order').order_by('-subtopic_modification_date')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
         if "search_internship" in request.POST:
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
-                'subtopic_order').order_by('topic_id')
+                'topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
-            interns = User.objects.filter(subtopic__topic_id__internship_id=request.POST['search_internship'])
+            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                userdetails__user_status='ACTIVE').filter(
+                subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
 
         if "search_intern" in request.POST:
-            subtopic = Subtopic.objects.filter(assigned_user_id=request.POST['search_intern']).order_by(
-                'subtopic_order').order_by('topic_id')
+            subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['selected_internship']).filter(
+                assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by(
+                '-subtopic_modification_date')
+            first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
+            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                userdetails__user_status='ACTIVE').filter(
+                subtopic__topic_id__internship_id_id=request.POST['selected_internship']).distinct
 
         context = {
             'subtopic': subtopic,
             'internship': internship,
             'first_internship': first_internship,
             'interns': interns,
-            'userdetails':userdetails,
+            'userdetails': userdetails,
             'messages': messages,
         }
 
@@ -894,11 +916,12 @@ def manage_interns(request):
 
 @login_required
 def assign_topics(request):
-    if request.user.is_staff:
+    if request.user.is_staff and not request.user.is_superuser:
         form = AssignTopic()
         internship = Internship.objects.all()
         first_internsip = Internship.objects.filter(internship_status='ACTIVE').first()
-        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(topic_id__internship_id_id=first_internsip.pk)
+        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
+            topic_id__internship_id_id=first_internsip.pk)
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
@@ -907,18 +930,25 @@ def assign_topics(request):
                     subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
                 except:
                     subtopic = None
+            elif "deletetheassign" in request.POST:
+                s_id = request.POST['deletetheassign']
+                st = Subtopic.objects.get(subtopic_hash=s_id)
+                first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
+                subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
+                if st.subtopic_status == 'ACCEPTED':
+                    messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
+                else:
+                    st.assigned_user_id = None
+                    st.save()
             else:
-                if request.method == "POST":
-                    selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                    try:
-                        user = User.objects.get(pk=request.POST["assigned_user_id"])
-                        selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save()  # add email here
-                        messages.success(request, 'Topic assigned to the intern')
-                        first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
-                        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
-                    except:
-                        messages.error(request, "Intern not selected")
+                selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
+                user = User.objects.get(pk=request.POST["assigned_user_id"])
+                selectd_subtopic.assigned_user_id_id = user.id
+                selectd_subtopic.save()  # add email here
+                messages.success(request, 'Topic assigned to the intern')
+                first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
+                subtopic = Subtopic.objects.filter(
+                    topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
 
         context = {
             'form': form,
@@ -997,15 +1027,9 @@ def review_submissions_subtopic(request, s_id):
         if request.method == "POST":
             if "message" in request.POST:
                 message = request.POST['message']
-                try:
-                    obj = Messages.objects.get(subtopic_id_id=subtopic.pk)
-                    obj.message = message
-                    obj.message_send_date = now()
-                    obj.save()
-                except:
-                    obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
-                                   message_send_date=now())
-                    obj.save()
+                obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
+                               message_send_date=now())
+                obj.save()
             else:
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
@@ -1021,16 +1045,12 @@ def review_submissions_subtopic(request, s_id):
                                       professor=professor, data_aproval_date=now())
                     obj.save()
 
-        try:
-            instance = Messages.objects.get(subtopic_id_id=subtopic.pk)
-            form_message = sendMessage(request.POST or None, instance=instance)
-        except:
-            form_message = sendMessage()
+        form_message = sendMessage()
 
         try:
             instance = Contributor.objects.get(subtopic_id_id=subtopic.pk)
             form = addContributor(request.POST or None, instance=instance)
-        except:
+        except Exception:
             form = addContributor()
 
         context = {
@@ -1169,47 +1189,6 @@ def user_logout(request):
 
 def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
-
-
-@login_required
-def delete_topic(request, t_id):
-    if request.user.is_staff and not request.user.is_superuser:
-        try:
-            subtopic = Subtopic.objects.filter(topic_id=t_id)
-            if subtopic:
-                messages.error(request, "Subtopics exist for this topic; cannot delete!")
-                return redirect('add-topics')
-            else:
-                topic = Topic.objects.get(pk=t_id)
-                topic.delete()
-                messages.success(request, "Topic deleted!")
-                return redirect('add-topics')
-        except:
-            return redirect('add-topics')
-
-    else:
-        return redirect('dashboard')
-
-
-@login_required
-def delete_subtopic(request, t_id, st_id):
-    if request.user.is_staff and not request.user.is_superuser:
-        subtopic = Subtopic.objects.get(subtopic_hash=st_id)
-        try:
-            if Data.objects.filter(subtopic_id__topic_id_id=t_id, subtopic_id__subtopic_hash=st_id).exists():
-                messages.error(request, "Data exists for this subtopic, cannot delete!!")
-                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                                subtopic.topic_id.topic_url)
-            else:
-                subtopic.delete()
-                messages.success(request, "Subtopic deleted!")
-                return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                                subtopic.topic_id.topic_url)
-        except:
-            return redirect('add-subtopics', subtopic.topic_id.internship_id.internship_url,
-                            subtopic.topic_id.topic_url)
-    else:
-        return redirect('dashboard')
 
 
 def activate(request, uidb64, token):

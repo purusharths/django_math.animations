@@ -113,7 +113,7 @@
                             {% if i.data_id_id == data.pk %}
                             <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
-                            {% if data.data_caption != None %}
+                            {% if data.data_caption != NULL %}
                             <br>
                             <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
                             {% endif %}
@@ -149,7 +149,7 @@
                                 <source src="{{ data.data_video.url }}" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>
-                            {% if data.data_caption != None %}
+                            {% if data.data_caption != NULL %}
                             <br>
                             <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
                             {% endif %}
