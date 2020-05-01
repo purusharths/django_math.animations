@@ -198,7 +198,7 @@ def add_users(request):
                     'token': account_activation_token.make_token(user),
                     'pass': password,
                 })
-                email = EmailMessage(mail_subject, message, SENDER_EMAIL, to=[email])
+                email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
                 email.send()
             except:
                 messages.error(request, 'Some error occured while sending email!')  # What is this for?
