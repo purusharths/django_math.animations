@@ -63,10 +63,10 @@
                                 <form method="POST" class="form-group" name="RearrangeSubTopic">
                                     <input type="hidden" value="{{ i.pk }}" name="subtopicid">
                                     {% csrf_token %} {{ rearrange_subtopic|crispy }}
-                                  </form>
                             </td>
                             <td>
                                 <input class="btn btn-outline-success" type="submit" name="submit" value="Change">
+                                   </form>
                             </td>
                         <td>
                             <a href="{% url 'delete-subtopic' i.topic_id_id i.subtopic_hash %}" class="btn btn-outline-danger">Delete</a>
