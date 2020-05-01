@@ -825,7 +825,8 @@ def review_submissions(request):
         first_internship = ""
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by('topic_id__topic_order').order_by(
+        subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
+            'topic_id__topic_order').order_by(
             'subtopic_order')
         messages = Messages.objects.all()
         userdetails = UserDetails.objects.all()
@@ -1072,20 +1073,28 @@ def approve_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
-        instance.subtopic_status = "ACCEPTED"
-        # try:
-        instance.save()
-        scheme = request.is_secure() and "https" or "http"
-        message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
-        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
-        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
-                                                           instance.assigned_user_id.last_name,
-                                                           instance.subtopic_name, instance.subtopic_status,
-                                                           message_link, subtopic_link)
-        send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
-        return redirect('review-submissions-subtopic', instance.subtopic_hash)
-        # except IntegrityError:
-        #    messages.error(request, "An empty submission cannot be accepted!")
+        try:
+            data = Data.objects.get(subtopic_id_id=instance.id)
+        except:
+            data = None
+
+        if data:
+            instance.subtopic_status = "ACCEPTED"
+            instance.save()
+            scheme = request.is_secure() and "https" or "http"
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                      instance.subtopic_hash)
+            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                   instance.subtopic_hash)
+            subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                                   instance.assigned_user_id.last_name,
+                                                                   instance.subtopic_name, instance.subtopic_status,
+                                                                   message_link, subtopic_link)
+            send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        else:
+            messages.error(request, 'An empty submission cannot be Approved!')
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
@@ -1094,18 +1103,27 @@ def approve_subtopic(request, id):
 def reject_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
-        t_id = instance.pk
-        instance.subtopic_status = "REJECTED"
-        instance.save()
-        scheme = request.is_secure() and "https" or "http"
-        message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
-        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
-        subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
-                                                           instance.assigned_user_id.last_name,
-                                                           instance.subtopic_name, instance.subtopic_status,
-                                                           message_link, subtopic_link)
-        send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
-        return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        try:
+            data = Data.objects.get(subtopic_id_id=instance.id)
+        except:
+            data = None
+
+        if data:
+            t_id = instance.pk
+            instance.subtopic_status = "REJECTED"
+            instance.save()
+            scheme = request.is_secure() and "https" or "http"
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
+            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'], instance.subtopic_hash)
+            subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                               instance.assigned_user_id.last_name,
+                                                               instance.subtopic_name, instance.subtopic_status,
+                                                               message_link, subtopic_link)
+            send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        else:
+            messages.error(request, 'An empty submission cannot be Rejected!')
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
 
