@@ -125,7 +125,8 @@ class AssignTopic(ModelForm):
 
     def __init__(self):
         super().__init__()
-        self.fields['assigned_user_id'].queryset = User.objects.filter(userdetails__user_role='INTERN',userdetails__user_status='ACTIVE')
+        self.fields['assigned_user_id'].queryset = User.objects.filter(userdetails__user_role='INTERN',
+                                                                       userdetails__user_status='ACTIVE')
 
 
 class data(ModelForm):
