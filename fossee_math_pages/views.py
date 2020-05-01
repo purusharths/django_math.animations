@@ -456,6 +456,7 @@ def edit_media(request, t_id, id):
                         content = request.POST.get('data_content')
                         img = request.FILES.get('data_image')
                         video = request.FILES.get('data_video')
+                        caption = request.POST.get('data_caption')
                         instance = Data.objects.get(data_hash=id)
                         if img is None and video is None:
                             if content.strip() == '':
@@ -481,7 +482,7 @@ def edit_media(request, t_id, id):
                         instance.data_content = content
                         instance.data_image = img
                         instance.data_video = video
-                        instance.data_caption = ""
+                        instance.data_caption = caption
                         instance.data_modification_date = now()
                         instance.save()
                         sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
@@ -1035,7 +1036,7 @@ def review_submissions_subtopic(request, s_id):
         try:
             instance = Contributor.objects.get(subtopic_id_id=subtopic.pk)
             form = addContributor(request.POST or None, instance=instance)
-        except:
+        except Exception:
             form = addContributor()
 
         context = {
