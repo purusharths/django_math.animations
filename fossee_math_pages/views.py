@@ -748,7 +748,7 @@ def add_topics(request):
     if request.user.is_staff:
         form = add_topic()
         topic_order = topicOrder()
-        internship = Internship.objects.filter().first()
+        internship =  Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
@@ -976,7 +976,7 @@ def interns(request):
     if request.user.is_staff:
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
-        internship = Internship.objects.first()
+        internship =  Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
         internship = Internship.objects.get(pk=internship.pk)
 
         if "search_internship" in request.POST:
@@ -995,7 +995,7 @@ def interns(request):
 @login_required
 def internship_progress(request):
     if request.user.is_staff or request.user.is_superuser:
-        internship = Internship.objects.first()
+        internship =  Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
         internship = Internship.objects.filter(pk=internship.pk)
         topics = Topic.objects.all()
         subtopics = Subtopic.objects.all()
