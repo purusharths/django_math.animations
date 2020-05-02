@@ -1247,14 +1247,16 @@ def activate(request, uidb64, token):
 
 def password_set(request):
     form = PasswordChangeForm(user=request.user)
-    if request.method == 'POST':
-        form = PasswordChangeForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user)
-            messages.success(request, 'Password Changed Successfully!')
-            return redirect(dashboard)
-
+    try:
+        if request.method == 'POST':
+            form = PasswordChangeForm(user=request.user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                update_session_auth_hash(request, form.user)
+                messages.success(request, 'Password Changed Successfully!')
+                return redirect(dashboard)
+    except NotImplementedError:
+        messages.error(request,'User is not expected to visit this page again !')
     context = {
         'form': form,
     }
