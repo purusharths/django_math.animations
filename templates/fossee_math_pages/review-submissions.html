@@ -78,9 +78,9 @@
                         {% for detail in userdetails %}
                             {% if k.assigned_user_id == detail.user_id %}
                                 {% if detail.user_status == "INACTIVE" %}
-                                    <td><span style="color: red">{{ k.assigned_user_id }}</span></td>
+                                    <td><span class="text-black-50">{{ k.assigned_user_id }}</span></td>
                                 {% else %}
-                                    <td><span style="color: green"> {{ k.assigned_user_id }}</span></td>
+                                    <td><span> {{ k.assigned_user_id }}</span></td>
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
