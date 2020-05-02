@@ -343,14 +343,14 @@ def add_submission_subtopic(request, st_id):
                             caption = caption_video
                             video_file = str(video)
                             if not video_file.lower().endswith(('.mp4', '.webm')):
-                                messages.error(request, 'Inavalid File Type for Video')
+                                messages.error(request, 'Invalid File Type for Video')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if video is None and content.strip() == '':
                             caption = caption_image
                             image = str(img)
                             if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                                messages.error(request, 'Inavalid File Type for Image')
+                                messages.error(request, 'Invalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if content.strip() != '':
