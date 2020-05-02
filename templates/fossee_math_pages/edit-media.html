@@ -60,19 +60,22 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                     <h5 class="card-title">Edit Text</h5>
-                    <p class="card-text">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
+                    <p class="card-text text-muted">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
                     <form method="POST" enctype="multipart/form-data">
+                        <button class="float-right btn btn-sm btn-light">
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px">Save
+                        </button>
                         {% csrf_token %}
                         <center>
                             {{ form.media }} {{ form_text }}
                             <br>
-                            <button class="btn btn-sm btn-outline-success">Save</button>
+                            
                         </center>
                     </form>
                 </div>
                 <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
                     <h5 class="card-title">Replace Text</h5>
-                    <p class="card-text">Replace Text with Image/Video</p><br/>
+                    <p class="card-text">Replace existing text with Image or Video</p><br/>
                     {% if current_image %}
                         <center>
                         <img src="{{ current_image.url }}" height="250px">
@@ -82,7 +85,8 @@
                     <form method="post" name="ImageForm" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}{{ form_image|crispy }}
-                    <button class="btn btn-outline-primary">Upload</button>
+                    <button class="btn btn-light">
+                        <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
                     </form>
                     <br>
                     <br>
@@ -98,7 +102,8 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}{{ form_video|crispy }}
-                    <button class="btn btn-outline-primary">Upload</button>
+                        <button class="btn btn-light">
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
                     </form>
                 </div>
             </div>
