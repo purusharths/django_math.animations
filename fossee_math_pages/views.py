@@ -931,7 +931,7 @@ def assign_topics(request):
     if request.user.is_staff and not request.user.is_superuser:
         form = AssignTopic()
         internship = Internship.objects.all()
-        first_internsip = Internship.objects.filter(internship_status='ACTIVE').first()
+        first_internsip = Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
         subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
             topic_id__internship_id_id=first_internsip.pk)
 
