@@ -333,11 +333,11 @@ def add_submission_subtopic(request, st_id):
                     caption = None
 
                     if img.size > 5242880:
-                        messages.error(request,'Maximum Image File Size is 5MB')
+                        messages.error(request, 'Maximum Image File Size is 5MB')
                         return redirect('add-submission-subtopic', st_id)
 
                     if video.size > 31457280:
-                        messages.error(request,'Maximum Video File Size is 30MB')
+                        messages.error(request, 'Maximum Video File Size is 30MB')
                         return redirect('add-submission-subtopic', st_id)
 
                     if subtopic.assigned_user_id.id == request.user.id:
@@ -480,11 +480,11 @@ def edit_media(request, t_id, id):
                     caption = request.POST.get('data_caption')
 
                     if img.size > 5242880:
-                        messages.error(request,'Maximum Image File Size is 5MB')
+                        messages.error(request, 'Maximum Image File Size is 5MB')
                         return redirect('edit-media', t_id, id)
 
                     if video.size > 31457280:
-                        messages.error(request,'Maximum Video File Size is 30MB')
+                        messages.error(request, 'Maximum Video File Size is 30MB')
                         return redirect('edit-media', t_id, id)
 
                     if img is not None:
@@ -502,7 +502,7 @@ def edit_media(request, t_id, id):
                         else:
                             img = None
                     elif video is None and img is None:
-                        messages.error(request,'No Files selected to upload !')
+                        messages.error(request, 'No Files selected to upload !')
                         return redirect('edit-media', t_id, id)
 
                     instance.data_content = ""
@@ -522,11 +522,11 @@ def edit_media(request, t_id, id):
                     caption = request.POST.get('data_caption')
 
                     if img.size > 5242880:
-                        messages.error(request,'Maximum Image File Size is 5MB')
+                        messages.error(request, 'Maximum Image File Size is 5MB')
                         return redirect('edit-media', t_id, id)
 
                     if video.size > 31457280:
-                        messages.error(request,'Maximum Video File Size is 30MB')
+                        messages.error(request, 'Maximum Video File Size is 30MB')
                         return redirect('edit-media', t_id, id)
 
                     if img is not None:
@@ -544,7 +544,7 @@ def edit_media(request, t_id, id):
                         else:
                             img = None
                     elif video is None and img is None:
-                        messages.error(request,'No Files selected to upload !')
+                        messages.error(request, 'No Files selected to upload !')
                         return redirect('edit-media', t_id, id)
 
                     instance.data_content = ""
@@ -641,7 +641,6 @@ def edit_image(request, t_id, id):
                     return redirect('edit-image-staff', t_id, id)
                 else:
                     return redirect('edit-image', t_id, id)
-
 
         context = {
             'image': image,
