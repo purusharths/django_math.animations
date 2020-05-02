@@ -476,47 +476,6 @@ def edit_media(request, t_id, id):
                     img = request.FILES.get('data_image')
                     video = request.FILES.get('data_video')
                     caption = request.POST.get('data_caption')
-
-                    if img is not None:
-                        image = str(img)
-                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                            messages.error(request, 'Inavalid File Type for Image')
-                            return redirect('edit-media', t_id, id)
-                        elif img.size > 2097152:
-                            messages.error(request, 'Maximum Image File Size is 2MB')
-                            return redirect('edit-media', t_id, id)
-                        else:
-                            video = None
-                    elif video is not None:
-                        video_file = str(video)
-                        if not video_file.lower().endswith(('.mp4', '.webm')):
-                            messages.error(request, 'Inavalid File Type for Video')
-                            return redirect('edit-media', t_id, id)
-                        elif video.size > 31457280:
-                            messages.error(request, 'Maximum Video File Size is 30MB')
-                            return redirect('edit-media', t_id, id)
-                        else:
-                            img = None
-                    elif video is None and img is None:
-                        messages.error(request, 'No Files selected to upload !')
-                        return redirect('edit-media', t_id, id)
-
-                    instance.data_content = ""
-                    instance.data_image = img
-                    instance.data_video = video
-                    instance.data_caption = caption
-                    instance.data_modification_date = now()
-                    instance.save()
-                    sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
-                    sub.subtopic_modification_date = now()
-                    sub.save()
-                    messages.success(request, 'Image added Successfully !')
-                    return redirect('add-submission-subtopic', t_id)
-                elif from_video:
-                    video = request.FILES.get('data_video')
-                    img = request.FILES.get('data_image')
-                    caption = request.POST.get('data_caption')
-
                     if img is not None:
                         image = str(img)
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
@@ -540,7 +499,44 @@ def edit_media(request, t_id, id):
                     elif video is None and img is None:
                         messages.error(request, 'No Files selected to upload !')
                         return redirect('edit-media', t_id, id)
-
+                    instance.data_content = ""
+                    instance.data_image = img
+                    instance.data_video = video
+                    instance.data_caption = caption
+                    instance.data_modification_date = now()
+                    instance.save()
+                    sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                    sub.subtopic_modification_date = now()
+                    sub.save()
+                    messages.success(request, 'Image added Successfully !')
+                    return redirect('add-submission-subtopic', t_id)
+                elif from_video:
+                    video = request.FILES.get('data_video')
+                    img = request.FILES.get('data_image')
+                    caption = request.POST.get('data_caption')
+                    if img is not None:
+                        image = str(img)
+                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                            messages.error(request, 'Inavalid File Type for Image')
+                            return redirect('edit-media', t_id, id)
+                        elif img.size > 5242880:
+                            messages.error(request, 'Maximum Image File Size is 5MB')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            video = None
+                    elif video is not None:
+                        video_file = str(video)
+                        if not video_file.lower().endswith(('.mp4', '.webm')):
+                            messages.error(request, 'Inavalid File Type for Video')
+                            return redirect('edit-media', t_id, id)
+                        elif video.size > 31457280:
+                            messages.error(request, 'Maximum Video File Size is 30MB')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            img = None
+                    elif video is None and img is None:
+                        messages.error(request, 'No Files selected to upload !')
+                        return redirect('edit-media', t_id, id)
                     instance.data_content = ""
                     instance.data_image = ""
                     instance.data_video = video
@@ -565,7 +561,6 @@ def edit_media(request, t_id, id):
                     current_video = instance.data_video
                     caption_image = instance.data_caption
                     from_video = change_video(request.POST, request.FILES, instance=instance)
-
             context = {
                 'form_text': form_text,
                 'form_image': form_image,
@@ -578,7 +573,7 @@ def edit_media(request, t_id, id):
             }
             return render(request, 'fossee_math_pages/edit-media.html', context)
         else:
-            messages.error(request, 'You do not have access to that page!')
+            messages.error(request, 'You no longer have access to that page!')
             return redirect('dashboard')
     else:
         return redirect('dashboard')
@@ -1004,8 +999,7 @@ def assign_topics(request):
     if request.user.is_staff and not request.user.is_superuser:
         form = AssignTopic()
         internship = Internship.objects.all()
-        first_internsip = Internship.objects.filter(
-            internship_status='ACTIVE').first()  # taking first active internship
+        first_internsip = Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
         subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
             topic_id__internship_id_id=first_internsip.pk)
 
