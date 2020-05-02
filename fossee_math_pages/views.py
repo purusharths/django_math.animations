@@ -332,6 +332,14 @@ def add_submission_subtopic(request, st_id):
                     caption_video = request.POST.get('caption_video')
                     caption = None
 
+                    if img.size > 5242880:
+                        messages.error(request,'Maximum Image File Size is 5MB')
+                        return redirect('add-submission-subtopic', st_id)
+
+                    if video.size > 31457280:
+                        messages.error(request,'Maximum Video File Size is 30MB')
+                        return redirect('add-submission-subtopic', st_id)
+
                     if subtopic.assigned_user_id.id == request.user.id:
                         if img is None and video is None:
                             if content in ('', ' '):
@@ -471,6 +479,14 @@ def edit_media(request, t_id, id):
                     video = request.FILES.get('data_video')
                     caption = request.POST.get('data_caption')
 
+                    if img.size > 5242880:
+                        messages.error(request,'Maximum Image File Size is 5MB')
+                        return redirect('edit-media', t_id, id)
+
+                    if video.size > 31457280:
+                        messages.error(request,'Maximum Video File Size is 30MB')
+                        return redirect('edit-media', t_id, id)
+
                     if img is not None:
                         image = str(img)
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
@@ -504,7 +520,14 @@ def edit_media(request, t_id, id):
                     video = request.FILES.get('data_video')
                     img = request.FILES.get('data_image')
                     caption = request.POST.get('data_caption')
-                    video_file = str(video)
+
+                    if img.size > 5242880:
+                        messages.error(request,'Maximum Image File Size is 5MB')
+                        return redirect('edit-media', t_id, id)
+
+                    if video.size > 31457280:
+                        messages.error(request,'Maximum Video File Size is 30MB')
+                        return redirect('edit-media', t_id, id)
 
                     if img is not None:
                         image = str(img)

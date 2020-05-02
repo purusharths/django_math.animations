@@ -82,7 +82,7 @@
                     <p class="card-text">Replace Text with Image/Video</p><br/>
                     {% if current_image %}
                         <center>
-                        <img src="{{ current_image.url }}" height="250px">
+                        <img src="{{ current_image.url }}" height="250px" style="max-width: 100%">
                         <p>{{ caption_image }}</p>
                         </center>
                     {% endif %}
