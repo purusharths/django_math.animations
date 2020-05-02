@@ -101,7 +101,7 @@
                         <td>{{ k.subtopic_modification_date|date:'d M Y H:i' }}</td>
                         <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
                         <td><a href="{% url 'messages' k.subtopic_hash %}"><img
-                                {% for mess in messages %}
+                                {% for mess in messages_user %}
                                     {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
                                         src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}"
                                         height="20px"

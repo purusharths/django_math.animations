@@ -828,7 +828,7 @@ def review_submissions(request):
         subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
             'topic_id__topic_order').order_by(
             'subtopic_order')
-        messag = Messages.objects.all()
+        messages_user = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
         if "search_internship" in request.POST:
@@ -860,7 +860,7 @@ def review_submissions(request):
             'first_internship': first_internship,
             'interns': interns,
             'userdetails': userdetails,
-            'messages': messag,
+            'messages_user': messages_user,
             'selected_intern': selected_intern,
         }
 
