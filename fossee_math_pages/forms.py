@@ -65,7 +65,7 @@ class AddContributor(ModelForm):
 class EditMedia(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_content', 'data_image', 'data_video', 'data_caption']
+        fields = ['data_image', 'data_video', 'data_caption']
 
 
 class ManageIntern(ModelForm):
@@ -86,38 +86,6 @@ class subtopicOrder(ModelForm):
         fields = ['subtopic_order']
 
 
-# class AddIntern(ModelForm):
-#     class Meta:
-#         model = Intern
-#         labels = {
-#             'user_id': 'Intern Name',
-#             'internship_id': 'Internship Name'
-#         }
-#         fields = ['user_id', 'internship_id']
-#
-#     def __init__(self, user, *args, **kwargs):
-#         super(AddIntern, self).__init__(*args, **kwargs)
-#         self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
-#         self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
-
-#
-# class AssignTopic(ModelForm):
-#     class Meta:
-#         model = AssignedTopics
-#         labels = {
-#             'user_id': 'User',
-#             'topic_d': 'Topic',
-#         }
-#         fields = ['user_id', 'topic_id']
-#
-#     def __init__(self, user, *args, **kwargs):
-#         super(AssignTopic, self).__init__(*args, **kwargs)
-#         assigned = AssignedTopics.objects.all().values_list('user_id_id')
-#         qs = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE").exclude(user_id_id__in=assigned)
-#         self.fields['user_id'].queryset = qs
-#         inner = AssignedTopics.objects.all().values_list('topic_id_id')
-#         self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
-
 class AssignTopic(ModelForm):
     class Meta:
         model = Subtopic
@@ -135,6 +103,28 @@ class data(ModelForm):
         fields = ['data_content']
         labels = {
             'data_content': "",
+        }
+
+
+class change_image(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_image', 'data_video', 'data_caption']
+        labels = {
+            'data_image': "Image",
+            'data_video': "<br>OR<br><br>Video",
+            'data_caption': "<br>Caption",
+        }
+
+
+class change_video(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_video', 'data_image', 'data_caption']
+        labels = {
+            'data_video': "Video",
+            'data_image': "<br>OR<br><br>Image",
+            'data_caption': "<br>Caption",
         }
 
 
