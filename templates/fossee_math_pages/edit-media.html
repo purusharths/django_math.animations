@@ -60,8 +60,8 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                     <h5 class="card-title">Edit Text</h5>
-                    <p class="card-text">Last Edited on {{ subtopic.subtopic_modification_date }}</p>
-                    <form method="POST">
+                    <p class="card-text">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
+                    <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <center>
                             {{ form.media }} {{ form_text }}
@@ -79,7 +79,7 @@
                         <p>{{ caption_image }}</p>
                         </center>
                     {% endif %}
-                    <form method="POST">
+                    <form method="post" name="ImageForm" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}{{ form_image|crispy }}
                     <button class="btn btn-outline-primary">Upload</button>
@@ -95,7 +95,7 @@
                             <p>{{ caption_video }}</p>
                         </center>
                     {% endif %}
-                    <form method="POST">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}{{ form_video|crispy }}
                     <button class="btn btn-outline-primary">Upload</button>
