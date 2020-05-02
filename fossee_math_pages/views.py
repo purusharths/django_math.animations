@@ -446,21 +446,10 @@ def edit_media(request, t_id, id):
             caption_image = ""
             current_video = ""
             caption_video = ""
-
-            if instance.data_content:
-                form_text = data(request.POST or None, instance=instance)
-            elif instance.data_image:
-                current_image = instance.data_image
-                caption_image = instance.data_caption
-                form_image = change_image(request.POST or None, instance=instance)
-            else:
-                current_video = instance.data_video
-                caption_image = instance.data_caption
-                from_video = change_video()
-
             t_id = instance.subtopic_id.subtopic_hash
             if request.POST:
                 if "data_content" in request.POST:
+                    print("working")
                     content = request.POST.get('data_content')
                     if content.strip() == '':
                         messages.error(request, "Fill any one of the field")
@@ -477,7 +466,7 @@ def edit_media(request, t_id, id):
                         sub.save()
                         messages.success(request, 'Data edited successfullty !')
                         return redirect('add-submission-subtopic', t_id)
-                elif "data_image" in request.POST:
+                elif form_image:
                     img = request.FILES.get('data_image')
                     caption = request.POST.get('data_caption')
                     image = str(img)
@@ -496,7 +485,7 @@ def edit_media(request, t_id, id):
                         sub.save()
                         messages.success(request, 'Image added Successfully !')
                         return redirect('add-submission-subtopic', t_id)
-                elif "data_video" in request.POST:
+                elif from_video:
                     video = request.FILES.get('data_video')
                     caption = request.POST.get('data_caption')
                     video_file = str(video)
@@ -515,6 +504,19 @@ def edit_media(request, t_id, id):
                         sub.save()
                         messages.success(request, 'Video added Successfully !')
                         return redirect('add-submission-subtopic', t_id)
+                else:
+                    return redirect('add-submission-subtopic', t_id)
+            else:
+                if instance.data_content:
+                    form_text = data(request.POST or None, instance=instance)
+                elif instance.data_image:
+                    current_image = instance.data_image
+                    caption_image = instance.data_caption
+                    form_image = change_image(request.POST, request.FILES, instance=instance)
+                else:
+                    current_video = instance.data_video
+                    caption_image = instance.data_caption
+                    from_video = change_video(request.POST, request.FILES, instance=instance)
 
             context = {
                 'form_text': form_text,
