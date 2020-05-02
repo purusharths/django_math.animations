@@ -3,6 +3,7 @@ import random
 import re
 import textwrap
 import uuid
+from itertools import chain
 
 import pytz
 import requests
@@ -26,7 +27,7 @@ from email_validator import validate_email, EmailNotValidError
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 
-#print(SENDER_EMAIL)
+# print(SENDER_EMAIL)
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
@@ -289,23 +290,13 @@ def index(request):
 
 
 def home_search_results(request, search_contains_query):
-    datas = ""
-    datass = ""
-    page_obj = ""
     topic = Subtopic.objects.all()
 
     datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
+    datasss = Subtopic.objects.filter(topic_id__internship_id__internship_topic__icontains=search_contains_query)
 
-    if datas:
-        paginator = Paginator(datas, 15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-    if datass:
-        paginator = Paginator(datass, 15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+    page_obj = list(chain(datas, datass, datass))
 
     data_search = Data.objects.all()
 
@@ -640,7 +631,7 @@ def password_change(request):
                 messages.success(request, 'Password Changed Successfully!')
                 return redirect(dashboard)
     except NotImplementedError:
-        messages.error(request,'User is not logged in to change password !')
+        messages.error(request, 'User is not logged in to change password !')
 
     context = {
         'form': form,
@@ -956,9 +947,13 @@ def assign_topics(request):
                 selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
                 if request.POST["assigned_user_id"] != "":
                     user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    selectd_subtopic.assigned_user_id_id = user.id
-                    selectd_subtopic.save()  # add email here
-                    messages.success(request, 'Topic assigned to the intern')
+                    ud = UserDetails.objects.get(user_id_id=user.pk)
+                    if ud.user_status == 'ACTIVE':
+                        selectd_subtopic.assigned_user_id_id = user.id
+                        selectd_subtopic.save()  # add email here
+                        messages.success(request, 'Topic assigned to the intern')
+                    else:
+                        messages.error(request, 'User is Inactive !, and you are not allowed to do this action !')
                 else:
                     messages.error(request, 'Select an Intern to Assign')
                 first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
@@ -1199,7 +1194,7 @@ def view_messages(request, s_id):
             scheme = request.is_secure() and "https" or "http"
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
                                                                   subtopic.subtopic_hash)
-            #print(message_link)
+            # print(message_link)
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
                                                 subtopic.subtopic_name, request.user.username, mess, message_link)
@@ -1256,7 +1251,7 @@ def password_set(request):
                 messages.success(request, 'Password Changed Successfully!')
                 return redirect(dashboard)
     except NotImplementedError:
-        messages.error(request,'User is not expected to visit this page again !')
+        messages.error(request, 'User is not expected to visit this page again !')
     context = {
         'form': form,
     }
