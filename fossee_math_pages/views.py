@@ -355,8 +355,8 @@ def add_submission_subtopic(request, st_id):
                             if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                                 messages.error(request, 'Invalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
-                            elif img.size > 5242880:
-                                messages.error(request, 'Maximum Image File Size is 5MB')
+                            elif img.size > 2097152:
+                                messages.error(request, 'Maximum Image File Size is 2MB')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if content.strip() != '':
@@ -482,8 +482,8 @@ def edit_media(request, t_id, id):
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                             messages.error(request, 'Inavalid File Type for Image')
                             return redirect('edit-media', t_id, id)
-                        elif img.size > 5242880:
-                            messages.error(request, 'Maximum Image File Size is 5MB')
+                        elif img.size > 2097152:
+                            messages.error(request, 'Maximum Image File Size is 2MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             video = None
