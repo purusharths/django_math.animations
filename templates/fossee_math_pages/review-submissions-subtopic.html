@@ -102,10 +102,10 @@
     </div>
     <br>
     <div align="center">
-        <a href="{% url 'approve-subtopic' subtopic.id %}"
+        <a href="{% url 'approve-subtopic' subtopic.subtopic_hash %}"
            class="btn btn-outline-success">Aprove</a>
         &nbsp;
-        <a href="{% url 'reject-subtopic' subtopic.id %}"
+        <a href="{% url 'reject-subtopic' subtopic.subtopic_hash %}"
            class="btn btn-outline-danger">Reject</a>
     </div>
 </div>
