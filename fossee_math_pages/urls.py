@@ -39,7 +39,7 @@ urlpatterns = [
                   path('dashboard/review-submissons/<str:t_id>/edit-text/<str:id>', views.edit_text,
                        name='edit-text-staff'),
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
-                  path('approve-subtopic/<int:id>', views.approve_subtopic, name='approve-subtopic'),
-                  path('reject-subtopic/<int:id>', views.reject_subtopic, name='reject-subtopic'),
+                  path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
+                  path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
