@@ -225,8 +225,8 @@ def contents(request, internship):
     internship_details = Internship.objects.get(internship_url=internship)
     id = internship_details.pk
     details = Internship.objects.get(id=id)
-    topics = Topic.objects.filter(internship_id_id=id)
-    subtopics = Subtopic.objects.all()
+    topics = Topic.objects.filter(internship_id_id=id).order_by('topic_order')
+    subtopics = Subtopic.objects.all().order_by('subtopic_order')
 
     if request.POST:
         search_contains_query = request.POST.get('title_contains')
