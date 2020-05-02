@@ -41,46 +41,79 @@
 
     </style>
     <div class="container">
-        <button type="button" class="btn btn-light">
-            <img src="{% static 'web-files/img/multiuse-svgs/arrow-left.svg' %}" height="18px"> Go back</button>
+        <a href="{% url 'add-submission-subtopic' subtopic.subtopic_hash %}" class="btn btn-light">
+            <img src="{% static 'web-files/img/multiuse-svgs/arrow-left.svg' %}" height="18px"> Go back</a>
         <div class="card mt-3 tab-card">
             <div class="card-header tab-card-header">
-              <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Edit Text</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Replace Text</a>
-                </li>
-              </ul>
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
+                           aria-selected="true"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                             alt="Text"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                           aria-selected="false"><img
+                            src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image"> </a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Two"
+                           aria-selected="false"><img
+                            src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"></a>
+                    </li>
+                </ul>
             </div>
-    
+
             <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
-                <h5 class="card-title">Edit Text</h5>
-                <p class="card-text">Last Edited on {date}</p>
-                <a href="#" class="btn btn-sm btn-outline-success">Ckeditor Save button</a> <br>
-                Put CKEDITOR here  (and remove the word DATA CONTENT)          
-              </div>
-              <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+                <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                    <h5 class="card-title">Edit Text</h5>
+                    <p class="card-text text-muted">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
+                    <form method="POST" enctype="multipart/form-data">
+                        <button class="float-right btn btn-sm btn-light">
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px">Save
+                        </button>
+                        {% csrf_token %}
+                        <center>
+                            {{ form.media }} {{ form_text }}
+                            <br>
+                            
+                        </center>
+                    </form>
+                </div>
+                <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+                    <h5 class="card-title">Replace Text</h5>
+                    <p class="card-text">Replace existing text with Image or Video</p><br/>
+                    {% if current_image %}
+                        <center>
+                        <img src="{{ current_image.url }}" height="250px" style="max-width: 100%">
+                        <p>{{ caption_image }}</p>
+                        </center>
+                    {% endif %}
+                    <form method="post" name="ImageForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.media }}{{ form_image|crispy }}
+                    <button class="btn btn-light">
+                        <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
+                    </form>
+                    <br>
+                </div>
+                <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
                 <h5 class="card-title">Replace Text</h5>
-                <p class="card-text">Replace Text with Image/Video</p><br/>
-                image and Video Broswe button with caption 
-                <a href="#" class="btn btn-primary">Upload</a>              
-              </div>  
+                    <p class="card-text">Replace Text with Image/Video</p><br/>
+                    {% if current_video %}
+                        <center>
+                            <video src="{{ current_video.url }}" height="250px" controls></video>
+                            <p>{{ caption_video }}</p>
+                        </center>
+                    {% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.media }}{{ form_video|crispy }}
+                        <button class="btn btn-light">
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
+                    </form>
+                </div>
             </div>
-          </div>
-
-        <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
-
-            {{ form.media }} {{ form.as_p }}
-
-            <div class="upload-btn-wrapper">
-                <input class="btn btn-success mleft" type="submit" name="submit" id="submit" value="Save">
-            </div>
-        </form>
-        <div>
-            <a href="{% url 'add-submission-subtopic' subtopic.subtopic_hash %}" class="btn btn-success">back</a>
         </div>
         <br>
     </div>
