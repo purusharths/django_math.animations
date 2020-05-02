@@ -1081,11 +1081,14 @@ def approve_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         t_id = instance.pk
+        print(instance, t_id)
         try:
-            data = Data.objects.get(subtopic_id_id=instance.id)
-        except:
-            data = None
-
+            data = Data.objects.filter(subtopic_id_id=t_id)
+            print(data)
+        except Data.DoesNotExist:
+           # print(data)
+           data = None
+        print(data)
         if data:
             instance.subtopic_status = "ACCEPTED"
             instance.save()
@@ -1112,8 +1115,8 @@ def reject_subtopic(request, id):
     if request.user.is_staff:
         instance = Subtopic.objects.get(id=id)
         try:
-            data = Data.objects.get(subtopic_id_id=instance.id)
-        except:
+            data = Data.objects.filter(subtopic_id_id=instance.id)
+        except Data.DoesNotExist:
             data = None
 
         if data:
