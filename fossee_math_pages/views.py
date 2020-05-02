@@ -1117,7 +1117,7 @@ def review_submissions_subtopic(request, s_id):
 @login_required
 def approve_subtopic(request, id):
     if request.user.is_staff:
-        instance = Subtopic.objects.get(id=id)
+        instance = Subtopic.objects.get(subtopic_hash=id)
         t_id = instance.pk
         try:
             data = Data.objects.get(subtopic_id_id=instance.id)
@@ -1148,7 +1148,7 @@ def approve_subtopic(request, id):
 @login_required
 def reject_subtopic(request, id):
     if request.user.is_staff:
-        instance = Subtopic.objects.get(id=id)
+        instance = Subtopic.objects.get(subtopic_hash=id)
         try:
             data = Data.objects.get(subtopic_id_id=instance.id)
         except:

@@ -60,7 +60,7 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                     <h5 class="card-title">Edit Text</h5>
-                    <p class="card-text">Last Edited on {{ subtopic.subtopic_modification_date }}</p>
+                    <p class="card-text">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <center>
