@@ -78,9 +78,9 @@
                         {% for detail in userdetails %}
                             {% if k.assigned_user_id == detail.user_id %}
                                 {% if detail.user_status == "INACTIVE" %}
-                                    <td><span style="color: red">{{ k.assigned_user_id }}</span></td>
+                                    <td><span class="text-black-50">{{ k.assigned_user_id }}</span></td>
                                 {% else %}
-                                    <td><span style="color: green"> {{ k.assigned_user_id }}</span></td>
+                                    <td><span> {{ k.assigned_user_id }}</span></td>
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
@@ -101,7 +101,7 @@
                         <td>{{ k.subtopic_modification_date|date:'d M Y H:i' }}</td>
                         <td><a href="{% url 'review-submissions-subtopic' k.subtopic_hash %}">View</a></td>
                         <td><a href="{% url 'messages' k.subtopic_hash %}"><img
-                                {% for mess in messages %}
+                                {% for mess in messages_user %}
                                     {% if not mess.message_is_seen_staff and k.pk == mess.subtopic_id_id %}
                                         src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}"
                                         height="20px"
