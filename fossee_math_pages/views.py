@@ -491,7 +491,7 @@ def edit_media(request, t_id, id):
                 }
                 return render(request, 'fossee_math_pages/edit-media.html', context)
             else:
-                messages.error(request, 'You do not have access to that page!')
+                messages.error(request, 'You no longer have access to edit that page!')
                 return redirect('dashboard')
         except Exception:
             return redirect('dashboard')
