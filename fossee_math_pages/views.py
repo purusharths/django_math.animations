@@ -468,42 +468,73 @@ def edit_media(request, t_id, id):
                         return redirect('add-submission-subtopic', t_id)
                 elif form_image:
                     img = request.FILES.get('data_image')
-                    caption = request.POST.get('data_caption')
-                    image = str(img)
-                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                        messages.error(request, 'Inavalid File Type for Image')
-                        return redirect('edit-media', t_id, id)
-                    else:
-                        instance.data_content = ""
-                        instance.data_image = img
-                        instance.data_video = ""
-                        instance.data_caption = caption
-                        instance.data_modification_date = now()
-                        instance.save()
-                        sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
-                        sub.subtopic_modification_date = now()
-                        sub.save()
-                        messages.success(request, 'Image added Successfully !')
-                        return redirect('add-submission-subtopic', t_id)
-                elif from_video:
                     video = request.FILES.get('data_video')
                     caption = request.POST.get('data_caption')
-                    video_file = str(video)
-                    if not video_file.lower().endswith(('.mp4', '.webm')):
-                        messages.error(request, 'Inavalid File Type for Video')
+
+                    if img is not None:
+                        image = str(img)
+                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                            messages.error(request, 'Inavalid File Type for Image')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            video = None
+                    elif video is not None:
+                        video_file = str(video)
+                        if not video_file.lower().endswith(('.mp4', '.webm')):
+                            messages.error(request, 'Inavalid File Type for Video')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            img = None
+                    elif video is None and img is None:
+                        messages.error(request,'No Files selected to upload !')
                         return redirect('edit-media', t_id, id)
-                    else:
-                        instance.data_content = ""
-                        instance.data_image = ""
-                        instance.data_video = video
-                        instance.data_caption = caption
-                        instance.data_modification_date = now()
-                        instance.save()
-                        sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
-                        sub.subtopic_modification_date = now()
-                        sub.save()
-                        messages.success(request, 'Video added Successfully !')
-                        return redirect('add-submission-subtopic', t_id)
+
+                    instance.data_content = ""
+                    instance.data_image = img
+                    instance.data_video = video
+                    instance.data_caption = caption
+                    instance.data_modification_date = now()
+                    instance.save()
+                    sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                    sub.subtopic_modification_date = now()
+                    sub.save()
+                    messages.success(request, 'Image added Successfully !')
+                    return redirect('add-submission-subtopic', t_id)
+                elif from_video:
+                    video = request.FILES.get('data_video')
+                    img = request.FILES.get('data_image')
+                    caption = request.POST.get('data_caption')
+                    video_file = str(video)
+
+                    if img is not None:
+                        image = str(img)
+                        if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                            messages.error(request, 'Inavalid File Type for Image')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            video = None
+                    elif video is not None:
+                        video_file = str(video)
+                        if not video_file.lower().endswith(('.mp4', '.webm')):
+                            messages.error(request, 'Inavalid File Type for Video')
+                            return redirect('edit-media', t_id, id)
+                        else:
+                            img = None
+                    elif video is None and img is None:
+                        messages.error(request,'No Files selected to upload !')
+                        return redirect('edit-media', t_id, id)
+
+                    instance.data_content = ""
+                    instance.data_image = ""
+                    instance.data_video = video
+                    instance.data_caption = caption
+                    instance.data_modification_date = now()
+                    instance.save()
+                    sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
+                    sub.subtopic_modification_date = now()
+                    sub.save()
+                    messages.success(request, 'Video added Successfully !')
+                    return redirect('add-submission-subtopic', t_id)
                 else:
                     return redirect('add-submission-subtopic', t_id)
             else:
@@ -587,9 +618,7 @@ def edit_image(request, t_id, id):
                     return redirect('edit-image-staff', t_id, id)
                 else:
                     return redirect('edit-image', t_id, id)
-            else:
-                messages.error(request, 'You dont have the access to this page !')
-                return redirect('dashboard')
+
 
         context = {
             'image': image,

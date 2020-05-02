@@ -48,11 +48,18 @@
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
-                           aria-selected="true">Edit Text</a>
+                           aria-selected="true"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                             alt="Text"></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
-                           aria-selected="false">Add / Change Media Files</a>
+                           aria-selected="false"><img
+                            src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image"> </a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Two"
+                           aria-selected="false"><img
+                            src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"></a>
                     </li>
                 </ul>
             </div>
@@ -89,13 +96,13 @@
                         <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
                     </form>
                     <br>
-                    <br>
-                    OR
-                    <br>
-                    <br>
+                </div>
+                <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
+                <h5 class="card-title">Replace Text</h5>
+                    <p class="card-text">Replace Text with Image/Video</p><br/>
                     {% if current_video %}
                         <center>
-                            <video src="{{ current_video }}" height="250px" controls></video>
+                            <video src="{{ current_video.url }}" height="250px" controls></video>
                             <p>{{ caption_video }}</p>
                         </center>
                     {% endif %}
