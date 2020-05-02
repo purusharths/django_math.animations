@@ -332,14 +332,6 @@ def add_submission_subtopic(request, st_id):
                     caption_video = request.POST.get('caption_video')
                     caption = None
 
-                    if img.size > 5242880:
-                        messages.error(request, 'Maximum Image File Size is 5MB')
-                        return redirect('add-submission-subtopic', st_id)
-
-                    if video.size > 31457280:
-                        messages.error(request, 'Maximum Video File Size is 30MB')
-                        return redirect('add-submission-subtopic', st_id)
-
                     if subtopic.assigned_user_id.id == request.user.id:
                         if img is None and video is None:
                             if content in ('', ' '):
@@ -353,12 +345,18 @@ def add_submission_subtopic(request, st_id):
                             if not video_file.lower().endswith(('.mp4', '.webm')):
                                 messages.error(request, 'Inavalid File Type for Video')
                                 return redirect('add-submission-subtopic', st_id)
+                            elif video.size > 31457280:
+                                messages.error(request, 'Maximum Video File Size is 30MB')
+                                return redirect('add-submission-subtopic', st_id)
 
                         if video is None and content.strip() == '':
                             caption = caption_image
                             image = str(img)
                             if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                                 messages.error(request, 'Inavalid File Type for Image')
+                                return redirect('add-submission-subtopic', st_id)
+                            elif img.size > 5242880:
+                                messages.error(request, 'Maximum Image File Size is 5MB')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if content.strip() != '':
@@ -479,18 +477,13 @@ def edit_media(request, t_id, id):
                     video = request.FILES.get('data_video')
                     caption = request.POST.get('data_caption')
 
-                    if img.size > 5242880:
-                        messages.error(request, 'Maximum Image File Size is 5MB')
-                        return redirect('edit-media', t_id, id)
-
-                    if video.size > 31457280:
-                        messages.error(request, 'Maximum Video File Size is 30MB')
-                        return redirect('edit-media', t_id, id)
-
                     if img is not None:
                         image = str(img)
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                             messages.error(request, 'Inavalid File Type for Image')
+                            return redirect('edit-media', t_id, id)
+                        elif img.size > 5242880:
+                            messages.error(request, 'Maximum Image File Size is 5MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             video = None
@@ -498,6 +491,9 @@ def edit_media(request, t_id, id):
                         video_file = str(video)
                         if not video_file.lower().endswith(('.mp4', '.webm')):
                             messages.error(request, 'Inavalid File Type for Video')
+                            return redirect('edit-media', t_id, id)
+                        elif video.size > 31457280:
+                            messages.error(request, 'Maximum Video File Size is 30MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             img = None
@@ -521,18 +517,13 @@ def edit_media(request, t_id, id):
                     img = request.FILES.get('data_image')
                     caption = request.POST.get('data_caption')
 
-                    if img.size > 5242880:
-                        messages.error(request, 'Maximum Image File Size is 5MB')
-                        return redirect('edit-media', t_id, id)
-
-                    if video.size > 31457280:
-                        messages.error(request, 'Maximum Video File Size is 30MB')
-                        return redirect('edit-media', t_id, id)
-
                     if img is not None:
                         image = str(img)
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                             messages.error(request, 'Inavalid File Type for Image')
+                            return redirect('edit-media', t_id, id)
+                        elif img.size > 5242880:
+                            messages.error(request, 'Maximum Image File Size is 5MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             video = None
@@ -540,6 +531,9 @@ def edit_media(request, t_id, id):
                         video_file = str(video)
                         if not video_file.lower().endswith(('.mp4', '.webm')):
                             messages.error(request, 'Inavalid File Type for Video')
+                            return redirect('edit-media', t_id, id)
+                        elif video.size > 31457280:
+                            messages.error(request, 'Maximum Video File Size is 30MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             img = None
