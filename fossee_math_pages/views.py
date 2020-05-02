@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 # from django.contrib.sites.models import Site
 from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
@@ -325,6 +326,8 @@ def add_submission_subtopic(request, st_id):
             t_id = subtopic.pk
             if subtopic.assigned_user_id_id == request.user.id:
                 if request.method == 'POST':
+                    if subtopic.subtopic_status == "ACCEPTED":
+                        return HttpResponse(status=403)
                     content = request.POST.get('data_content')
                     img = request.FILES.get('image')
                     video = request.FILES.get('video')
