@@ -26,7 +26,7 @@ from email_validator import validate_email, EmailNotValidError
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 
-print(SENDER_EMAIL)
+#print(SENDER_EMAIL)
 
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
@@ -1160,7 +1160,7 @@ def view_messages(request, s_id):
                 wrap_text = textwrap.TextWrapper(width=80)
                 wrap_list = wrap_text.wrap(text=mess)
                 mess = "\n".join(wrap_list)
-                print(mess)
+                # print(mess)
                 save_mess = Messages(message=mess, message_send_date=now(), subtopic_id_id=subtopic.pk,
                                      user_id_id=request.user.pk)
                 save_mess.message_is_seen_intern = 1
@@ -1196,7 +1196,7 @@ def view_messages(request, s_id):
             scheme = request.is_secure() and "https" or "http"
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
                                                                   subtopic.subtopic_hash)
-            print(message_link)
+            #print(message_link)
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
                                                 subtopic.subtopic_name, request.user.username, mess, message_link)
