@@ -109,10 +109,10 @@ class data(ModelForm):
 class change_image(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_image', 'data_video', 'data_caption']
+        fields = ['data_image',  'data_caption'] # 'data_video',
         labels = {
             'data_image': "Image",
-            'data_video': "<br>OR<br><br>Video",
+            #'data_video': "<br>OR<br><br>Video",
             'data_caption': "<br>Caption",
         }
 
@@ -120,10 +120,10 @@ class change_image(ModelForm):
 class change_video(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_video', 'data_image', 'data_caption']
+        fields = ['data_video',  'data_caption'] # 'data_image',
         labels = {
             'data_video': "Video",
-            'data_image': "<br>OR<br><br>Image",
+            #'data_image': "<br>OR<br><br>Image",
             'data_caption': "<br>Caption",
         }
 
