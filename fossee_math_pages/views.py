@@ -199,7 +199,7 @@ def add_users(request):
             email.send()
 
             messages.success(request, 'User Added!')
-            return redirect('dashboard')
+            return redirect('add-users')
 
         paginator = Paginator(datas, 25)  # Show 25 contacts per page.
         page_number = request.GET.get('page')
