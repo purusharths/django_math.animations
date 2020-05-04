@@ -36,7 +36,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
 from .email_messages import (got_a_message, submission_status_changed)
-
+from .generic_functions import (large_img_size, large_video_size)
 
 @login_required
 def add_internship(request):
@@ -348,8 +348,8 @@ def add_submission_subtopic(request, st_id):
                             if not video_file.lower().endswith(('.mp4', '.webm')):
                                 messages.error(request, 'Invalid File Type for Video')
                                 return redirect('add-submission-subtopic', st_id)
-                            elif video.size > 31457280:
-                                messages.error(request, 'Maximum Video File Size is 30MB')
+                            if large_video_size(video):
+                                messages.error(request, 'Maximum allowed size for Video is 30MB')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if video is None and content.strip() == '':
@@ -358,8 +358,8 @@ def add_submission_subtopic(request, st_id):
                             if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                                 messages.error(request, 'Invalid File Type for Image')
                                 return redirect('add-submission-subtopic', st_id)
-                            elif img.size > 2097152:
-                                messages.error(request, 'Maximum Image File Size is 2MB')
+                            if large_img_size(img):
+                                messages.error(request, 'Maximum Allowed Size for Image is 2MB')
                                 return redirect('add-submission-subtopic', st_id)
 
                         if content.strip() != '':
@@ -451,14 +451,10 @@ def edit_media(request, t_id, id):
             form_text = data()
             form_image = change_image()
             from_video = change_video()
-            current_image = ""
-            caption_image = ""
-            current_video = ""
-            caption_video = ""
+            current_image, caption_image, current_video, caption_video = "","","",""
             t_id = instance.subtopic_id.subtopic_hash
             if request.POST:
                 if "data_content" in request.POST:
-                    print("working")
                     content = request.POST.get('data_content')
                     if content.strip() == '':
                         messages.error(request, "Fill any one of the field")
@@ -473,7 +469,7 @@ def edit_media(request, t_id, id):
                         sub = Subtopic.objects.get(pk=instance.subtopic_id.pk)
                         sub.subtopic_modification_date = now()
                         sub.save()
-                        messages.success(request, 'Data edited successfullty !')
+                        messages.success(request, 'Submission Updated Successfully')
                         return redirect('add-submission-subtopic', t_id)
                 elif form_image:
                     img = request.FILES.get('data_image')
@@ -484,8 +480,8 @@ def edit_media(request, t_id, id):
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                             messages.error(request, 'Inavalid File Type for Image')
                             return redirect('edit-media', t_id, id)
-                        elif img.size > 5242880:
-                            messages.error(request, 'Maximum Image File Size is 5MB')
+                        elif large_img_size(img):
+                            messages.error(request, 'Maximum Allowed Size for Image is 2MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             video = None
@@ -494,8 +490,8 @@ def edit_media(request, t_id, id):
                         if not video_file.lower().endswith(('.mp4', '.webm')):
                             messages.error(request, 'Inavalid File Type for Video')
                             return redirect('edit-media', t_id, id)
-                        elif video.size > 31457280:
-                            messages.error(request, 'Maximum Video File Size is 30MB')
+                        elif large_video_size(video):
+                            messages.error(request, 'Maximum allowed size for Video is 30MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             img = None
@@ -522,8 +518,8 @@ def edit_media(request, t_id, id):
                         if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                             messages.error(request, 'Inavalid File Type for Image')
                             return redirect('edit-media', t_id, id)
-                        elif img.size > 5242880:
-                            messages.error(request, 'Maximum Image File Size is 5MB')
+                        elif large_img_size(img):
+                            messages.error(request, 'Maximum Allowed Size for Image is 2MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             video = None
@@ -532,8 +528,8 @@ def edit_media(request, t_id, id):
                         if not video_file.lower().endswith(('.mp4', '.webm')):
                             messages.error(request, 'Inavalid File Type for Video')
                             return redirect('edit-media', t_id, id)
-                        elif video.size > 31457280:
-                            messages.error(request, 'Maximum Video File Size is 30MB')
+                        elif large_video_size(video):
+                            messages.error(request, 'Maximum allowed size for Video is 30MB')
                             return redirect('edit-media', t_id, id)
                         else:
                             img = None

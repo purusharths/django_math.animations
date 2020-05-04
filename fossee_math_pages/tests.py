@@ -47,7 +47,7 @@ class FosseeMathTest(TestCase):
                                           user_status=self.user_status)
         self.assertTrue(form.is_valid())
 
-    def CreateInternship(self):
+    def Test_CreateInternship(self):
         internship = Internship.objects.create(internship_topic=self.internship_topic,
                                                internship_url=self.internship_url,
                                                internship_start_date=self.internship_start_date,
