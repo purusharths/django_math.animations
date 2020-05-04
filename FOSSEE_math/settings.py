@@ -189,9 +189,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # Use nose to run all tests
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
@@ -211,3 +208,6 @@ SENDER_EMAIL = SENDER_EMAIL
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_TLS = True
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
