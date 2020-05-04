@@ -35,7 +35,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
-from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
+from .email_messages import (auth_token_message, got_a_message, submission_status_changed, topic_assigned)
 from .generic_functions import (large_img_size, large_video_size)
 
 @login_required
@@ -183,27 +183,23 @@ def add_users(request):
                 u_id.delete()
                 messages.error(request, 'error in creating user with the other details')
                 return redirect('add-users')
-
-            try:
-                current_site = get_current_site(request)
-                mail_subject = "[Activate Account] FOSSEE Animations Mathematics";
-                message = render_to_string('fossee_math_pages/activate_user.html', {
-                    'user': email,
-                    'firstname': firstname,
-                    'lastname': lastname,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                    'pass': password,
-                })
-                email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
-                email.send()
-            except:
-                messages.error(request, 'Some error occured while sending email!')  # What is this for?
-                return redirect('add-users')
+                
+            current_site = get_current_site(request)
+            mail_subject = "[Activate Account] FOSSEE Animations Mathematics"
+            message = render_to_string('fossee_math_pages/activate_user.html', {
+                'user': email,
+                'firstname': firstname,
+                'lastname': lastname,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'pass': password,
+            })
+            email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
+            email.send()
 
             messages.success(request, 'User Added!')
-            return redirect('add-users')
+            return redirect('dashboard')
 
         paginator = Paginator(datas, 25)  # Show 25 contacts per page.
         page_number = request.GET.get('page')
