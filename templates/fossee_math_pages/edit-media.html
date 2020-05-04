@@ -81,8 +81,8 @@
                     </form>
                 </div>
                 <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
-                    <h5 class="card-title">Replace Text</h5>
-                    <p class="card-text">Replace existing text with Image or Video</p><br/>
+                    <h5 class="card-title">Update Image</h5>
+                    <p class="card-text">Replace text with Image or Change the exisiting Image</p><br/>
                     {% if current_image %}
                         <center>
                         <img src="{{ current_image.url }}" height="250px" style="max-width: 100%">
@@ -98,8 +98,8 @@
                     <br>
                 </div>
                 <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
-                <h5 class="card-title">Replace Text</h5>
-                    <p class="card-text">Replace Text with Image/Video</p><br/>
+                <h5 class="card-title">Update Video</h5>
+                    <p class="card-text">Replace Text with Video or Change existing Video</p><br/>
                     {% if current_video %}
                         <center>
                             <video src="{{ current_video.url }}" height="250px" controls></video>

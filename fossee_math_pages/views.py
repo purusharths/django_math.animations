@@ -35,7 +35,7 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, Ma
                     subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
-from .email_messages import (got_a_message, submission_status_changed)
+from .email_messages import (auth_token_message, got_a_message, submission_status_changed, topic_assigned)
 from .generic_functions import (large_img_size, large_video_size)
 
 @login_required
@@ -183,24 +183,20 @@ def add_users(request):
                 u_id.delete()
                 messages.error(request, 'error in creating user with the other details')
                 return redirect('add-users')
-
-            try:
-                current_site = get_current_site(request)
-                mail_subject = "[Activate Account] FOSSEE Animations Mathematics";
-                message = render_to_string('fossee_math_pages/activate_user.html', {
-                    'user': email,
-                    'firstname': firstname,
-                    'lastname': lastname,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                    'pass': password,
-                })
-                email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
-                email.send()
-            except:
-                messages.error(request, 'Some error occured while sending email!')  # What is this for?
-                return redirect('add-users')
+                
+            current_site = get_current_site(request)
+            mail_subject = "[Activate Account] FOSSEE Animations Mathematics"
+            message = render_to_string('fossee_math_pages/activate_user.html', {
+                'user': email,
+                'firstname': firstname,
+                'lastname': lastname,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'pass': password,
+            })
+            email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
+            email.send()
 
             messages.success(request, 'User Added!')
             return redirect('add-users')
@@ -1015,7 +1011,7 @@ def assign_topics(request):
                 first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
                 subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
                 if st.subtopic_status == 'ACCEPTED':
-                    messages.error(request, 'Subtopic is alredy complted and ACCEPTED !')
+                    messages.error(request, 'Subtopic has alredy been completed and Accepted!')
                 else:
                     st.assigned_user_id = None
                     st.save()
@@ -1027,9 +1023,14 @@ def assign_topics(request):
                     if ud.user_status == 'ACTIVE':
                         selectd_subtopic.assigned_user_id_id = user.id
                         selectd_subtopic.save()  # add email here
+                        scheme = request.is_secure() and "https" or "http"
+                        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                        selectd_subtopic.subtopic_hash)
+                        subject, email_message = topic_assigned(user.first_name, user.last_name, selectd_subtopic.topic_id.topic_name, subtopic_link)
+                        send_mail(subject, email_message, SENDER_EMAIL, [user.email], fail_silently=True)
                         messages.success(request, 'Topic assigned to the intern')
                     else:
-                        messages.error(request, 'User is Inactive !, and you are not allowed to do this action !')
+                        messages.error(request, 'User is Inactive. This action requires admin privileges!')
                 else:
                     messages.error(request, 'Select an Intern to Assign')
                 first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
@@ -1116,6 +1117,15 @@ def review_submissions_subtopic(request, s_id):
                 obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
                                message_send_date=now())
                 obj.save()
+                scheme = request.is_secure() and "https" or "http"
+                message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  subtopic.subtopic_hash)
+                # print(message_link)
+                subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
+                                                subtopic.assigned_user_id.last_name,
+                                                subtopic.subtopic_name, request.user.username, message, message_link)
+                send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
+
             else:
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
