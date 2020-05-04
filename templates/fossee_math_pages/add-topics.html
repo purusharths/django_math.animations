@@ -89,7 +89,10 @@
                                     <form method="POST" class="form-group" name="DeleteTopic">{% csrf_token %}
                                         <input type="hidden" value="{{ internship.id }}" name="internshipid">
                                         <input type="hidden" value="{{ tp.id }}" name="deletetopic">
-                                        <button class="btn btn-outline-danger">Delete</button>
+                                        <button class="btn btn-outline-light">
+                                            <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
+                                            width="15px" alt="Delete">
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

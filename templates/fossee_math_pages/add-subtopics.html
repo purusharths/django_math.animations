@@ -74,7 +74,10 @@
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ i.topic_id_id }}" name="deletesubtopictopic">
                                     <input type="hidden" value="{{ i.subtopic_hash }}" name="subtopic">
-                                    <button class="btn btn-outline-danger">Delete</button>
+                                    <button class="btn btn-outline-light">
+                                        <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
+                                        width="15px" alt="Delete">
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -108,6 +111,7 @@
                 var cell2 = row.insertCell(1)
                 var cell3 = row.insertCell(2)
                 var cell4 = row.insertCell(3)
+                var cell5 = row.insertCell(4)
                 cell1.innerHTML = last_table_index_value
                 cell2.innerHTML = '<div class="text-muted">' + topic + '</div>'
                 document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/wait.svg' %}"
@@ -117,6 +121,7 @@
                         mainTable.rows[last_row_index-1]
                         cell2.innerHTML = topic
                         document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/check.svg' %}"
+                        document.getElementById('id_subtopic').value = ""
                         //var olist = document.getElementById("subtopic_list");
                         //var li_e = document.createElement("li");
                         //li_e.appendChild(document.createTextNode(topic))
