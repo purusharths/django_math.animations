@@ -1121,6 +1121,15 @@ def review_submissions_subtopic(request, s_id):
                 obj = Messages(subtopic_id_id=subtopic.pk, user_id_id=request.user.pk, message=message,
                                message_send_date=now())
                 obj.save()
+                scheme = request.is_secure() and "https" or "http"
+                message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  subtopic.subtopic_hash)
+                # print(message_link)
+                subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
+                                                subtopic.assigned_user_id.last_name,
+                                                subtopic.subtopic_name, request.user.username, message, message_link)
+                send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
+
             else:
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
