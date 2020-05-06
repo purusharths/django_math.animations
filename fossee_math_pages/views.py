@@ -1325,11 +1325,11 @@ def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
 
 
-def error_500_view(request, exception):
+def error_500_view(request):
     return render(request, 'fossee_math_pages/500.html')
 
 
-def error_400_view(request, exception):
+def error_400_view(request, exception=None):
     return render(request, 'fossee_math_pages/400.html')
 
 
@@ -1373,17 +1373,23 @@ def password_set(request):
 
 @login_required
 def profile(request):
-    if request.user.is_staff and not request.user.is_superuser:
-        user = request.user
-        userdetails = UserDetails.objects.get(user_id=user.pk)
-
+    if request.user.is_superuser:
+        messages.error(request, "You are the super user !!")
+        return redirect('dashboard')
+    elif request.user.is_staff:
+        userdetails = UserDetails.objects.get(user_id=request.user.pk)
         context = {
             'details': userdetails,
         }
         return render(request, 'fossee_math_pages/profile.html', context)
     else:
-        messages.error(request, "You are the super user !!")
-        return redirect('dashboard')
+        userdetails = UserDetails.objects.get(user_id=request.user.pk)
+        subtopic = Subtopic.objects.all()
+        context = {
+            'details': userdetails,
+            'subtopic': subtopic,
+        }
+        return render(request, 'fossee_math_pages/profile.html', context)
 
 
 @login_required
