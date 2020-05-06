@@ -1345,3 +1345,8 @@ def password_set(request):
         'form': form,
     }
     return render(request, "password_reset/password_set.html", context)
+
+
+
+def Profile(request):
+    return render(request,"fossee_math_pages/profile.html")
