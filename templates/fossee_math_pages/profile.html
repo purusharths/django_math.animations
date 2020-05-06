@@ -1,60 +1,20 @@
 {% extends 'base.html' %}{% load static %}{% block title %}Home{% endblock %}{% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
-  margin: auto;
-  text-align: center;
-    font-family: arial, serif;
-}
 
-.title {
-  color: grey;
-  font-size: 18px;
-}
-
-button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 8px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-}
-
-a {
-  text-decoration: none;
-  font-size: 22px;
-  color: black;
-}
-
-button:hover, a:hover {
-  opacity: 0.7;
-}
-</style>
-
+    <div class="container">
+    <br>
+        <br>
+        <br>
+        <hr/>
 <h2 style="text-align:center">User Profile</h2>
 
-<div class="card">
-  <h1>Name</h1>
-  <p class="title">Designation</p>
-  <p>College: {{ details.user_college }}</p>
-   <p>Email: {{details.user_email}}</p>
-    <p>Mobile: {{ details.user_phone }}</p>
-    <p>Role: {{ details.user_role }}</p>
+<p class="">
+    <p>Name:<span style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span></p>
+  <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
+   <p>Email:<span style="font-weight: bold"> {{details.user_email}}</span></p>
+    <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
+    <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
     <p></p>
-    <p>Password :<a class="dropdown-item" href="{% url 'password-change' %}"><span style="color: #2C009F">Change Password</span></a></p>
-  <div style="margin: 24px 0;">
-
-    <a href="#"><i class="fa fa-twitter"></i></a>
-    <a href="#"><i class="fa fa-linkedin"></i></a>
-    <a href="#"><i class="fa fa-facebook"></i></a>
-  </div>
-
-</div>
+    <p style="text-align: center"><a href="{% url 'password-change' %}"><span style="color: #2C009F">Change Password</span></a></p>
+ </div>
+    </div>
 {% endblock %}

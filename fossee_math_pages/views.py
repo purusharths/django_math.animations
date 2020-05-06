@@ -995,55 +995,59 @@ def assign_topics(request):
         form = AssignTopic()
         internship = Internship.objects.all()
         first_internsip = Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
-        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
-            topic_id__internship_id_id=first_internsip.pk)
+        if first_internsip:
+            subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
+                topic_id__internship_id_id=first_internsip.pk)
 
-        if request.method == 'POST':
-            if "search_internship" in request.POST:
-                first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
-                try:
+            if request.method == 'POST':
+                if "search_internship" in request.POST:
+                    first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
+                    try:
+                        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
+                    except:
+                        subtopic = None
+                elif "deletetheassign" in request.POST:
+                    s_id = request.POST['deletetheassign']
+                    st = Subtopic.objects.get(subtopic_hash=s_id)
+                    first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
                     subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
-                except:
-                    subtopic = None
-            elif "deletetheassign" in request.POST:
-                s_id = request.POST['deletetheassign']
-                st = Subtopic.objects.get(subtopic_hash=s_id)
-                first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
-                subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
-                if st.subtopic_status == 'ACCEPTED':
-                    messages.error(request, 'Subtopic has alredy been completed and Accepted!')
-                else:
-                    st.assigned_user_id = None
-                    st.save()
-            else:
-                selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                if request.POST["assigned_user_id"] != "":
-                    user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    ud = UserDetails.objects.get(user_id_id=user.pk)
-                    if ud.user_status == 'ACTIVE':
-                        selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save()  # add email here
-                        scheme = request.is_secure() and "https" or "http"
-                        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
-                                                                        selectd_subtopic.subtopic_hash)
-                        subject, email_message = topic_assigned(user.first_name, user.last_name, selectd_subtopic.topic_id.topic_name, subtopic_link)
-                        send_mail(subject, email_message, SENDER_EMAIL, [user.email], fail_silently=True)
-                        messages.success(request, 'Topic assigned to the intern')
+                    if st.subtopic_status == 'ACCEPTED':
+                        messages.error(request, 'Subtopic has alredy been completed and Accepted!')
                     else:
-                        messages.error(request, 'User is Inactive. This action requires admin privileges!')
+                        st.assigned_user_id = None
+                        st.save()
                 else:
-                    messages.error(request, 'Select an Intern to Assign')
-                first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
-                subtopic = Subtopic.objects.filter(
-                    topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
+                    selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
+                    if request.POST["assigned_user_id"] != "":
+                        user = User.objects.get(pk=request.POST["assigned_user_id"])
+                        ud = UserDetails.objects.get(user_id_id=user.pk)
+                        if ud.user_status == 'ACTIVE':
+                            selectd_subtopic.assigned_user_id_id = user.id
+                            selectd_subtopic.save()  # add email here
+                            scheme = request.is_secure() and "https" or "http"
+                            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                            selectd_subtopic.subtopic_hash)
+                            subject, email_message = topic_assigned(user.first_name, user.last_name, selectd_subtopic.topic_id.topic_name, subtopic_link)
+                            send_mail(subject, email_message, SENDER_EMAIL, [user.email], fail_silently=True)
+                            messages.success(request, 'Topic assigned to the intern')
+                        else:
+                            messages.error(request, 'User is Inactive. This action requires admin privileges!')
+                    else:
+                        messages.error(request, 'Select an Intern to Assign')
+                    first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
+                    subtopic = Subtopic.objects.filter(
+                        topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
 
-        context = {
-            'form': form,
-            'subtopic': subtopic,
-            'intern': internship,
-            'chosen_inernship': first_internsip,
-        }
-        return render(request, 'fossee_math_pages/assign-topics.html', context)
+            context = {
+                'form': form,
+                'subtopic': subtopic,
+                'intern': internship,
+                'chosen_inernship': first_internsip,
+            }
+            return render(request, 'fossee_math_pages/assign-topics.html', context)
+        else:
+            messages.error(request,'No active Internships !!')
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -1054,17 +1058,21 @@ def interns(request):
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
-        internship = Internship.objects.get(pk=internship.pk)
+        if internship:
+            internship = Internship.objects.get(pk=internship.pk)
 
-        if "search_internship" in request.POST:
-            internship = Internship.objects.get(pk=request.POST['search_internship'])
+            if "search_internship" in request.POST:
+                internship = Internship.objects.get(pk=request.POST['search_internship'])
 
-        conxext = {
-            'topics': topics,
-            'internship': internship,
-            'internship_all': internship_all,
-        }
-        return render(request, 'fossee_math_pages/interns.html', conxext)
+            conxext = {
+                'topics': topics,
+                'internship': internship,
+                'internship_all': internship_all,
+            }
+            return render(request, 'fossee_math_pages/interns.html', conxext)
+        else:
+            messages.error(request,"No active Internships !!")
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -1073,22 +1081,26 @@ def interns(request):
 def internship_progress(request):
     if request.user.is_staff or request.user.is_superuser:
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
-        internship = Internship.objects.filter(pk=internship.pk)
-        topics = Topic.objects.all()
-        subtopics = Subtopic.objects.all()
-        internship_all = Internship.objects.all()
+        if internship:
+            internship = Internship.objects.filter(pk=internship.pk)
+            topics = Topic.objects.all()
+            subtopics = Subtopic.objects.all()
+            internship_all = Internship.objects.all()
 
-        if "search_internship" in request.POST:
-            internship = Internship.objects.filter(pk=request.POST['search_internship'])
+            if "search_internship" in request.POST:
+                internship = Internship.objects.filter(pk=request.POST['search_internship'])
 
-        context = {
-            'internship': internship,
-            'topics': topics,
-            'subtopics': subtopics,
-            'internship_all': internship_all,
-            'chosen_internship': internship[0],
-        }
-        return render(request, 'fossee_math_pages/internship-progress.html', context)
+            context = {
+                'internship': internship,
+                'topics': topics,
+                'subtopics': subtopics,
+                'internship_all': internship_all,
+                'chosen_internship': internship[0],
+            }
+            return render(request, 'fossee_math_pages/internship-progress.html', context)
+        else:
+            messages.error(request,"No active Internships !!")
+            return redirect('dashboard')
 
     elif request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         internship = Internship.objects.all()
