@@ -4,6 +4,7 @@
         color: white;
     }
 
+
     body {
         min-height: 100vh;
         display: flex;
@@ -18,20 +19,7 @@
         border-radius: 3px;
     }
 
-    .bs-callout-right {
-        padding: 20px;
-        margin: 20px 0;
-        border: 1px solid #eee;
-        border-right-width: 5px;
-        border-radius: 3px;
-    }
-
     .bs-callout h4 {
-        margin-top: 0;
-        margin-bottom: 5px;
-    }
-
-    .bs-callout-right h4 {
         margin-top: 0;
         margin-bottom: 5px;
     }
@@ -40,15 +28,7 @@
         margin-bottom: 0;
     }
 
-    .bs-callout-right p:last-child {
-        margin-bottom: 0px;
-    }
-
     .bs-callout code {
-        border-radius: 3px;
-    }
-
-    .bs-callout-right code {
         border-radius: 3px;
     }
 
@@ -56,23 +36,11 @@
         margin-top: -5px;
     }
 
-    .bs-callout-right + .bs-callout-right {
-        margin-top: -5px;
-    }
-
-    .bs-callout-default .bs-callout-right-default {
+    .bs-callout-default {
         border-left-color: #777;
     }
 
-    .bs-callout-right-default {
-        border-right-color: #777;
-    }
-
     .bs-callout-default h4 {
-        color: #777;
-    }
-
-    .bs-callout-right-default h4 {
         color: #777;
     }
 
@@ -80,15 +48,7 @@
         border-left-color: #428bca;
     }
 
-    .bs-callout-right-primary {
-        border-right-color: #428bca;
-    }
-
     .bs-callout-primary h4 {
-        color: #428bca;
-    }
-
-    .bs-callout-right-primary h4 {
         color: #428bca;
     }
 
@@ -96,15 +56,7 @@
         border-left-color: #5cb85c;
     }
 
-    .bs-callout-right-success {
-        border-right-color: #5cb85c;
-    }
-
     .bs-callout-success h4 {
-        color: #5cb85c;
-    }
-
-    .bs-callout-right-success h4 {
         color: #5cb85c;
     }
 
@@ -112,15 +64,7 @@
         border-left-color: #d9534f;
     }
 
-    .bs-callout-right-danger {
-        border-right-color: #d9534f;
-    }
-
     .bs-callout-danger h4 {
-        color: #d9534f;
-    }
-
-    .bs-callout-right-danger h4 {
         color: #d9534f;
     }
 
@@ -128,15 +72,7 @@
         border-left-color: #f0ad4e;
     }
 
-    .bs-callout-right-warning {
-        border-right-color: #f0ad4e;
-    }
-
     .bs-callout-warning h4 {
-        color: #f0ad4e;
-    }
-
-    .bs-callout-right-warning h4 {
         color: #f0ad4e;
     }
 
@@ -144,19 +80,14 @@
         border-left-color: #5bc0de;
     }
 
-    .bs-callout-right-info {
-        border-right-color: #5bc0de;
-    }
-
     .bs-callout-info h4 {
         color: #5bc0de;
     }
 
-    .bs-callout-right-info h4 {
-        color: #5bc0de;
-    }
+    .nav-link:hover { background-color: lightblue; }
 
 </style>
+
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f8f8;">
     <div class="container">
@@ -192,7 +123,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                            <a class="dropdown-item" href="{% url 'password-change' %}">Change Password</a>
+                            {% if not user.is_superuser %}
+                                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            {% endif %}
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </div>
                     </li>
@@ -200,6 +133,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="{% url 'login' %}">Login</a>
                     </li>
+
                 {% endif %}
             </ul>
         </div>

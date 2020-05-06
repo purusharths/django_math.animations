@@ -9,9 +9,11 @@
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% if not user.is_staff %}
-        {% breadcrumb "Internship" "add-submission" %}
+      {% breadcrumb "Your Submissions" "add-submission" %}
+      {% breadcrumb subtopic.subtopic_name "add-submission-subtopic" subtopic.subtopic_hash %}
     {% else %}
         {% breadcrumb "Review Submissions" "review-submissions" %}
+        {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
     {% endif %}
     {% breadcrumb "Messages" "message" %}
     <!-- WRONG CRUMBS -->

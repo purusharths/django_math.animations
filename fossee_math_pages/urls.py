@@ -32,6 +32,7 @@ urlpatterns = [
                   path('dashboard/manage-interns/', views.manage_interns, name='manage-interns'),
                   path('dashboard/manage-internship/', views.manage_internship, name='manage-internship'),
                   path('dashboard/review-submissions/', views.review_submissions, name='review-submissions'),
+                  path('dashboard/rearrange-topics/', views.rearrange, name='rearrange-topics'),
                   path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic,
                        name='review-submissions-subtopic'),
                   path('dashboard/review-submissons/<str:t_id>/edit-image/<str:id>', views.edit_image,
@@ -41,5 +42,5 @@ urlpatterns = [
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
                   path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
-
+                  path('profile-page/', views.profile, name='profile'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -14,10 +14,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse
 # from django.contrib.sites.models import Site
 from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -27,16 +27,17 @@ from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
 from FOSSEE_math.email_config import SENDER_EMAIL
+from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
+from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
+                    ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
+                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
+from .generic_functions import (large_img_size, large_video_size)
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
+from .tokens import account_activation_token
+
 
 # print(SENDER_EMAIL)
 
-from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
-                    ManageIntern, add_subtopic, data, EditMedia, imageFormatting, topicOrder,
-                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
-from .tokens import account_activation_token
-from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
-from .generic_functions import (large_img_size, large_video_size)
 
 @login_required
 def add_internship(request):
@@ -184,23 +185,19 @@ def add_users(request):
                 messages.error(request, 'error in creating user with the other details')
                 return redirect('add-users')
 
-            try:
-                current_site = get_current_site(request)
-                mail_subject = "[Activate Account] FOSSEE Animations Mathematics";
-                message = render_to_string('fossee_math_pages/activate_user.html', {
-                    'user': email,
-                    'firstname': firstname,
-                    'lastname': lastname,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                    'pass': password,
-                })
-                email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
-                email.send()
-            except:
-                messages.error(request, 'Some error occured while sending email!')  # What is this for?
-                return redirect('add-users')
+            current_site = get_current_site(request)
+            mail_subject = "[Activate Account] FOSSEE Animations Mathematics"
+            message = render_to_string('fossee_math_pages/activate_user.html', {
+                'user': email,
+                'firstname': firstname,
+                'lastname': lastname,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'pass': password,
+            })
+            email = EmailMessage(mail_subject, message, from_email=SENDER_EMAIL, to=[email])
+            email.send()
 
             messages.success(request, 'User Added!')
             return redirect('add-users')
@@ -451,7 +448,7 @@ def edit_media(request, t_id, id):
             form_text = data()
             form_image = change_image()
             from_video = change_video()
-            current_image, caption_image, current_video, caption_video = "","","",""
+            current_image, caption_image, current_video, caption_video = "", "", "", ""
             t_id = instance.subtopic_id.subtopic_hash
             if request.POST:
                 if "data_content" in request.POST:
@@ -998,56 +995,62 @@ def assign_topics(request):
     if request.user.is_staff and not request.user.is_superuser:
         form = AssignTopic()
         internship = Internship.objects.all()
-        first_internsip = Internship.objects.filter(internship_status='ACTIVE').first() # taking first active internship
-        subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
-            topic_id__internship_id_id=first_internsip.pk)
+        first_internsip = Internship.objects.filter(
+            internship_status='ACTIVE').first()  # taking first active internship
+        if first_internsip:
+            subtopic = Subtopic.objects.all().order_by('topic_id__topic_order').filter(
+                topic_id__internship_id_id=first_internsip.pk)
 
-        if request.method == 'POST':
-            if "search_internship" in request.POST:
-                first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
-                try:
+            if request.method == 'POST':
+                if "search_internship" in request.POST:
+                    first_internsip = Internship.objects.get(pk=request.POST['search_internship'])
+                    try:
+                        subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
+                    except:
+                        subtopic = None
+                elif "deletetheassign" in request.POST:
+                    s_id = request.POST['deletetheassign']
+                    st = Subtopic.objects.get(subtopic_hash=s_id)
+                    first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
                     subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
-                except:
-                    subtopic = None
-            elif "deletetheassign" in request.POST:
-                s_id = request.POST['deletetheassign']
-                st = Subtopic.objects.get(subtopic_hash=s_id)
-                first_internsip = Internship.objects.get(pk=st.topic_id.internship_id.pk)
-                subtopic = Subtopic.objects.filter(topic_id__internship_id_id=first_internsip.pk)
-                if st.subtopic_status == 'ACCEPTED':
-                    messages.error(request, 'Subtopic has alredy been completed and Accepted!')
-                else:
-                    st.assigned_user_id = None
-                    st.save()
-            else:
-                selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
-                if request.POST["assigned_user_id"] != "":
-                    user = User.objects.get(pk=request.POST["assigned_user_id"])
-                    ud = UserDetails.objects.get(user_id_id=user.pk)
-                    if ud.user_status == 'ACTIVE':
-                        selectd_subtopic.assigned_user_id_id = user.id
-                        selectd_subtopic.save()  # add email here
-                        scheme = request.is_secure() and "https" or "http"
-                        subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
-                                                                        selectd_subtopic.subtopic_hash)
-                        subject, email_message = topic_assigned(user.first_name, user.last_name, selectd_subtopic.topic_id.topic_name, subtopic_link)
-                        send_mail(subject, email_message, SENDER_EMAIL, [user.email], fail_silently=True)
-                        messages.success(request, 'Topic assigned to the intern')
+                    if st.subtopic_status == 'ACCEPTED':
+                        messages.error(request, 'Subtopic has alredy been completed and Accepted!')
                     else:
-                        messages.error(request, 'User is Inactive. This action requires admin privileges!')
+                        st.assigned_user_id = None
+                        st.save()
                 else:
-                    messages.error(request, 'Select an Intern to Assign')
-                first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
-                subtopic = Subtopic.objects.filter(
-                    topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
+                    selectd_subtopic = Subtopic.objects.get(pk=request.POST["subtopicid"])
+                    if request.POST["assigned_user_id"] != "":
+                        user = User.objects.get(pk=request.POST["assigned_user_id"])
+                        ud = UserDetails.objects.get(user_id_id=user.pk)
+                        if ud.user_status == 'ACTIVE':
+                            selectd_subtopic.assigned_user_id_id = user.id
+                            selectd_subtopic.save()  # add email here
+                            scheme = request.is_secure() and "https" or "http"
+                            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                               selectd_subtopic.subtopic_hash)
+                            subject, email_message = topic_assigned(user.first_name, user.last_name,
+                                                                    selectd_subtopic.topic_id.topic_name, subtopic_link)
+                            send_mail(subject, email_message, SENDER_EMAIL, [user.email], fail_silently=True)
+                            messages.success(request, 'Topic assigned to the intern')
+                        else:
+                            messages.error(request, 'User is Inactive. This action requires admin privileges!')
+                    else:
+                        messages.error(request, 'Select an Intern to Assign')
+                    first_internsip = Internship.objects.get(pk=selectd_subtopic.topic_id.internship_id.pk)
+                    subtopic = Subtopic.objects.filter(
+                        topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
 
-        context = {
-            'form': form,
-            'subtopic': subtopic,
-            'intern': internship,
-            'chosen_inernship': first_internsip,
-        }
-        return render(request, 'fossee_math_pages/assign-topics.html', context)
+            context = {
+                'form': form,
+                'subtopic': subtopic,
+                'intern': internship,
+                'chosen_inernship': first_internsip,
+            }
+            return render(request, 'fossee_math_pages/assign-topics.html', context)
+        else:
+            messages.error(request, 'No active Internships !!')
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -1058,17 +1061,21 @@ def interns(request):
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
-        internship = Internship.objects.get(pk=internship.pk)
+        if internship:
+            internship = Internship.objects.get(pk=internship.pk)
 
-        if "search_internship" in request.POST:
-            internship = Internship.objects.get(pk=request.POST['search_internship'])
+            if "search_internship" in request.POST:
+                internship = Internship.objects.get(pk=request.POST['search_internship'])
 
-        conxext = {
-            'topics': topics,
-            'internship': internship,
-            'internship_all': internship_all,
-        }
-        return render(request, 'fossee_math_pages/interns.html', conxext)
+            conxext = {
+                'topics': topics,
+                'internship': internship,
+                'internship_all': internship_all,
+            }
+            return render(request, 'fossee_math_pages/interns.html', conxext)
+        else:
+            messages.error(request, "No active Internships !!")
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -1077,22 +1084,26 @@ def interns(request):
 def internship_progress(request):
     if request.user.is_staff or request.user.is_superuser:
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
-        internship = Internship.objects.filter(pk=internship.pk)
-        topics = Topic.objects.all()
-        subtopics = Subtopic.objects.all()
-        internship_all = Internship.objects.all()
+        if internship:
+            internship = Internship.objects.filter(pk=internship.pk)
+            topics = Topic.objects.all()
+            subtopics = Subtopic.objects.all()
+            internship_all = Internship.objects.all()
 
-        if "search_internship" in request.POST:
-            internship = Internship.objects.filter(pk=request.POST['search_internship'])
+            if "search_internship" in request.POST:
+                internship = Internship.objects.filter(pk=request.POST['search_internship'])
 
-        context = {
-            'internship': internship,
-            'topics': topics,
-            'subtopics': subtopics,
-            'internship_all': internship_all,
-            'chosen_internship': internship[0],
-        }
-        return render(request, 'fossee_math_pages/internship-progress.html', context)
+            context = {
+                'internship': internship,
+                'topics': topics,
+                'subtopics': subtopics,
+                'internship_all': internship_all,
+                'chosen_internship': internship[0],
+            }
+            return render(request, 'fossee_math_pages/internship-progress.html', context)
+        else:
+            messages.error(request, "No active Internships !!")
+            return redirect('dashboard')
 
     elif request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
         internship = Internship.objects.all()
@@ -1123,11 +1134,12 @@ def review_submissions_subtopic(request, s_id):
                 obj.save()
                 scheme = request.is_secure() and "https" or "http"
                 message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
-                                                                  subtopic.subtopic_hash)
+                                                                      subtopic.subtopic_hash)
                 # print(message_link)
                 subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
-                                                subtopic.assigned_user_id.last_name,
-                                                subtopic.subtopic_name, request.user.username, message, message_link)
+                                                    subtopic.assigned_user_id.last_name,
+                                                    subtopic.subtopic_name, request.user.username, message,
+                                                    message_link)
                 send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
             else:
@@ -1176,8 +1188,8 @@ def approve_subtopic(request, id):
             data = Data.objects.filter(subtopic_id_id=t_id)
             print(data)
         except Data.DoesNotExist:
-           # print(data)
-           data = None
+            # print(data)
+            data = None
         print(data)
         if data:
             instance.subtopic_status = "ACCEPTED"
@@ -1313,6 +1325,14 @@ def error_404_view(request, exception):
     return render(request, 'fossee_math_pages/404.html')
 
 
+def error_500_view(request):
+    return render(request, 'fossee_math_pages/500.html')
+
+
+def error_400_view(request, exception=None):
+    return render(request, 'fossee_math_pages/400.html')
+
+
 def activate(request, uidb64, token):
     try:
         # uidb64 = uidb64.decode('utf-8')
@@ -1349,3 +1369,61 @@ def password_set(request):
         'form': form,
     }
     return render(request, "password_reset/password_set.html", context)
+
+
+@login_required
+def profile(request):
+    if request.user.is_superuser:
+        messages.error(request, "You are the super user !!")
+        return redirect('dashboard')
+    elif request.user.is_staff:
+        userdetails = UserDetails.objects.get(user_id=request.user.pk)
+        context = {
+            'details': userdetails,
+        }
+        return render(request, 'fossee_math_pages/profile.html', context)
+    else:
+        userdetails = UserDetails.objects.get(user_id=request.user.pk)
+        subtopic = Subtopic.objects.all()
+        context = {
+            'details': userdetails,
+            'subtopic': subtopic,
+        }
+        return render(request, 'fossee_math_pages/profile.html', context)
+
+
+@login_required
+def rearrange(request):
+    if request.user.is_superuser:
+        subtopic = Subtopic.objects.all().order_by('topic_id')
+        user_query = request.GET.get('title_contains')
+        if user_query != '' and user_query is not None:
+            subtopic = Subtopic.objects.filter(subtopic_name__icontains=user_query)
+
+        if request.POST:
+            if "select_internship" in request.POST:
+                new_internship = request.POST['select_internship']
+                new_topic = request.POST['select_topic']
+                new_subtopic = request.POST['select_subtopic']
+                reassign_subtopic = Subtopic.objects.get(pk=new_subtopic)
+                reassign_subtopic.topic_id_id = new_topic
+                reassign_subtopic.topic_id.internship_id_id = new_internship
+                reassign_subtopic.save()
+                messages.success(request, "Subtopic changed !")
+
+        if subtopic:
+            internships = Internship.objects.all()
+            topics = Topic.objects.all()
+        else:
+            messages.error(request, "No Subtopics !")
+            return redirect('dashboard')
+
+        context = {
+            'subtopic': subtopic,
+            'internships': internships,
+            'topics': topics,
+        }
+        return render(request, 'fossee_math_pages/rearrange_topics.html', context)
+    else:
+        messages.error(request, 'You dont have access to this pages !!')
+        return redirect('dashboard')

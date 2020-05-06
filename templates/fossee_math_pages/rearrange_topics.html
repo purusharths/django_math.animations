@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Shift Topics" "rearrange-topics" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
+    <div class="container">
+        {% include 'partials/_alerts.html' %}
+        <div class="row">
+            <form method="GET" action=".">
+                <div class="row">
+                    <input class="form-control py-2 border col-lg-8" type="search" name="title_contains"
+                           placeholder="Search Subtopic"/> &nbsp;&nbsp;
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Internship</th>
+                <th>Topic</th>
+                <th>Subtopic</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sub in subtopic %}
+                <tr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <td>{{ forloop.counter }}</td>
+                        <th>
+                            <input type="hidden" value="{{ sub.pk }}" name="select_subtopic">
+                            {{ sub.subtopic_name }}
+                        </th>
+                        <td>
+                            <select name="select_topic" class="form-control">
+                                {% if sub.topic_id in topics %}
+                                    <option value="{{ sub.topic_id.pk }}">{{ sub.topic_id }}</option>
+                                {% else %}
+                                    <option>Select Topics</option>
+                                {% endif %}
+                                {% for i in topics %}
+                                    {% if i.topic_name != sub.topic_id.topic_name %}
+                                        <option value="{{ i.pk }}">{{ i.topic_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                {{ sub.topic_id }}
+                        </td>
+                        <td>
+                            <select name="select_internship" class="form-control">
+                                {% if sub.topic_id.internship_id in internships %}
+                                    <option value="{{ sub.topic_id.internship_id.pk }}">{{ sub.topic_id.internship_id }}</option>
+                                {% else %}
+                                    <option>Select Internship</option>
+                                {% endif %}
+                                {% for i in internships %}
+                                    {% if i.internship_topic != sub.topic_id.internship_id.internship_topic %}
+                                        <option value="{{ i.pk }}">{{ i.internship_topic }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <th>
+                            <button type="submit" class="btn btn-outline-danger">Change</button>
+                        </th>
+                    </form>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

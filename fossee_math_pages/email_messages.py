@@ -7,7 +7,7 @@ def auth_token_message(firstname, lastname, username, activation_link, password_
 def got_a_message(firstname, lastname, subtopic_name, from_user, message, messages_link):
     subject = "[FOSSEE Animations | Math] New Message Recived"
     message = """Hey {}, {} \n\n
-    You have recived a message for {} by {}. Please find the message below: \n
+    You have recived a message for "{}" by {}. Please find the message below: \n
     ____________________
     \n
     {}
@@ -22,7 +22,7 @@ def got_a_message(firstname, lastname, subtopic_name, from_user, message, messag
 def submission_status_changed(firstname, lastname, subtopic, submission_status, message_link, submission_link):
     subject = "[Submission Update] Submission Status changed at FOSSE Animations | Math"
     message = """Hey {}, {}\n\n
-    The status for your submission {} has been changed to {} \n
+    The status for your submission "{}" has been changed to "{}" \n
     Please go through the recent messages for more details: {}.\n\n
     Submission Link: {}\n
     Best Regards,
