@@ -1346,7 +1346,13 @@ def password_set(request):
     }
     return render(request, "password_reset/password_set.html", context)
 
-
+@login_required
 def profile(request):
+    user = request.user
+    print(user.first_name)
+    userdetails = UserDetails.objects.get(user_id=user.pk)
 
-    return render(request,'fossee_math_pages/profile.html')
+    context ={
+        'details' : userdetails,
+    }
+    return render(request,'fossee_math_pages/profile.html', context)

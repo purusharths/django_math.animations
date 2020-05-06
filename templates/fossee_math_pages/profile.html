@@ -1,6 +1,4 @@
 {% extends 'base.html' %}{% load static %}{% block title %}Home{% endblock %}{% block content %}
-<html>
-<head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 .card {
@@ -39,19 +37,16 @@ button:hover, a:hover {
   opacity: 0.7;
 }
 </style>
-</head>
-<body>
 
 <h2 style="text-align:center">User Profile</h2>
 
 <div class="card">
-
   <h1>Name</h1>
   <p class="title">Designation</p>
-  <p>College</p>
-   <p>Email:</p>
-    <p>Mobile:</p>
-    <p>Role:</p>
+  <p>College: {{ details.user_college }}</p>
+   <p>Email: {{details.user_email}}</p>
+    <p>Mobile: {{ details.user_phone }}</p>
+    <p>Role: {{ details.user_role }}</p>
     <p></p>
   <div style="margin: 24px 0;">
 
@@ -61,7 +56,4 @@ button:hover, a:hover {
   </div>
 
 </div>
-
-</body>
-</html>
 {% endblock %}
