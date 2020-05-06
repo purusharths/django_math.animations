@@ -5,40 +5,79 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "add-submission" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
 
-
+{% load static %} {{ form.media }}
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
         {% include 'partials/_alerts.html' %}
-
         <table class="table table-borderless">
             <tbody>
             {% for i in assigned_topic %}
                 <tr>
                     {% if i.subtopic_status == "ACCEPTED" %}
                         <div class="bs-callout bs-callout-success">
-                        {% elif i.subtopic_status == "REJECTED" %}
+                    {% elif i.subtopic_status == "REJECTED" %}
                         <div class="bs-callout bs-callout-danger">
-                            {% elif i.subtopic_status == "WAITING" %}
-                            <div class="bs-callout bs-callout-warning">
-                            {% else %}
-                            <div class="bs-callout bs-callout-info">
+                    {% elif i.subtopic_status == "WAITING" %}
+                        <div class="bs-callout bs-callout-warning">
+                    {% else %}
+                        <div class="bs-callout bs-callout-info">
+                    {% endif %}
+                    <div class="float-right">
+                        &nbsp;<a href="{% url 'messages' i.subtopic_hash %}">
+                        <img
+                                {% if not message.message_is_seen_intern and message.subtopic_id_id == i.pk %}
+                                    src="{% static '/web-files/img/multiuse-svgs/message-notification.svg' %}"
+                                    size="20px"
+                                {% else %}
+                                    src="{% static '/web-files/img/multiuse-svgs/message.svg' %}" size="20px"
                                 {% endif %}
-                        <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
-                        <h4>{{ i.subtopic_name }}</h4>
-                        &nbsp;
-                        <div class="float-right">
-                            <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Manage Submissions</a>
-                        </div>
+                                    alt="message" title="Send Message">
+                    </a>
+                    </div>
+                    <div class="text-muted">{{ i.topic_id.internship_id }} &rarr; {{ i.topic_id }}</div>
+                    <h4>{{ i.subtopic_name }}</h4>
+                    <div class="float-right">
+                        <a href="{% url  'add-submission-subtopic' i.subtopic_hash %}">Edit submission</a>
+                    </div>
+                    <br/>
+
                     </div>
                 </tr>
+            {% empty %}
+                <h3 class="text-muted text-center">
+                    Hmm! it looks like you've not been assigned any topic yet. <br>
+                    If you think there has been some mistake please contact the mentor.
+                </h3>
+                <br>
+                <br>
+                <span> Meanwhile, enjoy a <i>random</i> <b>xkcd</b> comic! </span>
+                <div class="text-center" style="padding-top:6%">
+                    #{{ xkcd_img_num }}<br/>
+                    <img src=" {{ xkcd_img_url }} "/>
+                </div>
             {% endfor %}
             </tbody>
         </table>
     </div>
     <hr>
-    <br> {% endblock %}
+    <br>
+
+    <script>
+        function getXkcd() {
+            var comicNum = Math.floor((Math.random() * 2298) + 1);
+            var comicJSONUrl = "http://xkcd.com/" + comicNum.toString() + "/info.0.json"
+            console.log(comicJSONUrl)
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "http://xkcd.com/614/info.0.json", true);
+            xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhttp.send(null);
+            console.log(xhttp.responseText);
+        }
+    </script>
+
+{% endblock %}

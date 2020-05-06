@@ -2,8 +2,9 @@
 .idea/
 venv/*
 *.sqlite3
-*.png
+*.gif
 *.mp4
+media/*
 __pycache__/*
 FOSSEE_math/__pycache__/*
 FOSSEE_math/__pycache__
@@ -12,3 +13,5 @@ fossee_math_pages/__pycache__
 https:/*
 fossee_math_pages/migrations/*
 __pycache__
+*.pyc
+.coverate_report

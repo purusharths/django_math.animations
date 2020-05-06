@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages, HomeImages)
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
 
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -34,7 +34,7 @@ class AddUserForm1(ModelForm):
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
-        fields = ['user_phone', 'user_role']
+        fields = ['user_phone', 'user_role', 'user_college']
 
 
 class AddInternship(ModelForm):
@@ -65,7 +65,7 @@ class AddContributor(ModelForm):
 class EditMedia(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_image', 'data_video']
+        fields = ['data_image', 'data_video', 'data_caption']
 
 
 class ManageIntern(ModelForm):
@@ -86,38 +86,6 @@ class subtopicOrder(ModelForm):
         fields = ['subtopic_order']
 
 
-# class AddIntern(ModelForm):
-#     class Meta:
-#         model = Intern
-#         labels = {
-#             'user_id': 'Intern Name',
-#             'internship_id': 'Internship Name'
-#         }
-#         fields = ['user_id', 'internship_id']
-#
-#     def __init__(self, user, *args, **kwargs):
-#         super(AddIntern, self).__init__(*args, **kwargs)
-#         self.fields['user_id'].queryset = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE")
-#         self.fields['internship_id'].queryset = Internship.objects.filter(internship_status='ACTIVE')
-
-#
-# class AssignTopic(ModelForm):
-#     class Meta:
-#         model = AssignedTopics
-#         labels = {
-#             'user_id': 'User',
-#             'topic_d': 'Topic',
-#         }
-#         fields = ['user_id', 'topic_id']
-#
-#     def __init__(self, user, *args, **kwargs):
-#         super(AssignTopic, self).__init__(*args, **kwargs)
-#         assigned = AssignedTopics.objects.all().values_list('user_id_id')
-#         qs = UserDetails.objects.filter(user_role="INTERN", user_status="ACTIVE").exclude(user_id_id__in=assigned)
-#         self.fields['user_id'].queryset = qs
-#         inner = AssignedTopics.objects.all().values_list('topic_id_id')
-#         self.fields['topic_id'].queryset = Topic.objects.exclude(pk__in=inner)
-
 class AssignTopic(ModelForm):
     class Meta:
         model = Subtopic
@@ -125,13 +93,39 @@ class AssignTopic(ModelForm):
 
     def __init__(self):
         super().__init__()
-        self.fields['assigned_user_id'].queryset = User.objects.exclude(is_staff=True)
+        self.fields['assigned_user_id'].queryset = User.objects.filter(userdetails__user_role='INTERN',
+                                                                       userdetails__user_status='ACTIVE')
 
 
 class data(ModelForm):
     class Meta:
         model = Data
         fields = ['data_content']
+        labels = {
+            'data_content': "",
+        }
+
+
+class change_image(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_image',  'data_caption'] # 'data_video',
+        labels = {
+            'data_image': "Image",
+            #'data_video': "<br>OR<br><br>Video",
+            'data_caption': "<br>Caption",
+        }
+
+
+class change_video(ModelForm):
+    class Meta:
+        model = Data
+        fields = ['data_video',  'data_caption'] # 'data_image',
+        labels = {
+            'data_video': "Video",
+            #'data_image': "<br>OR<br><br>Image",
+            'data_caption': "<br>Caption",
+        }
 
 
 class imageFormatting(ModelForm):
@@ -186,9 +180,7 @@ class add_subtopic(forms.Form):
 
 class addContributor(ModelForm):
     class Meta:
-        model = Contributor 
-        #mentor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_mentor"}))
-        #professor = forms.CharField(max_length=300, widget=forms.TextInput(attrs={"class":"md-textarea form-control", "id":"id_professor"}))
+        model = Contributor
         fields = ['mentor', 'professor']
 
 
@@ -196,6 +188,8 @@ class sendMessage(ModelForm):
     class Meta:
         model = Messages
         widgets = {
-          'message': forms.Textarea(attrs={'rows':4, 'cols':15}),
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 80, 'placeholder': "Send Message"}),
+
         }
         fields = ['message']
+        labels = {"message": ""}

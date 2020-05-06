@@ -5,13 +5,13 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Topics" "/#topics" %}
-    {% breadcrumb  details "contents" details.internship_topic %}
+    {% breadcrumb "Topics" "/#topics" %}
+    {% breadcrumb details "contents" details.internship_topic %}
 {% endblock %}
 
 {% block content %}
-  {% render_breadcrumbs %}
-  <hr>
+    {% render_breadcrumbs %}
+    <hr>
     <div class="container">
 
         <h1 style="font-weight:normal;">{{ details.internship_topic }}</h1>
@@ -52,10 +52,14 @@
                     <ul style="list-style-type: circle;">
                         {% for j in subtopics %}
                             {% if j.topic_id_id == i.id %}
-                                <li><a href="{% url 'home_details' details.internship_url j.topic_id.topic_url j.subtopic_url %}"> {{ j.subtopic_name }} </a></li>
+                                <li>
+                                    <a href="{% url 'home_details' details.internship_url j.topic_id.topic_url j.subtopic_url %}"> {{ j.subtopic_name }} </a>
+                                </li>
                             {% endif %}{% endfor %}
                     </ul>
                 </li>
+                {% empty %}
+                <h4 class="text-muted text-center">The submissions seems to be in progress right now.</h4>
             {% endfor %}
         </ol>
 

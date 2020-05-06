@@ -1,33 +1,174 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
 {% block title %} Add Submission {% endblock %}
 
+{% load template_vars %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
+    {% if not user.is_staff %}
+      {% breadcrumb "Your Submissions" "add-submission" %}
+      {% breadcrumb subtopic.subtopic_name "add-submission-subtopic" subtopic.subtopic_hash %}
+    {% else %}
+        {% breadcrumb "Review Submissions" "review-submissions" %}
+        {% breadcrumb subtopic.subtopic_name "review-submissions-subtopic" subtopic.subtopic_hash %}
+    {% endif %}
     {% breadcrumb "Messages" "message" %}
     <!-- WRONG CRUMBS -->
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
+
+    {% if subtopic.subtopic_status == "ACCEPTED" %}
+        {% setvar "success" as color %}
+    {% elif subtopic.subtopic_status == "WAITING" %}
+        {% setvar "warning" as color %}
+    {% elif subtopic.subtopic_status == "REJECTED" %}
+        {% setvar "danger" as color %}
+    {% endif %}
     <div class="container">
-        {% for i in message %}
-            <div class="card">
-                {% if i.subtopic_id.assigned_user_id_id == user.id %}
-                    <div class="card-header bg-info">
-                         <h6 class="text-white"> <i><u>{{ i.subtopic_id }}</u></i> ({{ i.subtopic_id.topic_id.internship_id }} &rarr; {{ i.subtopic_id.topic_id }})</h6>
+        <div class="card-header bg-{{ color }} rounded-top">
+            <!-- if subtopic status -->
+            <h3 class="text-white"><u>{{ subtopic.subtopic_name }}</u>
+                <img src="{% static '/web-files/img/multiuse-svgs/comment-discussion-white.svg' %} "
+                     onload=scrollToBottom()>
+            </h3>
+            <h6 class="text-light">{{ subtopic.topic_id.internship_id }} &rarr; {{ subtopic.topic_id }}
+                &rarr; {{ subtopic.subtopic_name }}</h6>
+        </div>
+        <br/>
+        <hr/>
+
+        {% if user.is_staff %}
+            <div class="row">
+                <div class="col-md-10  offset-md-1">
+                    <div class="border" style="height: 600px; overflow-y: auto;" id="table-chat"
+                         onclick="scrollToBottom()">
+                        <table class="table table-borderless table-sm" id="chat-table">
+                            <thead>
+                            <tr></tr>
+                            </thead>
+                            <tbody>
+                            {% for i in message %}
+                                {% if i.subtopic_id_id == subtopic.pk %}
+                                    <tr>
+                                        <td>
+                                            {% if i.user_id.is_staff %}
+                                                <span class="text-muted" style="font-size: smaller;"><p
+                                                        class="text-right">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                <div class="bs-callout-right bs-callout-right-info text-right"
+                                                     style="margin-top:0px; width: 100%; max-width: 900px ;">
+                                                    <p>{{ i.message }}</p></div>
+                                            {% elif not i.user_id.is_staff %}
+                                                <span class="text-muted"
+                                                      style="font-size: smaller;"><p>Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                <div class="bs-callout bs-callout-{{ color }}" style="margin-top: 0px;">
+                                                    <p>{{ i.message }}</p></div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="card-body" style="padding-top: 0px;">
-                        <div class="bs-callout bs-callout-info">
-                        <p>{{ i.message }}</p>
-                        </div>
-                        <span class="text-muted" style="font-size: small;">Sent on {{ i.message_send_date }}</span>
-                    </div>
-                {% endif %}
+                    <hr/>
+                </div>
             </div>
-            <br>
-        {% endfor %}
+        {% elif not user.is_staff and not user.is_superuser %}
+            <div class="row">
+                <div class="col-md-10  offset-md-1">
+                    <div class="border" style="height: 600px; overflow-y: auto;" id="table-chat" onclick="">
+                        <table class="table table-borderless table-sm" id="chat-table"
+                               style="width: 100%; max-width: 900px ">
+                            <thead>
+                            <tr></tr>
+                            </thead>
+                            <tbody>
+                            {% for i in message %}
+                                {% if i.subtopic_id_id == subtopic.pk %}
+                                    <tr>
+                                        <td>
+                                            {% if i.user_id.is_staff %}
+                                                <span class="text-muted"
+                                                      style="font-size: smaller;"><p>Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                <div class="bs-callout bs-callout-{{ color }}"
+                                                     style="margin-top:0px; width: 100%; max-width: 900px ;">
+                                                    <p>{{ i.message }}</p></div>
+                                            {% elif not i.user_id.is_staff %}
+                                                <span class="text-muted text-right" style="font-size: smaller;"><p
+                                                        class="text-right">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                <div class="bs-callout-right bs-callout-right-info text-right"
+                                                     style="margin-top: 0px;"><p class="text-right">{{ i.message }}</p>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+        {% endif %}
+        <form action="javascript:addData()" method="POST">
+            <div class="input-group offset-md-1">
+                {% csrf_token %}{{ form|crispy }}
+                <div class="input-group-append">
+                    <button class="btn btn-light" onClick="event.preventDefault();addData();">
+                        <span class=""><img src="{% static '/web-files/img/multiuse-svgs/send.svg' %}"
+                                            width=18px></span>
+                        Send
+                    </button>
+                </div>
+            </div>
+            <!--<input class="btn btn-outline-success btn-md btn-block" type="button" onClick="addData()" id="submitAJAX" value="Add Data">-->
+        </form>
+
+        <hr>
     </div>
-    <hr>
-    <br> {% endblock %}
+
+    <br>
+
+
+    <script>
+        window.onload = scrollToBottom;
+
+        function addData() {
+            var data = document.getElementById("id_message").value;
+            console.log(data)
+            var xhttp = new XMLHttpRequest();
+            var csrf_token = '{{ csrf_token }}';
+            if (data == null || data.trim() === '') {
+            } else {
+                console.log(data)
+                var mainTable = document.getElementById("chat-table");
+                var row = mainTable.insertRow()
+                var cell1 = row.insertCell(0)
+                cell1.innerHTML = "<div class=\"bs-callout-right bs-callout-right-default text-right text-muted\" style=\"margin-top: 0px;\"><p class=\"text-right\">" + data + "</p></div>";
+                scrollToBottom()
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        cell1.innerHTML = "<div class=\"bs-callout-right bs-callout-right-info text-right \" style=\"margin-top: 0px;\"><p class=\"text-right\">" + data + "</p></div>";
+                        document.getElementById("id_message").value = "";
+                    }
+                };
+                xhttp.open('post', "/dashboard/messages/{{ subtopic.subtopic_hash }}", true);
+                xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                xhttp.send("message=" + encodeURIComponent(data));
+            }
+        }
+
+        function scrollToBottom() {
+            var element = document.getElementById("table-chat");
+            //window.scrollTo(0, element.offsetHeight);
+            element.scrollTop = element.scrollHeight;
+        }
+    </script>
+{% endblock %}

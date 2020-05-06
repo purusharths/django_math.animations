@@ -3,7 +3,7 @@
 {% block title %} Assign Topics {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
-
+{% load static %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
@@ -12,7 +12,7 @@
 
 {% block content %}
     {% render_breadcrumbs %}
-     <style>
+    <style>
         label {
             display: none;
         }
@@ -21,7 +21,7 @@
     <div class="container">
         {% include 'partials/_alerts.html' %}
         <div class="row">
-            <h2>{{ chosen_inernship }}</h2> <br/>
+            <h2 class="text-info">{{ chosen_inernship }}</h2> <br/>
         </div>
 
         <div class="row">
@@ -40,7 +40,6 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                {#                <button class="btn btn-primary">Search</button>#}
             </form>
         </div>
         <hr/>
@@ -48,7 +47,7 @@
         <h4>Assign Sub Topic to interns</h4>
 
         <table class="table table-condensed table-sm">
-            <thead class="thead-light">
+            <thead class="table-primary">
             <tr>
                 <th>Topic</th>
                 <th>Subtopic</th>
@@ -59,26 +58,33 @@
             {% for i in subtopic %}
                 <tr>
                     <td>
-                    {{ i.topic_id }}
+                        {{ i.topic_id }}
                     </td>
                     <td>
-                        {{ i.subtopic_name   }}
+                        {{ i.subtopic_name }}
                     </td>
 
-                        {% if i.assigned_user_id %}
-                            <td colspan="2">
+                    {% if i.assigned_user_id %}
+                        <td>
                             {{ i.assigned_user_id }}
-                                  </td>
-                        {% else %}
-                             <td>
-                                    <form method="POST" class="form-group" name="RearrangeTopic">
-                                        <input type="hidden" value="{{ i.id }}" name="subtopicid">
-                                        {% csrf_token %} {{ form|crispy }}
-                                <td>
-                                    <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
-                                </td>
-                                </form>
-                        {% endif %}
+                        </td>
+                        <td>
+                        <form method="POST" class="form-group" name="DeleteAssign">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ i.subtopic_hash }}" name="deletetheassign">
+                            <button name="Delete" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                        </td>
+                    {% else %}
+                        <td>
+                            <form method="POST" class="form-group" name="RearrangeTopic">
+                                <input type="hidden" value="{{ i.id }}" name="subtopicid">
+                                {% csrf_token %} {{ form|crispy }}
+                        <td>
+                            <input class="btn btn-outline-success" type="submit" name="submit" value="Assign">
+                        </td>
+                        </form>
+                    {% endif %}
 
                 </tr>
             {% endfor %}

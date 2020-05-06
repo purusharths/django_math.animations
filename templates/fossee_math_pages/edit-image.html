@@ -6,9 +6,13 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Internship" "add-submission" %}
-    {% breadcrumb "Add Submission" "" %}
-    {% breadcrumb "Update Image Size" "" %}
+    {% breadcrumb "Your Submissions" "add-submission" %}
+    {% if user.is_staff %}
+        {% breadcrumb image_size.data_id.subtopic_id "review-submissions-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% else %}
+        {% breadcrumb image_size.data_id.subtopic_id "add-submission-subtopic" image_size.data_id.subtopic_id.subtopic_hash %}
+    {% endif %}
+    {% breadcrumb "Edit" "edit_image" %}
 {% endblock %}
 
 {% block content %}
@@ -54,11 +58,12 @@
         </div>
         <br>
         <div>
-          {% if user.is_staff %}
-          <a href="{% url 'review-submissions-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
-          {% else %}
-          <a href="{% url 'add-submission-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
-          {% endif %}
+            {% if user.is_staff %}
+                <a href="{% url 'review-submissions-subtopic' image.subtopic_id.subtopic_hash %}"
+                   class="btn btn-success">back</a>
+            {% else %}
+                <a href="{% url 'add-submission-subtopic' image.subtopic_id.subtopic_hash %}" class="btn btn-success">back</a>
+            {% endif %}
         </div>
         <br>
     </div>

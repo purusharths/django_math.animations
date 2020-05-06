@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 {% block title %} Add Subtopics {% endblock %}
-
 {% load django_bootstrap_breadcrumbs %}
-
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
     {% breadcrumb "Add Topics" "add-topics" %}
     {% breadcrumb "Add Subtopics" "add-subtopics" %}
 {% endblock %}
-
 {% block content %}
     {% render_breadcrumbs %}
     <style>
@@ -21,24 +19,38 @@
     <!-- Page Content -->
     <div class="container">
         {% include 'partials/_alerts.html' %}
-        <div class="container" style="padding-top: 3%;">
+        <div class="container" style="padding-top: 1.5%;">
             <table class="table table-condensed table-sm" id="subtopics_table">
-                <thead class="thead-light">
+                <thead class="table-primary">
                 <tr>
                     <h2>{{ i_topic.internship_id }}</h2>
                 </tr>
                 <tr>
-                    <h4>{{ i_topic.topic_name }}</h4>
-
+                    <h4 class="text-info">{{ i_topic.topic_name }}</h4>
                 </tr>
                 <tr>
-                    <th>Order</th>
+                    <hr>
+
+                    <form action="javascript:addData()" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ i_topic.id }}">
+                        <span>New Sub topic: </span>{{ form.subtopic }} &nbsp;
+                        <input class="btn btn-outline-info btn-sm" type="button" onClick="addData()" id="submitAJAX"
+                               value="Add Subtopic">
+                        &nbsp;&nbsp;&nbsp;
+                        <!--<input class="btn btn-outline-success" type="submit" name="submit" value="Submit">-->
+                        <img id="status_image" src="" width="18px" onclick="resetImage()">
+                    </form>
+                    <hr>
+                </tr>
+                <tr>
+                    <th>#</th>
                     <th>Subtopic</th>
                     <th colspan="2">Rearrange</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-
                 {% for i in subtopics %}
                     {% if i.topic_id_id == i_topic.id and i.topic_id.internship_id == i_topic.internship_id %}
                         <tr>
@@ -51,61 +63,77 @@
                             <td style="width: 100px">
                                 <form method="POST" class="form-group" name="RearrangeSubTopic">
                                     <input type="hidden" value="{{ i.pk }}" name="subtopicid">
-                                    {% csrf_token %} {{ rearrange_subtopic|crispy }}</td>
-                            <td>
-                                <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
+                                    {% csrf_token %} {{ rearrange_subtopic|crispy }}
                             </td>
-                            </form>
+                            <td>
+                                <input class="btn btn-outline-success" type="submit" name="submit" value="Change">
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST" class="form-group" name="DeleteSubtopic">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ i.topic_id_id }}" name="deletesubtopictopic">
+                                    <input type="hidden" value="{{ i.subtopic_hash }}" name="subtopic">
+                                    <button class="btn btn-outline-light">
+                                        <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}" title="Delete"
+                                        width="15px" alt="Delete">
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
-
                 </tbody>
             </table>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ i_topic.id }}">
-                <span>New Sub topic: </span>{{ form.subtopic }}
-                <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
-            </form>
-                <!--<input class="btn btn-outline-success btn-sm" type="button" onClick="addData()" id="submitAJAX" value="Add">-->
         </div>
     </div>
     <!-- /.container -->
-
-
-<script>
-    function addData() {
-        var csrf_token = '{{ csrf_token }}';
-        var topic = document.getElementById('id_subtopic').value
-        console.log(topic)
-        if (topic == null || topic.trim() === '') {
-            alert("Please enter the topic name")
-        } else {
-            var xhttp = new XMLHttpRequest();
-            var mainTable = document.getElementById("subtopics_table");
-                var row = mainTable.insertRow()
-                    var cell1 = row.insertCell(0)
-                    var cell2 = row.insertCell(1)
-                    var cell3 = row.insertCell(3)
-                    var cell4 = row.insertCell(4)
-                    cell1.innerHTML = '<div class="text-muted">' + topic + '</div>'
-            xhttp.onreadystatechange = function () {
-
-                if (this.readyState == 4 && this.status == 200) {
-                    cell1.innerHTML = topic
-                    //var olist = document.getElementById("subtopic_list");
-                    //var li_e = document.createElement("li");
-                    //li_e.appendChild(document.createTextNode(topic))
-                    //olist.appendChild(li_e)
-                    //document.getElementById("id_subtopic").value = '';
-                }
-            };
-            xhttp.open('POST', "/dashboard/add-subtopics/{{ i_topic.internship_id.internship_url }}/{{ i_topic.topic_url }}", true);
-            xhttp.setRequestHeader("X-CSRFToken", csrf_token);
-            xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
-            xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.pk }}");
+    <script>
+        function resetImage(){
+            document.getElementById('status_image').src=""
         }
-    }
-</script>
+        function addData() {
+            var csrf_token = '{{ csrf_token }}';
+            var topic = document.getElementById('id_subtopic').value
+            console.log(topic)
+            if (topic == null || topic.trim() === '') {
+                alert("Please enter the topic name")
+            } else {
+                var xhttp = new XMLHttpRequest();
+                var mainTable = document.getElementById("subtopics_table");
+                if (mainTable.lastElementChild.lastElementChild == null) {
+                  last_table_index_value=0
+                } else {
+                  last_table_index_value = parseInt(mainTable.lastElementChild.lastElementChild.cells[0].textContent)+1;
+                }
+                var row = mainTable.insertRow()
+                var cell1 = row.insertCell(0)
+                var cell2 = row.insertCell(1)
+                var cell3 = row.insertCell(2)
+                var cell4 = row.insertCell(3)
+                var cell5 = row.insertCell(4)
+                cell1.innerHTML = last_table_index_value
+                cell2.innerHTML = '<div class="text-muted">' + topic + '</div>'
+                document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/wait.svg' %}"
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        last_row_index = mainTable.rows.length
+                        mainTable.rows[last_row_index-1]
+                        cell2.innerHTML = topic
+                        document.getElementById('status_image').src="{% static '/web-files/img/multiuse-svgs/check.svg' %}"
+                        document.getElementById('id_subtopic').value = ""
+                        //var olist = document.getElementById("subtopic_list");
+                        //var li_e = document.createElement("li");
+                        //li_e.appendChild(document.createTextNode(topic))
+                        //olist.appendChild(li_e)
+                        //document.getElementById("id_subtopic").value = '';
+                    }
+                };
+                xhttp.open('POST', "/dashboard/add-subtopics/{{ i_topic.internship_id.internship_url }}/{{ i_topic.topic_url }}", true);
+                xhttp.setRequestHeader("X-CSRFToken", csrf_token);
+                xhttp.setRequestHeader('Content-type', "application/x-www-form-urlencoded");
+                xhttp.send("subtopic=" + encodeURIComponent(topic) + "&id={{ i_topic.pk }}");
+            }
+        }
+    </script>
 {% endblock %}

@@ -6,17 +6,19 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb  "Dashboard" "dashboard " %}
+    {% breadcrumb "Dashboard" "dashboard " %}
 {% endblock %}
 
 {% block content %}
-{% render_breadcrumbs %}
+    {% render_breadcrumbs %}
+    {% include 'partials/_alerts.html' %}
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             <div class="container" style="margin-top:20px; margin-bottom:50px">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"> <a href="{% url 'add-users' %}">Add users</a></h5>
+                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'add-users' %}">Add users</a>
+                        </h5>
                         <p class="card-text">View all the users (Interns and Staff), currently in the system.</p>
                     </div>
                 </div>
@@ -37,9 +39,10 @@
                     </div>
                 </div>
                 <br>
-                   <div class="card">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-interns' %}">Manage Interns</a></h5>
+                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-interns' %}">Manage
+                            Interns</a></h5>
                         <p class="card-text">Activate/Deactivate Intern in the system.</p>
                     </div>
                 </div>
@@ -56,88 +59,94 @@
 
         {% elif user.is_staff %}
 
-          <div class="container" style="margin-top:20px; margin-bottom:100px">
-              <h4 style="font-weight: lighter;"> Submissions: </h4>
-              <br>
-              <div class="row justify-content-center">
-                  <div class="col-md-6">
-                      <div class="col">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'review-submissions' %}"> Review Submissions </a></h5>
-                          <p class="card-text">Manage the data submitted by the Contributors.</p>
-                      </div>
-                  </div>
-                  <div class="col-md-6">
-                      <div class="col ml-auto">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'internship-progress' %}">Internships Progress</a></h5>
-                          <p class="card-text">View the internship progress.</p>
-                      </div>
-                  </div>
-              </div>
-              <br><hr>
-              <br>
-              <h4 style="font-weight: lighter;"> Content &amp; Assignments: </h4>
-              <br>
+            <div class="container" style="margin-top:20px; margin-bottom:100px">
+                <div class="bs-callout bs-callout-info">
+                    <h4 style="font-weight: lighter;"> Submissions: </h4>
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: normal;"><a
+                                        href="{% url 'review-submissions' %}"> Review Submissions </a></h5>
+                                <p class="card-text">Manage the data submitted by the Contributors.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: normal;"><a
+                                        href="{% url 'internship-progress' %}">Internships Progress</a></h5>
+                                <p class="card-text">View the internship progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="bs-callout bs-callout-success">
+                    <h4 style="font-weight: lighter;"> Content &amp; Assignments: </h4>
+                    <br>
 
-              <div class="row justify-content-center">
-                  <div class="col-md-6">
-                      <div class="col">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'add-topics' %}">Add Topics &amp; Subtopics</a></h5>
-                          <p class="card-text">Add topics and subtopics to the internship.</p>
-                      </div>
-                  </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'add-topics' %}">Add
+                                    Topics &amp; Subtopics</a></h5>
+                                <p class="card-text">Add topics and subtopics to the internship.</p>
+                            </div>
+                        </div>
 
-                  <div class="col-md-6">
-                      <div class="col ml-auto">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'assign-topics' %}">Assign Topics</a></h5>
-                          <p class="card-text">Assign topics to the interns to start the internship.</p>
-                      </div>
-                  </div>
-              </div>
-              <br><hr>
-              <br>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'assign-topics' %}">Assign
+                                    Topics</a></h5>
+                                <p class="card-text">Assign topics to the interns to start the internship.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="bs-callout bs-callout-warning">
+                    <h4 style="font-weight: lighter;"> Access Control: </h4>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: normal;"><a
+                                        href="{% url 'manage-interns' %}">Intern Status</a></h5>
+                                <p class="card-text">Activate / Deactivate the intern access</p>
+                            </div>
+                        </div>
 
-              <h4 style="font-weight: lighter;"> Access Control: </h4>
-              <br>
-              <div class="row">
-                  <div class="col-md-6">
-                      <div class="col">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'manage-interns' %}">Intern Status</a></h5>
-                          <p class="card-text">Activate / Deactivate the intern access</p>
-                      </div>
-                  </div>
-
-                  <div class="col-md-6">
-                      <div class="col">
-                          <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'interns' %}">Intern Outline</a></h5>
-                      <p class="card-text">View the interns in the internship progress.</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: normal;"><a href="{% url 'interns' %}">Intern
+                                    Outline</a></h5>
+                                <p class="card-text">View the interns in the internship progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         {% else %}
-          <div class="container" style="margin-top:40px;">
-              
-                  <div class="bs-callout bs-callout-primary">
-                      <h4 class="card-title" style="font-weight: lighter;"><a href="{% url 'add-submission' %}">Manage
-                          Submission</a></h4>
-                      <p class="card-text">View and Modify your submissions.</p>
-                  </div>
-              <br>
-              <div class="bs-callout bs-callout-info">
-                      <h4 class="" style="font-weight: lighter;"><a href="{% url 'internship-progress' %}">View
-                          Progress</a></h4>
-                      <p class="card-text">Check the overall progress of you expected submissions.</p>
-              </div>
-          <br>
-          <div class="bs-callout bs-callout-success">
-                      <h4 class="card-title" style="font-weight: lighter;"><a href="{% url 'messages' %}">View
-                          Messages</a></h4>
-                      <p class="card-text">Check messages sent by the mentor for a submission.</p>
-
-              </div>
-          </div>
+            <div class="container" style="margin-top:40px;">
+                <div class="bs-callout bs-callout-primary">
+                    <h4 class="card-title" style="font-weight: lighter;"><a href="{% url 'add-submission' %}">Your
+                        Submissions</a></h4>
+                    <p class="card-text">View and Modify your submissions.</p>
+                </div>
+                <br>
+                <div class="bs-callout bs-callout-info">
+                    <h4 class="" style="font-weight: lighter;"><a href="{% url 'internship-progress' %}">View
+                        Progress</a></h4>
+                    <p class="card-text">Check the overall progress of you expected submissions.</p>
+                </div>
+                <br>
+            </div>
         {% endif %}
-      {% endif %}
+    {% endif %}
 
- {% endblock %}
+{% endblock %}

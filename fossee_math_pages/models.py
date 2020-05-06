@@ -1,9 +1,11 @@
 from datetime import datetime
-from django.utils.timezone import now
+
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.timezone import now
+
+# from phonenumber_field.modelfields import PhoneNumberField
 
 # default choices
 INTERN_STATUS = (
@@ -28,7 +30,7 @@ DATA_STATUS = (
 # Foregin key from the default DJANGO User table
 class UserDetails(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_phone = PhoneNumberField(null=True, blank=True, unique=False, default='+91')
+    user_phone = models.CharField(null=True, blank=True, unique=False, max_length=15)
     INTERN = 'INTERN'
     STAFF = 'STAFF'
     ROLE_TYPE = (
@@ -38,9 +40,10 @@ class UserDetails(models.Model):
     user_role = models.CharField(max_length=20,
                                  choices=ROLE_TYPE,
                                  default=INTERN)
-    user_temp_password = models.CharField(max_length=10, blank=True)
+    user_temp_password = models.CharField(max_length=20, blank=True)
     user_email = models.CharField(max_length=128)
     user_status = models.CharField(max_length=255, choices=INTERN_STATUS, default='INACTIVE')
+    user_college = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
@@ -49,7 +52,7 @@ class UserDetails(models.Model):
 # table that will store the internship details,
 class Internship(models.Model):
     internship_topic = models.CharField(max_length=255, null=False)
-    internship_thumbnail = models.ImageField(upload_to='images/', blank=False)
+    internship_thumbnail = models.ImageField(upload_to='images/internship-thumbnails/', blank=False)
     internship_start_date = models.DateTimeField(default=datetime.now, blank=True)
     internship_status = models.CharField(max_length=20,
                                          choices=STATUS,
@@ -86,7 +89,7 @@ class Subtopic(models.Model):
                                        default='WAITING')
     subtopic_hash = models.CharField(max_length=50)
     subtopic_url = models.CharField(max_length=255)
-    subtopic_modification_date = models.DateField(default=now)
+    subtopic_modification_date = models.DateTimeField(default=now)
     subtopic_order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -96,7 +99,7 @@ class Subtopic(models.Model):
 # Information storing the details of the contributor info
 class Contributor(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    contributor = models.CharField(max_length=255, null=False)
+    contributor = models.CharField(max_length=255, null=True, blank=True)
     mentor = models.CharField(max_length=255, null=True, blank=True)
     professor = models.CharField(max_length=255, null=True, blank=True)
     data_aproval_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -109,10 +112,10 @@ class Contributor(models.Model):
 # foregin from the subtopic table
 class Data(models.Model):
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    data_content = RichTextUploadingField()
+    data_content = RichTextUploadingField(blank=True, null=True)
     data_image = models.ImageField(upload_to='images/', blank=True, null=True)
     data_video = models.FileField(upload_to='video/', blank=True, null=True)
-    data_caption = models.CharField(max_length=1024, blank=True,null=True)
+    data_caption = models.CharField(max_length=1024, blank=True, null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
 
@@ -133,8 +136,10 @@ class ImageFormatting(models.Model):
 class Messages(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subtopic_id = models.ForeignKey(Subtopic, on_delete=models.CASCADE)
-    message = models.TextField(max_length=300, null=True, blank=True)
-    message_send_date = models.DateField(default=datetime.now, null=True, blank=True)
+    message = models.TextField(max_length=1000, null=True, blank=True)
+    message_send_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
+    message_is_seen_staff = models.BooleanField(default=1)
+    message_is_seen_intern = models.BooleanField(default=1)
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
