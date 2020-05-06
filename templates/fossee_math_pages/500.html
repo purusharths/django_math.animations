@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    500
+{% endblock %}
+{% block content %}
+    <style>
+
+    .container {
+
+        width: 80%;
+
+        margin: 0 auto;
+
+        padding: 20px;
+
+        background: white;
+
+    }
+
+</style>
+    <div class="container" >
+    <h1>Oh no! The Tumbeasts got us!</h1>
+    <h2>500: Internal Server Error</h2>
+        <img src="Tumbeasts_servers.png" width="500px">
+        <p>Tumbeasts by Matthew Inman are licensed under a Creative Commons Attribution 3.0 Unported License</p>
+        <br>
+        <br>
+
+    <p>While we fix this error</p>
+        <ul>
+  <li>Refresh the page</li>
+  <li>Contact the staff</li>
+            <li> Write to us at <a href="animations@fossee.in">animations@fossee.in</a> </li>
+</ul>
+    <a href="{% url 'index' %}">Go To Homepage</a>
+    </div>
+
+{% endblock %}
