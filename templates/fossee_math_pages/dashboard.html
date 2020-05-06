@@ -14,47 +14,71 @@
     {% include 'partials/_alerts.html' %}
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
-            <div class="container" style="margin-top:20px; margin-bottom:50px">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'add-users' %}">Add users</a>
-                        </h5>
-                        <p class="card-text">View all the users (Interns and Staff), currently in the system.</p>
+            <div class="container" style="margin-top:20px; margin-bottom:100px">
+                <div class="bs-callout bs-callout-info">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'add-users' %}">Add
+                                    users</a></h5>
+                                <p class="card-text">View all the users (Interns and Staff), currently in the
+                                    system.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'add-internship' %}">Add
+                                    internship</a></h5>
+                                <p class="card-text">Add the internship for interns and staff to the system.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'add-internship' %}">Add
-                            internship</a></h5>
-                        <p class="card-text">Add the internship for interns and staff to the system.</p>
+                <hr>
+                <br>
+                <div class="bs-callout bs-callout-info">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: bold;"><a
+                                        href="{% url 'manage-internship' %}">Manage
+                                    internship </a></h5>
+                                <p class="card-text">Manage the internships in the system.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: bold;"><a
+                                        href="{% url 'manage-internship' %}">Rearrange internship </a></h5>
+                                <p class="card-text">Rearrange the internship topics and suubtopics among
+                                    inernships.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-internship' %}">Manage
-                            internship </a></h5>
-                        <p class="card-text">Manage the internships in the system.</p>
+                <hr>
+                <br>
+                <div class="bs-callout bs-callout-info">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-interns' %}">Manage
+                                    Interns</a></h5>
+                                <p class="card-text">Activate/Deactivate Intern in the system.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: bold;"><a
+                                        href="{% url 'internship-progress' %}">View
+                                    internships</a></h5>
+                                <p class="card-text">View the internships in the system.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-interns' %}">Manage
-                            Interns</a></h5>
-                        <p class="card-text">Activate/Deactivate Intern in the system.</p>
-                    </div>
-                </div>
-                <br>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'internship-progress' %}">View
-                            internships</a></h5>
-                        <p class="card-text">View the internships in the system.</p>
-                    </div>
-                </div>
-                <br>
             </div>
 
         {% elif user.is_staff %}
