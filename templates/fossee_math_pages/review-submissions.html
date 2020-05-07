@@ -13,9 +13,21 @@
     {% render_breadcrumbs %}
     {% include 'partials/_modal.html' %}
     <div class="container">
-            {% include 'partials/_alerts.html' %}
+        {% include 'partials/_alerts.html' %}
+         <div class="row">
+          <div class="col-sm-6">
         <h6>All Submissions: </h6>
         <h2 class="text-info">{{ first_internship.internship_topic }}</h2>
+    </div>
+     <div class="col-sm-6">
+            <form method="GET" action=".">
+                <div class="row">
+                    <input class="form-control py-2 border col-lg-8" type="search" name="title_contains"
+                           placeholder="Search Subtopic"/> &nbsp;&nbsp;
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+     </div></div>
         <hr>
         <div class="row">
             <div class="col-6 col-sm-6">
@@ -37,25 +49,25 @@
                 </form>
             </div>
             <div class="col-6 col-sm-6">
-            {% if first_internship %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
-                    <label>Select Contributor: </label>
-                    <select name="search_intern" onchange="submit();" class="form-control">
-                        {% if selected_intern in interns %}
-                            <option>{{ selected_intern.username }}</option>
-                        {% else %}
-                            <option>Select Interns</option>
-                        {% endif %}
-                        {% for i in interns %}
-                            {% if i.id != selected_intern.id %}
-                                <option value="{{ i.pk }}">{{ i.username }}</option>
+                {% if first_internship %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
+                        <label>Select Contributor: </label>
+                        <select name="search_intern" onchange="submit();" class="form-control">
+                            {% if selected_intern in interns %}
+                                <option>{{ selected_intern.username }}</option>
+                            {% else %}
+                                <option>Select Interns</option>
                             {% endif %}
-                        {% endfor %}
-                    </select>
-                </form>
-            {% endif %}
+                            {% for i in interns %}
+                                {% if i.id != selected_intern.id %}
+                                    <option value="{{ i.pk }}">{{ i.username }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </form>
+                {% endif %}
             </div>
         </div>
         <hr/>
