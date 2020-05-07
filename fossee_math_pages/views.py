@@ -1436,3 +1436,11 @@ def rearrange(request):
     else:
         messages.error(request, 'You dont have access to this pages !!')
         return redirect('dashboard')
+
+
+@login_required
+def update_profile(request):
+    context = {
+
+    }
+    return render(request, 'fossee_math_pages/update-user.html', context)
