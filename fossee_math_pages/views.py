@@ -690,12 +690,16 @@ def add_submission(request):
 
 
 def internship(request):
-    datas = Internship.objects.all()
-    context ={
-        'datas':datas,
+    subtopic = Subtopic.objects.all()
+    topic = Topic.objects.all()
+    internship = Internship.objects.all()
+    context = {
+        'subtopic': subtopic,
+        'topic': topic,
+        'internship': internship,
     }
 
-    return render(request, 'fossee_math_pages/internship.html',context)
+    return render(request, 'fossee_math_pages/internship.html', context)
 
 
 def password_change(request):
