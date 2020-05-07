@@ -16,47 +16,79 @@
         }
     </style>
     <div class="container">
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Ongoing internship</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Completed Internship</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Internship</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                   aria-selected="true">Ongoing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false">Completed</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                   aria-controls="contact" aria-selected="false">Upcoming</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
 
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br>
-    {% for i in datas %}
-        {% if i.internship_status == 'ACTIVE' %}
-        <h3>Internship : {{ i.internship_topic }}</h3>
-        {% else %}
-        <p>No active internships</p>
-        {% endif %}
-    {% endfor %}
-    </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><br>
-        {% for i in datas %}
-        {% if i.internship_status == 'COMPLETED' %}
-        <h3>Internship : {{ i.internship_topic }}</h3>
-        {% else %}
-        <p>No completed internships</p>
-        {% endif %}
-    {% endfor %}
-    </div>
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"><br><br>
-        <!-- Page Content -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br>
 
-        <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive"/>
-        <br/>
-        <br/>
-    </div>
-    <!-- row -->
+                {% for i in internship %}
+                    {% if i.internship_status == 'ACTIVE' %}
+                        <div class="bs-callout bs-callout-info mb-3">
+                            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
+                            {% for j in topic %}
+                                {% if j.internship_id.pk == i.pk %}
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h5 class="card-title">{{ j.topic_name }}</h5>
+                                        {% for k in subtopic %}
+                                            {% if k.topic_id.pk == j.pk %}
+                                                <p class="card-text">{{ k.subtopic_name }}</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-</div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><br>
+
+            {% for i in internship %}
+                    {% if i.internship_status == 'COMPLETED' %}
+                        <div class="bs-callout bs-callout-info mb-3">
+                            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
+                            {% for j in topic %}
+                                {% if j.internship_id.pk == i.pk %}
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h5 class="card-title">{{ j.topic_name }}</h5>
+                                        {% for k in subtopic %}
+                                            {% if k.topic_id.pk == j.pk %}
+                                                <p class="card-text">{{ k.subtopic_name }}</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"><br><br>
+                <!-- Page Content -->
+
+                <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt=""
+                     class="responsive"/>
+                <br/>
+                <br/>
+            </div>
+            <!-- row -->
+
+        </div>
 
     </div>
 
