@@ -33,8 +33,9 @@
     {% for i in datas %}
         {% if i.internship_status == 'ACTIVE' %}
         <h3>Internship : {{ i.internship_topic }}</h3>
+
         {% else %}
-        <p>No active internships</p>
+
         {% endif %}
     {% endfor %}
     </div>
@@ -43,7 +44,7 @@
         {% if i.internship_status == 'COMPLETED' %}
         <h3>Internship : {{ i.internship_topic }}</h3>
         {% else %}
-        <p>No completed internships</p>
+
         {% endif %}
     {% endfor %}
     </div>
