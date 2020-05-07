@@ -38,7 +38,15 @@
         {% endif %}
     {% endfor %}
     </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Vidhya</div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><br>
+        {% for i in datas %}
+        {% if i.internship_status == 'COMPLETED' %}
+        <h3>Internship : {{ i.internship_topic }}</h3>
+        {% else %}
+        <p>No completed internships</p>
+        {% endif %}
+    {% endfor %}
+    </div>
     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
         <!-- Page Content -->
 
