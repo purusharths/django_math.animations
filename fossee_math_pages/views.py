@@ -1334,10 +1334,6 @@ def error_500_view(request):
     return render(request, 'fossee_math_pages/500.html')
 
 
-def error_400_view(request, exception=None):
-    return render(request, 'fossee_math_pages/400.html')
-
-
 def activate(request, uidb64, token):
     try:
         # uidb64 = uidb64.decode('utf-8')
