@@ -15,13 +15,50 @@
             height: auto;
         }
     </style>
-
-    <!-- Page Content -->
     <div class="container">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Ongoing internship</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Completed Internship</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Internship</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br>
+    {% for i in datas %}
+        {% if i.internship_status == 'ACTIVE' %}
+        <h3>Internship : {{ i.internship_topic }}</h3>
+        {% else %}
+        <p>No active internships</p>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><br>
+        {% for i in datas %}
+        {% if i.internship_status == 'COMPLETED' %}
+        <h3>Internship : {{ i.internship_topic }}</h3>
+        {% else %}
+        <p>No completed internships</p>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <!-- Page Content -->
+
         <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive"/>
         <br/>
         <br/>
     </div>
     <!-- row -->
+
+</div>
+
+    </div>
+
     <br/>
 {% endblock %}
