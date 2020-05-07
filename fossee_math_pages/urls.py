@@ -42,4 +42,6 @@ urlpatterns = [
                   path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
                   path('profile/', views.Profile, name='profile'),
+                  path('profile-page/', views.profile, name='profile'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
