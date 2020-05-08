@@ -909,7 +909,7 @@ def review_submissions(request):
         else:
             subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
                 'topic_id__topic_order').order_by(
-                'subtopic_order')
+                'subtopic_order').order_by('-subtopic_modification_date')
         messages_user = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
