@@ -34,6 +34,7 @@ urlpatterns = [
                   path('dashboard/manage-internship/', views.manage_internship, name='manage-internship'),
                   path('dashboard/review-submissions/', views.review_submissions, name='review-submissions'),
                   path('dashboard/rearrange-topics/', views.rearrange, name='rearrange-topics'),
+                  path('dashboard/edit-topics/<str:id>', views.edit_topics, name='edit-topics'),
                   path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic,
                        name='review-submissions-subtopic'),
                   path('dashboard/review-submissons/<str:t_id>/edit-image/<str:id>', views.edit_image,

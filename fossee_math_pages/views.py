@@ -1546,3 +1546,42 @@ def reset_subtopic_status(request, id):
             return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
+
+
+def edit_topics(request, id):
+    internship = Internship.objects.get(internship_url=id)
+    topics = Topic.objects.filter(internship_id=internship.id)
+    subtopics = Subtopic.objects.filter(topic_id__internship_id=internship.id)
+
+    if request.user.is_superuser:
+        if request.POST:
+            if "internship_topic_new" in request.POST:
+                internship_topic_new = request.POST['internship_topic_new']
+                internship_id = request.POST['internship_id']
+                print(internship_topic_new, internship_id)
+
+                messages.success(request, 'Changed the Internship topic !')
+                return redirect(edit_topics, id)
+            elif "topic_new" in request.POST:
+                topic_new = request.POST['topic_new']
+                topic_id = request.POST['topic_id']
+                print(topic_new, topic_id)
+                messages.success(request, 'Changed the Topic !')
+                return redirect(edit_topics, id)
+            elif "subtopic_new" in request.POST:
+                subtopic_new = request.POST['subtopic_new']
+                subtopic_id = request.POST['subtopic_id']
+                print(subtopic_new, subtopic_id)
+                messages.success(request, 'Changed the Subtopic !')
+                return redirect(edit_topics, id)
+
+    else:
+        messages.error(request, 'Inavalid access !')
+        return redirect('dashboard')
+
+    context = {
+        'internship': internship,
+        'topics': topics,
+        'subtopics': subtopics,
+    }
+    return render(request, 'fossee_math_pages/edit-topics.html', context)
