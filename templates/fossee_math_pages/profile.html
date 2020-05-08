@@ -26,35 +26,7 @@
         <p style="text-align: center"><a href="{% url 'password-change' %}"><span
                 style="color: #2C009F">Change Password</span></a></p>
         <br>
-<<<<<<< HEAD
-        <br>
-        <hr/>
-<h2 style="text-align:center">User Profile</h2>
-
-<div class="card">
-
-  <img src="" alt="image" style="width:100%" >
-
-  <h1>Name</h1>
-  <p class="title">Designation</p>
-  <p>College</p>
-   <p>Email:</p>
-    <p>Mobile:</p>
-    <p>Role:</p>
-
-<p class="">
-    <p>Name:<span style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span></p>
-  <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
-   <p>Email:<span style="font-weight: bold"> {{details.user_email}}</span></p>
-    <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
-    <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
-
-    <p></p>
-    <p style="text-align: center"><a href="{% url 'password-change' %}"><span style="color: #2C009F">Change Password</span></a></p>
- </div>
-=======
         </div>
->>>>>>> 6739e7634abc40cf822b53e35a3e53460fd258de
     </div>
     <div class="container">
     {% if not user.is_staff %}

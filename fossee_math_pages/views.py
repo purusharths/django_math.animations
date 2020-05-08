@@ -690,6 +690,7 @@ def add_submission(request):
 
 
 def internship(request):
+
     datas = Internship.objects.all()
     topic = Topic.objects.all()
     context ={
@@ -703,6 +704,16 @@ def internship(request):
                 print(j.topic_name)
 
     return render(request, 'fossee_math_pages/internship.html',context)
+    subtopic = Subtopic.objects.all()
+    topic = Topic.objects.all()
+    internship = Internship.objects.all()
+    context = {
+        'subtopic': subtopic,
+        'topic': topic,
+        'internship': internship,
+    }
+
+    return render(request, 'fossee_math_pages/internship.html', context)
 
 
 def password_change(request):
@@ -904,9 +915,13 @@ def review_submissions(request):
         first_internship = ""
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
-            'topic_id__topic_order').order_by(
-            'subtopic_order')
+        user_query = request.GET.get('title_contains')
+        if user_query != '' and user_query is not None:
+            subtopic = Subtopic.objects.filter(subtopic_name__icontains=user_query)
+        else:
+            subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
+                'topic_id__topic_order').order_by(
+                'subtopic_order')
         messages_user = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
