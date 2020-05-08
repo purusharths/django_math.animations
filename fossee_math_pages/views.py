@@ -690,6 +690,20 @@ def add_submission(request):
 
 
 def internship(request):
+
+    datas = Internship.objects.all()
+    topic = Topic.objects.all()
+    context ={
+        'datas':datas,
+    }
+
+    for i in datas:
+        if(i.internship_status == 'ACTIVE'):
+            t = Topic.objects.filter(internship_id = i.id)
+            for j in t:
+                print(j.topic_name)
+
+    return render(request, 'fossee_math_pages/internship.html',context)
     subtopic = Subtopic.objects.all()
     topic = Topic.objects.all()
     internship = Internship.objects.all()
