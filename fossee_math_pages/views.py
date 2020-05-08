@@ -1075,6 +1075,7 @@ def interns(request):
     if request.user.is_staff:
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
+        interns = UserDetails.objects.filter(user_role='INTERN')
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
         if internship:
             internship = Internship.objects.get(pk=internship.pk)
@@ -1084,6 +1085,7 @@ def interns(request):
 
             conxext = {
                 'topics': topics,
+                'interns': interns,
                 'internship': internship,
                 'internship_all': internship_all,
             }
@@ -1385,7 +1387,7 @@ def password_set(request):
 @login_required
 def profile(request, id):
     hashids = Hashids()
-    hid =hashids.encode(id)
+    hid = hashids.encode(id)
     print(hid)
     print("hai")
     if request.user.is_superuser:
