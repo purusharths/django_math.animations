@@ -37,7 +37,12 @@
                 <div class="bs-callout bs-callout-info">
                 {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
                 <div class="float-right">
-                    {{ i.subtopic_status }}
+                    {% if i.subtopic_status == 'WAITING' %}
+                        IN PROCESS
+
+                    {% else %}
+                        {{ i.subtopic_status }}
+                        {% endif %}
                     </a>
                 </div>
                 </div>
