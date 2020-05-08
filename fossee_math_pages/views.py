@@ -31,7 +31,8 @@ from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
-                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
+                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video,
+                    EditUserForm1, EditUserForm2, )
 from .generic_functions import (large_img_size, large_video_size)
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
@@ -295,7 +296,7 @@ def home_search_results(request, search_contains_query):
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
     datasss = Subtopic.objects.filter(topic_id__internship_id__internship_topic__icontains=search_contains_query)
 
-    page_obj = list(chain(datas, datass, datass))
+    page_obj = list(chain(datas, datass, datasss))
 
     data_search = Data.objects.all()
 
@@ -691,20 +692,19 @@ def add_submission(request):
 
 
 def internship(request):
-
     datas = Internship.objects.all()
     topic = Topic.objects.all()
-    context ={
-        'datas':datas,
+    context = {
+        'datas': datas,
     }
 
     for i in datas:
-        if(i.internship_status == 'ACTIVE'):
-            t = Topic.objects.filter(internship_id = i.id)
+        if (i.internship_status == 'ACTIVE'):
+            t = Topic.objects.filter(internship_id=i.id)
             for j in t:
                 print(j.topic_name)
 
-    return render(request, 'fossee_math_pages/internship.html',context)
+    return render(request, 'fossee_math_pages/internship.html', context)
     subtopic = Subtopic.objects.all()
     topic = Topic.objects.all()
     internship = Internship.objects.all()
@@ -1455,3 +1455,75 @@ def rearrange(request):
     else:
         messages.error(request, 'You dont have access to this pages !!')
         return redirect('dashboard')
+
+
+@login_required
+def update_profile(request, user_id):
+    instance_user = User.objects.get(username__exact=user_id)
+    if instance_user:
+        instance_userdetails = UserDetails.objects.get(user_id=instance_user.id)
+        form = EditUserForm1(instance=instance_user)
+        sub_form = EditUserForm2(instance=instance_userdetails)
+
+        if request.method == 'POST':
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = firstname + " " + lastname
+            email = request.POST['email']
+            user_phone = request.POST['user_phone']
+            user_college = request.POST['user_college']
+            user_bio = request.POST['user_bio']
+
+            regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
+            if firstname.isdigit():
+                messages.error(request, 'Firstname cannot have numbers')
+                return redirect('update-profile', user_id)
+            if regex.search(firstname):
+                messages.error(request, 'Firstname cannot have special characters')
+                return redirect('update-profile', user_id)
+            if lastname.isdigit():
+                messages.error(request, 'Lastname cannot have numbers')
+                return redirect('update-profile', user_id)
+            if regex.search(lastname):
+                messages.error(request, 'Lastname cannot have special characters')
+                return redirect('update-profile', user_id)
+            Pattern = re.compile(r"(/+91)?[7-9][0-9]{9}")
+            if Pattern.match(user_phone):
+                messages.error(request, 'Phone number error')
+                return redirect('update-profile', user_id)
+            try:
+                v = validate_email(email)
+                val_email = v["email"]
+            except EmailNotValidError as e:
+                messages.error(request, 'Invalid Email ID')
+                return redirect('update-profile', user_id)
+
+            try:
+                user = User.objects.get(pk=instance_user.pk)
+                user.username = username
+                user.email = email
+                user.first_name = firstname
+                user.last_name = lastname
+                user.save()
+                addusr = UserDetails.objects.get(user_id=instance_user.id)
+                addusr.user_phone = user_phone
+                addusr.user_email = email
+                addusr.user_college = user_college
+                addusr.user_bio = user_bio
+                addusr.save()
+            except Exception:
+                messages.error(request, 'error in updating the User with the given details')
+                return redirect('add-users')
+
+            messages.success(request, 'User Updated!')
+            return redirect('add-users')
+
+        context = {
+            'form': form,
+            'subform': sub_form,
+            'currentuser': instance_user,
+        }
+        return render(request, 'fossee_math_pages/update-user.html', context)
+    else:
+        messages.error(request, 'Invalid User')
+        return redirect('add-users')
