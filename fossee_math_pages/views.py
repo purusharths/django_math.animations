@@ -4,6 +4,7 @@ import re
 import textwrap
 import uuid
 from itertools import chain
+from hashids import Hashids
 
 import pytz
 import requests
@@ -1395,7 +1396,11 @@ def password_set(request):
 
 
 @login_required
-def profile(request):
+def profile(request, id):
+    hashids = Hashids()
+    hid =hashids.encode(id)
+    print(hid)
+    print("hai")
     if request.user.is_superuser:
         messages.error(request, "You are the super user !!")
         return redirect('dashboard')
