@@ -1514,3 +1514,23 @@ def update_profile(request, user_id):
     else:
         messages.error(request, 'Invalid User')
         return redirect('add-users')
+
+
+@login_required
+def reset_subtopic_status(request, id):
+    if request.user.is_staff:
+        instance = Subtopic.objects.get(subtopic_hash=id)
+        try:
+            data = Data.objects.filter(subtopic_id_id=instance.id)
+        except Data.DoesNotExist:
+            data = None
+
+        if data:
+            instance.subtopic_status = "WAITING"
+            instance.save()
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        else:
+            messages.error(request, 'An empty submission cannot be Rejected!')
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+    else:
+        return redirect('dashboard')
