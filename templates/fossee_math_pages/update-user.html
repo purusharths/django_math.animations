@@ -6,27 +6,25 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Add Users" "add-users" %}
     {% breadcrumb "Update Profile" "update-user" %}
 {% endblock %}
 
 {% block content %}
     {% if user.is_authenticated %} {% if user.is_superuser %}
         {% render_breadcrumbs %}
-        <div class="container">
-            <br>
-            <form method="GET" action=".">
-                <div class="row">
-                    <h5>Search Users:</h5> &nbsp;
-                    <input class="form-control py-2 border col-lg-3" type="search" name="title_contains"
-                           placeholder="Search (UserName, Intern, Staff)"/> &nbsp;&nbsp;
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
+       <div class="container">
+            {% include 'partials/_alerts.html' %}
+
+            <h2>Update User : {{ currentuser.username }}</h2>
+            <hr>
+            <form method="POST" name="putdata" class="form-group" id="formTwo">
+
+                {% csrf_token %} {{ form|crispy }} {{ subform|crispy }}
+
+                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
             </form>
-        </div>
-        <div class="container">
-
-
-
+            <hr/>
         </div>
         <br>
     {% endif %}
