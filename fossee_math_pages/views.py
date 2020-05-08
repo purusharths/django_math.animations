@@ -4,6 +4,7 @@ import re
 import textwrap
 import uuid
 from itertools import chain
+from hashids import Hashids
 
 import pytz
 import requests
@@ -30,7 +31,8 @@ from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
-                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video, )
+                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video,
+                    EditUserForm1, EditUserForm2, )
 from .generic_functions import (large_img_size, large_video_size)
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
@@ -294,7 +296,7 @@ def home_search_results(request, search_contains_query):
     datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
     datasss = Subtopic.objects.filter(topic_id__internship_id__internship_topic__icontains=search_contains_query)
 
-    page_obj = list(chain(datas, datass, datass))
+    page_obj = list(chain(datas, datass, datasss))
 
     data_search = Data.objects.all()
 
@@ -690,7 +692,16 @@ def add_submission(request):
 
 
 def internship(request):
-    return render(request, 'fossee_math_pages/internship.html')
+    subtopic = Subtopic.objects.all()
+    topic = Topic.objects.all()
+    internship = Internship.objects.all()
+    context = {
+        'subtopic': subtopic,
+        'topic': topic,
+        'internship': internship,
+    }
+
+    return render(request, 'fossee_math_pages/internship.html', context)
 
 
 def password_change(request):
@@ -892,9 +903,13 @@ def review_submissions(request):
         first_internship = ""
         interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         internship = Internship.objects.all()
-        subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
-            'topic_id__topic_order').order_by(
-            'subtopic_order')
+        user_query = request.GET.get('title_contains')
+        if user_query != '' and user_query is not None:
+            subtopic = Subtopic.objects.filter(subtopic_name__icontains=user_query)
+        else:
+            subtopic = Subtopic.objects.all().order_by('topic_id__internship_id').order_by(
+                'topic_id__topic_order').order_by(
+                'subtopic_order').order_by('-subtopic_modification_date')
         messages_user = Messages.objects.all()
         userdetails = UserDetails.objects.all()
 
@@ -1060,6 +1075,7 @@ def interns(request):
     if request.user.is_staff:
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
+        interns = UserDetails.objects.filter(user_role='INTERN')
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
         if internship:
             internship = Internship.objects.get(pk=internship.pk)
@@ -1069,6 +1085,7 @@ def interns(request):
 
             conxext = {
                 'topics': topics,
+                'interns': interns,
                 'internship': internship,
                 'internship_all': internship_all,
             }
@@ -1329,10 +1346,6 @@ def error_500_view(request):
     return render(request, 'fossee_math_pages/500.html')
 
 
-def error_400_view(request, exception=None):
-    return render(request, 'fossee_math_pages/400.html')
-
-
 def activate(request, uidb64, token):
     try:
         # uidb64 = uidb64.decode('utf-8')
@@ -1372,7 +1385,11 @@ def password_set(request):
 
 
 @login_required
-def profile(request):
+def profile(request, id):
+    hashids = Hashids()
+    hid = hashids.encode(id)
+    print(hid)
+    print("hai")
     if request.user.is_superuser:
         messages.error(request, "You are the super user !!")
         return redirect('dashboard')
@@ -1427,3 +1444,144 @@ def rearrange(request):
     else:
         messages.error(request, 'You dont have access to this pages !!')
         return redirect('dashboard')
+
+
+@login_required
+def update_profile(request, user_id):
+    instance_user = User.objects.get(username__exact=user_id)
+    if instance_user:
+        instance_userdetails = UserDetails.objects.get(user_id=instance_user.id)
+        form = EditUserForm1(instance=instance_user)
+        sub_form = EditUserForm2(instance=instance_userdetails)
+
+        if request.method == 'POST':
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = firstname + " " + lastname
+            email = request.POST['email']
+            user_phone = request.POST['user_phone']
+            user_college = request.POST['user_college']
+            user_bio = request.POST['user_bio']
+
+            regex = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
+            if firstname.isdigit():
+                messages.error(request, 'Firstname cannot have numbers')
+                return redirect('update-profile', user_id)
+            if regex.search(firstname):
+                messages.error(request, 'Firstname cannot have special characters')
+                return redirect('update-profile', user_id)
+            if lastname.isdigit():
+                messages.error(request, 'Lastname cannot have numbers')
+                return redirect('update-profile', user_id)
+            if regex.search(lastname):
+                messages.error(request, 'Lastname cannot have special characters')
+                return redirect('update-profile', user_id)
+            Pattern = re.compile(r"(/+91)?[7-9][0-9]{9}")
+            if Pattern.match(user_phone):
+                messages.error(request, 'Phone number error')
+                return redirect('update-profile', user_id)
+            try:
+                v = validate_email(email)
+                val_email = v["email"]
+            except EmailNotValidError as e:
+                messages.error(request, 'Invalid Email ID')
+                return redirect('update-profile', user_id)
+
+            try:
+                user = User.objects.get(pk=instance_user.pk)
+                user.username = username
+                user.email = email
+                user.first_name = firstname
+                user.last_name = lastname
+                user.save()
+                addusr = UserDetails.objects.get(user_id=instance_user.id)
+                addusr.user_phone = user_phone
+                addusr.user_email = email
+                addusr.user_college = user_college
+                addusr.user_bio = user_bio
+                addusr.save()
+            except Exception:
+                messages.error(request, 'error in updating the User with the given details')
+                return redirect('add-users')
+
+            messages.success(request, 'User Updated!')
+            return redirect('add-users')
+
+        context = {
+            'form': form,
+            'subform': sub_form,
+            'currentuser': instance_user,
+        }
+        return render(request, 'fossee_math_pages/update-user.html', context)
+    else:
+        messages.error(request, 'Invalid User')
+        return redirect('add-users')
+
+
+@login_required
+def reset_subtopic_status(request, id):
+    if request.user.is_staff:
+        instance = Subtopic.objects.get(subtopic_hash=id)
+        try:
+            data = Data.objects.filter(subtopic_id_id=instance.id)
+        except Data.DoesNotExist:
+            data = None
+
+        if data:
+            instance.subtopic_status = "WAITING"
+            instance.save()
+            scheme = request.is_secure() and "https" or "http"
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  instance.subtopic_hash)
+            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                               instance.subtopic_hash)
+            subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                               instance.assigned_user_id.last_name,
+                                                               instance.subtopic_name, instance.subtopic_status,
+                                                               message_link, subtopic_link)
+            send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+        else:
+            messages.error(request, 'An empty submission cannot be Rejected!')
+            return redirect('review-submissions-subtopic', instance.subtopic_hash)
+    else:
+        return redirect('dashboard')
+
+
+def edit_topics(request, id):
+    internship = Internship.objects.get(internship_url=id)
+    topics = Topic.objects.filter(internship_id=internship.id)
+    subtopics = Subtopic.objects.filter(topic_id__internship_id=internship.id)
+
+    if request.user.is_superuser:
+        if request.POST:
+            if "internship_topic_new" in request.POST:
+                internship_topic_new = request.POST['internship_topic_new']
+                internship_id = request.POST['internship_id']
+                print(internship_topic_new, internship_id)
+
+                messages.success(request, 'Changed the Internship topic !')
+                return redirect(edit_topics, id)
+            elif "topic_new" in request.POST:
+                topic_new = request.POST['topic_new']
+                topic_id = request.POST['topic_id']
+                print(topic_new, topic_id)
+                messages.success(request, 'Changed the Topic !')
+                return redirect(edit_topics, id)
+            elif "subtopic_new" in request.POST:
+                subtopic_new = request.POST['subtopic_new']
+                subtopic_id = request.POST['subtopic_id']
+                print(subtopic_new, subtopic_id)
+                messages.success(request, 'Changed the Subtopic !')
+                return redirect(edit_topics, id)
+
+    else:
+        messages.error(request, 'Inavalid access !')
+        return redirect('dashboard')
+
+    context = {
+        'internship': internship,
+        'topics': topics,
+        'subtopics': subtopics,
+    }
+    return render(request, 'fossee_math_pages/edit-topics.html', context)

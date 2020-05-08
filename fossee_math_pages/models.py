@@ -44,6 +44,7 @@ class UserDetails(models.Model):
     user_email = models.CharField(max_length=128)
     user_status = models.CharField(max_length=255, choices=INTERN_STATUS, default='INACTIVE')
     user_college = models.CharField(max_length=255, blank=True, null=True)
+    user_bio = models.TextField(max_length=1024, blank=True, null=True, default=None)
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''

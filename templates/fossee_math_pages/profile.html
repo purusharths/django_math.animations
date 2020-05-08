@@ -14,7 +14,6 @@
     <div class="container">
         <div class=" bs-callout bs-callout-info">
         <h2 style="text-align:center">User Profile</h2>
-
         <p class="">
         <p>Name:<span
                 style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span>
@@ -38,7 +37,12 @@
                 <div class="bs-callout bs-callout-info">
                 {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
                 <div class="float-right">
-                    {{ i.subtopic_status }}
+                    {% if i.subtopic_status == 'WAITING' %}
+                        IN PROCESS
+
+                    {% else %}
+                        {{ i.subtopic_status }}
+                        {% endif %}
                     </a>
                 </div>
                 </div>

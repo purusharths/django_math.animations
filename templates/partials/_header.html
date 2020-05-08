@@ -1,93 +1,6 @@
 {% load static %}
-<style>
-    .navbar-toggler-icon {
-        color: white;
-    }
 
-
-    body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .bs-callout {
-        padding: 20px;
-        margin: 20px 0;
-        border: 1px solid #eee;
-        border-left-width: 5px;
-        border-radius: 3px;
-    }
-
-    .bs-callout h4 {
-        margin-top: 0;
-        margin-bottom: 5px;
-    }
-
-    .bs-callout p:last-child {
-        margin-bottom: 0;
-    }
-
-    .bs-callout code {
-        border-radius: 3px;
-    }
-
-    .bs-callout + .bs-callout {
-        margin-top: -5px;
-    }
-
-    .bs-callout-default {
-        border-left-color: #777;
-    }
-
-    .bs-callout-default h4 {
-        color: #777;
-    }
-
-    .bs-callout-primary {
-        border-left-color: #428bca;
-    }
-
-    .bs-callout-primary h4 {
-        color: #428bca;
-    }
-
-    .bs-callout-success {
-        border-left-color: #5cb85c;
-    }
-
-    .bs-callout-success h4 {
-        color: #5cb85c;
-    }
-
-    .bs-callout-danger {
-        border-left-color: #d9534f;
-    }
-
-    .bs-callout-danger h4 {
-        color: #d9534f;
-    }
-
-    .bs-callout-warning {
-        border-left-color: #f0ad4e;
-    }
-
-    .bs-callout-warning h4 {
-        color: #f0ad4e;
-    }
-
-    .bs-callout-info {
-        border-left-color: #5bc0de;
-    }
-
-    .bs-callout-info h4 {
-        color: #5bc0de;
-    }
-
-    .nav-link:hover { background-color: lightblue; }
-
-</style>
-
+ <link rel="stylesheet" type="text/css" href="{% static '/web-files/css/bs_callouts.css' %}">
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f8f8;">
     <div class="container">
@@ -100,12 +13,18 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse serif" id="navbarResponsive">
+
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
+
                     <a class="nav-link text-dark" href="{% url 'index' %}">Home
                         <span class="sr-only">(current)</span>
                     </a>
+
+
                 </li>
+
+
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="{% url 'index' %}#topics">Topics</a>
                 </li>
@@ -124,7 +43,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
                             {% if not user.is_superuser %}
-                                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                                <a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a>
                             {% endif %}
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </div>
@@ -136,6 +55,8 @@
 
                 {% endif %}
             </ul>
+
+
         </div>
     </div>
 </nav>

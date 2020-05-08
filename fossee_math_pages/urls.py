@@ -18,6 +18,7 @@ urlpatterns = [
                   path('dashboard/messages/<str:s_id>', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
+                  path('dashboard/update-profile/<str:user_id>', views.update_profile, name='update-profile'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),
                   path('dashboard/add-subtopics/<str:i_id>/<str:t_id>', views.add_subtopics, name='add-subtopics'),
                   path('dashboard/add-submission/', views.add_submission, name='add-submission'),
@@ -33,6 +34,7 @@ urlpatterns = [
                   path('dashboard/manage-internship/', views.manage_internship, name='manage-internship'),
                   path('dashboard/review-submissions/', views.review_submissions, name='review-submissions'),
                   path('dashboard/rearrange-topics/', views.rearrange, name='rearrange-topics'),
+                  path('dashboard/edit-topics/<str:id>', views.edit_topics, name='edit-topics'),
                   path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic,
                        name='review-submissions-subtopic'),
                   path('dashboard/review-submissons/<str:t_id>/edit-image/<str:id>', views.edit_image,
@@ -42,5 +44,7 @@ urlpatterns = [
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
                   path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
-                  path('profile-page/', views.profile, name='profile'),
+                  path('reset-subtopic-status/<str:id>', views.reset_subtopic_status, name='reset-subtopic-status'),
+                  path('profile/<int:id>', views.profile, name='profile'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -93,12 +93,8 @@
         </div>
     </div>
     <div align="center">
-        Current Status: <b>{{ subtopic.subtopic_status|title }}</b>
-        <!--<form method="POST">
-                            {% csrf_token %}
-                            {{ form.as_table }}
-                            <button class="btn btn-outline-success">Add</button>
-                        </form>-->
+        Current Status: <b>{{ subtopic.subtopic_status|title }}</b><br>
+        {% if subtopic.subtopic_status == 'REJECTED' %}Make the status to <a href="{% url 'reset-subtopic-status' subtopic.subtopic_hash %}" >Waiting</a> {% endif %}
     </div>
     <br>
     <div align="center">

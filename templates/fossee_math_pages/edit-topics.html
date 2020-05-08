@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Intern View Internship{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Progress" "internship-progress" %}
+    {% breadcrumb "Edit Internship Topics" "edit-topics" %}
+{% endblock %}
+
+{% block content %}{% load static %}
+    {% render_breadcrumbs %}
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <div class="container">
+                {% include 'partials/_alerts.html' %}
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            <h3>{{ internship.internship_topic }}</h3>
+                        </th>
+                        <th>
+                            <form method="POST" class="form">
+                                {% csrf_token %}
+                                <input type="hidden" name="internship_id" value="{{ internship.pk }}">
+                                <input type="text" name="internship_topic_new"
+                                       value="{{ internship.internship_topic }}" class="">
+                                <input type="submit" value="Change" class="btn btn-outline-danger">
+                            </form>
+                        </th>
+                    </tr>
+                    </thead>
+                    {% for i in topics %}
+                        <thead class="thead-light">
+                        <tr>
+                            <th>
+                                {{ i.topic_name }}
+                            </th>
+                            <th>
+                                  <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="topic_id" value="{{ i.pk }}">
+                                <input type="text" name="topic_new"
+                                       value="{{ i.topic_name }}">
+                                <input type="submit" value="Change" class="btn btn-outline-danger">
+                            </form>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for j in subtopics %}
+                            {% if j.topic_id.topic_name == i.topic_name %}
+                                <tr>
+                                    <td>{{ j.subtopic_name }}</td>
+                                <td>
+                                        <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="subtopic_id" value="{{ j.pk }}">
+                                <input type="text" name="subtopic_new"
+                                       value="{{ j.subtopic_name }}">
+                                <input type="submit" value="Change" class="btn btn-outline-danger">
+                            </form>
+                                </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

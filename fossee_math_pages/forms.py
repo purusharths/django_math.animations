@@ -37,6 +37,18 @@ class AddUserForm2(ModelForm):
         fields = ['user_phone', 'user_role', 'user_college']
 
 
+class EditUserForm1(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+
+class EditUserForm2(ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = ['user_phone', 'user_college', 'user_bio']
+
+
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
@@ -109,10 +121,10 @@ class data(ModelForm):
 class change_image(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_image',  'data_caption'] # 'data_video',
+        fields = ['data_image', 'data_caption']  # 'data_video',
         labels = {
             'data_image': "Image",
-            #'data_video': "<br>OR<br><br>Video",
+            # 'data_video': "<br>OR<br><br>Video",
             'data_caption': "<br>Caption",
         }
 
@@ -120,10 +132,10 @@ class change_image(ModelForm):
 class change_video(ModelForm):
     class Meta:
         model = Data
-        fields = ['data_video',  'data_caption'] # 'data_image',
+        fields = ['data_video', 'data_caption']  # 'data_image',
         labels = {
             'data_video': "Video",
-            #'data_image': "<br>OR<br><br>Image",
+            # 'data_image': "<br>OR<br><br>Image",
             'data_caption': "<br>Caption",
         }
 

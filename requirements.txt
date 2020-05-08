@@ -16,3 +16,4 @@ django-bootstrap-modal-forms==1.4.1
 django-widget-tweaks==1.4.2
 selenium==3.14.0
 django-nose==1.4.6
+hashids==1.2.0
