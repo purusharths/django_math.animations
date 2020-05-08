@@ -1528,6 +1528,16 @@ def reset_subtopic_status(request, id):
         if data:
             instance.subtopic_status = "WAITING"
             instance.save()
+            scheme = request.is_secure() and "https" or "http"
+            message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
+                                                                  instance.subtopic_hash)
+            subtopic_link = "{}://{}/add-submission/{}".format(scheme, request.META['HTTP_HOST'],
+                                                               instance.subtopic_hash)
+            subject, email_message = submission_status_changed(instance.assigned_user_id.first_name,
+                                                               instance.assigned_user_id.last_name,
+                                                               instance.subtopic_name, instance.subtopic_status,
+                                                               message_link, subtopic_link)
+            send_mail(subject, email_message, SENDER_EMAIL, [instance.assigned_user_id.email], fail_silently=True)
             return redirect('review-submissions-subtopic', instance.subtopic_hash)
         else:
             messages.error(request, 'An empty submission cannot be Rejected!')
