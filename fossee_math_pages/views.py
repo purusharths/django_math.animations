@@ -1075,6 +1075,7 @@ def interns(request):
     if request.user.is_staff:
         topics = Subtopic.objects.all()
         internship_all = Internship.objects.all()
+        interns = UserDetails.objects.filter(user_role='INTERN')
         internship = Internship.objects.filter(internship_status='ACTIVE').first()  # taking first active internship
         if internship:
             internship = Internship.objects.get(pk=internship.pk)
@@ -1084,6 +1085,7 @@ def interns(request):
 
             conxext = {
                 'topics': topics,
+                'interns': interns,
                 'internship': internship,
                 'internship_all': internship_all,
             }
@@ -1385,7 +1387,7 @@ def password_set(request):
 @login_required
 def profile(request, id):
     hashids = Hashids()
-    hid =hashids.encode(id)
+    hid = hashids.encode(id)
     print(hid)
     print("hai")
     if request.user.is_superuser:
@@ -1544,3 +1546,42 @@ def reset_subtopic_status(request, id):
             return redirect('review-submissions-subtopic', instance.subtopic_hash)
     else:
         return redirect('dashboard')
+
+
+def edit_topics(request, id):
+    internship = Internship.objects.get(internship_url=id)
+    topics = Topic.objects.filter(internship_id=internship.id)
+    subtopics = Subtopic.objects.filter(topic_id__internship_id=internship.id)
+
+    if request.user.is_superuser:
+        if request.POST:
+            if "internship_topic_new" in request.POST:
+                internship_topic_new = request.POST['internship_topic_new']
+                internship_id = request.POST['internship_id']
+                print(internship_topic_new, internship_id)
+
+                messages.success(request, 'Changed the Internship topic !')
+                return redirect(edit_topics, id)
+            elif "topic_new" in request.POST:
+                topic_new = request.POST['topic_new']
+                topic_id = request.POST['topic_id']
+                print(topic_new, topic_id)
+                messages.success(request, 'Changed the Topic !')
+                return redirect(edit_topics, id)
+            elif "subtopic_new" in request.POST:
+                subtopic_new = request.POST['subtopic_new']
+                subtopic_id = request.POST['subtopic_id']
+                print(subtopic_new, subtopic_id)
+                messages.success(request, 'Changed the Subtopic !')
+                return redirect(edit_topics, id)
+
+    else:
+        messages.error(request, 'Inavalid access !')
+        return redirect('dashboard')
+
+    context = {
+        'internship': internship,
+        'topics': topics,
+        'subtopics': subtopics,
+    }
+    return render(request, 'fossee_math_pages/edit-topics.html', context)
