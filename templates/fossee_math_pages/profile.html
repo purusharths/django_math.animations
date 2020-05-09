@@ -30,13 +30,13 @@
             {% endif %}
             {% if user.is_authenticated %}
                 {% if user.username == details.user_id.username %}
-                <br>
-                <br>
-                <br>
-                <br>
-                <p style="text-align: center"><a href="{% url 'password-change' %}"><span
-                        style="color: #2C009F">Change Password</span></a></p>
-            {% endif %}
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <p style="text-align: center"><a href="{% url 'password-change' %}"><span
+                            style="color: #2C009F">Change Password</span></a></p>
+                {% endif %}
             {% endif %}
             <br>
         </div>
