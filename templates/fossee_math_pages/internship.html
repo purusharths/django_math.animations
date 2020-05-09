@@ -45,7 +45,7 @@
                                                 <div class="bs-callout bs-callout-danger">
                                                     <p class="card-text">{{ k.subtopic_name }}</p>
                                                     {% if k.assigned_user_id %}
-                                                        <p class="float-right"><a target="_blank"
+                                                        <p class="float-right">By, <a target="_blank"
                                                                                   href="{% url 'profile' k.assigned_user_id.pk k.assigned_user_id.username|slugify %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
                                                         </p><br>
                                                     {% endif %}
@@ -75,7 +75,7 @@
                                                 <div class="bs-callout bs-callout-danger">
                                                     <p class="card-text">{{ k.subtopic_name }}</p>
                                                     {% if k.assigned_user_id %}
-                                                        <p class="float-right"><a target="_blank"
+                                                        <p class="float-right">By, <a target="_blank"
                                                                                   href="{% url 'profile' k.assigned_user_id.pk k.assigned_user_id.username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
                                                         </p><br>
                                                     {% endif %}
