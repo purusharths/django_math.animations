@@ -55,7 +55,7 @@
                         {% endfor %}
                         </td>
                     <td>
-                        <a href="">profile</a>
+                        <a href="{% url 'profile' i.user_id.last_name i.user_id.first_name %}">profile</a>
                     </td>
                         </tr>
                 {% endfor %}

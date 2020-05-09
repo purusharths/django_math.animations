@@ -5,49 +5,63 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Dashboard" "dashboard" %}
-    {% breadcrumb "Profile" "profile" %}
+    {% if user.is_authenticated %}
+        {% breadcrumb "Dashboard" "dashboard" %}
+        {% breadcrumb "Profile" "profile" %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     {% render_breadcrumbs %}
     <div class="container">
         <div class=" bs-callout bs-callout-info">
-        <h2 style="text-align:center">User Profile</h2>
-        <p class="">
-        <p>Name:<span
-                style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span>
-        </p>
-        <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
-        <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>
-        <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
-        <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
-        <p></p>
-        <p style="text-align: center"><a href="{% url 'password-change' %}"><span
-                style="color: #2C009F">Change Password</span></a></p>
-        <br>
+            <h2 style="text-align:center">User Profile</h2>
+            <p class="">
+            <p>Name:<span
+                    style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span>
+            </p>
+            <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
+            <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>
+            <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
+            <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
+            <p>Bio: <span style="font-weight: bold">{{ details.user_bio }}</span></p>
+            {% if user.is_authenticated %}
+                Profile Url : <b>{{ profile_url }}</b>
+            {% endif %}
+            {% if user.is_authenticated %}
+                {% if user.username == details.user_id.username %}
+                <br>
+                <br>
+                <br>
+                <br>
+                <p style="text-align: center"><a href="{% url 'password-change' %}"><span
+                        style="color: #2C009F">Change Password</span></a></p>
+            {% endif %}
+            {% endif %}
+            <br>
         </div>
     </div>
     <div class="container">
-    {% if not user.is_staff %}
-        <br>
-        <b style="text-align: center"> Internships Taken</b>
-        {% for i in subtopic %}
-            {% if user.pk == i.assigned_user_id.pk %}
-                <div class="bs-callout bs-callout-info">
-                {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
-                <div class="float-right">
-                    {% if i.subtopic_status == 'WAITING' %}
-                        IN PROCESS
-
-                    {% else %}
-                        {{ i.subtopic_status }}
-                        {% endif %}
-                    </a>
-                </div>
-                </div>
+        {% if not user.is_staff %}
+            {% if details.user_role == 'INTERN' %}
+                <br>
+                <b style="text-align: center"> Contributions :</b>
+                {% for i in subtopic %}
+                    {% if user.pk == i.assigned_user_id.pk %}
+                        <div class="bs-callout bs-callout-info">
+                            {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
+                            <div class="float-right">
+                                {% if i.subtopic_status == 'WAITING' %}
+                                    IN PROCESS
+                                {% else %}
+                                    {{ i.subtopic_status }}
+                                {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-        {% endfor %}
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
 {% endblock %}

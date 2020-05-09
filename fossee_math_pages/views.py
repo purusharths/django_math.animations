@@ -1386,29 +1386,26 @@ def password_set(request):
     return render(request, "password_reset/password_set.html", context)
 
 
-@login_required
-def profile(request, id):
-    hashids = Hashids()
-    hid = hashids.encode(id)
-    print(hid)
-    print("hai")
-    if request.user.is_superuser:
-        messages.error(request, "You are the super user !!")
-        return redirect('dashboard')
-    elif request.user.is_staff:
-        userdetails = UserDetails.objects.get(user_id=request.user.pk)
-        context = {
-            'details': userdetails,
-        }
-        return render(request, 'fossee_math_pages/profile.html', context)
+def profile(request, lastname, firstname):
+    userdetails = UserDetails.objects.get(user_id__last_name=lastname, user_id__first_name=firstname)
+    if userdetails:
+        if userdetails.user_role == 'INTERN':
+            subtopic = Subtopic.objects.all()
+        else:
+            subtopic = None
+
+        scheme = request.is_secure() and "https" or "http"
+        profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.last_name,
+                                                     userdetails.user_id.first_name)
     else:
-        userdetails = UserDetails.objects.get(user_id=request.user.pk)
-        subtopic = Subtopic.objects.all()
-        context = {
-            'details': userdetails,
-            'subtopic': subtopic,
-        }
-        return render(request, 'fossee_math_pages/profile.html', context)
+        messages.error(request, 'Invalid User !')
+        return redirect('dashboard')
+    context = {
+        'details': userdetails,
+        'subtopic': subtopic,
+        'profile_url': profile_url,
+    }
+    return render(request, 'fossee_math_pages/profile.html', context)
 
 
 @login_required
