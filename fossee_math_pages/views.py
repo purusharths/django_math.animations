@@ -23,6 +23,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.text import slugify
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 from hashids import Hashids
@@ -32,7 +33,7 @@ from .email_messages import (got_a_message, submission_status_changed, topic_ass
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video,
-                    EditUserForm1, EditUserForm2, )
+                    EditUserForm1, EditUserForm2, EditBio, )
 from .generic_functions import (large_img_size, large_video_size)
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
@@ -1383,17 +1384,27 @@ def password_set(request):
     return render(request, "password_reset/password_set.html", context)
 
 
-def profile(request, lastname, firstname):
-    userdetails = UserDetails.objects.get(user_id__last_name=lastname, user_id__first_name=firstname)
+def profile(request, id, username):
+    userdetails = UserDetails.objects.get(user_id_id=id)
     if userdetails:
-        if userdetails.user_role == 'INTERN':
-            subtopic = Subtopic.objects.all()
-        else:
-            subtopic = None
+        name = slugify(userdetails.user_id.username)
+        if name == username:
+            if request.POST:
+                bio = request.POST['user_bio']
+                userdetails.user_bio = bio
+                userdetails.save()
 
-        scheme = request.is_secure() and "https" or "http"
-        profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.last_name,
-                                                     userdetails.user_id.first_name)
+            if userdetails.user_role == 'INTERN':
+                subtopic = Subtopic.objects.all()
+            else:
+                subtopic = None
+
+            form_edit_bio = EditBio(instance=userdetails)
+            scheme = request.is_secure() and "https" or "http"
+            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,slugify(userdetails.user_id.username))
+        else:
+            messages.error(request, 'Invalid User !')
+            return redirect('dashboard')
     else:
         messages.error(request, 'Invalid User !')
         return redirect('dashboard')
@@ -1401,6 +1412,7 @@ def profile(request, lastname, firstname):
         'details': userdetails,
         'subtopic': subtopic,
         'profile_url': profile_url,
+        'form_edit_bio' : form_edit_bio,
     }
     return render(request, 'fossee_math_pages/profile.html', context)
 

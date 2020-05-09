@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block title %}Profile{% endblock %}
 
@@ -20,18 +21,47 @@
             <p>Name:<span
                     style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span>
             </p>
-            <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
-            <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>
-            <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
-            <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
-            <p>Bio: <span style="font-weight: bold">{{ details.user_bio }}</span></p>
-            {% if user.is_authenticated %}
-                Profile Url : <b>{{ profile_url }}</b>
-            {% endif %}
             {% if user.is_authenticated %}
                 {% if user.username == details.user_id.username %}
-                    <br>
-                    <br>
+                    <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
+                    <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
+                    <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>
+                    <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
+                {% endif %}
+            {% endif %}
+            <div class="float-right">
+                <a class="nav-link" href="" role="tab" data-toggle="modal"
+                   data-target="#modalContactForm"> <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
+                                                         alt="Text"></a>
+                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title">Edit Bio : {{ details.user_id }}</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body mx-3">
+                                <div class="md-form">
+                                    <i class="fas fa-pencil prefix grey-text"></i>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        {{ form_edit_bio|crispy }}
+                                        <button type="submit" class="btn btn-success col-md-12">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>Bio: <span style="font-weight: bold">{{ details.user_bio }}</span></p>
+            <p>Profile Url : <b>{{ profile_url }}</b></p>
+
+            {% if user.is_authenticated %}
+                {% if user.username == details.user_id.username %}
                     <br>
                     <br>
                     <p style="text-align: center"><a href="{% url 'password-change' %}"><span
@@ -41,13 +71,13 @@
             <br>
         </div>
     </div>
-    <div class="container">
-        {% if not user.is_staff %}
-            {% if details.user_role == 'INTERN' %}
+    {% if not details.user_id.is_staff %}
+        {% if not user.is_staff or details.user_role == 'INTERN' %}
+            <div class="container">
                 <br>
                 <b style="text-align: center"> Contributions :</b>
                 {% for i in subtopic %}
-                    {% if user.pk == i.assigned_user_id.pk %}
+                    {% if details.user_id.pk == i.assigned_user_id.pk %}
                         <div class="bs-callout bs-callout-info">
                             {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
                             <div class="float-right">
@@ -61,7 +91,7 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-            {% endif %}
+            </div>
         {% endif %}
-    </div>
+    {% endif %}
 {% endblock %}

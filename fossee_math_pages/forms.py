@@ -49,6 +49,12 @@ class EditUserForm2(ModelForm):
         fields = ['user_phone', 'user_college', 'user_bio']
 
 
+class EditBio(ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = ['user_bio']
+
+
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
