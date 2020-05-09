@@ -1558,20 +1558,28 @@ def edit_topics(request, id):
             if "internship_topic_new" in request.POST:
                 internship_topic_new = request.POST['internship_topic_new']
                 internship_id = request.POST['internship_id']
-                print(internship_topic_new, internship_id)
-
+                current_internship = Internship.objects.get(pk=internship_id)
+                current_internship.internship_topic=internship_topic_new
+                current_internship.internship_url = '-'.join(str(internship_topic_new).lower().split())
+                current_internship.save()
                 messages.success(request, 'Changed the Internship topic !')
-                return redirect(edit_topics, id)
+                return redirect(edit_topics, current_internship.internship_url)
             elif "topic_new" in request.POST:
                 topic_new = request.POST['topic_new']
                 topic_id = request.POST['topic_id']
-                print(topic_new, topic_id)
+                current_topic = Topic.objects.get(pk=topic_id)
+                current_topic.topic_name = topic_new
+                current_topic.topic_url = '-'.join(str(topic_new).lower().split())
+                current_topic.save()
                 messages.success(request, 'Changed the Topic !')
                 return redirect(edit_topics, id)
             elif "subtopic_new" in request.POST:
                 subtopic_new = request.POST['subtopic_new']
                 subtopic_id = request.POST['subtopic_id']
-                print(subtopic_new, subtopic_id)
+                current_subtopic = Subtopic.objects.get(pk=subtopic_id)
+                current_subtopic.subtopic_name = subtopic_new
+                current_subtopic.subtopic_url = '-'.join(str(subtopic_new).lower().split())
+                current_subtopic.save()
                 messages.success(request, 'Changed the Subtopic !')
                 return redirect(edit_topics, id)
 
