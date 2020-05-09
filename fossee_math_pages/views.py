@@ -4,7 +4,6 @@ import re
 import textwrap
 import uuid
 from itertools import chain
-from hashids import Hashids
 
 import pytz
 import requests
@@ -26,6 +25,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
+from hashids import Hashids
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
@@ -292,16 +292,18 @@ def index(request):
 def home_search_results(request, search_contains_query):
     topic = Subtopic.objects.all()
 
-    datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
-    datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
-    datasss = Subtopic.objects.filter(topic_id__internship_id__internship_topic__icontains=search_contains_query)
+    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
+    search_internship_name = Subtopic.objects.filter(
+        topic_id__internship_id__internship_topic__icontains=search_contains_query)
+    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query)
 
-    page_obj = list(chain(datas, datass, datasss))
+    search_result = list(chain(search_subtopic_name, search_topic_name, search_internship_name, search_data_content))
 
     data_search = Data.objects.all()
 
     context = {
-        'datas': page_obj,
+        'datas': search_result,
         'topic': topic,
         'querry': search_contains_query,
         'data_search': data_search,
@@ -1559,7 +1561,7 @@ def edit_topics(request, id):
                 internship_topic_new = request.POST['internship_topic_new']
                 internship_id = request.POST['internship_id']
                 current_internship = Internship.objects.get(pk=internship_id)
-                current_internship.internship_topic=internship_topic_new
+                current_internship.internship_topic = internship_topic_new
                 current_internship.internship_url = '-'.join(str(internship_topic_new).lower().split())
                 current_internship.save()
                 messages.success(request, 'Changed the Internship topic !')
