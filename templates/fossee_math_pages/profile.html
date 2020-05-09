@@ -28,8 +28,7 @@
             {% if user.is_authenticated %}
                 Profile Url : <b>{{ profile_url }}</b>
             {% endif %}
-            {% if user.is_authenticated %}
-                {% if user.username == details.user_id.username %}
+            {% if user.is_authenticated {% if user.username == details.user_id.username %}
                 <br>
                 <br>
                 <br>
