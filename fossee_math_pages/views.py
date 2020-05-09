@@ -4,7 +4,6 @@ import re
 import textwrap
 import uuid
 from itertools import chain
-from hashids import Hashids
 
 import pytz
 import requests
@@ -26,6 +25,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
+from hashids import Hashids
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
@@ -292,16 +292,18 @@ def index(request):
 def home_search_results(request, search_contains_query):
     topic = Subtopic.objects.all()
 
-    datas = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
-    datass = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
-    datasss = Subtopic.objects.filter(topic_id__internship_id__internship_topic__icontains=search_contains_query)
+    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
+    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
+    search_internship_name = Subtopic.objects.filter(
+        topic_id__internship_id__internship_topic__icontains=search_contains_query)
+    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query)
 
-    page_obj = list(chain(datas, datass, datasss))
+    search_result = list(chain(search_subtopic_name, search_topic_name, search_internship_name, search_data_content))
 
     data_search = Data.objects.all()
 
     context = {
-        'datas': page_obj,
+        'datas': search_result,
         'topic': topic,
         'querry': search_contains_query,
         'data_search': data_search,
@@ -1384,29 +1386,26 @@ def password_set(request):
     return render(request, "password_reset/password_set.html", context)
 
 
-@login_required
-def profile(request, id):
-    hashids = Hashids()
-    hid = hashids.encode(id)
-    print(hid)
-    print("hai")
-    if request.user.is_superuser:
-        messages.error(request, "You are the super user !!")
-        return redirect('dashboard')
-    elif request.user.is_staff:
-        userdetails = UserDetails.objects.get(user_id=request.user.pk)
-        context = {
-            'details': userdetails,
-        }
-        return render(request, 'fossee_math_pages/profile.html', context)
+def profile(request, lastname, firstname):
+    userdetails = UserDetails.objects.get(user_id__last_name=lastname, user_id__first_name=firstname)
+    if userdetails:
+        if userdetails.user_role == 'INTERN':
+            subtopic = Subtopic.objects.all()
+        else:
+            subtopic = None
+
+        scheme = request.is_secure() and "https" or "http"
+        profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.last_name,
+                                                     userdetails.user_id.first_name)
     else:
-        userdetails = UserDetails.objects.get(user_id=request.user.pk)
-        subtopic = Subtopic.objects.all()
-        context = {
-            'details': userdetails,
-            'subtopic': subtopic,
-        }
-        return render(request, 'fossee_math_pages/profile.html', context)
+        messages.error(request, 'Invalid User !')
+        return redirect('dashboard')
+    context = {
+        'details': userdetails,
+        'subtopic': subtopic,
+        'profile_url': profile_url,
+    }
+    return render(request, 'fossee_math_pages/profile.html', context)
 
 
 @login_required
@@ -1558,20 +1557,28 @@ def edit_topics(request, id):
             if "internship_topic_new" in request.POST:
                 internship_topic_new = request.POST['internship_topic_new']
                 internship_id = request.POST['internship_id']
-                print(internship_topic_new, internship_id)
-
+                current_internship = Internship.objects.get(pk=internship_id)
+                current_internship.internship_topic = internship_topic_new
+                current_internship.internship_url = '-'.join(str(internship_topic_new).lower().split())
+                current_internship.save()
                 messages.success(request, 'Changed the Internship topic !')
-                return redirect(edit_topics, id)
+                return redirect(edit_topics, current_internship.internship_url)
             elif "topic_new" in request.POST:
                 topic_new = request.POST['topic_new']
                 topic_id = request.POST['topic_id']
-                print(topic_new, topic_id)
+                current_topic = Topic.objects.get(pk=topic_id)
+                current_topic.topic_name = topic_new
+                current_topic.topic_url = '-'.join(str(topic_new).lower().split())
+                current_topic.save()
                 messages.success(request, 'Changed the Topic !')
                 return redirect(edit_topics, id)
             elif "subtopic_new" in request.POST:
                 subtopic_new = request.POST['subtopic_new']
                 subtopic_id = request.POST['subtopic_id']
-                print(subtopic_new, subtopic_id)
+                current_subtopic = Subtopic.objects.get(pk=subtopic_id)
+                current_subtopic.subtopic_name = subtopic_new
+                current_subtopic.subtopic_url = '-'.join(str(subtopic_new).lower().split())
+                current_subtopic.save()
                 messages.success(request, 'Changed the Subtopic !')
                 return redirect(edit_topics, id)
 
