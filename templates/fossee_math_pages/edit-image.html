@@ -82,11 +82,12 @@
                 {#                Image_Height_slider: <input type="range" min="1" max="100" value="{{ image_size.image_height }}" class="slider" id="myheight">#}
                 <br>
                 Slide: <input type="range" min="1" max="100" value="{{ image_size.image_width }}"
-                                          class="slider" id="mywidth">
+                              class="slider" id="mywidth">
                 <br>
                 <input id="id_image_height" type="hidden" name="image_height" value="50%" maxlength="5">
                 <br>
-                Value : <input id="id_image_width" name="image_width" type="text" maxlength="5" value="{{ image_size.image_width }}" disabled>
+                Value : <input id="id_image_width" name="image_width" type="text" maxlength="5"
+                               value="{{ image_size.image_width }}">
                 <br>
                 <br>
                 <script>

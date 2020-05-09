@@ -593,7 +593,6 @@ def edit_image(request, t_id, id):
             if request.POST:
                 image_height = request.POST.get('image_height')
                 image_width = request.POST.get('image_width')
-                caption = request.POST.get('image_caption')
 
                 if re.match(r"\d+px$", image_height):
                     temp = re.findall(r'\d+', image_height)
@@ -624,7 +623,6 @@ def edit_image(request, t_id, id):
                 obj = ImageFormatting.objects.get(data_id_id=image.pk)
                 obj.image_height = image_height
                 obj.image_width = image_width
-                obj.image_caption = caption
                 obj.save()
                 if request.user.is_staff:
                     return redirect('edit-image-staff', t_id, id)
