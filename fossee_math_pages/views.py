@@ -1443,8 +1443,13 @@ def rearrange(request):
             messages.error(request, "No Subtopics !")
             return redirect('dashboard')
 
+        if subtopic:
+            paginator = Paginator(subtopic,10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
         context = {
-            'subtopic': subtopic,
+            'subtopic': page_obj,
             'internships': internships,
             'topics': topics,
         }

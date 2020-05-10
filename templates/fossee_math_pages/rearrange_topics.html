@@ -79,5 +79,22 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="pagination">
+    <span class="step-links">
+        {% if subtopic.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ subtopic.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ subtopic.number }} of {{ subtopic.paginator.num_pages }}.
+        </span>
+
+        {% if subtopic.has_next %}
+            <a href="?page={{ subtopic.next_page_number }}">next</a>
+            <a href="?page={{ subtopic.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+        </div>
     </div>
 {% endblock %}
