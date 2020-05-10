@@ -26,7 +26,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.text import slugify
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
-from hashids import Hashids
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
@@ -1401,7 +1400,8 @@ def profile(request, id, username):
 
             form_edit_bio = EditBio(instance=userdetails)
             scheme = request.is_secure() and "https" or "http"
-            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,slugify(userdetails.user_id.username))
+            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,
+                                                         slugify(userdetails.user_id.username))
         else:
             messages.error(request, 'Invalid User !')
             return redirect('dashboard')
@@ -1412,7 +1412,7 @@ def profile(request, id, username):
         'details': userdetails,
         'subtopic': subtopic,
         'profile_url': profile_url,
-        'form_edit_bio' : form_edit_bio,
+        'form_edit_bio': form_edit_bio,
     }
     return render(request, 'fossee_math_pages/profile.html', context)
 
@@ -1444,7 +1444,7 @@ def rearrange(request):
             return redirect('dashboard')
 
         if subtopic:
-            paginator = Paginator(subtopic,10)
+            paginator = Paginator(subtopic, 10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 
