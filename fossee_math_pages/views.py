@@ -31,7 +31,7 @@ from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
-                    subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video,
+                    subtopicOrder, addContributor, sendMessage, change_image, change_video,
                     EditUserForm1, EditUserForm2, EditBio, )
 from .generic_functions import (large_img_size, large_video_size)
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
@@ -113,7 +113,7 @@ def add_users(request):
         datas = UserDetails.objects.all()
         user_contains_query = request.GET.get('title_contains')
         if user_contains_query != '' and user_contains_query is not None:
-            datas = UserDetails.objects.filter(user_id__username__contains=user_contains_query)
+            datas = UserDetails.objects.filter(user_id__first_name__icontains=user_contains_query)
         if user_contains_query in ('STAFF', 'staff'):
             datas = UserDetails.objects.filter(user_role="STAFF")
         if user_contains_query in ('INTERN', 'intern'):
@@ -125,7 +125,6 @@ def add_users(request):
             # register user
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
-            username = firstname + " " + lastname
             email = request.POST['email']
             user_role = request.POST['user_role']
             user_phone = request.POST['user_phone']
@@ -136,7 +135,7 @@ def add_users(request):
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'The email already exists')
                 return redirect('add-users')
-            if User.objects.filter(username=username).exists():
+            if User.objects.filter(username=email).exists():
                 messages.error(request, 'That username is being used')
                 return redirect('add-users')
             if firstname.isdigit():
@@ -164,7 +163,7 @@ def add_users(request):
 
             try:
                 password = str(uuid.uuid1())[:16]
-                user = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
+                user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
                 if user_role == 'STAFF':
                     user.is_staff = True
@@ -175,14 +174,14 @@ def add_users(request):
                 return redirect('add-users')
 
             try:
-                u_id = User.objects.get(username=username)
+                u_id = User.objects.get(username=email)
 
                 addusr = UserDetails(user_id=u_id, user_phone=user_phone, user_role=user_role,
                                      user_temp_password=password, user_status=user_status, user_email=email,
                                      user_college=user_college)
                 addusr.save()
             except Exception:
-                u_id = User.objects.get(username=username)
+                u_id = User.objects.get(username=email)
                 u_id.delete()
                 messages.error(request, 'error in creating user with the other details')
                 return redirect('add-users')
@@ -920,7 +919,7 @@ def review_submissions(request):
             subtopic = Subtopic.objects.filter(topic_id__internship_id_id=request.POST['search_internship']).order_by(
                 'topic_id__topic_order').order_by('subtopic_order').order_by('-subtopic_modification_date')
             first_internship = Internship.objects.get(pk=request.POST['search_internship'])
-            interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+            interns = User.objects.order_by('pk').filter(userdetails__user_role='INTERN').filter(
                 userdetails__user_status='ACTIVE').filter(
                 subtopic__topic_id__internship_id_id=request.POST['search_internship']).distinct
 
@@ -931,7 +930,7 @@ def review_submissions(request):
                     assigned_user_id=request.POST['search_intern']).order_by('subtopic_order').order_by(
                     '-subtopic_modification_date')
                 first_internship = Internship.objects.get(pk=request.POST['selected_internship'])
-                interns = User.objects.order_by('username').filter(userdetails__user_role='INTERN').filter(
+                interns = User.objects.order_by('pk').filter(userdetails__user_role='INTERN').filter(
                     userdetails__user_status='ACTIVE').filter(
                     subtopic__topic_id__internship_id_id=request.POST['selected_internship']).distinct
                 selected_intern = User.objects.get(pk=request.POST['search_intern'])
@@ -967,7 +966,7 @@ def manage_interns(request):
             interns = UserDetails.objects.filter(user_role='INTERN')
         else:
             interns = UserDetails.objects.filter(user_role='INTERN',
-                                                 user_id__username__icontains=search_query)
+                                                 user_id__first_name__icontains=search_query)
 
         if request.method == 'POST':
             current_user = UserDetails.objects.get(user_id_id=request.POST['assigneduserid'])
@@ -1011,8 +1010,8 @@ def manage_interns(request):
 @login_required
 def assign_topics(request):
     if request.user.is_staff and not request.user.is_superuser:
-        form = AssignTopic()
         internship = Internship.objects.all()
+        interns = User.objects.filter(userdetails__user_role='INTERN', userdetails__user_status='ACTIVE')
         first_internsip = Internship.objects.filter(
             internship_status='ACTIVE').first()  # taking first active internship
         if first_internsip:
@@ -1060,7 +1059,7 @@ def assign_topics(request):
                         topic_id__internship_id_id=selectd_subtopic.topic_id.internship_id.pk)
 
             context = {
-                'form': form,
+                'interns': interns,
                 'subtopic': subtopic,
                 'intern': internship,
                 'chosen_inernship': first_internsip,
@@ -1156,9 +1155,10 @@ def review_submissions_subtopic(request, s_id):
                 message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
                                                                       subtopic.subtopic_hash)
                 # print(message_link)
+                username = request.user.first_name + " " + request.user.last_name
                 subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                     subtopic.assigned_user_id.last_name,
-                                                    subtopic.subtopic_name, request.user.username, message,
+                                                    subtopic.subtopic_name, username, message,
                                                     message_link)
                 send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
@@ -1213,6 +1213,7 @@ def approve_subtopic(request, id):
         print(data)
         if data:
             instance.subtopic_status = "ACCEPTED"
+            instance.subtopic_managed_user = request.user.pk
             instance.save()
             scheme = request.is_secure() and "https" or "http"
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
@@ -1244,6 +1245,7 @@ def reject_subtopic(request, id):
         if data:
             t_id = instance.pk
             instance.subtopic_status = "REJECTED"
+            instance.subtopic_managed_user = request.user.pk
             instance.save()
             scheme = request.is_secure() and "https" or "http"
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
@@ -1320,9 +1322,10 @@ def view_messages(request, s_id):
             message_link = "{}://{}/dashboard/messages/{}".format(scheme, request.META['HTTP_HOST'],
                                                                   subtopic.subtopic_hash)
             # print(message_link)
+            username = request.user.first_name + " " + request.user.last_name
             subject, email_body = got_a_message(subtopic.assigned_user_id.first_name,
                                                 subtopic.assigned_user_id.last_name,
-                                                subtopic.subtopic_name, request.user.username, mess, message_link)
+                                                subtopic.subtopic_name, username, mess, message_link)
             send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
         context = {
@@ -1399,6 +1402,8 @@ def profile(request, id, username):
 
             if userdetails.user_role == 'INTERN':
                 subtopic = Subtopic.objects.all()
+            elif userdetails.user_role == 'STAFF':
+                subtopic = Subtopic.objects.all()
             else:
                 subtopic = None
 
@@ -1474,7 +1479,6 @@ def update_profile(request, user_id):
         if request.method == 'POST':
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
-            username = firstname + " " + lastname
             email = request.POST['email']
             user_phone = request.POST['user_phone']
             user_college = request.POST['user_college']
@@ -1506,7 +1510,7 @@ def update_profile(request, user_id):
 
             try:
                 user = User.objects.get(pk=instance_user.pk)
-                user.username = username
+                user.username = email
                 user.email = email
                 user.first_name = firstname
                 user.last_name = lastname

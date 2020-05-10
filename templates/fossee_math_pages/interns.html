@@ -46,7 +46,7 @@
             <tbody>
                 {% for i in interns %}
                         <tr>
-                    <td>{{ i.user_id.username }}</td>
+                    <td>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</td>
                            <td>
                     {% for j in topics %}
                         {% if j.topic_id.internship_id.internship_topic == internship.internship_topic and j.assigned_user_id.username == i.user_id.username %}
