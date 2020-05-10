@@ -113,7 +113,7 @@
                     {% for i in imagesize %}
                         {% if i.data_id_id == data.pk %}
                             <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                 height="{{ i.image_height }}" style="display:block; margin:0 auto;">
+                                  style="display:block; margin:0 auto;">
                             {% if data.data_caption != NULL %}
                                 <br>
                                 <p align="center" class="text-muted" style="font-size: 13px">{{ data.data_caption }}</p>
