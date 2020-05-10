@@ -257,7 +257,7 @@ def home_details(request, internship, topic, subtopic):
         imagesize = None
 
     try:
-        contributor = Contributor.objects.get(topic_id=subtopic_details.topic_id)
+        contributor = Contributor.objects.get(subtopic_id=subtopic_details.pk)
     except:
         contributor = None
 
@@ -1168,12 +1168,15 @@ def review_submissions_subtopic(request, s_id):
 
                 try:
                     if mentor.strip() != '' and professor.strip() != "":
+                        contributor = subtopic.assigned_user_id.first_name + " " + subtopic.assigned_user_id.last_name
                         obj = Contributor.objects.get(subtopic_id_id=subtopic.pk)
+                        obj.contributor = contributor
                         obj.mentor = mentor
                         obj.professor = professor
                         obj.save()
                 except:
-                    obj = Contributor(subtopic_id_id=subtopic.pk, contributor=subtopic.assigned_user_id, mentor=mentor,
+                    contributor = subtopic.assigned_user_id.first_name + " " + subtopic.assigned_user_id.last_name
+                    obj = Contributor(subtopic_id_id=subtopic.pk, contributor=contributor, mentor=mentor,
                                       professor=professor, data_aproval_date=now())
                     obj.save()
 
