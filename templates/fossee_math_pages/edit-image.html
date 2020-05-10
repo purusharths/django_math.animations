@@ -112,7 +112,7 @@
                 </script>
 
                 <div class="upload-btn-wrapper">
-                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
+                    <input  id="save_confim" class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
                 </div>
             </form>
         </div>
@@ -126,6 +126,15 @@
             {% endif %}
         </div>
         <br>
+    <script type="text/javascript">
+         document.getElementById('save_confim').onclick = function (e) {
+             if (!confirm('Changes Saved')) {
+                 e.preventDefault();
+             }
+         }
+
+
+    </script>
     </div>
 
 {% endblock %}

@@ -133,7 +133,7 @@
                                  width="15px" alt="Delete">
                         </a>
                         <hr/>
-                        <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}"> <img
+                        <a href="{% url 'edit-image' subtopic.subtopic_hash data.data_hash %}" > <img
                                 src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
                                 width="15px">
                         </a><br/>
@@ -142,6 +142,7 @@
             {% endif %}
 
         </tr>
+
         <tr>
             {% if data.data_video.url != "NULL" %}
                 <td>
