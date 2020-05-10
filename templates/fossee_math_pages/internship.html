@@ -45,9 +45,11 @@
                                                 <div class="bs-callout bs-callout-danger">
                                                     <p class="card-text">{{ k.subtopic_name }}</p>
                                                     {% if k.assigned_user_id %}
+                                                         {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
                                                         <p class="float-right">By, <a target="_blank"
-                                                                                  href="{% url 'profile' k.assigned_user_id.pk k.assigned_user_id.username|slugify %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
+                                                                                  href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
                                                         </p><br>
+                                                        {% endwith %}
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
@@ -75,9 +77,11 @@
                                                 <div class="bs-callout bs-callout-danger">
                                                     <p class="card-text">{{ k.subtopic_name }}</p>
                                                     {% if k.assigned_user_id %}
+                                                         {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
                                                         <p class="float-right">By, <a target="_blank"
-                                                                                  href="{% url 'profile' k.assigned_user_id.pk k.assigned_user_id.username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
+                                                                                  href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
                                                         </p><br>
+                                                        {% endwith %}
                                                     {% endif %}
                                                 </div>
                                             {% endif %}

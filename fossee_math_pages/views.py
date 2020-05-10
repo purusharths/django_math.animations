@@ -1396,7 +1396,7 @@ def password_set(request):
 def profile(request, id, username):
     userdetails = UserDetails.objects.get(user_id_id=id)
     if userdetails:
-        name = slugify(userdetails.user_id.username)
+        name = userdetails.user_id.first_name+userdetails.user_id.last_name
         if name == username:
             if request.POST:
                 bio = request.POST['user_bio']
@@ -1412,8 +1412,7 @@ def profile(request, id, username):
 
             form_edit_bio = EditBio(instance=userdetails)
             scheme = request.is_secure() and "https" or "http"
-            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,
-                                                         slugify(userdetails.user_id.username))
+            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,name)
         else:
             messages.error(request, 'Invalid User !')
             return redirect('dashboard')

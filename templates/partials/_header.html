@@ -47,7 +47,9 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
                             {% if not user.is_superuser %}
-                                <a class="dropdown-item" href="{% url 'profile' user.pk user.username|slugify %}">Profile</a>
+                                {% with  user.first_name|add:user.last_name as username %}
+                                <a class="dropdown-item" href="{% url 'profile' user.pk username %}">Profile</a>
+                                {% endwith %}
                             {% endif %}
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </div>
