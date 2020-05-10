@@ -155,12 +155,16 @@ body {
     color: #5bc0de
 }
 
+.nav-link{
+    border-bottom: 3px solid #f8f8f8;
+}
+
 .nav-link:hover {
     border-bottom: 3px solid orange;
-    background: gainsboro;
+    background: white;
 }
 
 .ac.active {
     border-bottom: 3px solid orange;
-    background: gainsboro;
+    background: white;
 }
