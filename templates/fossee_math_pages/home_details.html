@@ -6,6 +6,8 @@
     <script>
         new Darkmode().showWidget();
     </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
 {% endblock %}
 
@@ -17,8 +19,6 @@
     {% breadcrumb subtopic.topic_id.internship_id "contents" subtopic.topic_id.internship_id.internship_url %}
     {% breadcrumb subtopic.topic_id "" %}
     {% breadcrumb subtopic.subtopic_name "home_view_details" %}
-
-
 {% endblock %}
 
 {% block content %}
@@ -37,67 +37,76 @@
             visibility: hidden;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
     <hr>
     <div class="container">
-        <thead class="thread-light">
-        <tr>
-            <th>
-                <h1>{{ subtopic.subtopic_name }}</h1>
-            </th>
-        </tr>
-        </thead>
-        <body>
-        {% for data in datas %}
-            {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
-
-                <tr>
-                    {% if data.data_content != "NULL" %}
+        <div class="js-toc-content">
+            <table>
+                {% if subtopic.subtopic_status == 'ACCEPTED' %}
+                    <thead class="thread-light">
+                    <tr>
+                        <th>
+                            <h1>{{ subtopic.subtopic_name }}</h1>
+                        </th>
+                    </tr>
+                    <tr>
                         <td>
-                            <p></p>
-                            {{ data.data_content |safe }}
+                            <div class='js-toc'></div>
                         </td>
-                    {% endif %}
-                </tr>
-                <tr>
-                    {% if data.data_image.url != "NULL" %}
-                        <td>
-                            <p></p>
-                            {% for i in imagesize %}
-                                {% if i.data_id_id == data.pk %}
-                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                        style="display:block; margin:0 auto;">
+                    </tr>
+                    </thead>
+                {% endif %}
+                <tbody>
+                {% for data in datas %}
+                    {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
+
+                        <tr>
+                            {% if data.data_content != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    {{ data.data_content |safe }}
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_image.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    {% for i in imagesize %}
+                                        {% if i.data_id_id == data.pk %}
+                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                 style="display:block; margin:0 auto;" alt="Image not loaded">
+                                            {% if data.data_caption != None %}
+                                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if data.data_video.url != "NULL" %}
+                                <td>
+                                    <p></p>
+                                    <video width='70%' style="display:block; margin:0 auto;" controls>
+                                        <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                        Your browser does not support the video tag.
+                                    </video>
                                     {% if data.data_caption != None %}
                                         <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    {% endif %}
-                </tr>
-                <tr>
-                    {% if data.data_video.url != "NULL" %}
-                        <td>
-                            <p></p>
-                            <video width='70%' style="display:block; margin:0 auto;" controls>
-                                <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                Your browser does not support the video tag.
-                            </video>
-                            {% if data.data_caption != None %}
-                                <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                </td>
                             {% endif %}
-                        </td>
+                        </tr>
                     {% endif %}
-                </tr>
-            {% endif %}
-        {% endfor %}
-        {% if subtopic.subtopic_status != 'ACCEPTED' %}
-            <br>
-            <h4 class="text-center text-muted"><u>Submission Under Review</u></h4>
-            <br>
-        {% endif %}
-        </body>
-        </table>
+                {% endfor %}
+                {% if subtopic.subtopic_status != 'ACCEPTED' %}
+                    <br>
+                    <h4 class="text-center text-muted"><u>Submission Under Review</u></h4>
+                    <br>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
         {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
 
             <div style="background-color: #ffffff">
@@ -123,38 +132,62 @@
 
             </div>
         {% endif %}
+        <script type="text/javascript">
+            var options = {
+                bottom: '64px', // default: '32px'
+                right: 'unset', // default: '32px'
+                left: '32px', // default: 'unset'
+                time: '0.5s', // default: '0.3s'
+                mixColor: '#fff', // default: '#fff'
+                backgroundColor: '#fff',  // default: '#fff'
+                buttonColorDark: '#100f2c',  // default: '#100f2c'
+                buttonColorLight: '#fff', // default: '#fff'
+                saveInCookies: false, // default: true,
+                label: '🌓', // default: ''
+                autoMatchOsTheme: true // default: true
+            }
+            const darkmode = new Darkmode(options);
+            darkmode.showWidget();
+        </script>
+        {% if subtopic.subtopic_status == 'ACCEPTED' %}
+            <script>
+                tocbot.init({
+                    tocSelector: '.js-toc',
+                    contentSelector: '.js-toc-content',
+                    headingSelector: 'h1, h2, h3',
+                    ignoreSelector: '.js-toc-ignore',
+                    hasInnerContainers: false,
+                    linkClass: 'toc-link',
+                    extraLinkClasses: '',
+                    activeLinkClass: 'is-active-link',
+                    listClass: 'toc-list',
+                    extraListClasses: '',
+                    isCollapsedClass: 'is-collapsed',
+                    collapsibleClass: 'is-collapsible',
+                    listItemClass: 'toc-list-item',
+                    collapseDepth: 0,
+                    scrollSmooth: true,
+                    scrollSmoothDuration: 420,
+                    scrollEndCallback: function (e) {
+                    },
+                    headingsOffset: 1,
+                    throttleTimeout: 50,
+                    positionFixedSelector: null,
+                    positionFixedClass: 'is-position-fixed',
+                    fixedSidebarOffset: 'auto',
+                    includeHtml: true,
+                    onClick: true,
+                    orderedList: true,
+                    scrollContainer: null,
+                    skipRendering: false,
+                });
+                tocbot.init();
+                tocbot.refresh()
+            </script>
+        {% endif %}
     </div>
     <br>
     <hr>
     <br>
-    <script type="text/javascript">
-        var options = {
-            bottom: '64px', // default: '32px'
-            right: 'unset', // default: '32px'
-            left: '32px', // default: 'unset'
-            time: '0.5s', // default: '0.3s'
-            mixColor: '#fff', // default: '#fff'
-            backgroundColor: '#fff',  // default: '#fff'
-            buttonColorDark: '#100f2c',  // default: '#100f2c'
-            buttonColorLight: '#fff', // default: '#fff'
-            saveInCookies: false, // default: true,
-            label: '🌓', // default: ''
-            autoMatchOsTheme: true // default: true
-        }
-        const darkmode = new Darkmode(options);
-        darkmode.showWidget();
-
-        tocbot.init({
-            // Where to render the table of contents.
-            tocSelector: '.js-toc',
-            // Where to grab the headings to build the table of contents.
-            contentSelector: '.js-toc-content',
-            // Which headings to grab inside of the contentSelector element.
-            headingSelector: 'h1, h2, h3',
-            // For headings inside relative or absolute positioned containers within content.
-            hasInnerContainers: true,
-        });
-        tocbot.refresh();
-    </script>
 
 {% endblock %}
