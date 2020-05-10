@@ -292,11 +292,15 @@ def index(request):
 def home_search_results(request, search_contains_query):
     topic = Subtopic.objects.all()
 
-    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
-    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
+    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query,
+                                                   topic_id__internship_id__internship_status='COMPLETED')
+    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query,
+                                                topic_id__internship_id__internship_status='COMPLETED')
     search_internship_name = Subtopic.objects.filter(
-        topic_id__internship_id__internship_topic__icontains=search_contains_query)
-    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query)
+        topic_id__internship_id__internship_topic__icontains=search_contains_query,
+        topic_id__internship_id__internship_status='COMPLETED')
+    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query,
+                                                  topic_id__internship_id__internship_status='COMPLETED')
 
     search_result = list(chain(search_subtopic_name, search_topic_name, search_internship_name, search_data_content))
 

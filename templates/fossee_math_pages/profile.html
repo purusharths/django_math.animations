@@ -8,8 +8,8 @@
     {{ block.super }}
     {% if user.is_authenticated %}
         {% breadcrumb "Dashboard" "dashboard" %}
-        {% breadcrumb "Profile" "profile" %}
     {% endif %}
+      {% breadcrumb "Profile" "" %}
 {% endblock %}
 
 {% block content %}
@@ -28,35 +28,37 @@
                     <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>
                     <p>Mobile: <span style="font-weight: bold">{{ details.user_phone }}</span></p>
 
-            <div class="float-right">
-                <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
-                   data-target="#modalContactForm"> <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
-                                                         alt="Text"></a>
-                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header text-center">
-                                <h4 class="modal-title">Edit Bio : {{ details.user_id }}</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body mx-3">
-                                <div class="md-form">
-                                    <i class="fas fa-pencil prefix grey-text"></i>
-                                    <form method="POST">
-                                        {% csrf_token %}
-                                        {{ form_edit_bio|crispy }}
-                                        <button type="submit" class="btn btn-success col-md-12">Update</button>
-                                    </form>
+                    <div class="float-right">
+                        <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
+                           data-target="#modalContactForm"> <img
+                                src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
+                                alt="Text"></a>
+                        <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                        <h4 class="modal-title">Edit Bio : {{ details.user_id }}</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                        <div class="md-form">
+                                            <i class="fas fa-pencil prefix grey-text"></i>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                {{ form_edit_bio|crispy }}
+                                                <button type="submit" class="btn btn-success col-md-12">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-         {% endif %}
+                {% endif %}
             {% endif %}
             <p>Bio: <span style="font-weight: bold">{{ details.user_bio }}</span></p>
             <p>Profile Url : <b>{{ profile_url }}</b></p>
