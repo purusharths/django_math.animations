@@ -23,16 +23,16 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.text import slugify
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
-from hashids import Hashids
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
 from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
                     ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
                     subtopicOrder, AssignTopic, addContributor, sendMessage, change_image, change_video,
-                    EditUserForm1, EditUserForm2, )
+                    EditUserForm1, EditUserForm2, EditBio, )
 from .generic_functions import (large_img_size, large_video_size)
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
 from .tokens import account_activation_token
@@ -292,11 +292,15 @@ def index(request):
 def home_search_results(request, search_contains_query):
     topic = Subtopic.objects.all()
 
-    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query)
-    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query)
+    search_subtopic_name = Subtopic.objects.filter(subtopic_name__icontains=search_contains_query,
+                                                   topic_id__internship_id__internship_status='COMPLETED')
+    search_topic_name = Subtopic.objects.filter(topic_id__topic_name__icontains=search_contains_query,
+                                                topic_id__internship_id__internship_status='COMPLETED')
     search_internship_name = Subtopic.objects.filter(
-        topic_id__internship_id__internship_topic__icontains=search_contains_query)
-    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query)
+        topic_id__internship_id__internship_topic__icontains=search_contains_query,
+        topic_id__internship_id__internship_status='COMPLETED')
+    search_data_content = Subtopic.objects.filter(data__data_content__icontains=search_contains_query,
+                                                  topic_id__internship_id__internship_status='COMPLETED')
 
     search_result = list(chain(search_subtopic_name, search_topic_name, search_internship_name, search_data_content))
 
@@ -593,7 +597,6 @@ def edit_image(request, t_id, id):
             if request.POST:
                 image_height = request.POST.get('image_height')
                 image_width = request.POST.get('image_width')
-                caption = request.POST.get('image_caption')
 
                 if re.match(r"\d+px$", image_height):
                     temp = re.findall(r'\d+', image_height)
@@ -624,7 +627,6 @@ def edit_image(request, t_id, id):
                 obj = ImageFormatting.objects.get(data_id_id=image.pk)
                 obj.image_height = image_height
                 obj.image_width = image_width
-                obj.image_caption = caption
                 obj.save()
                 if request.user.is_staff:
                     return redirect('edit-image-staff', t_id, id)
@@ -646,8 +648,7 @@ def edit_image(request, t_id, id):
 def delete_data(request, id):
     if request.user.is_authenticated and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
-        if (
-                instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED') or request.user.is_staff:
+        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED':
             t_id = instance.subtopic_id.subtopic_hash
             try:
                 image = ImageFormatting.objects.get(data_id=instance.id)
@@ -1386,17 +1387,28 @@ def password_set(request):
     return render(request, "password_reset/password_set.html", context)
 
 
-def profile(request, lastname, firstname):
-    userdetails = UserDetails.objects.get(user_id__last_name=lastname, user_id__first_name=firstname)
+def profile(request, id, username):
+    userdetails = UserDetails.objects.get(user_id_id=id)
     if userdetails:
-        if userdetails.user_role == 'INTERN':
-            subtopic = Subtopic.objects.all()
-        else:
-            subtopic = None
+        name = slugify(userdetails.user_id.username)
+        if name == username:
+            if request.POST:
+                bio = request.POST['user_bio']
+                userdetails.user_bio = bio
+                userdetails.save()
 
-        scheme = request.is_secure() and "https" or "http"
-        profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.last_name,
-                                                     userdetails.user_id.first_name)
+            if userdetails.user_role == 'INTERN':
+                subtopic = Subtopic.objects.all()
+            else:
+                subtopic = None
+
+            form_edit_bio = EditBio(instance=userdetails)
+            scheme = request.is_secure() and "https" or "http"
+            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,
+                                                         slugify(userdetails.user_id.username))
+        else:
+            messages.error(request, 'Invalid User !')
+            return redirect('dashboard')
     else:
         messages.error(request, 'Invalid User !')
         return redirect('dashboard')
@@ -1404,6 +1416,7 @@ def profile(request, lastname, firstname):
         'details': userdetails,
         'subtopic': subtopic,
         'profile_url': profile_url,
+        'form_edit_bio': form_edit_bio,
     }
     return render(request, 'fossee_math_pages/profile.html', context)
 
@@ -1434,8 +1447,13 @@ def rearrange(request):
             messages.error(request, "No Subtopics !")
             return redirect('dashboard')
 
+        if subtopic:
+            paginator = Paginator(subtopic, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
         context = {
-            'subtopic': subtopic,
+            'subtopic': page_obj,
             'internships': internships,
             'topics': topics,
         }

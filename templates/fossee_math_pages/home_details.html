@@ -6,6 +6,7 @@
     <script>
         new Darkmode().showWidget();
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
 {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -22,6 +23,21 @@
 
 {% block content %}
     {% render_breadcrumbs %}
+    <style>
+        video, footer {
+            isolation: isolate;
+            display: inline-block;
+        }
+
+        h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+            display: block;
+            content: " ";
+            height: 60px;
+            margin-top: -60px;
+            visibility: hidden;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
     <hr>
     <div class="container">
         <thead class="thread-light">
@@ -127,6 +143,18 @@
         }
         const darkmode = new Darkmode(options);
         darkmode.showWidget();
+
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '.js-toc',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: '.js-toc-content',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: 'h1, h2, h3',
+            // For headings inside relative or absolute positioned containers within content.
+            hasInnerContainers: true,
+        });
+        tocbot.refresh();
     </script>
 
 {% endblock %}
