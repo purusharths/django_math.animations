@@ -17,7 +17,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
 
-                    <a class="nav-link text-dark" href="{% url 'index' %}">Home
+                    <a class="nav-link hov text-dark" href="{% url 'index' %}">Home
                         <span class="sr-only">(current)</span>
                     </a>
 
@@ -26,17 +26,17 @@
 
 
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="{% url 'index' %}#topics">Topics</a>
+                    <a class="nav-link hov text-dark" href="{% url 'index' %}#topics">Topics</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="http://animations.fossee.in">About</a>
+                    <a class="nav-link hov text-dark" href="http://animations.fossee.in">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="{% url 'internship' %}">Internship</a>
+                    <a class="nav-link hov  text-dark" href="{% url 'internship' %}">Internship</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                        <a class="nav-link hov dropdown-toggle" href="#" id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {% if user.is_superuser %}
                                 {{ user.email }}
