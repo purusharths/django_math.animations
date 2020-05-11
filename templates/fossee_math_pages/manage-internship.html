@@ -55,9 +55,25 @@
                             <td>{{ internship.internship_topic }}</td>
                             <td>{{ internship.internship_status }}</td>
                             <form method="POST" class="form-group" name="AddInternship">
+                                {% csrf_token %}
                                 <td>
                                     <input type="hidden" value="{{ internship.id }}"
-                                           name="id"> {% csrf_token %} {{ form|crispy }}
+                                           name="id"/>
+                                    <select name="status_change" class="form-control">
+                                        {% if internship.internship_status == 'ACTIVE' %}
+                                            <option value="ACTIVE">ACTIVE</option>
+                                            <option value="COMPLETED">COMPLETED</option>
+                                            <option value="INACTIVE">INACTIVE</option>
+                                        {% elif internship.internship_status == 'COMPLETED' %}
+                                            <option value="COMPLETED">COMPLETED</option>
+                                            <option value="ACTIVE">ACTIVE</option>
+                                            <option value="INACTIVE">INACTIVE</option>
+                                        {% else %}
+                                            <option value="INACTIVE">INACTIVE</option>
+                                            <option value="COMPLETED">COMPLETED</option>
+                                            <option value="ACTIVE">ACTIVE</option>
+                                        {% endif %}
+                                    </select>
                                 </td>
                                 <td>
                                     <input class="btn btn-success" type="submit" name="submit" value="Submit">
@@ -72,9 +88,25 @@
                                 <td>{{ i.internship_topic }}</td>
                                 <td>{{ i.internship_status }}</td>
                                 <form method="POST" class="form-group" name="AddInternship">
+                                {% csrf_token %}
                                     <td>
                                         <input type="hidden" value="{{ i.id }}"
-                                               name="id"> {% csrf_token %} {{ form|crispy }}
+                                               name="id"/>
+                                        <select name="status_change" class="form-control">
+                                            {% if i.internship_status == 'ACTIVE' %}
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="COMPLETED">COMPLETED</option>
+                                                <option value="INACTIVE">INACTIVE</option>
+                                            {% elif i.internship_status == 'COMPLETED' %}
+                                                <option value="COMPLETED">COMPLETED</option>
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="INACTIVE">INACTIVE</option>
+                                            {% else %}
+                                                <option value="INACTIVE">INACTIVE</option>
+                                                <option value="COMPLETED">COMPLETED</option>
+                                                <option value="ACTIVE">ACTIVE</option>
+                                            {% endif %}
+                                        </select>
                                     </td>
                                     <td>
                                         <input class="btn btn-success" type="submit" name="submit" value="Submit">

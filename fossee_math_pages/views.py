@@ -77,17 +77,16 @@ def add_internship(request):
 def manage_internship(request):
     if request.user.is_superuser:
         internship = None
-        form = ManageInternship
 
         if request.method == 'POST':
             if "search_internship" in request.POST:
                 internship = Internship.objects.get(pk=request.POST['search_internship'])
             else:
                 int_id = request.POST["id"]
+                status = request.POST["status_change"]
                 obj = get_object_or_404(Internship, id=int_id)
-                form = ManageInternship(request.POST or None, instance=obj)
-                if form.is_valid():
-                    obj = form.save(commit=False)
+                if obj:
+                    obj.internship_status = status
                     obj.save()
                     messages.success(request, "Changed")
                     return redirect('manage-internship')
@@ -100,7 +99,6 @@ def manage_internship(request):
         context = {
             'internship': internship,
             'internship_all': internship_all,
-            'form': form
         }
         return render(request, 'fossee_math_pages/manage-internship.html', context)
     else:
@@ -957,7 +955,6 @@ def review_submissions(request):
 @login_required
 def manage_interns(request):
     if request.user.is_staff and not request.user.is_superuser:
-        form = ManageIntern()
         subtopic = Subtopic.objects.all()
         interns = UserDetails.objects.filter(user_role='INTERN')
 
@@ -970,12 +967,12 @@ def manage_interns(request):
 
         if request.method == 'POST':
             current_user = UserDetails.objects.get(user_id_id=request.POST['assigneduserid'])
-            current_user.user_status = request.POST['user_status']
+            status = request.POST["status_change"]
+            current_user.user_status = status
             current_user.save()
             messages.success(request, "Intern Status Changed")
 
         context = {
-            'form': form,
             'interns': interns,
             'subtopic': subtopic,
             'searchq': search_query,
@@ -984,13 +981,20 @@ def manage_interns(request):
 
     elif request.user.is_superuser:
         interns = UserDetails.objects.filter(user_role="INTERN")
-        form = ManageIntern()
+
+        search_query = request.GET.get('title_contains')
+        if search_query is None or search_query == '.':
+            interns = UserDetails.objects.filter(user_role='INTERN')
+        else:
+            interns = UserDetails.objects.filter(user_role='INTERN',
+                                                 user_id__first_name__icontains=search_query)
+
         if request.method == 'POST':
             int_id = request.POST["id"]
+            status = request.POST["status_change"]
             obj = UserDetails.objects.get(user_id_id=int_id)
-            form = ManageIntern(request.POST or None, instance=obj)
-            if form.is_valid():
-                obj = form.save(commit=False)
+            if obj:
+                obj.user_status = status
                 obj.save()
                 messages.success(request, "Changed")
                 return redirect('manage-interns')
@@ -1000,7 +1004,6 @@ def manage_interns(request):
 
         context = {
             'interns': interns,
-            'form': form,
         }
         return render(request, 'fossee_math_pages/manage-interns.html', context)
     else:
@@ -1398,7 +1401,7 @@ def password_set(request):
 def profile(request, id, username):
     userdetails = UserDetails.objects.get(user_id_id=id)
     if userdetails:
-        name = userdetails.user_id.first_name+userdetails.user_id.last_name
+        name = userdetails.user_id.first_name + userdetails.user_id.last_name
         if name == username:
             if request.POST:
                 bio = request.POST['user_bio']
@@ -1407,19 +1410,24 @@ def profile(request, id, username):
 
             if userdetails.user_role == 'INTERN':
                 subtopic = Subtopic.objects.all()
+                messages_send = None
             elif userdetails.user_role == 'STAFF':
                 subtopic = Subtopic.objects.all()
+                messages_send = Messages.objects.all()
             else:
                 subtopic = None
+                messages_send = None
 
             form_edit_bio = EditBio(instance=userdetails)
             scheme = request.is_secure() and "https" or "http"
-            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,name)
+            profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,
+                                                         name)
         else:
             subtopic = None
             profile_url = None
             form_edit_bio = None
             userdetails = None
+            messages_send = None
             messages.error(request, 'Invalid User !')
 
     else:
@@ -1427,11 +1435,13 @@ def profile(request, id, username):
         profile_url = None
         form_edit_bio = None
         userdetails = None
+        messages_send = None
         messages.error(request, 'Invalid User !')
 
     context = {
         'details': userdetails,
         'subtopic': subtopic,
+        'messages_send': messages_send,
         'profile_url': profile_url,
         'form_edit_bio': form_edit_bio,
     }
