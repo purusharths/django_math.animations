@@ -1144,6 +1144,7 @@ def review_submissions_subtopic(request, s_id):
         subtopic = Subtopic.objects.get(subtopic_hash=s_id)
         data = Data.objects.filter(subtopic_id=subtopic.pk)
         imageformat = ImageFormatting.objects.all()
+        user_staff = UserDetails.objects.filter(user_role='STAFF')
 
         if request.method == "POST":
             if "message" in request.POST:
@@ -1194,6 +1195,7 @@ def review_submissions_subtopic(request, s_id):
             'imagesize': imageformat,
             'form': form,
             'form_message': form_message,
+            'user_staff': user_staff,
         }
 
         return render(request, 'fossee_math_pages/review-submissions-subtopic.html', context)

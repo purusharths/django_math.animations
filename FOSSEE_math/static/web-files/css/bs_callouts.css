@@ -155,16 +155,11 @@ body {
     color: #5bc0de
 }
 
-.nav-link{
+.nav-link {
     border-bottom: 3px solid #f8f8f8;
 }
 
-.nav-link:hover {
-    border-bottom: 3px solid orange;
-    background: white;
-}
-
-.ac.active {
+.hov:hover {
     border-bottom: 3px solid orange;
     background: white;
 }

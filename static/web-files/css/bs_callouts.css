@@ -154,8 +154,12 @@ body {
 .bs-callout-right-info h4 {
     color: #5bc0de
 }
-  .hov:hover {
+
+.nav-link {
+    border-bottom: 3px solid #f8f8f8;
+}
+
+.hov:hover {
     border-bottom: 3px solid orange;
     background: white;
-  }
-
+}
