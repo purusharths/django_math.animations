@@ -24,7 +24,7 @@
                         style="font-weight: bold; font-size: x-large"> {{ details.user_id.first_name }} {{ details.user_id.last_name }}</span>
                 </p>
                 {% if user.is_authenticated %}
-                    {% if user.username == details.user_id.username %}
+                    {% if user.username == details.user_id.username or user.is_staff %}
                         <p>Role: <span style="font-weight: bold">{{ details.user_role }}</span></p>
                         <p>College: <span style="font-weight: bold">{{ details.user_college }}</span></p>
                         <p>Email:<span style="font-weight: bold"> {{ details.user_email }}</span></p>

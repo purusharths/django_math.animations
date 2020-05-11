@@ -216,7 +216,10 @@ def add_users(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'fossee_math_pages/dashboard.html')
+    context = {
+        'l_active': 'nav_active'
+    }
+    return render(request, 'fossee_math_pages/dashboard.html', context)
 
 
 def contents(request, internship):
@@ -281,6 +284,7 @@ def index(request):
     context = {
         'internship': interships,
         'images': images,
+        'home_active': 'nav_active',
     }
 
     return render(request, 'fossee_math_pages/index.html', context)
@@ -699,6 +703,7 @@ def internship(request):
         'subtopic': subtopic,
         'topic': topic,
         'internship': internship,
+        'i_active': 'nav_active',
     }
 
     return render(request, 'fossee_math_pages/internship.html', context)
@@ -757,7 +762,7 @@ def user_login(request):
             return render(request, "fossee_math_pages/login.html", {"form": form})
     else:
         form = UserLoginForm()
-        return render(request, "fossee_math_pages/login.html", {"form": form})
+        return render(request, "fossee_math_pages/login.html", {"form": form, "l_active": 'nav_active'})
 
 
 @login_required
@@ -1444,6 +1449,7 @@ def profile(request, id, username):
         'messages_send': messages_send,
         'profile_url': profile_url,
         'form_edit_bio': form_edit_bio,
+        'l_active': 'nav_active'
     }
     return render(request, 'fossee_math_pages/profile.html', context)
 
