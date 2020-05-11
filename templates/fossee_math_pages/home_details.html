@@ -2,6 +2,7 @@
 {% block title %} Details {% endblock %}
 
 {% block extrahead %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
     <script>
         new Darkmode().showWidget();
@@ -23,6 +24,7 @@
 
 {% block content %}
     {% render_breadcrumbs %}
+
     <style>
         video, footer {
             isolation: isolate;
@@ -38,6 +40,7 @@
         }
     </style>
     <hr>
+
     <div class="container">
         <div class="js-toc-content">
             <table>
@@ -45,7 +48,7 @@
                     <thead class="thread-light">
                     <tr>
                         <th>
-                            <h1>{{ subtopic.subtopic_name }}</h1>
+                            <h1 id="{{ subtopic.subtopic_name }}">{{ subtopic.subtopic_name }}</h1>
                         </th>
                     </tr>
                     <tr>
@@ -64,6 +67,7 @@
                                 <td>
                                     <p></p>
                                     {{ data.data_content |safe }}
+
                                 </td>
                             {% endif %}
                         </tr>
@@ -131,6 +135,7 @@
                     and is freely avilable under CC licence.</i>
 
             </div>
+
         {% endif %}
         <script type="text/javascript">
             var options = {
@@ -151,6 +156,14 @@
         </script>
         {% if subtopic.subtopic_status == 'ACCEPTED' %}
             <script>
+            var _selectIndex = 0;
+                var x= document.getElementsByTagName("H2")
+            var i;
+                for(i=0;i<x.length;i++)
+                {
+                    x[i].setAttribute("id","select-"+_selectIndex++)
+                }
+                 {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
                 tocbot.init({
                     tocSelector: '.js-toc',
                     contentSelector: '.js-toc-content',
@@ -183,11 +196,15 @@
                 });
                 tocbot.init();
                 tocbot.refresh()
+                tocbot._parseContent.selectHeadings
+                tocbot.scrollContainer()
             </script>
         {% endif %}
     </div>
     <br>
     <hr>
     <br>
+
+
 
 {% endblock %}
