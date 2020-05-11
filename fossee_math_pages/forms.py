@@ -104,17 +104,6 @@ class subtopicOrder(ModelForm):
         fields = ['subtopic_order']
 
 
-class AssignTopic(ModelForm):
-    class Meta:
-        model = Subtopic
-        fields = ['assigned_user_id']
-
-    def __init__(self):
-        super().__init__()
-        self.fields['assigned_user_id'].queryset = User.objects.filter(userdetails__user_role='INTERN',
-                                                                       userdetails__user_status='ACTIVE')
-
-
 class data(ModelForm):
     class Meta:
         model = Data

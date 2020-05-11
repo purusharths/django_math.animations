@@ -1,6 +1,6 @@
 {% load static %}
 
- <link rel="stylesheet" type="text/css" href="{% static '/web-files/css/bs_callouts.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/web-files/css/bs_callouts.css' %}">
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f8f8;">
     <div class="container">
@@ -38,12 +38,18 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.username }}
+                            {% if user.is_superuser %}
+                                {{ user.email }}
+                            {% else %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% endif %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
                             {% if not user.is_superuser %}
-                                <a class="dropdown-item" href="{% url 'profile' user.pk user.username|slugify %}">Profile</a>
+                                {% with  user.first_name|add:user.last_name as username %}
+                                <a class="dropdown-item" href="{% url 'profile' user.pk username %}">Profile</a>
+                                {% endwith %}
                             {% endif %}
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </div>

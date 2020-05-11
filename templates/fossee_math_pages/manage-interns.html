@@ -56,7 +56,7 @@
                         {% for i in interns %}
                             <tr>
                                 {% if searchq != '' %}
-                                    <td><b>{{ i.user_id }}</b></td>
+                                    <td><b>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</b></td>
                                 {% endif %}
                                 <td>
                                     {% for st in subtopic %}

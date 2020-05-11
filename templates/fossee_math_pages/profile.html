@@ -9,7 +9,7 @@
     {% if user.is_authenticated %}
         {% breadcrumb "Dashboard" "dashboard" %}
     {% endif %}
-      {% breadcrumb "Profile" "" %}
+    {% breadcrumb "Profile" "" %}
 {% endblock %}
 
 {% block content %}
@@ -89,7 +89,24 @@
                                 {% else %}
                                     {{ i.subtopic_status }}
                                 {% endif %}
-                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+    {% if not user.is_superuser %}
+        {% if details.user_id.is_staff %}
+            <div class="container">
+                <br>
+                <b style="text-align: center">Topics Handled</b>
+                {% for i in subtopic %}
+                    {% if details.user_id.pk == i.subtopic_managed_user %}
+                        <div class="bs-callout bs-callout-info">
+                            {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
+                            <div class="float-right">
+                                {{ i.subtopic_status }}
                             </div>
                         </div>
                     {% endif %}
