@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %} Review Submissions {% endblock %}
 {% load django_bootstrap_breadcrumbs %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -72,6 +73,7 @@
             </div>
         </div>
         <hr/>
+    <div style="overflow-x: auto">
         <table class="table table-sm" id="myTable">
             <thead class="table-info">
             <tr>
@@ -127,6 +129,7 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
     </div>
     <br>
     <hr>
