@@ -32,7 +32,11 @@
                     </select>
                 </form>
                 <br/>
-
+                {% if user.is_superuser %}
+                    <div class="float-right">
+                        <a href="{% url 'edit-topics' chosen_internship.internship_url %}">Rename topics and subtopics </a>
+                    </div>
+                {% endif %}
                 <table class="table table-sm  ">
                     {% for i in internship %}
                         <h3 class="text-info">{{ i.internship_topic }}</h3>
@@ -88,11 +92,6 @@
                         {% endfor %}
                     {% endfor %}
                 </table>
-                {% if user.is_superuser %}
-                    <div class="float-right">
-                        <a href="{% url 'edit-topics' chosen_internship.internship_url %}">Edit the topics and subtopics of the internship</a>
-                    </div>
-                {% endif %}
             </div>
             <br>
             <hr/>

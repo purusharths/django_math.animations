@@ -38,11 +38,27 @@
                         </form>
                         <br>
                     </div>
+                {% elif user.is_superuser %}
+                    <div class="container">
+                        <br>
+                        <form method="GET" action=".">
+                            <div class="row">
+                                <h5>Search:</h5> &nbsp;
+                                <input class="form-control py-2 border col-sm-6" type="search" name="title_contains"
+                                       placeholder="Search Interns"/> &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
                 {% endif %}
                 <table class="table table-sm ">
                     <thead class="table-warning">
                     <tr>
                         <th>Intern Name</th>
+                        {% if user.is_superuser %}
+                            <th>Email</th>
+                        {% endif %}
                         {% if user.is_staff and not user.is_superuser %}
                             <th>Assigned Subtopic</th>
                         {% endif %}
@@ -78,8 +94,17 @@
                                 </td>
                                 <td class="">
                                     <form method="POST" class="form-group" name="ManageIntern">
+                                        {% csrf_token %}
                                         <input type="hidden" value="{{ i.user_id_id }}" name="assigneduserid">
-                                        {% csrf_token %} {{ form|crispy }}
+                                        <select name="status_change" class="form-control">
+                                            {% if i.user_status == 'ACTIVE' %}
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="INACTIVE">INACTIVE</option>
+                                            {% else %}
+                                                <option value="INACTIVE">INACTIVE</option>
+                                                <option value="ACTIVE">ACTIVE</option>
+                                            {% endif %}
+                                        </select>
                                 <td>
                                     <input class="btn btn-outline-warning btn-sm" type="submit" name="submit"
                                            value="Change">
@@ -93,12 +118,22 @@
                         <tbody>
                         {% for i in interns %}
                             <tr>
-                                <td>{{ i.user_id }}</td>
+                                <td>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</td>
+                                <td>{{ i.user_id.email }}</td>
                                 <td>{{ i.user_status }}</td>
                                 <td class="">
                                     <form method="POST" class="form-group" name="ManageIntern">
+                                        {% csrf_token %}
                                         <input type="hidden" value="{{ i.user_id_id }}" name="id">
-                                        {% csrf_token %} {{ form|crispy }}
+                                        <select name="status_change" class="form-control">
+                                            {% if i.user_status == 'ACTIVE' %}
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="INACTIVE">INACTIVE</option>
+                                            {% else %}
+                                                <option value="INACTIVE">INACTIVE</option>
+                                                <option value="ACTIVE">ACTIVE</option>
+                                            {% endif %}
+                                        </select>
                                 <td>
                                     <input class="btn btn-outline-success" type="submit" name="submit" value="Submit">
                                 </td>

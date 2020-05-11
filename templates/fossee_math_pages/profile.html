@@ -65,7 +65,7 @@
                 {% endif %}
                 <p>Bio: <span style="font-weight: bold">{{ details.user_bio }}</span></p>
                 <p>Profile Url : <b>{{ profile_url }}</b></p>
-
+                <p>User Joined : <b>{{ details.user_id.date_joined }}</b></p>
                 {% if user.is_authenticated %}
                     {% if user.username == details.user_id.username %}
                         <br>
@@ -100,20 +100,30 @@
             {% endif %}
             {% if not user.is_superuser %}
                 {% if details.user_id.is_staff %}
-                    <div>
-                        <br>
-                        <b style="text-align: center">Topics Handled</b>
-                        {% for i in subtopic %}
-                            {% if details.user_id.pk == i.subtopic_managed_user %}
-                                <div class="bs-callout bs-callout-info">
-                                    {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
-                                    <div class="float-right">
-                                        {{ i.subtopic_status }}
-                                    </div>
+                    <br>
+                    <b style="text-align: center">Topics Approved</b>
+                    {% for i in subtopic %}
+                        {% if details.user_id.pk == i.subtopic_managed_user %}
+                            <div class="bs-callout bs-callout-info">
+                                {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
+                                <div class="float-right">
+                                    {{ i.subtopic_status }}
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                     <br>
+                    <b style="text-align: center">Topics Interacted With</b>
+                    {% for i in messages_send %}
+                        {% if details.user_id.pk == i.user_id.pk %}
+                            <div class="bs-callout bs-callout-info">
+                                {{ i.subtopic_id.subtopic_name }} -> {{ i.subtopic_id.topic_id }} -> {{ i.subtopic_id.topic_id.internship_id }}
+                                <div class="float-right">
+                                    {{ i.subtopic_id.subtopic_status }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
             {% endif %}
         {% endif %}
