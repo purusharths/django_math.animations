@@ -48,7 +48,7 @@
                     <thead class="thread-light">
                     <tr>
                         <th>
-                            <h1 id="{{ subtopic.subtopic_name }}">{{ subtopic.subtopic_name }}</h1>
+                            <h1>{{ subtopic.subtopic_name }}</h1>
                         </th>
                     </tr>
                     <tr>
@@ -156,12 +156,26 @@
         </script>
         {% if subtopic.subtopic_status == 'ACCEPTED' %}
             <script>
+              var _selectIndex_2 = 0;
+                var z= document.getElementsByTagName("H1")
+            var i;
+                for(i=0;i<z.length;i++)
+                {
+                    z[i].setAttribute("id","select-"+_selectIndex++)
+                }
             var _selectIndex = 0;
                 var x= document.getElementsByTagName("H2")
-            var i;
-                for(i=0;i<x.length;i++)
+            var j;
+                for(j=0;j<x.length;j++)
                 {
-                    x[i].setAttribute("id","select-"+_selectIndex++)
+                    x[j].setAttribute("id","select-"+_selectIndex++)
+                }
+              var _selectIndex_1 = 0;
+                var y= document.getElementsByTagName("H3")
+            var k;
+                for(k=0;k<y.length;k++)
+                {
+                    y[k].setAttribute("id","id-"+_selectIndex_1++)
                 }
                  {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
                 tocbot.init({
@@ -196,7 +210,6 @@
                 });
                 tocbot.init();
                 tocbot.refresh()
-                tocbot._parseContent.selectHeadings
                 tocbot.scrollContainer()
             </script>
         {% endif %}
