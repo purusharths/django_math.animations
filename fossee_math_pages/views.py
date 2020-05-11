@@ -1416,11 +1416,19 @@ def profile(request, id, username):
             scheme = request.is_secure() and "https" or "http"
             profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,name)
         else:
+            subtopic = None
+            profile_url = None
+            form_edit_bio = None
+            userdetails = None
             messages.error(request, 'Invalid User !')
-            return redirect('dashboard')
+
     else:
+        subtopic = None
+        profile_url = None
+        form_edit_bio = None
+        userdetails = None
         messages.error(request, 'Invalid User !')
-        return redirect('dashboard')
+
     context = {
         'details': userdetails,
         'subtopic': subtopic,
