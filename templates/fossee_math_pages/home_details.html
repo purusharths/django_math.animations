@@ -5,8 +5,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script>
         new Darkmode().showWidget();
     </script>
@@ -29,9 +29,10 @@
     {% render_breadcrumbs %}
 
     <style>
-    body {
-    font: normal 15px Verdana, Arial, sans-serif;
-}
+        {#body {#}
+        {#    font: normal 15px Verdana, Arial, sans-serif;#}
+
+
         video, footer {
             isolation: isolate;
             display: inline-block;
@@ -44,20 +45,23 @@
             margin-top: -60px;
             visibility: hidden;
         }
-    element {
-  @include float-left;
-}
-.another-element {
-  @include float-right;
-}
-.one-more {
-  @include float-none;
-}
+
+        element {
+        @include float-left;
+        }
+
+        .another-element {
+        @include float-right;
+        }
+
+        .one-more {
+        @include float-none;
+        }
 
 
     </style>
     <hr>
-<body>
+    <body>
     <div class="container">
 
         <div class="js-toc-content">
@@ -70,23 +74,15 @@
                         </th>
                     </tr>
                     <tr>
-
                         <td>
-
-
- <div class='js-toc'  data-spy="affix" style="margin-left: -281px" ></div>
+                            <div class='js-toc' data-spy="affix" style="margin-left: -281px"></div>
                         </td>
-
-
                     </tr>
-
                     </thead>
-
                 {% endif %}
                 <tbody>
                 {% for data in datas %}
                     {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
-
                         <tr>
                             {% if data.data_content != "NULL" %}
                                 <td>
@@ -182,32 +178,29 @@
         </script>
         {% if subtopic.subtopic_status == 'ACCEPTED' %}
             <script>
-              var _selectIndex_2 = 0;
-                var z= document.getElementsByTagName("H1")
-            var i;
-                for(i=0;i<z.length;i++)
-                {
-                    z[i].setAttribute("id","select_1-"+_selectIndex_2++)
+                var _selectIndex_2 = 0;
+                var z = document.getElementsByTagName("H1")
+                var i;
+                for (i = 0; i < z.length; i++) {
+                    z[i].setAttribute("id", "select_1-" + _selectIndex_2++)
                 }
-            var _selectIndex = 0;
-                var x= document.getElementsByTagName("H2")
-            var j;
-                for(j=0;j<x.length;j++)
-                {
-                    x[j].setAttribute("id","select-"+_selectIndex++)
+                var _selectIndex = 0;
+                var x = document.getElementsByTagName("H2")
+                var j;
+                for (j = 0; j < x.length; j++) {
+                    x[j].setAttribute("id", "select-" + _selectIndex++)
                 }
-              var _selectIndex_1 = 0;
-                var y= document.getElementsByTagName("H3")
-            var k;
-                for(k=0;k<y.length;k++)
-                {
-                    y[k].setAttribute("id","id-"+_selectIndex_1++)
+                var _selectIndex_1 = 0;
+                var y = document.getElementsByTagName("H3")
+                var k;
+                for (k = 0; k < y.length; k++) {
+                    y[k].setAttribute("id", "id-" + _selectIndex_1++)
                 }
-                 {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
+                {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
                 tocbot.init({
                     tocSelector: '.js-toc',
                     contentSelector: '.js-toc-content',
-                    headingSelector: 'h1, h2, h3',
+                    headingSelector: 'h1, h2, h3, h4, h5, h6',
                     ignoreSelector: '.js-toc-ignore',
                     hasInnerContainers: false,
                     linkClass: 'toc-link',
