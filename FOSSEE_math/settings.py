@@ -38,6 +38,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# Change file upload permission for Nginx
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 # Application definition
 
 INSTALLED_APPS = [
