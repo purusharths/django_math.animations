@@ -42,6 +42,8 @@ urlpatterns = [
                   path('dashboard/review-submissons/<str:t_id>/edit-text/<str:id>', views.edit_text,
                        name='edit-text-staff'),
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
+                  path('moveUpData/<str:id>', views.moveUpData, name='moveUpData'),
+                  path('moveDownData/<str:id>', views.moveDownData, name='moveDownData'),
                   path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
                   path('reset-subtopic-status/<str:id>', views.reset_subtopic_status, name='reset-subtopic-status'),
