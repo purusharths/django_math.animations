@@ -23,14 +23,13 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.text import slugify
 from django.utils.timezone import now
 from email_validator import validate_email, EmailNotValidError
 
 from FOSSEE_math.email_config import SENDER_EMAIL
 from .email_messages import (got_a_message, submission_status_changed, topic_assigned)
-from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ManageInternship, add_topic,
-                    ManageIntern, add_subtopic, data, imageFormatting, topicOrder,
+from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, add_topic,
+                    add_subtopic, data, imageFormatting, topicOrder,
                     subtopicOrder, addContributor, sendMessage, change_image, change_video,
                     EditUserForm1, EditUserForm2, EditBio, )
 from .generic_functions import (large_img_size, large_video_size)
@@ -319,103 +318,101 @@ def home_search_results(request, search_contains_query):
 @login_required
 def add_submission_subtopic(request, st_id):
     if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        form = data
+
         try:
-            user = request.user
-            form = data
+            subtopic = Subtopic.objects.get(subtopic_hash=st_id)
+        except Exception:
+            messages.error(request, 'This subtopic does not exist!')
+            return redirect('dashboard')
+
+        t_id = subtopic.pk
+        if subtopic.assigned_user_id_id == request.user.id:
+            if request.method == 'POST':
+                if subtopic.subtopic_status == "ACCEPTED":
+                    return HttpResponse(status=403)
+                content = request.POST.get('data_content')
+                img = request.FILES.get('image')
+                video = request.FILES.get('video')
+                caption_image = request.POST.get('caption_image')
+                caption_video = request.POST.get('caption_video')
+                caption = None
+
+                if img is None and video is None:
+                    if content.strip() == '':
+                        messages.error(request, "Fill any one of the fields.")
+                        return redirect('add-submission-subtopic', st_id)
+
+                if img is None and content.strip() == '':
+                    caption = caption_video
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Invalid File Type for Video')
+                        return redirect('add-submission-subtopic', st_id)
+                    if large_video_size(video):
+                        messages.error(request, 'Maximum allowed size for Video is 30MB')
+                        return redirect('add-submission-subtopic', st_id)
+
+                if video is None and content.strip() == '':
+                    caption = caption_image
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Invalid File Type for Image')
+                        return redirect('add-submission-subtopic', st_id)
+                    if large_img_size(img):
+                        messages.error(request, 'Maximum Allowed Size for Image is 2MB')
+                        return redirect('add-submission-subtopic', st_id)
+
+                if caption:
+                    if caption.strip() == '':
+                        caption = None
+
+                obj = Data.objects.filter(subtopic_id_id=t_id).order_by('data_order').last()
+                if obj:
+                    order = obj.data_order
+                else:
+                    order = 0
+
+                order = order + 1
+                add_data = Data(data_content=content, data_image=img,
+                                data_video=video, data_caption=caption, subtopic_id_id=t_id, data_order=order)
+                add_data.data_modification_date = now()
+                add_data.save()
+                sub = Subtopic.objects.get(pk=t_id)
+                sub.subtopic_modification_date = now()
+                sub.save()
+                uuid_hash = uuid.uuid4()
+                add_data.data_hash = str(uuid_hash)
+                add_data.save()
+
+                if img != "" or img != " ":
+                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
+                    imgformat.save()
+
+            e_data = Data.objects.filter(subtopic_id=t_id).order_by('data_order')
+            imagesize = ImageFormatting.objects.all()
+            subtopic = Subtopic.objects.get(id=t_id)
 
             try:
-                subtopic = Subtopic.objects.get(subtopic_hash=st_id)
-            except Exception:
-                messages.error(request, 'This subtopic does not exist!')
-                return redirect('dashboard')
+                last_modified_UTC = sorted([dta.data_modification_date for dta in e_data])[-1]
+                tz = pytz.timezone("Asia/Kolkata")
+                last_modified_IST = last_modified_UTC.astimezone(tz)
+                last_modified = last_modified_IST.strftime('%d %B, %Y %H:%M:%S (%A)')
+            except IndexError:
+                last_modified = "No modifications"
 
-            t_id = subtopic.pk
-            if subtopic.assigned_user_id_id == request.user.id:
-                if request.method == 'POST':
-                    if subtopic.subtopic_status == "ACCEPTED":
-                        return HttpResponse(status=403)
-                    content = request.POST.get('data_content')
-                    img = request.FILES.get('image')
-                    video = request.FILES.get('video')
-                    caption_image = request.POST.get('caption_image')
-                    caption_video = request.POST.get('caption_video')
-                    caption = None
+            context = {
+                'topic': e_data,
+                'form': form,
+                'subtopic': subtopic,
+                'imagesize': imagesize,
+                'last_modified': last_modified,
+            }
 
-                    if subtopic.assigned_user_id.id == request.user.id:
-                        if img is None and video is None:
-                            if content in ('', ' '):
-                                if content.strip() == '':
-                                    messages.error(request, "Fill any one of the fields.")
-                                    return redirect('add-submission-subtopic', st_id)
-
-                        if img is None and content.strip() == '':
-                            caption = caption_video
-                            video_file = str(video)
-                            if not video_file.lower().endswith(('.mp4', '.webm')):
-                                messages.error(request, 'Invalid File Type for Video')
-                                return redirect('add-submission-subtopic', st_id)
-                            if large_video_size(video):
-                                messages.error(request, 'Maximum allowed size for Video is 30MB')
-                                return redirect('add-submission-subtopic', st_id)
-
-                        if video is None and content.strip() == '':
-                            caption = caption_image
-                            image = str(img)
-                            if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                                messages.error(request, 'Invalid File Type for Image')
-                                return redirect('add-submission-subtopic', st_id)
-                            if large_img_size(img):
-                                messages.error(request, 'Maximum Allowed Size for Image is 2MB')
-                                return redirect('add-submission-subtopic', st_id)
-
-                        if content.strip() != '':
-                            caption = None
-
-                        add_data = Data(data_content=content, data_image=img,
-                                        data_video=video, data_caption=caption, subtopic_id_id=t_id)
-                        add_data.data_modification_date = now()
-                        add_data.save()
-                        sub = Subtopic.objects.get(pk=t_id)
-                        sub.subtopic_modification_date = now()
-                        sub.save()
-                        current_data = Data.objects.get(pk=add_data.pk)
-                        # hashtext = str(current_data.pk) + '-' + str(request.user.pk)
-                        # hash_result = hashlib.md5(hashtext.encode())
-                        # add_data.data_hash = hash_result.hexdigest()
-                        uuid_hash = uuid.uuid4()
-                        add_data.data_hash = str(uuid_hash)
-                        add_data.save()
-
-                        if img != "" or img != " ":
-                            imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
-                            imgformat.save()
-
-                e_data = Data.objects.filter(subtopic_id=t_id)
-                imagesize = ImageFormatting.objects.all()
-                subtopic = Subtopic.objects.get(id=t_id)
-
-                try:
-                    last_modified_UTC = sorted([dta.data_modification_date for dta in e_data])[-1]
-                    tz = pytz.timezone("Asia/Kolkata")
-                    last_modified_IST = last_modified_UTC.astimezone(tz)
-                    last_modified = last_modified_IST.strftime('%d %B, %Y %H:%M:%S (%A)')
-                except IndexError:
-                    last_modified = "No modifications"
-
-                context = {
-                    'topic': e_data,
-                    'form': form,
-                    'subtopic': subtopic,
-                    'imagesize': imagesize,
-                    'last_modified': last_modified,
-                }
-
-                return render(request, 'fossee_math_pages/add-submission-subtopic.html', context)
-            else:
-                messages.error(request, 'You do not have access to that subtopic submission!')
-                return redirect('dashboard')
-        except Exception:
-            return request('dashboard')
+            return render(request, 'fossee_math_pages/add-submission-subtopic.html', context)
+        else:
+            messages.error(request, 'You do not have access to that subtopic submission!')
+            return redirect('dashboard')
     else:
         return redirect('dashboard')
 
@@ -641,6 +638,52 @@ def edit_image(request, t_id, id):
         }
 
         return render(request, 'fossee_math_pages/edit-image.html', context)
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def moveUpData(request, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
+        instance = Data.objects.get(data_hash=id)
+        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED':
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.data_order = instance.data_order - 1
+            instance.save()
+            return redirect('add-submission-subtopic', t_id)
+
+        elif request.user.is_staff:
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.data_order = instance.data_order - 1
+            instance.save()
+            return redirect('review-submissions-subtopic', t_id)
+
+        else:
+            return redirect('dashboard')
+
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def moveDownData(request, id):
+    if request.user.is_authenticated and not request.user.is_superuser:
+        instance = Data.objects.get(data_hash=id)
+        if instance.subtopic_id.assigned_user_id.id == request.user.id and instance.subtopic_id.subtopic_status != 'ACCEPTED':
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.data_order = instance.data_order + 1
+            instance.save()
+            return redirect('add-submission-subtopic', t_id)
+
+        elif request.user.is_staff:
+            t_id = instance.subtopic_id.subtopic_hash
+            instance.data_order = instance.data_order + 1
+            instance.save()
+            return redirect('review-submissions-subtopic', t_id)
+
+        else:
+            return redirect('dashboard')
+
     else:
         return redirect('dashboard')
 
@@ -1150,7 +1193,6 @@ def internship_progress(request):
 def review_submissions_subtopic(request, s_id):
     if request.user.is_staff:
         subtopic = Subtopic.objects.get(subtopic_hash=s_id)
-        data = Data.objects.filter(subtopic_id=subtopic.pk)
         imageformat = ImageFormatting.objects.all()
         user_staff = UserDetails.objects.filter(user_role='STAFF')
 
@@ -1171,7 +1213,7 @@ def review_submissions_subtopic(request, s_id):
                                                     message_link)
                 send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
-            else:
+            elif "mentor" in request.POST :
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
 
@@ -1188,8 +1230,68 @@ def review_submissions_subtopic(request, s_id):
                     obj = Contributor(subtopic_id_id=subtopic.pk, contributor=contributor, mentor=mentor,
                                       professor=professor, data_aproval_date=now())
                     obj.save()
+            else:
+                content = request.POST.get('data_content')
+                img = request.FILES.get('image')
+                video = request.FILES.get('video')
+                caption_image = request.POST.get('caption_image')
+                caption_video = request.POST.get('caption_video')
+                caption = None
 
+                if img is None and video is None:
+                    if content.strip() == '':
+                        messages.error(request, "Fill any one of the fields.")
+                        return redirect('review-submissions-subtopic', s_id)
+
+                if img is None and content.strip() == '':
+                    caption = caption_video
+                    video_file = str(video)
+                    if not video_file.lower().endswith(('.mp4', '.webm')):
+                        messages.error(request, 'Invalid File Type for Video')
+                        return redirect('review-submissions-subtopic', s_id)
+                    if large_video_size(video):
+                        messages.error(request, 'Maximum allowed size for Video is 30MB')
+                        return redirect('review-submissions-subtopic', s_id)
+
+                if video is None and content.strip() == '':
+                    caption = caption_image
+                    image = str(img)
+                    if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        messages.error(request, 'Invalid File Type for Image')
+                        return redirect('review-submissions-subtopic', s_id)
+                    if large_img_size(img):
+                        messages.error(request, 'Maximum Allowed Size for Image is 2MB')
+                        return redirect('review-submissions-subtopic', s_id)
+
+                if caption:
+                    if caption.strip() == '':
+                        caption = None
+
+                obj = Data.objects.filter(subtopic_id_id=subtopic.pk).order_by('data_order').last()
+                if obj:
+                    order = obj.data_order
+                else:
+                    order = 0
+
+                order = order + 1
+                add_data = Data(data_content=content, data_image=img,
+                                data_video=video, data_caption=caption, subtopic_id_id=subtopic.pk, data_order=order)
+                add_data.data_modification_date = now()
+                add_data.save()
+                sub = Subtopic.objects.get(pk=subtopic.pk)
+                sub.subtopic_modification_date = now()
+                sub.save()
+                uuid_hash = uuid.uuid4()
+                add_data.data_hash = str(uuid_hash)
+                add_data.save()
+
+                if img != "" or img != " ":
+                    imgformat = ImageFormatting(data_id_id=add_data.pk, image_width='50%', image_height='50%')
+                    imgformat.save()
+
+        data_results = Data.objects.filter(subtopic_id=subtopic.pk).order_by('data_order')
         form_message = sendMessage()
+        form_data = data
 
         try:
             instance = Contributor.objects.get(subtopic_id_id=subtopic.pk)
@@ -1199,7 +1301,8 @@ def review_submissions_subtopic(request, s_id):
 
         context = {
             'subtopic': subtopic,
-            'datas': data,
+            'datas': data_results,
+            'form_data': form_data,
             'imagesize': imageformat,
             'form': form,
             'form_message': form_message,

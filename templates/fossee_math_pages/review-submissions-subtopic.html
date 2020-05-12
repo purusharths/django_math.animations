@@ -125,9 +125,19 @@
                                      alt="Edit Section">
                             </a>
                             <hr/>
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_text">
+                            <a href="{% url 'delete-data' data.data_hash %}"
+                               onclick="return confirm('Are you sure you want to delete this?')">
                                 <img src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                      title="Delete Section" width="15px" alt="Delete"></a>
+                            <hr/>
+                            <a href="{% url 'moveUpData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/up.svg' %}"
+                                     title="Move Up" width="15px" alt="Move Up"></a>
+                            <hr/>
+                            <a href="{% url 'moveDownData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/down.svg' %}"
+                                     title="Move Down" width="15px" alt="Move Down"></a>
+                            <hr/>
                         </td>
                     {% endif %}
                 </tr>
@@ -144,15 +154,24 @@
                             {% endfor %}
                         </td>
                         <td>
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_image"><img
+                            <a href="{% url 'delete-data' data.data_hash %}"
+                               onclick="return confirm('Are you sure you want to delete this?')"><img
                                     src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                     title="Delete Section" width="15px" alt="Delete">
                             </a>
-                            <br>
-                            <br>
+                            <hr/>
                             <a href="{% url 'edit-image-staff' subtopic.subtopic_hash data.data_hash %}"> <img
                                     src="{% static '/web-files/img/multiuse-svgs/crop.svg' %}" title="Crop"
                                     width="15px"></a>
+                            <hr/>
+                            <a href="{% url 'moveUpData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/up.svg' %}"
+                                     title="Move Up" width="15px" alt="Move Up"></a>
+                            <hr/>
+                            <a href="{% url 'moveDownData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/down.svg' %}"
+                                     title="Move Down" width="15px" alt="Move Down"></a>
+                            <hr/>
                         </td>
                     {% endif %}
                 </tr>
@@ -169,10 +188,20 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'delete-data' data.data_hash %}" id="delete_video"><img
+                            <a href="{% url 'delete-data' data.data_hash %}"
+                               onclick="return confirm('Are you sure you want to delete this?')"><img
                                     src="{% static '/web-files/img/multiuse-svgs/trash.svg' %}"
                                     title="Delete Section" width="15px" alt="Delete">
                             </a>
+                            <hr/>
+                            <a href="{% url 'moveUpData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/up.svg' %}"
+                                     title="Move Up" width="15px" alt="Move Up"></a>
+                            <hr/>
+                            <a href="{% url 'moveDownData' data.data_hash %}">
+                                <img src="{% static '/web-files/img/multiuse-svgs/down.svg' %}"
+                                     title="Move Down" width="15px" alt="Move Down"></a>
+                            <hr/>
                         </td>
                     {% endif %}
                 </tr>
@@ -229,21 +258,113 @@
                 </div>
             </div>
         </div>
+        <br>
+        <div class="container" style="background-color:#F5F5F5  ">
+            <form method="post" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#data" role="tab" data-toggle="tab"
+                           onclick="show()"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                                 alt="Text">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#image" role="tab" data-toggle="tab"><img
+                                src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#video" role="tab" data-toggle="tab"><img
+                                src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"> </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade show active" id="data">
+                        <div class="ck center" align="center" id="cc">
+                            <div class="row" style="padding-bottom: 0px;">
+                                <div class="col-auto mr-auto">&nbsp;</div>
+                                <div class="col-auto" style="padding-top: 10px;">
+                                    <input class="btn btn-outline-success btn-md btn-block" type="submit"
+                                            value="Add Data">
+                                </div>
+                            </div>
+                            {{ form.media }} {{ form_data.as_p }}
+                        </div>
+                        <br>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="image" style="padding-bottom: 2%;">
+                        <br>
+                        <div class="row ">
+                            <div class="col-auto mr-auto">
+                                <label>Select Image: </label> <input type="file" class="btn" name="image"
+                                                                     id="fileInput" onchange="handleFileSelect()"/>
+                                <br>
+                            </div>
+                            <div class="col-auto">
+                                <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                       id="submit" value="Upload">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <canvas id="testCanvas" width="600" height="300">
+                                        Your browser does not support canvas.
+                                    </canvas>
+                                    <input type="text" placeholder="Caption for the image"
+                                           class=" md-form form-control" name="caption_image">
+                                </div>
+                            </div>
+
+                        </div>
+                        <script src="{% static 'web-files/javascript/cropper.js' %}"></script>
+                        <script>
+                            // initialize cropper by providing it with a target canvas and a XY ratio (height = width * ratio)
+                            cropper.start(document.getElementById("testCanvas"), 1);
+
+                            function handleFileSelect() {
+                                // this function will be called when the file input below is changed
+                                var file = document.getElementById("fileInput").files[0];  // get a reference to the selected file
+                                var reader = new FileReader(); // create a file reader
+                                // set an onload function to show the image in cropper once it has been loaded
+                                reader.onload = function (event) {
+                                    var data = event.target.result; // the "data url" of the image
+                                    cropper.showImage(data); // hand this to cropper, it will be displayed
+                                };
+                                // this loads the file as a data url calling the function above once done
+                                reader.readAsDataURL(file);
+
+                            }
+                        </script>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="video">
+                        <br>
+                        <div class="row ">
+                            <div class="col-auto mr-auto">
+                                <label> Select Video: </label> <input type="file" class="btn " name="video"/>
+                                <br><br>
+
+                                <input type="text" placeholder="Video Caption" class="md-form form-control"
+                                       name="caption_video"></div>
+
+                            <div class="col-auto">
+                                <input class="btn btn-outline-secondary btn-md " type="submit" name="submit"
+                                       id="submit" value="Upload">
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </form>
+        </div>
         <script type="text/javascript">
-            document.getElementById('delete_text').onclick = function (e) {
-                if (!confirm('Are you sure you want to delete this submission?')) {
-                    e.preventDefault();
-                }
-            }
-            document.getElementById('delete_image').onclick = function (e) {
-                if (!confirm('Are you sure you want to delete this image?')) {
-                    e.preventDefault();
-                }
-            }
-            document.getElementById('delete_video').onclick = function (e) {
-                if (!confirm('Are you sure you want to delete the video?')) {
-                    e.preventDefault();
-                }
+            var show = () => {
+                $("#cc").toggle()
             }
         </script>
     </div>

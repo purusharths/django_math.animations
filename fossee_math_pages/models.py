@@ -120,6 +120,7 @@ class Data(models.Model):
     data_caption = models.CharField(max_length=1024, blank=True, null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
+    data_order = models.IntegerField(blank=None, null=True, default=0)
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''
