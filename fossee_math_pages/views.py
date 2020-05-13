@@ -338,12 +338,17 @@ def add_submission_subtopic(request, st_id):
                 caption_video = request.POST.get('caption_video')
                 caption = None
 
+                # checking for empty string for 'content'
+                clean = re.compile('<.*?>')
+                cleaned_data = re.sub(clean, '', content)
+                cleaned_data = cleaned_data.replace("&nbsp;", " ")
+
                 if img is None and video is None:
-                    if content.strip() == '':
+                    if cleaned_data.strip() == '':
                         messages.error(request, "Fill any one of the fields.")
                         return redirect('add-submission-subtopic', st_id)
 
-                if img is None and content.strip() == '':
+                if img is None and cleaned_data.strip() == '':
                     caption = caption_video
                     video_file = str(video)
                     if not video_file.lower().endswith(('.mp4', '.webm')):
@@ -353,7 +358,7 @@ def add_submission_subtopic(request, st_id):
                         messages.error(request, 'Maximum allowed size for Video is 30MB')
                         return redirect('add-submission-subtopic', st_id)
 
-                if video is None and content.strip() == '':
+                if video is None and cleaned_data.strip() == '':
                     caption = caption_image
                     image = str(img)
                     if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
@@ -459,7 +464,13 @@ def edit_media(request, t_id, id):
             if request.POST:
                 if "data_content" in request.POST:
                     content = request.POST.get('data_content')
-                    if content.strip() == '':
+
+                    # checking for empty string for 'content'
+                    clean = re.compile('<.*?>')
+                    cleaned_data = re.sub(clean, '', content)
+                    cleaned_data = cleaned_data.replace("&nbsp;", " ")
+
+                    if cleaned_data.strip() == '':
                         messages.error(request, "Fill any one of the field")
                         return redirect('edit-media', t_id, id)
                     else:
@@ -1238,12 +1249,17 @@ def review_submissions_subtopic(request, s_id):
                 caption_video = request.POST.get('caption_video')
                 caption = None
 
+                # checking for empty string for 'content'
+                clean = re.compile('<.*?>')
+                cleaned_data = re.sub(clean, '', content)
+                cleaned_data = cleaned_data.replace("&nbsp;", " ")
+
                 if img is None and video is None:
-                    if content.strip() == '':
+                    if cleaned_data.strip() == '':
                         messages.error(request, "Fill any one of the fields.")
                         return redirect('review-submissions-subtopic', s_id)
 
-                if img is None and content.strip() == '':
+                if img is None and cleaned_data.strip() == '':
                     caption = caption_video
                     video_file = str(video)
                     if not video_file.lower().endswith(('.mp4', '.webm')):
@@ -1253,7 +1269,7 @@ def review_submissions_subtopic(request, s_id):
                         messages.error(request, 'Maximum allowed size for Video is 30MB')
                         return redirect('review-submissions-subtopic', s_id)
 
-                if video is None and content.strip() == '':
+                if video is None and cleaned_data.strip() == '':
                     caption = caption_image
                     image = str(img)
                     if not image.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
