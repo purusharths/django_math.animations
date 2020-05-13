@@ -5,7 +5,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script>
         new Darkmode().showWidget();
@@ -29,9 +28,15 @@
     {% render_breadcrumbs %}
 
     <style>
-        {#body {#}
-        {#    font: normal 15px Verdana, Arial, sans-serif;#}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
+        .cell-breakWord {
+            word-wrap: break-word;
+            max-width: 1px;
+        }
 
         video, footer {
             isolation: isolate;
@@ -61,7 +66,7 @@
 
     </style>
     <hr>
-    <body>
+
     <div class="container">
 
         <div class="js-toc-content">
@@ -75,7 +80,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class='js-toc' data-spy="affix" style="margin-left: -281px"></div>
+                            <div class='js-toc' data-spy="affix" style="margin-left: -200px"></div>
                         </td>
                     </tr>
                     </thead>
@@ -85,7 +90,7 @@
                     {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
                         <tr>
                             {% if data.data_content != "NULL" %}
-                                <td>
+                                <td style="width:100%" class="cell-breakWord">
                                     <p></p>
                                     {{ data.data_content |safe }}
 
@@ -237,8 +242,5 @@
     <br>
     <hr>
     <br>
-    </body>
-
-
 
 {% endblock %}

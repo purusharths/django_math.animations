@@ -39,6 +39,16 @@
         #dta tr:hover {
             background-color: #fffafa;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cell-breakWord {
+            word-wrap: break-word;
+            max-width: 1px;
+        }
     </style>
 
     <div class="container">
@@ -84,7 +94,7 @@
     {% for data in topic %}
         <tr>
             {% if data.data_content != "" and data.data_content != " " %}
-                <td>
+                <td style="width:100%" class="cell-breakWord">
                     <p></p>
                     {{ data.data_content |safe }}
                 </td>
@@ -330,7 +340,7 @@
                 var row = mainTable.insertRow()
                 var cell1 = row.insertCell(0)
                 var cell2 = row.insertCell(1)
-                cell1.innerHTML = '<div class="text-muted">' + data + '</div>'
+                cell1.innerHTML = '<div class="text-muted cell-breakWord">' + data + '</div>'
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         cell1.innerHTML = data
