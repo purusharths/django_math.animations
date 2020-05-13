@@ -16,6 +16,16 @@
         tr:hover {
             background-color: rgb(240, 240, 240);
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cell-breakWord {
+            word-wrap: break-word;
+            max-width: 1px;
+        }
     </style>
     <div class="container">
         {% include 'partials/_alerts.html' %}
@@ -114,7 +124,7 @@
             {% for data in datas %}
                 <tr>
                     {% if data.data_content != "" and data.data_content != " " %}
-                        <td>
+                        <td style="width:100%" class="cell-breakWord">
                             <p></p>
                             {{ data.data_content |safe }}
                         </td>
@@ -287,7 +297,7 @@
                                 <div class="col-auto mr-auto">&nbsp;</div>
                                 <div class="col-auto" style="padding-top: 10px;">
                                     <input class="btn btn-outline-success btn-md btn-block" type="submit"
-                                            value="Add Data">
+                                           value="Add Data">
                                 </div>
                             </div>
                             {{ form.media }} {{ form_data.as_p }}

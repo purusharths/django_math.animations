@@ -39,6 +39,16 @@
         #dta tr:hover {
             background-color: #fffafa;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cell-breakWord {
+            word-wrap: break-word;
+            max-width: 1px;
+        }
     </style>
 
     <div class="container">
@@ -84,7 +94,7 @@
     {% for data in topic %}
         <tr>
             {% if data.data_content != "" and data.data_content != " " %}
-                <td>
+                <td style="width:100%" class="cell-breakWord">
                     <p></p>
                     {{ data.data_content |safe }}
                 </td>

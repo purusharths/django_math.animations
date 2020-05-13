@@ -29,9 +29,15 @@
     {% render_breadcrumbs %}
 
     <style>
-        {#body {#}
-        {#    font: normal 15px Verdana, Arial, sans-serif;#}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
+        .cell-breakWord {
+            word-wrap: break-word;
+            max-width: 1px;
+        }
 
         video, footer {
             isolation: isolate;
@@ -85,7 +91,7 @@
                     {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
                         <tr>
                             {% if data.data_content != "NULL" %}
-                                <td>
+                                <td style="width:100%" class="cell-breakWord">
                                     <p></p>
                                     {{ data.data_content |safe }}
 
