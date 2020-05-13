@@ -66,7 +66,18 @@
 
     </style>
     <hr>
-
+    <script>
+        function toggle(ele) {
+            var cont = document.getElementById('toc');
+            cont.style.display = cont.style.display == 'none' ? 'block' : 'none';
+        }
+    </script>
+<div>
+    <div class="float-left">
+        <a href="#"  id="bt" onclick="toggle(this)" style="font-size: medium;"> Table Of Content</a>
+        <div class='js-toc collapse' id="toc" data-spy="affix" id="toc" style="width: 10%; padding-top: 2%; color: orange;" ></div>
+    </div>
+</div>
     <div class="container">
 
         <div class="js-toc-content">
@@ -80,12 +91,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class='js-toc' data-spy="affix" style="margin-left: -200px"></div>
+                            
                         </td>
                     </tr>
                     </thead>
                 {% endif %}
-                <tbody>
+                <tbody style="font-size: medium;">
                 {% for data in datas %}
                     {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
                         <tr>
@@ -238,6 +249,7 @@
 
             </script>
         {% endif %}
+    </div>
     </div>
     <br>
     <hr>
