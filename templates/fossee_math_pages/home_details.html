@@ -62,7 +62,16 @@
         .one-more {
         @include float-none;
         }
-
+        .toc-link::before {
+            background-color: rgb(255, 255, 255);
+            content: ' ';
+            /* display: inline-block; */
+            height: ;
+            left: 0;
+            margin-top: 0;
+            position: absolute;
+            width: 0;
+        }
     </style>
     <hr>
     <script>
@@ -72,14 +81,15 @@
         }
         $(document).ready(function(){
             if(window.matchMedia("(max-width: 767px)").matches){
-                //mobile
-                $("#toc_container").toggleClass('js-toc');
+                // //mobile
+                // $("#toc_container").toggleClass('js-toc');
                 $("#content_container").toggleClass('col col-xl-10');
+                $("#toc_container").css({"color": "orange", "font-size": "large", "max-width":"100%", "word-wrap":"none", "position":"relative", "color":"orange"});
             }
             else{
-                //desktop
-                $("#toc_container").toggleClass('js-toc d-none d-md-block');
-                $("#content_container").toggleClass('col col-xl-9');
+                // //desktop
+                // $("#toc_container").toggleClass('js-toc d-none d-md-block position-fixed');
+                // $("#content_container").toggleClass('col col-xl-9');
             }
         });
         // $(function(){
@@ -98,15 +108,13 @@
         //         });
         // });
     </script>
-    
+
     <div class="container">
         <div class="row">
-            <div class="col" >
-                <div class='js-toc' data-spy="affix" style="color: orange; font-size: large;" ></div>
-            </div>
-            <div class="col col-xl-9" id="content_container">
+            <div id="toc_container" class='js-toc col' data-spy="affix" style="width:20%; max-height:auto; color:orange; font-size: large; word-wrap:break-word; position: fixed;" ></div>
+            <div class="col"  id="content_container" style="margin-left: 30%; max-width: 80%;">
                 <div class="js-toc-content">
-                    <table style="max-width: 80%;">
+                    <table >
                         {% if subtopic.subtopic_status == 'ACCEPTED' %}
                             <thead class="thread-light">
                             <tr>
