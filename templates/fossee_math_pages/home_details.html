@@ -63,7 +63,6 @@
         @include float-none;
         }
 
-
     </style>
     <hr>
     <script>
@@ -71,17 +70,28 @@
             var cont = document.getElementById('toc');
             cont.style.display = cont.style.display == 'none' ? 'block' : 'none';
         }
-    </script>
-<div>
-    <div class="float-left">
-        <a href="#"  id="bt" onclick="toggle(this)" style="font-size: medium;"> Table Of Content</a>
-        <div class='js-toc collapse' id="toc" data-spy="affix" id="toc" style="width: 10%; padding-top: 2%; color: orange;" ></div>
-    </div>
-</div>
-    <div class="container">
+        $(function(){
+                // Check the initial Poistion of the Sticky Header
+                var stickyHeaderTop = $('#stickyheader').offset().top;
 
+                $(window).scroll(function(){
+                        if( $(window).scrollTop() > stickyHeaderTop ) {
+                                $('#stickyheader').css({position: 'fixed', top: '0px', 'right': '10%', 'margin-left': '-10%'});
+                                $('#stickyalias').css('display', 'block');
+                        } else {
+                                $('#stickyheader').css({position: 'static', top: '0px', 'right': '10%', 'margin-left': '-10%'});
+                                $('#stickyalias').css('display', 'none');
+                        }
+                });
+        });
+    </script>
+
+    
+    <div class="container">
+        <div id="stickyheader" class="float-right d-none d-md-block "><div class='js-toc' data-spy="affix" style="color: orange; font-size: large; margin-left: -10%;" ></div></div>
+        
         <div class="js-toc-content">
-            <table>
+            <table style="max-width: 80%;">
                 {% if subtopic.subtopic_status == 'ACCEPTED' %}
                     <thead class="thread-light">
                     <tr>
@@ -249,7 +259,6 @@
 
             </script>
         {% endif %}
-    </div>
     </div>
     <br>
     <hr>
