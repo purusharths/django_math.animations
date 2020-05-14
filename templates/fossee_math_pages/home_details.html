@@ -1,16 +1,8 @@
 {% extends 'base.html' %}
 {% block title %} Details {% endblock %}
+{% load static %}{% load staticfiles %}
 
 {% block extrahead %}
-{#        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
-    {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">#}
-    {#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#}
-    <script>
-        new Darkmode().showWidget();
-    </script>
-
-    {#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">#}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
 {% endblock %}
 
@@ -20,7 +12,7 @@
     {{ block.super }}
     {% breadcrumb "Topics" "/#topics" %}
     {% breadcrumb subtopic.topic_id.internship_id "contents" subtopic.topic_id.internship_id.internship_url %}
-    {% breadcrumb subtopic.topic_id "" %}
+    {% breadcrumb subtopic.topic_id "contents" subtopic.topic_id.internship_id.internship_url %}
     {% breadcrumb subtopic.subtopic_name "home_view_details" %}
 {% endblock %}
 
@@ -73,6 +65,24 @@
             position: absolute;
             width: 0;
         }
+
+        .dark-mode {
+            background-color: black;
+            color: white;
+        }
+
+        .float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            left: 40px;
+            background-color: #0C9;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 2px 2px 3px #999;
+        }
     </style>
     <hr>
     <script>
@@ -92,7 +102,6 @@
                     "max-width": "100%",
                     "word-wrap": "none",
                     "position": "relative",
-                    "color": "orange"
                 });
             } else {
                 // //desktop
@@ -100,21 +109,6 @@
                 // $("#content_container").toggleClass('col col-xl-9');
             }
         });
-        // $(function(){
-        //         // Check the initial Poistion of the Sticky Header
-        //         var stickyHeaderTop = $('#toc_container').offset().top;
-
-        //         $(window).scroll(function(){
-        //                 if( $(window).scrollTop() > stickyHeaderTop ) {
-        //                         $('#toc_container').css({position: 'fixed', top: '0px'});
-        //                         $('#stickyalias').css('display', 'block');
-        //                 } else {
-        //                         $('#toc_container').css({position: 'relative', top: '0px'});
-        //                         $('#stickyalias').css('display', 'none');
-        //                 }
-
-        //         });
-        // });
     </script>
 
     <div class="container">
@@ -193,13 +187,12 @@
                 </div>
 
                 {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                    <div style="background-color: #ffffff">
+                    <div>
                         <hr>
                         <table>
                             <tr>
                                 <td><i>Contributor: {{ contributor.contributor }} </i></td>
                             </tr>
-                            <!--<tr> <td>Contributor Name: </td>  </tr>-->
                             <tr>
                                 <td><i>Mentor & Editor: {{ contributor.mentor }}</i></td>
                             </tr>
@@ -212,13 +205,22 @@
                         </table>
                         <hr>
                         <i>The following notes and their corrosponding animations was created by the above-mentioned
-                            contributor
-                            and is freely avilable under CC licence.</i>
-
+                            contributor and is freely avilable under CC licence.</i>
                     </div>
                 {% endif %}
             </div>
         </div>
+
+        <button onclick="myFunction()" class="float">
+            <img src="{% static '/web-files/img/multiuse-svgs/mode.svg' %}" width="45px" alt="Dark">
+        </button>
+
+        <script>
+            function myFunction() {
+                var element = document.body;
+                element.classList.toggle("dark-mode");
+            }
+        </script>
     </div>
     {% if subtopic.subtopic_status == 'ACCEPTED' %}
         <script>
@@ -277,23 +279,6 @@
 
         </script>
     {% endif %}
-    <script type="text/javascript">
-        var options = {
-            bottom: '64px', // default: '32px'
-            right: 'unset', // default: '32px'
-            left: '32px', // default: 'unset'
-            time: '0.5s', // default: '0.3s'
-            mixColor: '#fff', // default: '#fff'
-            backgroundColor: '#fff',  // default: '#fff'
-            buttonColorDark: '#100f2c',  // default: '#100f2c'
-            buttonColorLight: '#fff', // default: '#fff'
-            saveInCookies: false, // default: true,
-            label: '🌓', // default: ''
-            autoMatchOsTheme: true // default: true
-        }
-        const darkmode = new Darkmode(options);
-        darkmode.showWidget();
-    </script>
     <br>
     <hr>
     <br>
