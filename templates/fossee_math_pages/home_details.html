@@ -70,94 +70,110 @@
             var cont = document.getElementById('toc');
             cont.style.display = cont.style.display == 'none' ? 'block' : 'none';
         }
-        $(function(){
-                // Check the initial Poistion of the Sticky Header
-                var stickyHeaderTop = $('#stickyheader').offset().top;
-
-                $(window).scroll(function(){
-                        if( $(window).scrollTop() > stickyHeaderTop ) {
-                                $('#stickyheader').css({position: 'fixed', top: '0px', 'right': '10%', 'margin-left': '-10%'});
-                                $('#stickyalias').css('display', 'block');
-                        } else {
-                                $('#stickyheader').css({position: 'static', top: '0px', 'right': '10%', 'margin-left': '-10%'});
-                                $('#stickyalias').css('display', 'none');
-                        }
-                });
+        $(document).ready(function(){
+            if(window.matchMedia("(max-width: 767px)").matches){
+                //mobile
+                $("#toc_container").toggleClass('js-toc');
+                $("#content_container").toggleClass('col col-xl-10');
+            }
+            else{
+                //desktop
+                $("#toc_container").toggleClass('js-toc d-none d-md-block');
+                $("#content_container").toggleClass('col col-xl-9');
+            }
         });
+        // $(function(){
+        //         // Check the initial Poistion of the Sticky Header
+        //         var stickyHeaderTop = $('#toc_container').offset().top;
+
+        //         $(window).scroll(function(){
+        //                 if( $(window).scrollTop() > stickyHeaderTop ) {
+        //                         $('#toc_container').css({position: 'fixed', top: '0px'});
+        //                         $('#stickyalias').css('display', 'block');
+        //                 } else {
+        //                         $('#toc_container').css({position: 'relative', top: '0px'});
+        //                         $('#stickyalias').css('display', 'none');
+        //                 }
+
+        //         });
+        // });
     </script>
 
-    
-    <div class="container">
-        <div id="stickyheader" class="float-right d-none d-md-block "><div class='js-toc' data-spy="affix" style="color: orange; font-size: large; margin-left: -10%;" ></div></div>
-        
-        <div class="js-toc-content">
-            <table style="max-width: 80%;">
-                {% if subtopic.subtopic_status == 'ACCEPTED' %}
-                    <thead class="thread-light">
-                    <tr>
-                        <th>
-                            <h1>{{ subtopic.subtopic_name }}</h1>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                    </thead>
-                {% endif %}
-                <tbody style="font-size: medium;">
-                {% for data in datas %}
-                    {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                        <tr>
-                            {% if data.data_content != "NULL" %}
-                                <td style="width:100%" class="cell-breakWord">
-                                    <p></p>
-                                    {{ data.data_content |safe }}
 
-                                </td>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            {% if data.data_image.url != "NULL" %}
+    <div class="container">
+        <div class="row">
+            <div class="col" >
+                <div class='js-toc ' data-spy="affix" style="color: orange; font-size: large;" ></div>
+            </div>
+            <div class="col" id="content_container">
+                <div class="js-toc-content">
+                    <table>
+                        {% if subtopic.subtopic_status == 'ACCEPTED' %}
+                            <thead class="thread-light">
+                            <tr>
+                                <th>
+                                    <h1>{{ subtopic.subtopic_name }}</h1>
+                                </th>
+                            </tr>
+                            <tr>
                                 <td>
-                                    <p></p>
-                                    {% for i in imagesize %}
-                                        {% if i.data_id_id == data.pk %}
-                                            <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
-                                                 style="display:block; margin:0 auto;" alt="Image not loaded">
+                                    
+                                </td>
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        <tbody style="font-size: medium;">
+                        {% for data in datas %}
+                            {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
+                                <tr>
+                                    {% if data.data_content != "NULL" %}
+                                        <td style="width:100%" class="cell-breakWord">
+                                            <p></p>
+                                            {{ data.data_content |safe }}
+
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    {% if data.data_image.url != "NULL" %}
+                                        <td>
+                                            <p></p>
+                                            {% for i in imagesize %}
+                                                {% if i.data_id_id == data.pk %}
+                                                    <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
+                                                        style="display:block; margin:0 auto;" alt="Image not loaded">
+                                                    {% if data.data_caption != None %}
+                                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    {% if data.data_video.url != "NULL" %}
+                                        <td>
+                                            <p></p>
+                                            <video width='70%' style="display:block; margin:0 auto;" controls>
+                                                <source src="{{ data.data_video.url }}" type='video/mp4'>
+                                                Your browser does not support the video tag.
+                                            </video>
                                             {% if data.data_caption != None %}
                                                 <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                                             {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            {% if data.data_video.url != "NULL" %}
-                                <td>
-                                    <p></p>
-                                    <video width='70%' style="display:block; margin:0 auto;" controls>
-                                        <source src="{{ data.data_video.url }}" type='video/mp4'>
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    {% if data.data_caption != None %}
-                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
+                                        </td>
                                     {% endif %}
-                                </td>
+                                </tr>
                             {% endif %}
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                {% if subtopic.subtopic_status != 'ACCEPTED' %}
-                    <br>
-                    <h4 class="text-center text-muted"><u>Submission Under Review</u></h4>
-                    <br>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
+                        {% endfor %}
+                        {% if subtopic.subtopic_status != 'ACCEPTED' %}
+                            <br>
+                            <h4 class="text-center text-muted"><u>Submission Under Review</u></h4>
+                            <br>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
 
         {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
 
@@ -260,6 +276,9 @@
             </script>
         {% endif %}
     </div>
+</div>
+</div>
+
     <br>
     <hr>
     <br>
