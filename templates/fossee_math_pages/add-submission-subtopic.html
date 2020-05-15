@@ -143,7 +143,7 @@
                     <td>
                         <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
                             <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
-                                 title="Added on {{ data.data_post_date }}" alt="Edit">
+                                 title="Added on {{  data.data_modification_date|date:'D d M Y H:i' }}" alt="Edit">
                         </a>
                         <hr>
                         <a href="{% url 'delete-data' data.data_hash %}"
