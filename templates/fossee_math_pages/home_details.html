@@ -4,6 +4,7 @@
 
 {% block extrahead %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+
 {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -83,36 +84,36 @@
         }
     </style>
     <hr>
-    <script>
-        function toggle(ele) {
-            var cont = document.getElementById('toc');
-            cont.style.display = cont.style.display == 'none' ? 'block' : 'none';
-        }
-
-        $(document).ready(function () {
-            if (window.matchMedia("(max-width: 767px)").matches) {
-                // //mobile
-                // $("#toc_container").toggleClass('js-toc');
-                $("#content_container").toggleClass('col col-xl-10');
-                $("#toc_container").css({
-                    "color": "orange",
-                    "font-size": "large",
-                    "max-width": "100%",
-                    "word-wrap": "none",
-                    "position": "relative",
-                });
-            } else {
-                // //desktop
-                // $("#toc_container").toggleClass('js-toc d-none d-md-block position-fixed');
-                // $("#content_container").toggleClass('col col-xl-9');
-            }
-        });
-    </script>
+{#    <script>#}
+{#        function toggle(ele) {#}
+{#            var cont = document.getElementById('toc');#}
+{#            cont.style.display = cont.style.display == 'none' ? 'block' : 'none';#}
+{#        }#}
+{##}
+{#        $(document).ready(function () {#}
+{#            if (window.matchMedia("(max-width: 767px)").matches) {#}
+{#                // //mobile#}
+{#                // $("#toc_container").toggleClass('js-toc');#}
+{#                $("#content_container").toggleClass('col col-xl-10');#}
+{#                $("#toc_container").css({#}
+{#                    "color": "orange",#}
+{#                    "font-size": "large",#}
+{#                    "max-width": "100%",#}
+{#                    "word-wrap": "none",#}
+{#                    "position": "relative",#}
+{#                });#}
+{#            } else {#}
+{#                // //desktop#}
+{#                // $("#toc_container").toggleClass('js-toc d-none d-md-block position-fixed');#}
+{#                // $("#content_container").toggleClass('col col-xl-9');#}
+{#            }#}
+{#        });#}
+{#    </script>#}
 
     <div class="container">
         <div class="row">
             <div id="toc_container" class='js-toc col' data-spy="affix"
-                 style="width:20%; max-height:inherit; color:orange; font-size: large; word-wrap:break-word; position: fixed;"></div>
+                 style=" max-height:inherit; color:orange; font-size: large; word-wrap:break-word;"></div>
             <div class="col" id="content_container" style="margin-left: 30%; max-width: 80%;">
                 <div class="js-toc-content">
                     <table>
@@ -210,13 +211,14 @@
         </div>
 
         <button onclick="myFunction()" class="float">
-            <img src="{% static '/web-files/img/multiuse-svgs/mode.svg' %}" width="45px" alt="Dark">
+            <img id="dark" src="{% static '/web-files/img/multiuse-svgs/mode.svg' %}" width="45px" alt="Dark">
         </button>
 
         <script>
             function myFunction() {
                 var element = document.body;
                 element.classList.toggle("dark-mode");
+                document.getElementById("dark").style.color="black"
             }
         </script>
     </div>
@@ -276,6 +278,25 @@
 
 
         </script>
+         <script>
+
+ var toc= document.getElementById("toc_container");
+ var content= document.getElementById("content_container");
+      if (navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)) {
+              toc.style.position="static";
+              content.style.marginTop="44px";
+
+
+            } else {
+                toc.style.position="fixed";
+            }
+    </script>
     {% endif %}
     <br>
     <hr>
