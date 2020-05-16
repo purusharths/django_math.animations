@@ -14,11 +14,19 @@
 
 {% block content %}
     {% render_breadcrumbs %}
-    <div class="container" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <style>
+        .change_font{
+            font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    
+
+    <div class="container change_font" >
         {% include 'partials/_alerts.html' %}
         {% if details is not None %}
+        <h3 class="change_font">User profile for {{ details.user_id.first_name }}  {{ details.user_id.last_name }}</h3>
             <div class=" bs-callout bs-callout-grey">
-                <p class="">
+                <p class="change_font">
                 <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
                 {% if user.is_authenticated %}
                     {% if user.username == details.user_id.username or user.is_staff %}
@@ -48,7 +56,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header text-center">
-                                            <h4 class="modal-title">Edit Bio : {{ details.user_id }}</h4>
+                                            <h4 class="modal-title change_font">Edit Bio : {{ details.user_id }}</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -71,7 +79,7 @@
                     {% endif %}
                 {% endif %}
                 
-                <b>Bio:</b> <br>{{ details.user_bio }}
+                <b class="change_font">Bio:</b> <br> <p class="change_font">{{ details.user_bio }}</p>
                         <hr/>
                 {% if user.is_authenticated %}
                     {% if user.username == details.user_id.username %}
@@ -105,18 +113,22 @@
             {% if not user.is_superuser %}
                 {% if details.user_id.is_staff %}
                     <br>
+                    <div class="card">
                     <b style="text-align: center">Topics Approved</b>
                     {% for i in subtopic %}
                         {% if details.user_id.pk == i.subtopic_managed_user %}
-                            <div class="bs-callout bs-callout-grey">
-                                {{ i.topic_id.internship_id  }} -> {{ i.topic_id }} -> 
-                                <h3>{{ i.subtopic_name}}</h3>
+                            <div class="">
+                                {{ i.topic_id.internship_id  }} -> {{ i.topic_id }} ->  {{ i.subtopic_name}}
+                                <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                    Tooltip on top
+                                  </button>
                                 <div class="float-right">
                                     {{ i.subtopic_status | title }}
                                 </div>
                             </div>
                         {% endif %}
                     {% endfor %}
+                        </div>
                      <br>
                     <b style="text-align: center">Topics Mentored</b>
                     {% for i in messages_send %}
@@ -133,4 +145,9 @@
             {% endif %}
         {% endif %}
     </div>
+    <script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+        </script>
 {% endblock %}
