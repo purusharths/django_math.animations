@@ -379,11 +379,11 @@
 
     </script>
 
-    <div class="container">
+    <div style="margin-left: 5%;margin-right: 10%" id="container">
         <div class="row">
             <div id="toc_container" class='js-toc col' data-spy="affix"
-                 style="font-size: large; max-width: 30%; right: 0;"></div>
-            <div class="col" id="content_container" style="float: left; max-width: 70%;">
+                 style="font-size: large; max-width: 20%; left: 5%;"></div>
+            <div class="col" id="content_container" style="float: right; margin-left: 22%; max-width: 70%;">
                 <div class="js-toc-content">
                     <table>
                         {% if subtopic.subtopic_status == 'ACCEPTED' %}
@@ -551,6 +551,7 @@
 
             var toc = document.getElementById("toc_container");
             var content = document.getElementById("content_container");
+            var container = document.getElementById("container");
             var darkimage = document.getElementById("darkimage");
             var darkbutton = document.getElementById("darkbutton");
             if (navigator.userAgent.match(/Android/i)
@@ -565,7 +566,10 @@
                 toc.style.maxWidth = "100%";
                 content.maxWidth = "100%";
                 content.classList.remove("col");
-                content.classList.add("container");
+                content.style.marginLeft = "2%";
+                content.style.marginRight = "2%";
+                content.style.maxWidth = "100%";
+                {#content.classList.add("container");#}
                 content.style.marginTop = "44px";
                 darkbutton.style.left = "0";
 
