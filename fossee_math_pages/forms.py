@@ -71,7 +71,7 @@ class AddInternship(ModelForm):
         fields = ['internship_topic', 'internship_quote', 'internship_quote_author', 'internship_thumbnail',
                   'internship_status']
 
-
+# CLASS DECLARATION FOR MANAGEINTERNSHIP
 class ManageInternship(ModelForm):
     class Meta:
         model = Internship
