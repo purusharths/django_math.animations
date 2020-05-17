@@ -4,7 +4,10 @@
 
 {% block extrahead %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+    <script>
+        new Darkmode().showWidget();
+    </script>
 {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -20,6 +23,7 @@
 {% block content %}
     {% render_breadcrumbs %}
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">
     <style>
         table {
             width: 100%;
@@ -36,354 +40,22 @@
             display: inline-block;
         }
 
-        h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
-            display: block;
-            content: " ";
-            height: 60px;
-            margin-top: -60px;
-            visibility: hidden;
-        }
-
-        element {
-        @include float-left;
-        }
-
-        .another-element {
-        @include float-right;
-        }
-
-        .one-more {
-        @include float-none;
-        }
-
-        .toc-link::before {
-            background-color: rgb(255, 255, 255);
-            content: ' ';
-            /* display: inline-block; */
-            /* height: ; */
-            left: 0;
-            margin-top: 0;
-            position: absolute;
-            width: 0;
-        }
-
-        .dark-mode {
-            background-color: black;
-            color: white;
-        }
-
-        .float {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 40px;
-            left: 40px;
-            background-color: darkorange;
-            border-radius: 50px;
-            text-align: center;
-        }
-
-        .toc {
-            overflow-y: auto
-        }
-
-        .toc > .toc-list {
-            overflow: hidden;
-            position: relative
-        }
-
-        .toc > .toc-list li {
-            list-style: none
-        }
-
         .toc-list {
-            margin: 1%;
-            padding-left: 10px;
+            color: blue;
         }
 
-        a.toc-link {
-            height: 100%
-        }
-
-        .is-collapsible {
-            max-height: 1000px;
-            overflow: inherit;
-            transition: all 20000ms ease-in-out
-        }
-
-        *
-
-        /
-        .is-collapsed {
-            max-height: 0
-        }
-
-        .is-position-fixed {
-            position: fixed !important;
-            top: 0
-        }
-
-        .is-active-link {
-            font-weight: 900
-        }
-
-        .toc-link::before {
-            background-color: #EEE;
-            content: ' ';
-            display: block;
-            height: 20%;
-            left: 0;
-            margin-top: -1px;
-            position: absolute;
-            width: 2px;
-        }
-
-        .is-active-link::before {
-            background-color: #54BC4B
-        }
-
-        body {
-            background-color: #FFF
-        }
-
-        .transition--300 {
-            transition: all 300ms ease-in-out
-        }
-
-        '
-        .toc {
-            height: 100%;
-            width: 280px;
-            transform: translateX(0)
-        }
-
-        .content {
-            position: relative
-        }
-
-        .content h1:first-child, .content h2:first-child {
-            padding-top: 0;
-            margin-top: 0
-        }
-
-        .title {
-            font-size: 3em
-        }
-
-        .content {
-            margin-bottom: 95vh
-        }
-
-        .content ul, .content ol {
-            list-style: inherit
-        }
-
-        .content a {
-            color: #0977c3;
-            text-decoration: none;
-            border-bottom: 1px solid #EEE;
-            transition: all 300ms ease
-        }
-
-        .content a.no-decoration {
-            border-bottom: 0
-        }
-
-        .content a:hover {
-            border-bottom: 1px solid #0977c3
-        }
-
-        .content a:hover.no-decoration {
-            border-bottom: 0
-        }
-
-        a.toc-link {
-            text-decoration: none
-        }
-
-        .try-it-container {
-            transform: translateY(84%)
-        }
-
-        .try-it-container.is-open {
-            transform: translateY(0%)
-        }
-
-        .page-content {
-            display: block !important
-        }
-
-        .hljs {
-            display: block;
-            background: white;
-            padding: 0.5em;
-            color: #333333;
-            overflow-x: auto
-        }
-
-        .hljs-comment, .hljs-meta {
-            color: #969896
-        }
-
-        .hljs-string, .hljs-variable, .hljs-template-variable, .hljs-strong, .hljs-emphasis, .hljs-quote {
-            color: #df5000
-        }
-
-        .hljs-keyword, .hljs-selector-tag, .hljs-type {
-            color: #a71d5d
-        }
-
-        .hljs-literal, .hljs-symbol, .hljs-bullet, .hljs-attribute {
-            color: #0086b3
-        }
-
-        .hljs-section, .hljs-name {
-            color: #63a35c
-        }
-
-        .hljs-tag {
-            color: #333333
-        }
-
-        .hljs-title, .hljs-attr, .hljs-selector-id, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo {
-            color: #795da3
-        }
-
-        .hljs-addition {
-            color: #55a532;
-            background-color: #eaffea
-        }
-
-        .hljs-deletion {
-            color: #bd2c00;
-            background-color: #ffecec
-        }
-
-        .hljs-link {
-            text-decoration: underline
-        }
-
-        .toc-icon {
-            position: fixed;
-            top: 0;
-            right: 0
-        }
-
-        #toc:checked ~ .toc {
-            box-shadow: 0 0 5px #c8c8c8;
-            transform: translateX(0)
-        }
-
-        .toc {
-            background-color: rgba(255, 255, 255, 0.9);
-            transform: translateX(-100%)
-        }
-
-        .toc.toc-right {
-            transform: translateX(100%);
-            right: 0
-        }
-
-        @media (min-width: 52em) {
-            .toc {
-                transform: translateX(0)
-            }
-
-            .toc.toc-right {
-                transform: translateX(0);
-                right: calc((100% - 48rem - 4rem) / 2)
-            }
-
-            .toc-icon {
-                display: none
-            }
-
-            .try-it-container {
-                display: block
-            }
-
-            .content {
-                margin-left: 280px
-            }
-
-            .toc-right ~ .content {
-                margin-left: 0;
-                margin-right: 280px
-            }
-        }
-
-        * {
-            box-sizing: border-box
-        }
-
-        /*body{font-size:1.2rem;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif}*/
-        h1, h2, h3, h4, h5, h6 {
-            padding-top: 0.5em
-        }
-
-        h1:focus, h2:focus, h3:focus, h4:focus, h5:focus, h6:focus {
-            outline: 0
-        }
-
-        p {
-            margin-top: 0.25rem
-        }
-
-        pre {
-            display: block;
-            background: #f7f7f7;
-            border-radius: 2px;
-            border: 1px solid #e0e0e0;
-            padding: 2px;
-            line-height: 1.2;
-            margin-bottom: 10px;
-            overflow: auto;
-            white-space: pre-wrap
-        }
-
-        code {
-            display: inline;
-            font-size: .8em;
-            max-width: 100%
+        .toc-list-item {
+            margin-left: 3px;
         }
 
     </style>
     <hr>
-    {#    <script>#}
-    {#        function toggle(ele) {#}
-    {#            var cont = document.getElementById('toc');#}
-    {#            cont.style.display = cont.style.display == 'none' ? 'block' : 'none';#}
-    {#        }#}
-    {##}
-    {#        $(document).ready(function () {#}
-    {#            if (window.matchMedia("(max-width: 767px)").matches) {#}
-    {#                // //mobile#}
-    {#                // $("#toc_container").toggleClass('js-toc');#}
-    {#                $("#content_container").toggleClass('col col-xl-10');#}
-    {#                $("#toc_container").css({#}
-    {#                    "color": "orange",#}
-    {#                    "font-size": "large",#}
-    {#                    "max-width": "100%",#}
-    {#                    "word-wrap": "none",#}
-    {#                    "position": "relative",#}
-    {#                });#}
-    {#            } else {#}
-    {#                // //desktop#}
-    {#                // $("#toc_container").toggleClass('js-toc d-none d-md-block position-fixed');#}
-    {#                // $("#content_container").toggleClass('col col-xl-9');#}
-    {#            }#}
-    {#        });#}
-    {#    </script>#}
-
-    <script>
-
-    </script>
 
     <div style="margin-left: 5%;margin-right: 10%" id="container">
         <div class="row">
             <div id="toc_container" class='js-toc col' data-spy="affix"
                  style="font-size: small; max-width: 20%; right: 2%;"></div>
-            <div class="container" id="content_container" style=" margin-right: 15%;" >
+            <div class="container" id="content_container" style=" margin-right: 15%;">
                 <div class="js-toc-content">
                     <table>
                         {% if subtopic.subtopic_status == 'ACCEPTED' %}
@@ -479,22 +151,28 @@
             </div>
         </div>
 
-        <button onclick="myFunction()" class="float" id="darkbutton">
-            <img id="dark" src="{% static '/web-files/img/multiuse-svgs/mode.svg' %}" width="45px" alt="Dark">
-        </button>
-
         <script>
-            //Dark mode config
-            function myFunction() {
-                var element = document.body;
-                element.classList.toggle("dark-mode");
-                document.getElementById("dark").style.color = "black"
+            var options = {
+                bottom: '64px', // default: '32px'
+                right: 'unset', // default: '32px'
+                left: '32px', // default: 'unset'
+                time: '0.5s', // default: '0.3s'
+                mixColor: '#fff', // default: '#fff'
+                backgroundColor: '#fff',  // default: '#fff'
+                buttonColorDark: '#100f2c',  // default: '#100f2c'
+                buttonColorLight: '#fff', // default: '#fff'
+                saveInCookies: false, // default: true,
+                label: '🌓', // default: ''
+                autoMatchOsTheme: true // default: true
             }
+
+            const darkmode = new Darkmode(options);
+            darkmode.showWidget();
         </script>
     </div>
     {% if subtopic.subtopic_status == 'ACCEPTED' %}
         <script>
-        //H1 id assign
+            //H1 id assign
             var _selectIndex_2 = 0;
             var z = document.getElementsByTagName("H1")
             var i;
@@ -516,7 +194,7 @@
                 y[k].setAttribute("id", "id-" + _selectIndex_1++)
             }
             //H4 id assign
-              var _selectIndex_3 = 0;
+            var _selectIndex_3 = 0;
             var a = document.getElementsByTagName("H4")
             var l;
             for (l = 0; l < a.length; l++) {
@@ -530,14 +208,14 @@
                 b[m].setAttribute("id", "id-" + _selectIndex_4++)
             }
             //H6 id assign
-             var _selectIndex_5 = 0;
+            var _selectIndex_5 = 0;
             var c = document.getElementsByTagName("H6")
             var p;
             for (p = 0; p < c.length; p++) {
                 c[p].setAttribute("id", "id-" + _selectIndex_5++)
             }
             {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
-        //toc configuration
+            //toc configuration
             tocbot.init({
                 tocSelector: '.js-toc',
                 contentSelector: '.js-toc-content',
@@ -572,12 +250,11 @@
             tocbot.refresh()
 
 
-
         </script>
         <script>
-        //Toc mobile adjust
-        //if moble view toc styles are changed
-        //if not position fixed
+            //Toc mobile adjust
+            //if moble view toc styles are changed
+            //if not position fixed
 
             var toc = document.getElementById("toc_container");
             var content = document.getElementById("content_container");
