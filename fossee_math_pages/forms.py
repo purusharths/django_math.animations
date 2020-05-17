@@ -107,7 +107,7 @@ class topicOrder(ModelForm):
         model = Topic
         fields = ['topic_order']
 
-
+# CLASS DECLARATION FOR SUBTOPIC ORDER FORM
 class subtopicOrder(ModelForm):
     class Meta:
         model = Subtopic
