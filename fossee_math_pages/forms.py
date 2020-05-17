@@ -38,7 +38,7 @@ class AddUserForm2(ModelForm):
         model = UserDetails
         fields = ['user_phone', 'user_role', 'user_college']
 
-
+#Class definiton for edituserform1
 class EditUserForm1(ModelForm):
     class Meta:
         model = User
