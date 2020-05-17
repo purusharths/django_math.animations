@@ -133,7 +133,7 @@ class change_image(ModelForm):
             'data_caption': "<br>Caption",
         }
 
-
+# CLASS FOR CHANGE VIDEO FORM
 class change_video(ModelForm):
     class Meta:
         model = Data
