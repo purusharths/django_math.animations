@@ -19,7 +19,7 @@ def got_a_message(firstname, lastname, subtopic_name, from_user, message, messag
     FOSSEE Animations Team""".format(firstname, "", subtopic_name, from_user, message, messages_link)
     return subject, message
 
-#Checking submission status
+#submission status message
 def submission_status_changed(firstname, lastname, subtopic, submission_status, message_link, submission_link):
     subject = "[Submission Update] Submission Status changed at FOSSE Animations | Math"
     message = """Hey {}, {}\n\n
