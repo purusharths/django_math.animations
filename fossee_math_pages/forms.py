@@ -101,7 +101,7 @@ class ManageIntern(ModelForm):
         model = UserDetails
         fields = ['user_status']
 
-
+# CLASS DECLARATION FOR TOPIC ORDER FORM
 class topicOrder(ModelForm):
     class Meta:
         model = Topic
