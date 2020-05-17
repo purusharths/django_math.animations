@@ -50,7 +50,7 @@ class EditUserForm2(ModelForm):
         model = UserDetails
         fields = ['user_phone', 'user_college', 'user_bio']
 
-
+#CLASS DECLRATION FOR EDIT BIO
 class EditBio(ModelForm):
     class Meta:
         model = UserDetails
