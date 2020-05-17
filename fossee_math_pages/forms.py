@@ -1,4 +1,4 @@
-#Django forms Management
+# Django forms Management
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -6,57 +6,65 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
-#Declaring Intern Status
+
+# Declaring Intern Status
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
 )
-#Declaring Status
+# Declaring Status
 
 STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
     ("COMPLETED", "COMPLETED"),
 )
-#Declaring data Status
+# Declaring data Status
 DATA_STATUS = (
     ("ACCEPTED", "ACCEPTED"),
     ("REJECTED", "REJECTED"),
     ("WAITING", "WAITING"),
     ("UNDER REVIEW", "UNDER REVIEW"),
 )
-#Class definiton for userform1
+
+
+# Class definiton for userform1
 
 class AddUserForm1(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-#Class definiton for userform2
+
+# Class definiton for userform2
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_phone', 'user_role', 'user_college']
 
-#Class definiton for edituserform1
+
+# Class definiton for edituserform1
 class EditUserForm1(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-#class definition for edituserform2
+
+# class definition for edituserform2
 class EditUserForm2(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_phone', 'user_college', 'user_bio']
 
-#CLASS DECLRATION FOR EDIT BIO
+
+# CLASS DECLRATION FOR EDIT BIO
 class EditBio(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_bio']
 
 
+# CLASS DECLARATION FOR ADDINTERNSHIP FORM
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
