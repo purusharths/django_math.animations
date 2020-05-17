@@ -30,7 +30,7 @@ def submission_status_changed(firstname, lastname, subtopic, submission_status, 
     FOSSEE Animations Team""".format(firstname, "", subtopic, submission_status, message_link, submission_link)
     return subject, message
 
-
+#Checking topic assignation
 def topic_assigned(firstname, lastname, topic_name, submission_url):
     subject = "[Topic Assigned] A new topic has been assigned to You"
     message = """Hey {}, {}\n\n
