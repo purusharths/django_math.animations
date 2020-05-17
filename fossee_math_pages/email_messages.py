@@ -1,9 +1,10 @@
+#Email handling
 def auth_token_message(firstname, lastname, username, activation_link, password_token):
     subject = "[Activate Account] FOSSEE Animations Mathematics"
     message = "activate_user.html"
     return subject, message
 
-
+#Function for message check
 def got_a_message(firstname, lastname, subtopic_name, from_user, message, messages_link):
     subject = "[FOSSEE Animations | Math] New Message Recived"
     message = """Hey {}, {} \n\n
@@ -18,7 +19,7 @@ def got_a_message(firstname, lastname, subtopic_name, from_user, message, messag
     FOSSEE Animations Team""".format(firstname, "", subtopic_name, from_user, message, messages_link)
     return subject, message
 
-
+#submission status message
 def submission_status_changed(firstname, lastname, subtopic, submission_status, message_link, submission_link):
     subject = "[Submission Update] Submission Status changed at FOSSE Animations | Math"
     message = """Hey {}, {}\n\n
@@ -29,7 +30,7 @@ def submission_status_changed(firstname, lastname, subtopic, submission_status, 
     FOSSEE Animations Team""".format(firstname, "", subtopic, submission_status, message_link, submission_link)
     return subject, message
 
-
+#topic assignation message
 def topic_assigned(firstname, lastname, topic_name, submission_url):
     subject = "[Topic Assigned] A new topic has been assigned to You"
     message = """Hey {}, {}\n\n
