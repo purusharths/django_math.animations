@@ -18,7 +18,7 @@ STATUS = (
     ("INACTIVE", "INACTIVE"),
     ("COMPLETED", "COMPLETED"),
 )
-
+#Declaring data Status
 DATA_STATUS = (
     ("ACCEPTED", "ACCEPTED"),
     ("REJECTED", "REJECTED"),
