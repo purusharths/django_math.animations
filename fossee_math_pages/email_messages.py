@@ -4,7 +4,7 @@ def auth_token_message(firstname, lastname, username, activation_link, password_
     message = "activate_user.html"
     return subject, message
 
-
+#Function for message check
 def got_a_message(firstname, lastname, subtopic_name, from_user, message, messages_link):
     subject = "[FOSSEE Animations | Math] New Message Recived"
     message = """Hey {}, {} \n\n
