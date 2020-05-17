@@ -95,7 +95,7 @@ class EditMedia(ModelForm):
         model = Data
         fields = ['data_image', 'data_video', 'data_caption']
 
-
+# CLASS DECLARATION FOR MANAGE INTERN FORM
 class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
