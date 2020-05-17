@@ -114,20 +114,25 @@
                 {% if details.user_id.is_staff %}
                     <br>
                     <div class="card">
-                    <b style="text-align: center">Topics Approved</b>
+                        <div class="card-header">
+                    Topics Approved
+                        </div>
+                        <ol>
                     {% for i in subtopic %}
+                    
                         {% if details.user_id.pk == i.subtopic_managed_user %}
                             <div class="">
-                                {{ i.topic_id.internship_id  }} -> {{ i.topic_id }} ->  {{ i.subtopic_name}}
-                                <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                                    Tooltip on top
-                                  </button>
+                                <li>
+                              {{ i.subtopic_name}} <small>{{ i.topic_id.internship_id  }} -> {{ i.topic_id }} -> </small>
                                 <div class="float-right">
-                                    {{ i.subtopic_status | title }}
+                                    {{ i.subtopic_modification_date|date:'d F Y' }}
                                 </div>
+                            </li>
                             </div>
                         {% endif %}
+                    
                     {% endfor %}
+                    </ol>
                         </div>
                      <br>
                     <b style="text-align: center">Topics Mentored</b>
@@ -145,9 +150,11 @@
             {% endif %}
         {% endif %}
     </div>
-    <script>
+<script>
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('.example-popover').popover({
+    container: 'body'
+  })
 })
-        </script>
+</script>
 {% endblock %}
