@@ -32,7 +32,7 @@ class AddUserForm1(ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-
+#Class definiton for userform2
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
