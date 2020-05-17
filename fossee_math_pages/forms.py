@@ -44,7 +44,7 @@ class EditUserForm1(ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-
+#class definition for edituserform2
 class EditUserForm2(ModelForm):
     class Meta:
         model = UserDetails
