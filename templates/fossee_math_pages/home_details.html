@@ -514,8 +514,13 @@
               var _selectIndex_3 = 0;
             var a = document.getElementsByTagName("H4")
             var l;
-            for (l = 0; l < y.length; l++) {
-                y[k].setAttribute("id", "id-" + _selectIndex_3++)
+            for (l = 0; l < a.length; l++) {
+                a[l].setAttribute("id", "id-" + _selectIndex_3++)
+            } var _selectIndex_4 = 0;
+            var b = document.getElementsByTagName("H5")
+            var m;
+            for (m = 0; m < b.length; m++) {
+                b[m].setAttribute("id", "id-" + _selectIndex_4++)
             }
             {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
             tocbot.init({
