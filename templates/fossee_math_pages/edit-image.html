@@ -106,7 +106,7 @@
                     var output = document.getElementById("id_image_width");
                     var set_image = document.getElementById("size_change")
                     output.innerHTML = slider.value;
-
+                    //Function to change values with slider
                     slider.oninput = function () {
                         document.getElementById("id_image_width").value = this.value + "%";
                         set_image.style.width = this.value + "%"
