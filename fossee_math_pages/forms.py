@@ -11,6 +11,7 @@ INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
 )
+#Declaring Status
 
 STATUS = (
     ("ACTIVE", "ACTIVE"),
