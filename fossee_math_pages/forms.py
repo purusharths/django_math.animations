@@ -77,7 +77,7 @@ class ManageInternship(ModelForm):
         model = Internship
         fields = ['internship_status']
 
-
+# CLASS DECLARATION FOR APROVECONTENTS
 class AproveContents(ModelForm):
     class Meta:
         model = Subtopic
