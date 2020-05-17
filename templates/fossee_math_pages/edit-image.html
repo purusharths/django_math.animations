@@ -91,6 +91,7 @@
                 <br>
                 <br>
                 <script>
+                    //Slider management height
                     var slider = document.getElementById("myheight");
                     var output = document.getElementById("id_image_height");
                     output.innerHTML = slider.value;
@@ -100,11 +101,12 @@
                     }
                 </script>
                 <script>
+                  //Slider width
                     var slider = document.getElementById("mywidth");
                     var output = document.getElementById("id_image_width");
                     var set_image = document.getElementById("size_change")
                     output.innerHTML = slider.value;
-
+                    //Function to change values with slider
                     slider.oninput = function () {
                         document.getElementById("id_image_width").value = this.value + "%";
                         set_image.style.width = this.value + "%"
@@ -127,6 +129,7 @@
         </div>
         <br>
     <script type="text/javascript">
+        //dialouge box for confirmation
          document.getElementById('save_confim').onclick = function (e) {
              if (!confirm('Changes Saved')) {
                  e.preventDefault();

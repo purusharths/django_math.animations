@@ -1,3 +1,4 @@
+# Django forms Management
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -6,17 +7,19 @@ from django.forms import ModelForm
 
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
 
+# Declaring Intern Status
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
 )
+# Declaring Status
 
 STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
     ("COMPLETED", "COMPLETED"),
 )
-
+# Declaring data Status
 DATA_STATUS = (
     ("ACCEPTED", "ACCEPTED"),
     ("REJECTED", "REJECTED"),
@@ -25,85 +28,92 @@ DATA_STATUS = (
 )
 
 
+# Class definiton for userform1
+
 class AddUserForm1(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
 
+# Class definiton for userform2
 class AddUserForm2(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_phone', 'user_role', 'user_college']
 
 
+# Class definiton for edituserform1
 class EditUserForm1(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
 
+# class definition for edituserform2
 class EditUserForm2(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_phone', 'user_college', 'user_bio']
 
 
+# CLASS DECLRATION FOR EDIT BIO
 class EditBio(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_bio']
 
 
+# CLASS DECLARATION FOR ADDINTERNSHIP FORM
 class AddInternship(ModelForm):
     class Meta:
         model = Internship
         fields = ['internship_topic', 'internship_quote', 'internship_quote_author', 'internship_thumbnail',
                   'internship_status']
 
-
+# CLASS DECLARATION FOR MANAGEINTERNSHIP
 class ManageInternship(ModelForm):
     class Meta:
         model = Internship
         fields = ['internship_status']
 
-
+# CLASS DECLARATION FOR APROVECONTENTS
 class AproveContents(ModelForm):
     class Meta:
         model = Subtopic
         fields = ['subtopic_status']
 
-
+# CLASS DECLARATION FOR ADD CONTRIBUTOR FORM
 class AddContributor(ModelForm):
     class Meta:
         model = Contributor
         fields = ['mentor', 'professor']
 
-
+# CLASS DECLARATION FOR EDITMEDIA FORM
 class EditMedia(ModelForm):
     class Meta:
         model = Data
         fields = ['data_image', 'data_video', 'data_caption']
 
-
+# CLASS DECLARATION FOR MANAGE INTERN FORM
 class ManageIntern(ModelForm):
     class Meta:
         model = UserDetails
         fields = ['user_status']
 
-
+# CLASS DECLARATION FOR TOPIC ORDER FORM
 class topicOrder(ModelForm):
     class Meta:
         model = Topic
         fields = ['topic_order']
 
-
+# CLASS DECLARATION FOR SUBTOPIC ORDER FORM
 class subtopicOrder(ModelForm):
     class Meta:
         model = Subtopic
         fields = ['subtopic_order']
 
-
+# CLASS FOR DATA FORM
 class data(ModelForm):
     class Meta:
         model = Data
@@ -112,7 +122,7 @@ class data(ModelForm):
             'data_content': "",
         }
 
-
+# CLASS CHNAGE IMAGE FORM
 class change_image(ModelForm):
     class Meta:
         model = Data
@@ -123,7 +133,7 @@ class change_image(ModelForm):
             'data_caption': "<br>Caption",
         }
 
-
+# CLASS FOR CHANGE VIDEO FORM
 class change_video(ModelForm):
     class Meta:
         model = Data
@@ -134,7 +144,7 @@ class change_video(ModelForm):
             'data_caption': "<br>Caption",
         }
 
-
+# CLASS FOR IMAGE FORMATTING FORM
 class imageFormatting(ModelForm):
     class Meta:
         model = ImageFormatting

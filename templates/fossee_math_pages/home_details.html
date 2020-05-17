@@ -484,6 +484,7 @@
         </button>
 
         <script>
+            //Dark mode config
             function myFunction() {
                 var element = document.body;
                 element.classList.toggle("dark-mode");
@@ -493,25 +494,50 @@
     </div>
     {% if subtopic.subtopic_status == 'ACCEPTED' %}
         <script>
+        //H1 id assign
             var _selectIndex_2 = 0;
             var z = document.getElementsByTagName("H1")
             var i;
             for (i = 0; i < z.length; i++) {
                 z[i].setAttribute("id", "select_1-" + _selectIndex_2++)
             }
+            //H2 id assign
             var _selectIndex = 0;
             var x = document.getElementsByTagName("H2")
             var j;
             for (j = 0; j < x.length; j++) {
                 x[j].setAttribute("id", "select-" + _selectIndex++)
             }
+            //H3 id assign
             var _selectIndex_1 = 0;
             var y = document.getElementsByTagName("H3")
             var k;
             for (k = 0; k < y.length; k++) {
                 y[k].setAttribute("id", "id-" + _selectIndex_1++)
             }
+            //H4 id assign
+              var _selectIndex_3 = 0;
+            var a = document.getElementsByTagName("H4")
+            var l;
+            for (l = 0; l < a.length; l++) {
+                a[l].setAttribute("id", "id-" + _selectIndex_3++)
+            }
+            //H5 id assign
+            var _selectIndex_4 = 0;
+            var b = document.getElementsByTagName("H5")
+            var m;
+            for (m = 0; m < b.length; m++) {
+                b[m].setAttribute("id", "id-" + _selectIndex_4++)
+            }
+            //H6 id assign
+             var _selectIndex_5 = 0;
+            var c = document.getElementsByTagName("H6")
+            var p;
+            for (p = 0; p < c.length; p++) {
+                c[p].setAttribute("id", "id-" + _selectIndex_5++)
+            }
             {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
+        //toc configuration
             tocbot.init({
                 tocSelector: '.js-toc',
                 contentSelector: '.js-toc-content',
@@ -546,14 +572,19 @@
             tocbot.refresh()
 
 
+
         </script>
         <script>
+        //Toc mobile adjust
+        //if moble view toc styles are changed
+        //if not position fixed
 
             var toc = document.getElementById("toc_container");
             var content = document.getElementById("content_container");
             var container = document.getElementById("container");
             var darkimage = document.getElementById("darkimage");
             var darkbutton = document.getElementById("darkbutton");
+            //detecting mobile view
             if (navigator.userAgent.match(/Android/i)
                 || navigator.userAgent.match(/webOS/i)
                 || navigator.userAgent.match(/iPhone/i)
