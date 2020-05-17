@@ -144,7 +144,7 @@ class change_video(ModelForm):
             'data_caption': "<br>Caption",
         }
 
-
+# CLASS FOR IMAGE FORMATTING FORM
 class imageFormatting(ModelForm):
     class Meta:
         model = ImageFormatting
