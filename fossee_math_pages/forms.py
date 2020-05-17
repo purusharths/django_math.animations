@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ModelForm
 
 from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, Messages)
-
+#Declaring Intern Status
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
     ("INACTIVE", "INACTIVE"),
