@@ -83,7 +83,7 @@ class AproveContents(ModelForm):
         model = Subtopic
         fields = ['subtopic_status']
 
-
+# CLASS DECLARATION FOR ADD CONTRIBUTOR FORM
 class AddContributor(ModelForm):
     class Meta:
         model = Contributor
