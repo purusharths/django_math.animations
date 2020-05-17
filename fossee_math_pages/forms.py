@@ -89,7 +89,7 @@ class AddContributor(ModelForm):
         model = Contributor
         fields = ['mentor', 'professor']
 
-
+# CLASS DECLARATION FOR EDITMEDIA FORM
 class EditMedia(ModelForm):
     class Meta:
         model = Data
