@@ -122,7 +122,7 @@ class data(ModelForm):
             'data_content': "",
         }
 
-
+# CLASS CHNAGE IMAGE FORM
 class change_image(ModelForm):
     class Meta:
         model = Data
