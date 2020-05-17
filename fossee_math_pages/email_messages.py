@@ -1,3 +1,4 @@
+#Email handling
 def auth_token_message(firstname, lastname, username, activation_link, password_token):
     subject = "[Activate Account] FOSSEE Animations Mathematics"
     message = "activate_user.html"
