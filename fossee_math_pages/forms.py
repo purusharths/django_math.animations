@@ -25,7 +25,7 @@ DATA_STATUS = (
     ("WAITING", "WAITING"),
     ("UNDER REVIEW", "UNDER REVIEW"),
 )
-
+#Class definiton for userform1
 
 class AddUserForm1(ModelForm):
     class Meta:
