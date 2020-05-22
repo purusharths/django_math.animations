@@ -100,7 +100,7 @@
                 </td>
                 {% if  subtopic.subtopic_status != "ACCEPTED" %}
                     <td>
-                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}#one">
                             <img src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}" width="15px"
                                  title="Last Modified on {{ data.data_modification_date|date:'D d M Y H:i' }}"
                                  alt="Edit">
@@ -141,7 +141,7 @@
                 </td>
                 {% if  subtopic.subtopic_status != "ACCEPTED" %}
                     <td>
-                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}#two">
                             <img src="{% static '/web-files/img/multiuse-svgs/image.svg' %}" width="15px"
                                  title="Added on {{  data.data_modification_date|date:'D d M Y H:i' }}" alt="Edit">
                         </a>
@@ -188,7 +188,7 @@
                 </td>
                 {% if subtopic.subtopic_status != "ACCEPTED" %}
                     <td>
-                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}">
+                        <a href="{% url 'edit-media' subtopic.subtopic_hash data.data_hash %}#three">
                             <img src="{% static '/web-files/img/multiuse-svgs/film.svg' %}" title="Change Video"
                                  width="15px" alt="Edit">
                         </a>
