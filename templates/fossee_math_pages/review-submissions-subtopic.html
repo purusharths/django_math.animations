@@ -159,7 +159,7 @@
                                 {% if i.data_id_id == data.pk %}
                                     <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                          style="display:block; margin:0 auto;">
-                                    <p align="center" style="font-size: 15px">{{ i.image_caption }}</p>
+                                    <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                                 {% endif %}
                             {% endfor %}
                         </td>

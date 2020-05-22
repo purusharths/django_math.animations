@@ -15,72 +15,84 @@
 {% block content %}
     {% render_breadcrumbs %}
     <style>
-        .change_font{
+        .change_font {
             font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
-    
+    <!-- Pop Over JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
 
-    <div class="container change_font" >
+
+    <div class="container change_font">
+
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title"
+                data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover
+        </button>
+
         {% include 'partials/_alerts.html' %}
         {% if details is not None %}
-        <h3 class="change_font">User profile for {{ details.user_id.first_name }}  {{ details.user_id.last_name }}</h3>
+            <h3 class="change_font">User profile
+                for {{ details.user_id.first_name }} {{ details.user_id.last_name }}</h3>
             <div class=" bs-callout bs-callout-grey">
                 <p class="change_font">
-                <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
-                {% if user.is_authenticated %}
-                    {% if user.username == details.user_id.username or user.is_staff %}
-                        <b>Role: </b>    
-                        {% if details.user_role == "INTERN" %}
-                            Contributor <br/>
-                        {% elif details.user_role == "STAFF" %}
-                            Mentor <br/>
-                        {% else %}
-                            {{ details.user_role }} <br/>
-                        {% endif %}
-                        
-                        <b>College:</b> {{ details.user_college }}<br/>
-                        <b>Email:</b> <a href="mailto:{{ details.user_email }}">{{ details.user_email }}</a><br>
-                        <b>Mobile:</b> {{ details.user_phone }}<br>
-                        <b>Profile Url: </b> <a href="{{ profile_url }}">{{ profile_url }}</a><br>
-                        <b>User Joined: </b> {{ details.user_id.date_joined|date:'d F Y' }} </br>
-                        <b>Last Login: </b>{{ details.user_id.last_login }} <br>
-                        <div class="float-right">
-                            <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
-                               data-target="#modalContactForm"> <img
-                                    src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
-                                    alt="Text"></a>
-                            <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog"
-                                 aria-labelledby="myModalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header text-center">
-                                            <h4 class="modal-title change_font">Edit Bio : {{ details.user_id }}</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body mx-3">
-                                            <div class="md-form">
-                                                <i class="fas fa-pencil prefix grey-text"></i>
-                                                <form method="POST">
-                                                    {% csrf_token %}
-                                                    {{ form_edit_bio|crispy }}
-                                                    <button type="submit" class="btn btn-success col-md-12">Update
-                                                    </button>
-                                                </form>
+                    <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
+                    {% if user.is_authenticated %}
+                        {% if user.username == details.user_id.username or user.is_staff %}
+                            <b>Role: </b>
+                            {% if details.user_role == "INTERN" %}
+                                Contributor <br/>
+                            {% elif details.user_role == "STAFF" %}
+                                Mentor <br/>
+                            {% else %}
+                                {{ details.user_role }} <br/>
+                            {% endif %}
+
+                            <b>College:</b> {{ details.user_college }}<br/>
+                            <b>Email:</b> <a href="mailto:{{ details.user_email }}">{{ details.user_email }}</a><br>
+                            <b>Mobile:</b> {{ details.user_phone }}<br>
+                            <b>Profile Url: </b> <a href="{{ profile_url }}">{{ profile_url }}</a><br>
+                            <b>User Joined: </b> {{ details.user_id.date_joined|date:'d F Y' }} </br>
+                            <b>Last Login: </b>{{ details.user_id.last_login }} <br>
+                            <div class="float-right">
+                                <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
+                                   data-target="#modalContactForm"> <img
+                                        src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
+                                        alt="Text"></a>
+                                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header text-center">
+                                                <h4 class="modal-title change_font">Edit Bio
+                                                    : {{ details.user_id }}</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mx-3">
+                                                <div class="md-form">
+                                                    <i class="fas fa-pencil prefix grey-text"></i>
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+                                                        {{ form_edit_bio|crispy }}
+                                                        <button type="submit" class="btn btn-success col-md-12">Update
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                
-                <b class="change_font">Bio:</b> <br> <p class="change_font">{{ details.user_bio }}</p>
-                        <hr/>
+
+                <b class="change_font">Bio:</b> <br>
+                <p class="change_font">{{ details.user_bio }}</p>
+                <hr/>
                 {% if user.is_authenticated %}
                     {% if user.username == details.user_id.username %}
                         <p><a href="{% url 'password-change' %}"><span
@@ -115,31 +127,33 @@
                     <br>
                     <div class="card">
                         <div class="card-header">
-                    Topics Approved
+                            Topics Approved
                         </div>
                         <ol>
-                    {% for i in subtopic %}
-                    
-                        {% if details.user_id.pk == i.subtopic_managed_user %}
-                            <div class="">
-                                <li>
-                              {{ i.subtopic_name}} <small>{{ i.topic_id.internship_id  }} -> {{ i.topic_id }} -> </small>
-                                <div class="float-right">
-                                    {{ i.subtopic_modification_date|date:'d F Y' }}
-                                </div>
-                            </li>
-                            </div>
-                        {% endif %}
-                    
-                    {% endfor %}
-                    </ol>
-                        </div>
-                     <br>
+                            {% for i in subtopic %}
+
+                                {% if details.user_id.pk == i.subtopic_managed_user %}
+                                    <div class="">
+                                        <li>
+                                            {{ i.subtopic_name }} <small>{{ i.topic_id.internship_id }}
+                                            -> {{ i.topic_id }} -> </small>
+                                            <div class="float-right">
+                                                {{ i.subtopic_modification_date|date:'d F Y' }}
+                                            </div>
+                                        </li>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    <br>
                     <b style="text-align: center">Topics Mentored</b>
                     {% for i in messages_send %}
                         {% if details.user_id.pk == i.user_id.pk %}
                             <div class="bs-callout bs-callout-info">
-                                {{ i.subtopic_id.subtopic_name }} -> {{ i.subtopic_id.topic_id }} -> {{ i.subtopic_id.topic_id.internship_id }}
+                                {{ i.subtopic_id.subtopic_name }} -> {{ i.subtopic_id.topic_id }}
+                                -> {{ i.subtopic_id.topic_id.internship_id }}
                                 <div class="float-right">
                                     {{ i.subtopic_id.subtopic_status }}
                                 </div>
@@ -150,11 +164,9 @@
             {% endif %}
         {% endif %}
     </div>
-<script>
-$(function () {
-  $('.example-popover').popover({
-    container: 'body'
-  })
-})
-</script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
 {% endblock %}
