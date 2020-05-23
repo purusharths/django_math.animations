@@ -47,27 +47,29 @@
             <div class="card-header tab-card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
-                           aria-selected="true"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
-                                             alt="Text"></a>
+                        <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="one"
+                           aria-selected="false"><img src="{% static '/web-files/img/multiuse-svgs/add_text.svg' %}"
+                                                      alt="Text"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                        <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="two"
                            aria-selected="false"><img
-                            src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image"> </a>
+                                src="{% static '/web-files/img/multiuse-svgs/aperture.svg' %}" alt="Image"> </a>
                     </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Two"
+                    <li class="nav-item">
+                        <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab"
+                           aria-controls="three"
                            aria-selected="false"><img
-                            src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"></a>
+                                src="{% static '/web-files/img/multiuse-svgs/video.svg' %}" alt="Video"></a>
                     </li>
                 </ul>
             </div>
 
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                <div class="tab-pane fade p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                     <h5 class="card-title">Edit Text</h5>
-                    <p class="card-text text-muted">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b></p>
+                    <p class="card-text text-muted">Last Edited on : <b> {{ subtopic.subtopic_modification_date }} </b>
+                    </p>
                     <form method="POST" enctype="multipart/form-data">
                         <button class="float-right btn btn-sm btn-light">
                             <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px">Save
@@ -76,7 +78,7 @@
                         <center>
                             {{ form.media }} {{ form_text }}
                             <br>
-                            
+
                         </center>
                     </form>
                 </div>
@@ -85,20 +87,21 @@
                     <p class="card-text">Replace text with Image or Change the exisiting Image</p><br/>
                     {% if current_image %}
                         <center>
-                        <img src="{{ current_image.url }}" height="250px" style="max-width: 100%">
-                        <p>{{ caption_image }}</p>
+                            <img src="{{ current_image.url }}" height="250px" style="max-width: 100%">
+                            <p>{{ caption_image }}</p>
                         </center>
                     {% endif %}
                     <form method="post" name="ImageForm" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}{{ form_image|crispy }}
-                    <button class="btn btn-light">
-                        <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
+                        <button class="btn btn-light">
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload
+                        </button>
                     </form>
                     <br>
                 </div>
                 <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
-                <h5 class="card-title">Update Video</h5>
+                    <h5 class="card-title">Update Video</h5>
                     <p class="card-text">Replace Text with Video or Change existing Video</p><br/>
                     {% if current_video %}
                         <center>
@@ -110,11 +113,21 @@
                         {% csrf_token %}
                         {{ form.media }}{{ form_video|crispy }}
                         <button class="btn btn-light">
-                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload</button>
+                            <img src="{% static 'web-files/img/multiuse-svgs/save.svg' %}" height="18px"> Upload
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
         <br>
     </div>
+    <script>
+        url = document.URL.toString().split('#')[1]
+        get_tab = document.getElementById(url)
+        get_tab.classList.add("show")
+        get_tab.classList.add("active")
+        url_edited = url.concat("-tab")
+        get_element = document.getElementById(url_edited)
+        get_element.classList.add("active")
+    </script>
 {% endblock %}
