@@ -161,10 +161,10 @@ body {
 
 .hov:hover {
     border-bottom: 3px solid orange;
-    background: lightgrey;
+    /*background: lightgrey;*/
 }
 
 .nav_active {
     border-bottom: 3px solid orange;
-    background: lightgrey;
+    /*background: lightgrey;*/
 }
