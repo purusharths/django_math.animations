@@ -39,20 +39,82 @@
             margin-left: 415px;
         }
 
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
     </style>
     <div class="container">
         <div>
-            <img src="{{ image.data_image.url }}" width="{{ image_size.image_width }}"
+            <img id="size_change" src="{{ image.data_image.url }}" width="{{ image_size.image_width }}"
                  height="{{ image_size.image_height }}">
         </div>
         <br>
         <div>
             <form method="POST" name="data" enctype="multipart/form-data"><br>{% csrf_token %}
+                {#                Image_Height_slider: <input type="range" min="1" max="100" value="{{ image_size.image_height }}" class="slider" id="myheight">#}
+                <br>
+                Slide: <input type="range" min="1" max="100" value="{{ image_size.image_width }}"
+                              class="slider" id="mywidth">
+                <br>
+                <input id="id_image_height" type="hidden" name="image_height" value="50%" maxlength="5">
+                <br>
+                Value : <input id="id_image_width" name="image_width" type="text" maxlength="5"
+                               value="{{ image_size.image_width }}">
+                <br>
+                <br>
+                <script>
+                    //Slider management height
+                    var slider = document.getElementById("myheight");
+                    var output = document.getElementById("id_image_height");
+                    output.innerHTML = slider.value;
 
-                {{ form.media }} {{ form.as_p }}
+                    slider.oninput = function () {
+                        document.getElementById("id_image_height").value = this.value + "%";
+                    }
+                </script>
+                <script>
+                  //Slider width
+                    var slider = document.getElementById("mywidth");
+                    var output = document.getElementById("id_image_width");
+                    var set_image = document.getElementById("size_change")
+                    output.innerHTML = slider.value;
+                    //Function to change values with slider
+                    slider.oninput = function () {
+                        document.getElementById("id_image_width").value = this.value + "%";
+                        set_image.style.width = this.value + "%"
+                    }
+                </script>
 
                 <div class="upload-btn-wrapper">
-                    <input class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
+                    <input  id="save_confim" class="btn btn-success" type="submit" name="submit" id="submit" value="Save">
                 </div>
             </form>
         </div>
@@ -66,5 +128,16 @@
             {% endif %}
         </div>
         <br>
+    <script type="text/javascript">
+        //dialouge box for confirmation
+         document.getElementById('save_confim').onclick = function (e) {
+             if (!confirm('Changes Saved')) {
+                 e.preventDefault();
+             }
+         }
+
+
+    </script>
     </div>
+
 {% endblock %}

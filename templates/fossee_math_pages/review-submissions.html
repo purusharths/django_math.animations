@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %} Review Submissions {% endblock %}
 {% load django_bootstrap_breadcrumbs %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -13,9 +14,22 @@
     {% render_breadcrumbs %}
     {% include 'partials/_modal.html' %}
     <div class="container">
-            {% include 'partials/_alerts.html' %}
-        <h6>All Submissions: </h6>
-        <h2 class="text-info">{{ first_internship.internship_topic }}</h2>
+        {% include 'partials/_alerts.html' %}
+        <div class="row">
+            <div class="col-sm-6">
+                <h6>All Submissions: </h6>
+                <h2 class="text-info">{{ first_internship.internship_topic }}</h2>
+            </div>
+            <div class="col-sm-6">
+                <form method="GET" action=".">
+                    <div class="row">
+                        <input class="form-control py-2 border col-lg-8" type="search" name="title_contains"
+                               placeholder="Search Subtopic"/> &nbsp;&nbsp;
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <hr>
         <div class="row">
             <div class="col-6 col-sm-6">
@@ -37,36 +51,37 @@
                 </form>
             </div>
             <div class="col-6 col-sm-6">
-            {% if first_internship %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
-                    <label>Select Contributor: </label>
-                    <select name="search_intern" onchange="submit();" class="form-control">
-                        {% if selected_intern in interns %}
-                            <option>{{ selected_intern.username }}</option>
-                        {% else %}
-                            <option>Select Interns</option>
-                        {% endif %}
-                        {% for i in interns %}
-                            {% if i.id != selected_intern.id %}
-                                <option value="{{ i.pk }}">{{ i.username }}</option>
+                {% if first_internship %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="selected_internship" value="{{ first_internship.pk }}" type="hidden">
+                        <label>Select Contributor: </label>
+                        <select name="search_intern" onchange="submit();" class="form-control">
+                            {% if selected_intern in interns %}
+                                <option>{{ selected_intern.first_name }} {{ selected_intern.last_name }}</option>
+                            {% else %}
+                                <option>Select Interns</option>
                             {% endif %}
-                        {% endfor %}
-                    </select>
-                </form>
-            {% endif %}
+                            {% for i in interns %}
+                                {% if i.id != selected_intern.id %}
+                                    <option value="{{ i.pk }}">{{ i.first_name }} {{ i.last_name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </form>
+                {% endif %}
             </div>
         </div>
         <hr/>
-        <table class="table table-sm">
+    <div style="overflow-x: auto">
+        <table class="table table-sm" id="myTable">
             <thead class="table-info">
             <tr>
-                <th scope="col">User Name</th>
-                <th scope="col">Topic</th>
-                <th scope="col">Subtopic</th>
+                <th scope="col" onclick="sortTable(1)">User Name</th>
+                <th scope="col" onclick="sortTable(2)">Topic</th>
+                <th scope="col" onclick="sortTable(3)">Subtopic</th>
                 <th scope="col">Status</th>
-                <th scope="col">Modified Date</th>
+                <th scope="col" onclick="sortTable(4)">Modified Date</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
@@ -78,9 +93,9 @@
                         {% for detail in userdetails %}
                             {% if k.assigned_user_id == detail.user_id %}
                                 {% if detail.user_status == "INACTIVE" %}
-                                    <td><span class="text-black-50">{{ k.assigned_user_id }}</span></td>
+                                    <td><span class="text-black-50">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</span></td>
                                 {% else %}
-                                    <td><span> {{ k.assigned_user_id }}</span></td>
+                                    <td><span> {{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</span></td>
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
@@ -115,7 +130,70 @@
             </tbody>
         </table>
     </div>
+    </div>
     <br>
     <hr>
     <br>
+    <script>
+        function sortTable(n) {
+
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+
+            table = document.getElementById("myTable");
+            switching = true;
+
+            rows = table.rows.length;
+
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}

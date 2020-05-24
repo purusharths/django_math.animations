@@ -18,6 +18,7 @@ urlpatterns = [
                   path('dashboard/messages/<str:s_id>', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
+                  path('dashboard/update-profile/<str:user_id>', views.update_profile, name='update-profile'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),
                   path('dashboard/add-subtopics/<str:i_id>/<str:t_id>', views.add_subtopics, name='add-subtopics'),
                   path('dashboard/add-submission/', views.add_submission, name='add-submission'),
@@ -32,6 +33,8 @@ urlpatterns = [
                   path('dashboard/manage-interns/', views.manage_interns, name='manage-interns'),
                   path('dashboard/manage-internship/', views.manage_internship, name='manage-internship'),
                   path('dashboard/review-submissions/', views.review_submissions, name='review-submissions'),
+                  path('dashboard/rearrange-topics/', views.rearrange, name='rearrange-topics'),
+                  path('dashboard/edit-topics/<str:id>', views.edit_topics, name='edit-topics'),
                   path('dashboard/review-submissions/<str:s_id>', views.review_submissions_subtopic,
                        name='review-submissions-subtopic'),
                   path('dashboard/review-submissons/<str:t_id>/edit-image/<str:id>', views.edit_image,
@@ -39,7 +42,11 @@ urlpatterns = [
                   path('dashboard/review-submissons/<str:t_id>/edit-text/<str:id>', views.edit_text,
                        name='edit-text-staff'),
                   path('delete-data/<str:id>', views.delete_data, name='delete-data'),
+                  path('moveUpData/<str:id>', views.moveUpData, name='moveUpData'),
+                  path('moveDownData/<str:id>', views.moveDownData, name='moveDownData'),
                   path('approve-subtopic/<str:id>', views.approve_subtopic, name='approve-subtopic'),
                   path('reject-subtopic/<str:id>', views.reject_subtopic, name='reject-subtopic'),
+                  path('reset-subtopic-status/<str:id>', views.reset_subtopic_status, name='reset-subtopic-status'),
+                  path('profile/<int:id>/<str:username>', views.profile, name='profile'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

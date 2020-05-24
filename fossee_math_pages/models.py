@@ -44,6 +44,7 @@ class UserDetails(models.Model):
     user_email = models.CharField(max_length=128)
     user_status = models.CharField(max_length=255, choices=INTERN_STATUS, default='INACTIVE')
     user_college = models.CharField(max_length=255, blank=True, null=True)
+    user_bio = models.TextField(max_length=1024, blank=True, null=True, default=None)
 
     def __str__(self):
         return str(self.user_id) if self.user_id else ''
@@ -60,6 +61,7 @@ class Internship(models.Model):
     internship_quote = models.TextField(max_length=255)
     internship_quote_author = models.CharField(max_length=128)
     internship_url = models.CharField(max_length=255)
+    #internship_completed_date = models.DateTimeField(default=None, blank=True, null=True)
 
     def __str__(self):
         return str(self.internship_topic) if self.internship_topic else ''
@@ -91,6 +93,7 @@ class Subtopic(models.Model):
     subtopic_url = models.CharField(max_length=255)
     subtopic_modification_date = models.DateTimeField(default=now)
     subtopic_order = models.IntegerField(blank=True, null=True)
+    subtopic_managed_user = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.subtopic_name
@@ -118,6 +121,7 @@ class Data(models.Model):
     data_caption = models.CharField(max_length=1024, blank=True, null=True)
     data_modification_date = models.DateTimeField(blank=True, null=True, default=now)
     data_hash = models.CharField(max_length=50)
+    data_order = models.IntegerField(blank=None, null=True, default=0)
 
     def __str__(self):
         return str(self.subtopic_id) if self.subtopic_id else ''

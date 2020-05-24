@@ -46,3 +46,4 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'fossee_math_pages.views.error_404_view'
+handler500 = 'fossee_math_pages.views.error_500_view'

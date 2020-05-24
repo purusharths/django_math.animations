@@ -14,9 +14,8 @@
             <form method="GET" action=".">
                 <table>
                     <tr>
-                        <td> Search:</td>
                         <td>
-                            <input class="form-control py-2 border" type="search"
+                            <input class="form-control py-3 border" type="search"
                                    name="title_contains"
                                    placeholder="{{ querry }}"/>
                         </td>
@@ -30,7 +29,7 @@
         </div>
         {% if datas %}
             {% for data in datas %}
-                {% if data.topic_id.internship_id.internship_status == 'COMPLETED' %}
+                {% if data.topic_id.internship_id.internship_status == 'COMPLETED' and data.subtopic_status == 'ACCEPTED' %}
                     <div class="card">
                         <div class="card-body">
                             <div class=""><small><b>{{ data.topic_id.internship_id }}</b> > {{ data.topic_id }}
@@ -45,8 +44,8 @@
                             {% endfor %}
                         </div>
                     </div>
+                    <br/>
                 {% endif %}
-                <br/>
             {% endfor %}
         {% else %}
             <h3 style="font-weight: normal;">No Results Found for <u><i>{{ querry }}</i></u></h3>

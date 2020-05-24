@@ -11,6 +11,8 @@
 
 {% block content %}
 
+
+
     {% render_breadcrumbs %}
 
     <div class="container">
@@ -33,33 +35,37 @@
         </form>
 
         <br/>
-        <table class="table table-light table-sm">
+        <table class="table table-light table-sm" id="myTable">
             <thead class="table-warning">
             <tr>
                 <th>Intern Name</th>
-                <th>Internship</th>
-                <th>Topic</th>
                 <th>Subtopic</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
-            {% for i in topics %}
-                {% if internship.pk == i.topic_id.internship_id_id %}
-                    <tr>
-                        {% if i.assigned_user_id_id != None %}
-                            <td>{{ i.assigned_user_id }}</td>
-                        {% else %}
-                            <td></td>
+                {% for i in interns %}
+                        <tr>
+                    <td>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</td>
+                           <td>
+                    {% for j in topics %}
+                        {% if j.topic_id.internship_id.internship_topic == internship.internship_topic and j.assigned_user_id.username == i.user_id.username %}
+                          {{ j.topic_id.internship_id }} - {{ j.topic_id }} - {{ j.subtopic_name }}<br>
                         {% endif %}
-                        <td>{{ i.topic_id.internship_id }}</td>
-                        <td>{{ i.topic_id }}</td>
-                        <td>{{ i.subtopic_name }}</td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
+                        {% endfor %}
+                        </td>
+                    <td> {% with  i.user_id.first_name|add:i.user_id.last_name as username %}
+                        <a href="{% url 'profile' i.user_id.pk username %}">profile</a>
+                        {% endwith %}
+                    </td>
+                        </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
     <br>
     <hr>
-    <br> {% endblock %}
+    <br>
+
+{% endblock %}
+

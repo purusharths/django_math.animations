@@ -32,12 +32,14 @@
                     </select>
                 </form>
                 <br/>
-
+                {% if user.is_superuser %}
+                    <div class="float-right">
+                        <a href="{% url 'edit-topics' chosen_internship.internship_url %}">Rename topics and subtopics </a>
+                    </div>
+                {% endif %}
                 <table class="table table-sm  ">
                     {% for i in internship %}
-
                         <h3 class="text-info">{{ i.internship_topic }}</h3>
-
                         {% for j in topics %}
                             {% if j.internship_id_id == i.id %}
                                 <thead class="-info">
@@ -150,15 +152,3 @@
 
     {% endif %}
 {% endblock %}
-{% block extrascripts %}
-
-    {% if user.is_staff and not user.is_superuser %}
-        <!--THESE NEEDS TO BE CROSS CHECKED AND PUT ON CDN-->
-        <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
-        <!--CDN FOR THIS!-->
-        <script src="{% static 'assets/js/popper.min.js' %}"></script>
-        <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-        <!-- You can alternatively load the minified version -->
-        <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
-    {% endif %}
-{% endblock extrascripts %}

@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% if user.is_authenticated %}
+        {% breadcrumb "Dashboard" "dashboard" %}
+    {% endif %}
+    {% breadcrumb "Profile" "" %}
+{% endblock %}
+
+{% block content %}
+    {% render_breadcrumbs %}
+    <style>
+        .change_font {
+            font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    <!-- Pop Over JS 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title"
+        data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover
+        </button>-->
+
+    <div class="container change_font">
+
+
+
+        {% include 'partials/_alerts.html' %}
+        {% if details is not None %}
+            <h3 class="change_font">User profile
+                for <i>{{ details.user_id.first_name }} {{ details.user_id.last_name }}</i></h3>
+            <div class=" bs-callout bs-callout-grey">
+                <p class="change_font">
+                    <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
+                    {% if user.is_authenticated %}
+                        {% if user.username == details.user_id.username or user.is_staff %}
+                            <b>Role: </b>
+                            {% if details.user_role == "INTERN" %}
+                                Contributor <br/>
+                            {% elif details.user_role == "STAFF" %}
+                                Mentor <br/>
+                            {% else %}
+                                {{ details.user_role }} <br/>
+                            {% endif %}
+
+                            <b>College:</b> {{ details.user_college }}<br/>
+                            <b>Email:</b> <a href="mailto:{{ details.user_email }}">{{ details.user_email }}</a><br>
+                            <b>Mobile:</b> {{ details.user_phone }}<br>
+                            <b>Profile Url: </b> <a href="{{ profile_url }}">{{ profile_url }}</a><br>
+                            <b>User Joined: </b> {{ details.user_id.date_joined|date:'d F Y' }} </br>
+                            <b>Last Login: </b>{{ details.user_id.last_login }} <br>
+                            <div class="float-right">
+                                <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
+                                   data-target="#modalContactForm"> <img
+                                        src="{% static '/web-files/img/multiuse-svgs/edit.svg' %}"
+                                        alt="Text"></a>
+                                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header text-center">
+                                                <h4 class="modal-title change_font">Edit Bio
+                                                    : {{ details.user_id }}</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body mx-3">
+                                                <div class="md-form">
+                                                    <i class="fas fa-pencil prefix grey-text"></i>
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+                                                        {{ form_edit_bio|crispy }}
+                                                        <button type="submit" class="btn btn-success col-md-12">Update
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                <b class="change_font"></b>
+                <p class="change_font">{{ details.user_bio }}</p>
+                <hr/>
+                {% if user.is_authenticated %}
+                    {% if user.username == details.user_id.username %}
+                        <p><a href="{% url 'password-change' %}"><span
+                                style="color: #2C009F">Change Password</span></a></p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <br>
+            {% if not details.user_id.is_staff %}
+                {% if not user.is_staff or details.user_role == 'INTERN' %}
+                    <div class="card border-light">
+                        <br>
+                        <div class="card-title"><h3 style="font-weight: bold;"> <b class="change_font">Contributions:</b> </h3><hr></div>
+                        
+                        
+                            <div class="card-body">
+                                <ol>
+                            {% for i in subtopic %}
+                                {% if details.user_id.pk == i.assigned_user_id.pk %}
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-8">
+                                            <h5  style="margin-bottom: 0px;"><li class="change_font">
+                                                <!--<a href="{{ ROOT_URL }}/contents/{{ i.topic_id.internship_id.internship_url }}/{{ i.topic_id.topic_url }}/{{ i.subtopic_url }}"></a>-->
+                                                {{ i.subtopic_name }}
+                                            </h5>
+                                            <small class="text-muted">
+                                                <b class="change_font">[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
+                                            </small></li>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {% if i.subtopic_status == 'WAITING' %}
+                                                <b class="change_font text-warning">In Progress</b>
+                                            {% else %}
+                                                <b class="change_font">{{ i.subtopic_status|title }}</b><br>
+                                                <small class="text-muted change_font"> {{ i.subtopic_modification_date|date:'d F Y' }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </ol>
+                        </div>
+                        
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if not user.is_superuser %}
+                {% if details.user_id.is_staff %}
+                    <br>
+                    <div class="card border-light">
+                        <div class="card-title">
+                            <h4 class="change_font">Topics Approved</h4>
+                            <hr>
+                        </div>
+                        <ol>
+                            <div class="card-body">
+                            {% for i in subtopic %}
+                                {% if details.user_id.pk == i.subtopic_managed_user %}
+                                
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-8">
+                                            <h5 style="margin-bottom: 0px; " class="change_font"><li>{{ i.subtopic_name }}</h5>
+                                            <small class="text-muted ">
+                                                <b class="change_font">[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
+                                            </small>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {% if i.subtopic_status == 'WAITING' %}
+                                                In Progress
+                                            {% else %}
+                                                <b class="change_font">{{ i.subtopic_status|title }}</b><br>
+                                                <small class="text-muted change_font">{{ i.subtopic_modification_date|date:'d F Y' }}</small>
+                                            {% endif %}</li>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        </ol>
+                    </div>
+                    
+                    <br>
+                        
+                    <div class="card border-light">
+                        <div class="card-title">
+                            <h4 class="change_font">Topics Mentored</h4>
+                            <hr>
+                        </div>
+
+                        <div class="card-body">
+                          <ol>
+                            {% for i in messages_send %}
+                                {% for j in subtopic %}
+                                    {% if i.subtopic_id == j.pk %}
+                                        <div class="row justify-content-between">
+                                            <div class="col-md-8">
+                                                <h5 class="change_font" style="margin-bottom: 0px;"><li>{{ j.subtopic_name }}</h5> 
+                                                <small class="text-muted"><b class="change_font">[ {{ j.topic_id }} &#8594; {{ j.topic_id.internship_id }} ]</b></small>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {% if j.subtopic_status == 'WAITING' %}
+                                                    <b class="change_font text-warning">In Progress</b>
+                                                {% else %}
+                                                <b class="change_font">{{ j.subtopic_status|title }}</b><br>
+                                                <!--<small class="text-muted change_font">{{ j.subtopic_modification_date|date:'d F Y' }}</small>-->
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                          </ol>
+                        </div>
+
+                </div>
+
+
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+{% endblock %}

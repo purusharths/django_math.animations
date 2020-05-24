@@ -57,14 +57,15 @@
                                     <tr>
                                         <td>
                                             {% if i.user_id.is_staff %}
-                                                <span class="text-muted" style="font-size: smaller;"><p
-                                                        class="text-right">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
-                                                <div class="bs-callout-right bs-callout-right-info text-right"
+                                                <span class="text-muted" style="font-size: smaller;">
+                                                    <p style="margin-bottom: 0px;" class="text-right">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</b></p>
+                                                </span>
+                                                <div class="bs-callout-right bs-callout-right-info "
                                                      style="margin-top:0px; width: 100%; max-width: 900px ;">
                                                     <p>{{ i.message }}</p></div>
                                             {% elif not i.user_id.is_staff %}
                                                 <span class="text-muted"
-                                                      style="font-size: smaller;"><p>Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                      style="font-size: smaller;"><p style="margin-bottom: 0px;" >Sent on : {{ i.message_send_date }} by <b>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</b></p></span>
                                                 <div class="bs-callout bs-callout-{{ color }}" style="margin-top: 0px;">
                                                     <p>{{ i.message }}</p></div>
                                             {% endif %}
@@ -94,15 +95,15 @@
                                         <td>
                                             {% if i.user_id.is_staff %}
                                                 <span class="text-muted"
-                                                      style="font-size: smaller;"><p>Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                      style="font-size: smaller;"><p style="margin-bottom: 0px;">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</b></p></span>
                                                 <div class="bs-callout bs-callout-{{ color }}"
                                                      style="margin-top:0px; width: 100%; max-width: 900px ;">
                                                     <p>{{ i.message }}</p></div>
                                             {% elif not i.user_id.is_staff %}
-                                                <span class="text-muted text-right" style="font-size: smaller;"><p
-                                                        class="text-right">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id }}</b></p></span>
+                                                <span class="text-muted text-right" style="font-size: smaller;">
+                                                    <p style="margin-bottom: 0px;">Sent on : {{ i.message_send_date }} by <b>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</b></p></span>
                                                 <div class="bs-callout-right bs-callout-right-info text-right"
-                                                     style="margin-top: 0px;"><p class="text-right">{{ i.message }}</p>
+                                                     style="margin-top: 0px;"><p class="">{{ i.message }}</p>
                                                 </div>
                                             {% endif %}
                                         </td>

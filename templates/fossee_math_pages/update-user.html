@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add Users{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Add Users" "add-users" %}
+    {% breadcrumb "Update Profile" "update-user" %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %} {% if user.is_superuser %}
+        {% render_breadcrumbs %}
+       <div class="container">
+            {% include 'partials/_alerts.html' %}
+
+            <h2>Update User : {{ currentuser.username }}</h2>
+            <hr>
+            <form method="POST" name="putdata" class="form-group" id="formTwo">
+
+                {% csrf_token %} {{ form|crispy }} {{ subform|crispy }}
+
+                <input class="btn btn-success" type="submit" name="submit" id="submit" value="Submit">
+            </form>
+            <hr/>
+        </div>
+        <br>
+    {% endif %}
+    {% endif %}
+{% endblock %}
