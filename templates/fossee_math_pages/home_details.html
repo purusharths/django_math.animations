@@ -22,8 +22,8 @@
 
 {% block content %}
     {% render_breadcrumbs %}
-    <!--ToCBot Css-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">
+    <!--ToCBot Css
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">-->
     <style>
         table {
             width: 100%;
@@ -52,14 +52,14 @@
     </style>
     <hr>
 
-    <div style="margin-left: 5%;margin-right: 10%" id="container">
-        <div class="row">
-            <div id="toc_container" style="font-size: small; max-width: 20%; right: 2%;">
+    <div id="container"> <!--style="margin-left: 5%;margin-right: 10%" >-->
+        <div class="container"><!--class="row">-->
+            <!--<div id="toc_container" style="font-size: small; max-width: 20%; right: 2%;">
                  <b style="color: blue">Table of Contents</b>
                 <div   class='js-toc col' data-spy="affix"></div>
-            </div>
-            <div class="container" id="content_container" style=" margin-right: 15%;">
-                <div class="js-toc-content">
+            </div>-->
+            <!--<div class="container" id="content_container" style=" margin-right: 15%;">-->
+                <!--<div class="js-toc-content">-->
                     <table>
                         {% if subtopic.subtopic_status == 'ACCEPTED' %}
                             <thead class="thread-light">
@@ -127,7 +127,7 @@
                         {% endif %}
                         </tbody>
                     </table>
-                </div>
+                <!--</div>-->
 
                 {% if subtopic.subtopic_status == 'ACCEPTED' and subtopic.topic_id.internship_id.internship_status == 'COMPLETED' %}
                     <div>
@@ -151,9 +151,9 @@
                             contributor and is freely avilable under CC licence.</i>
                     </div>
                 {% endif %}
-            </div>
+            <!--</div>-->
         </div>
-
+        {% if subtopic.subtopic_status == 'ACCEPTED' %}
         <script>
             var options = {
                 bottom: '64px', // default: '32px'
@@ -173,8 +173,8 @@
             darkmode.showWidget();
         </script>
     </div>
-    {% if subtopic.subtopic_status == 'ACCEPTED' %}
-        <script>
+    
+    <!--<script>
             //H1 id assign
             var _selectIndex_2 = 0;
             var z = document.getElementsByTagName("H1")
@@ -217,7 +217,7 @@
             for (p = 0; p < c.length; p++) {
                 c[p].setAttribute("id", "id-" + _selectIndex_5++)
             }
-            {#newSelectBox.setAttribute("id","select-"+_selectIndex++);#}
+            {# newSelectBox.setAttribute("id","select-"+_selectIndex++); #}
             //toc configuration
             tocbot.init({
                 tocSelector: '.js-toc',
@@ -251,8 +251,6 @@
             });
             tocbot.init();
             tocbot.refresh()
-
-
         </script>
         <script>
             //Toc mobile adjust
@@ -287,7 +285,7 @@
             } else {
                 toc.style.position = "fixed";
             }
-        </script>
+        </script>-->
     {% endif %}
     <br>
     <hr>
