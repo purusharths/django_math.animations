@@ -113,17 +113,20 @@
                                 {% if details.user_id.pk == i.assigned_user_id.pk %}
                                     <div class="row justify-content-between">
                                         <div class="col-md-8">
-                                            <h4 style="margin-bottom: 0px;"><li><i>{{ i.subtopic_name }}</i></h4>
+                                            <h5  style="margin-bottom: 0px;"><li class="change_font">
+                                                <!--<a href="{{ ROOT_URL }}/contents/{{ i.topic_id.internship_id.internship_url }}/{{ i.topic_id.topic_url }}/{{ i.subtopic_url }}"></a>-->
+                                                {{ i.subtopic_name }}
+                                            </h5>
                                             <small class="text-muted">
-                                                <b>[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
+                                                <b class="change_font">[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
                                             </small></li>
                                         </div>
                                         <div class="col-md-2">
                                             {% if i.subtopic_status == 'WAITING' %}
-                                                In Progress
+                                                <b class="change_font text-warning">In Progress</b>
                                             {% else %}
-                                                <b>{{ i.subtopic_status|title }}</b><br>
-                                                <small class="text-muted"> {{ i.subtopic_modification_date|date:'d F Y' }}</small>
+                                                <b class="change_font">{{ i.subtopic_status|title }}</b><br>
+                                                <small class="text-muted change_font"> {{ i.subtopic_modification_date|date:'d F Y' }}</small>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -145,9 +148,10 @@
                             <hr>
                         </div>
                         <ol>
+                            <div class="card-body">
                             {% for i in subtopic %}
                                 {% if details.user_id.pk == i.subtopic_managed_user %}
-                                <div class="card-body">
+                                
                                     <div class="row justify-content-between">
                                         <div class="col-md-8">
                                             <h5 style="margin-bottom: 0px; " class="change_font"><li>{{ i.subtopic_name }}</h5>
@@ -161,39 +165,51 @@
                                             {% else %}
                                                 <b class="change_font">{{ i.subtopic_status|title }}</b><br>
                                                 <small class="text-muted change_font">{{ i.subtopic_modification_date|date:'d F Y' }}</small>
-                                            {% endif %}
+                                            {% endif %}</li>
                                         </div>
-                                    </li>
                                     </div>
-                                </div>
+                                    <hr>
                                 {% endif %}
                             {% endfor %}
+                        </div>
                         </ol>
                     </div>
+                    
                     <br>
-                    <hr>
-                    
-                    
-                    <b style="text-align: center">Topics Mentored</b>
-                    
-                    {% for i in messages_send %}
-                        {% for j in subtopic %}
-                        {% if i.subtopic_id == j.pk %}
-                            <div class="">
-                                {{ j.subtopic_name }} -> {{ j.topic_id }}
-                                -> {{ j.topic_id.internship_id }}
-                                <div class="float-right">
-                                    {% if i.subtopic_status == 'WAITING' %}
-                                        In Progress
-                                    {% else %}
-                                        {{ j.subtopic_status|title }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% endfor %}
+                        
+                    <div class="card border-light">
+                        <div class="card-title">
+                            <h4 class="change_font">Topics Mentored</h4>
+                            <hr>
+                        </div>
 
+                        <div class="card-body">
+                          <ol>
+                            {% for i in messages_send %}
+                                {% for j in subtopic %}
+                                    {% if i.subtopic_id == j.pk %}
+                                        <div class="row justify-content-between">
+                                            <div class="col-md-8">
+                                                <h5 class="change_font" style="margin-bottom: 0px;"><li>{{ j.subtopic_name }}</h5> 
+                                                <small class="text-muted"><b class="change_font">[ {{ j.topic_id }} &#8594; {{ j.topic_id.internship_id }} ]</b></small>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {% if j.subtopic_status == 'WAITING' %}
+                                                    <b class="change_font text-warning">In Progress</b>
+                                                {% else %}
+                                                <b class="change_font">{{ j.subtopic_status|title }}</b><br>
+                                                <!--<small class="text-muted change_font">{{ j.subtopic_modification_date|date:'d F Y' }}</small>-->
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                          </ol>
+                        </div>
+
+                </div>
 
 
                 {% endif %}
