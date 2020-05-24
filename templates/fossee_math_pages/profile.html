@@ -177,19 +177,21 @@
                     <b style="text-align: center">Topics Mentored</b>
                     
                     {% for i in messages_send %}
-                        {% if details.user_id.pk == i.user_id.pk %}
+                        {% for j in subtopic %}
+                        {% if i.subtopic_id == j.pk %}
                             <div class="">
-                                {{ i.subtopic_id.subtopic_name }} -> {{ i.subtopic_id.topic_id }}
-                                -> {{ i.subtopic_id.topic_id.internship_id }}
+                                {{ j.subtopic_name }} -> {{ j.topic_id }}
+                                -> {{ j.topic_id.internship_id }}
                                 <div class="float-right">
                                     {% if i.subtopic_status == 'WAITING' %}
                                         In Progress
                                     {% else %}
-                                        {{ i.subtopic_id.subtopic_status|title }}
+                                        {{ j.subtopic_status|title }}
                                     {% endif %}
                                 </div>
                             </div>
                         {% endif %}
+                    {% endfor %}
                     {% endfor %}
 
 
