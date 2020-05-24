@@ -1,112 +1,139 @@
 {% extends 'base.html' %}
 {% block title %}Internship{% endblock %}
 
+{% load staticfiles %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Internship" "internship" %}
+{{ block.super }}
+{% breadcrumb "Internship" "internship" %}
 {% endblock %}
 
 {% block content %}
-    {% render_breadcrumbs %}
-    <style>
-        .responsive {
-            width: 100%;
-            height: auto;
-        }
-    </style>
-    <div class="container">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                   aria-selected="true">Completed</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                   aria-controls="profile" aria-selected="false">Ongoing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
-                   aria-controls="contact" aria-selected="false">Upcoming</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br>
+{% render_breadcrumbs %}
+<style>
+    .responsive {
+        width: 100%;
+        height: auto;
+    }
+</style>
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="completed"
+                aria-selected="true">Completed</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ongoing-tab" data-toggle="tab" href="#ongoing" role="tab" aria-controls="ongoing"
+                aria-selected="false">Ongoing</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="upcomming-tab" data-toggle="tab" href="#upcomming" role="tab" aria-controls="upcomming"
+                aria-selected="false">Upcoming</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="completed" role="tabpanel" aria-labelledby="completed-tab"><br>
+            <ol>
                 {% for i in internship %}
                     {% if i.internship_status == 'COMPLETED' %}
-                        <div class="bs-callout bs-callout-info mb-3">
-                            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
-                            {% for j in topic %}
-                                {% if j.internship_id.pk == i.pk %}
-                                    <div class="bs-callout bs-callout-warning">
-                                        <h5 class="card-title">{{ j.topic_name }}</h5>
-                                        {% for k in subtopic %}
-                                            {% if k.topic_id.pk == j.pk %}
-                                                <div class="bs-callout bs-callout-danger">
-                                                    <p class="card-text">{{ k.subtopic_name }}</p>
-                                                    {% if k.assigned_user_id %}
-                                                         {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
-                                                        <p class="float-right">By, <a target="_blank"
-                                                                                  href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
-                                                        </p><br>
-                                                        {% endwith %}
+                        <h4 style="font-weight: bold">
+                            <li>{{ i.internship_topic }}
+                                <button class="btn btn-light" type="button" data-toggle="collapse"
+                                    data-target="#{{ i.internship_topic|cut:' ' }}" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                    <span><img src="{% static '/web-files/img/multiuse-svgs/eye-off-grey.svg' %}" height="15px">
+                                    </span>
+                                </button></li>
+                        </h4>
+                        <div class="collapse show" id="{{ i.internship_topic|cut:' ' }}">
+                            <div class="card border-light card-body">
+                                <span class="text-muted"> <small>The internship started on
+                                        <b>{{ i.internship_start_date|date:'d M Y' }}</b> and covered the following topics and
+                                        subtopics:</small></span>
+                                <hr>
+                                <ul>
+                                    {% for j in topic %}    
+                                        {% if j.internship_id.pk == i.pk %}
+                                            <li><h5 class="card-title">{{ j.topic_name }} </h5></li>
+                                            <ol>
+                                                {% for k in subtopic %}
+                                                    {% if k.topic_id.pk == j.pk %}
+                                                        <li><p class="card-text">{{ k.subtopic_name }} 
+                                                        {% if k.assigned_user_id %}
+                                                            {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
+                                                             [ <a target="_blank"
+                                                            href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }}
+                                                            {{ k.assigned_user_id.last_name }}</a>
+                                                            ]</p></li>
+                                                            {% endwith %}
+                                                        {% endif %}
                                                     {% endif %}
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                                {% endfor %}
+                                            </ol>
+                                        {% endif %}
+                                    
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
+                        <hr />
+      
                     {% endif %}
                 {% endfor %}
-
-            </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><br>
-
-                {% for i in internship %}
-                    {% if i.internship_status == 'ACTIVE' %}
-                        <div class="bs-callout bs-callout-info mb-3">
-                            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
-                            {% for j in topic %}
-                                {% if j.internship_id.pk == i.pk %}
-                                    <div class="bs-callout bs-callout-warning">
-                                        <h5 class="card-title">{{ j.topic_name }}</h5>
-                                        {% for k in subtopic %}
-                                            {% if k.topic_id.pk == j.pk %}
-                                                <div class="bs-callout bs-callout-danger">
-                                                    <p class="card-text">{{ k.subtopic_name }}</p>
-                                                    {% if k.assigned_user_id %}
-                                                         {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
-                                                        <p class="float-right">By, <a target="_blank"
-                                                                                  href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }} {{ k.assigned_user_id.last_name }}</a>
-                                                        </p><br>
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-
-            </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"><br><br>
-                <!-- Page Content -->
-
-                <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt=""
-                     class="responsive"/>
-                <br/>
-                <br/>
-            </div>
-            <!-- row -->
-
+            </ol>
         </div>
+    <!-- ongoing tab --->
+    <div class="tab-pane fade" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab"><br>
 
+
+        {% for i in internship %}
+        {% if i.internship_status == 'ACTIVE' %}
+        <div class="bs-callout bs-callout-info mb-3">
+            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
+            {% for j in topic %}
+            {% if j.internship_id.pk == i.pk %}
+            <div class="bs-callout bs-callout-warning">
+                <h5 class="card-title">{{ j.topic_name }}</h5>
+                {% for k in subtopic %}
+                {% if k.topic_id.pk == j.pk %}
+                <div class="bs-callout bs-callout-danger">
+                    <p class="card-text">{{ k.subtopic_name }}</p>
+                    {% if k.assigned_user_id %}
+                    {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
+                    <p class="float-right">By, <a target="_blank"
+                            href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }}
+                            {{ k.assigned_user_id.last_name }}</a>
+                    </p><br>
+                    {% endwith %}
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        
     </div>
 
-    <br/>
+    <!--upcoming-->
+    <div class="tab-pane fade" id="upcomming" role="tabpanel" aria-labelledby="upcomming-tab">
+        <br>
+        <!-- Page Content -->
+
+        <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive" />
+        <br />
+        <br />
+    </div>
+    <!-- row -->
+
+</div>
+
+</div>
+
+<br />
+
 {% endblock %}
