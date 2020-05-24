@@ -1538,11 +1538,12 @@ def profile(request, id, username):
                 messages_send = None
             elif userdetails.user_role == 'STAFF':
                 subtopic = Subtopic.objects.all()
-                messages_send = Messages.objects.all()
+                messages_send = Messages.objects.values('subtopic_id').distinct()
             else:
                 subtopic = None
                 messages_send = None
 
+            print(messages_send)
             form_edit_bio = EditBio(instance=userdetails)
             scheme = request.is_secure() and "https" or "http"
             profile_url = "{}://{}/profile/{}/{}".format(scheme, request.META['HTTP_HOST'], userdetails.user_id.pk,
