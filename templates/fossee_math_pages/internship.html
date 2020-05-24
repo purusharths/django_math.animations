@@ -36,7 +36,7 @@
             <ol>
                 {% for i in internship %}
                     {% if i.internship_status == 'COMPLETED' %}
-                        <h4 style="font-weight: bold">
+                        <h4 style="font-weight: lighter">
                             <li>{{ i.internship_topic }}
                                 <button class="btn btn-light" type="button" data-toggle="collapse"
                                     data-target="#{{ i.internship_topic|cut:' ' }}" aria-expanded="false"
@@ -54,11 +54,11 @@
                                 <ul>
                                     {% for j in topic %}    
                                         {% if j.internship_id.pk == i.pk %}
-                                            <li><h5 class="card-title">{{ j.topic_name }} </h5></li>
+                                            <li><h5 class="card-title"><i>{{ j.topic_name }}</i> </h5></li>
                                             <ol>
                                                 {% for k in subtopic %}
                                                     {% if k.topic_id.pk == j.pk %}
-                                                        <li><p class="card-text">{{ k.subtopic_name }} 
+                                                        <li><p class="card-text"><i>{{ k.subtopic_name }} </i>
                                                         {% if k.assigned_user_id %}
                                                             {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
                                                              [ <a target="_blank"
@@ -85,46 +85,64 @@
     <!-- ongoing tab --->
     <div class="tab-pane fade" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab"><br>
 
-
-        {% for i in internship %}
-        {% if i.internship_status == 'ACTIVE' %}
-        <div class="bs-callout bs-callout-info mb-3">
-            <h4 style="font-weight: bold">{{ i.internship_topic }}</h4>
-            {% for j in topic %}
-            {% if j.internship_id.pk == i.pk %}
-            <div class="bs-callout bs-callout-warning">
-                <h5 class="card-title">{{ j.topic_name }}</h5>
-                {% for k in subtopic %}
-                {% if k.topic_id.pk == j.pk %}
-                <div class="bs-callout bs-callout-danger">
-                    <p class="card-text">{{ k.subtopic_name }}</p>
-                    {% if k.assigned_user_id %}
-                    {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
-                    <p class="float-right">By, <a target="_blank"
-                            href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }}
-                            {{ k.assigned_user_id.last_name }}</a>
-                    </p><br>
-                    {% endwith %}
-                    {% endif %}
-                </div>
+        <ol>
+            {% for i in internship %}
+                {% if i.internship_status == 'ACTIVE' %}
+                    <h4 style="font-weight: normal" class="text-warning">
+                        <li>{{ i.internship_topic }}
+                            <button class="btn btn-light" type="button" data-toggle="collapse"
+                                data-target="#{{ i.internship_topic|cut:' ' }}" aria-expanded="false"
+                                aria-controls="collapseExample">
+                                <span><img src="{% static '/web-files/img/multiuse-svgs/eye-off-grey.svg' %}" height="15px">
+                                </span>
+                            </button></li>
+                    </h4>
+                    <div class="collapse show" id="{{ i.internship_topic|cut:' ' }}">
+                        <div class="card border-light card-body">
+                            <span class="text-muted"> <small>The internship started on
+                                    <b>{{ i.internship_start_date|date:'d M Y' }}</b>. The submissions are currently being reviewed.</small></span>
+                            <hr>
+                            <ul>
+                                {% for j in topic %}    
+                                    {% if j.internship_id.pk == i.pk %}
+                                        <li><h5 class="card-title"> <i>{{ j.topic_name }}</i> </h5></li>
+                                        <ol>
+                                            {% for k in subtopic %}
+                                                {% if k.topic_id.pk == j.pk %}
+                                                    <li><p class="card-text"><i>{{ k.subtopic_name }} </i>
+                                                    {% if k.assigned_user_id %}
+                                                        {% with  k.assigned_user_id.first_name|add:k.assigned_user_id.last_name as username %}
+                                                         [ <a target="_blank"
+                                                        href="{% url 'profile' k.assigned_user_id.pk username %}">{{ k.assigned_user_id.first_name }}
+                                                        {{ k.assigned_user_id.last_name }}</a>
+                                                        ]</p></li>
+                                                        {% endwith %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ol>
+                                    {% endif %}
+                                
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+  
                 {% endif %}
-                {% endfor %}
-            </div>
-            {% endif %}
             {% endfor %}
-        </div>
-        {% endif %}
-        {% endfor %}
+        </ol>
 
-        
+
+
     </div>
 
     <!--upcoming-->
     <div class="tab-pane fade" id="upcomming" role="tabpanel" aria-labelledby="upcomming-tab">
-        <br>
-        <!-- Page Content -->
+        <br><br>
+            <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive" />
 
-        <img src="{{ ROOT_URL }}/static/web-files/img/internship-posters/internship.png" alt="" class="responsive" />
+        <!--No active internships at this time-->
         <br />
         <br />
     </div>
@@ -135,5 +153,13 @@
 </div>
 
 <br />
-
+<script>
+/*    url = document.URL.toString().split('#')[1]
+    get_tab = document.getElementById(url)
+    get_tab.classList.add("show")
+    get_tab.classList.add("active")
+    url_edited = url.concat("-tab")
+    get_element = document.getElementById(url_edited)
+    get_element.classList.add("active")*/
+</script>
 {% endblock %}

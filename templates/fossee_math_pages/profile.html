@@ -19,20 +19,20 @@
             font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
-    <!-- Pop Over JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <!-- Pop Over JS 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title"
+        data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover
+        </button>-->
 
     <div class="container change_font">
 
-        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title"
-                data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover
-        </button>
+
 
         {% include 'partials/_alerts.html' %}
         {% if details is not None %}
             <h3 class="change_font">User profile
-                for {{ details.user_id.first_name }} {{ details.user_id.last_name }}</h3>
+                for <i>{{ details.user_id.first_name }} {{ details.user_id.last_name }}</i></h3>
             <div class=" bs-callout bs-callout-grey">
                 <p class="change_font">
                     <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
@@ -89,7 +89,7 @@
                         {% endif %}
                     {% endif %}
 
-                <b class="change_font">Bio:</b> <br>
+                <b class="change_font"></b>
                 <p class="change_font">{{ details.user_bio }}</p>
                 <hr/>
                 {% if user.is_authenticated %}
@@ -99,66 +99,101 @@
                     {% endif %}
                 {% endif %}
             </div>
+            <br>
             {% if not details.user_id.is_staff %}
                 {% if not user.is_staff or details.user_role == 'INTERN' %}
-                    <div>
+                    <div class="card border-light">
                         <br>
-                        <b style="text-align: center"> Contributions :</b>
-                        {% for i in subtopic %}
-                            {% if details.user_id.pk == i.assigned_user_id.pk %}
-                                <div class="bs-callout bs-callout-info">
-                                    {{ i.subtopic_name }} -> {{ i.topic_id }} -> {{ i.topic_id.internship_id }}
-                                    <div class="float-right">
-                                        {% if i.subtopic_status == 'WAITING' %}
-                                            IN PROCESS
-                                        {% else %}
-                                            {{ i.subtopic_status }}
-                                        {% endif %}
+                        <div class="card-title"><h3 style="font-weight: bold;"> <b class="change_font">Contributions:</b> </h3><hr></div>
+                        
+                        
+                            <div class="card-body">
+                                <ol>
+                            {% for i in subtopic %}
+                                {% if details.user_id.pk == i.assigned_user_id.pk %}
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-8">
+                                            <h4 style="margin-bottom: 0px;"><li><i>{{ i.subtopic_name }}</i></h4>
+                                            <small class="text-muted">
+                                                <b>[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
+                                            </small></li>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {% if i.subtopic_status == 'WAITING' %}
+                                                In Progress
+                                            {% else %}
+                                                <b>{{ i.subtopic_status|title }}</b><br>
+                                                <small class="text-muted"> {{ i.subtopic_modification_date|date:'d F Y' }}</small>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </ol>
+                        </div>
+                        
                     </div>
                 {% endif %}
             {% endif %}
             {% if not user.is_superuser %}
                 {% if details.user_id.is_staff %}
                     <br>
-                    <div class="card">
-                        <div class="card-header">
-                            Topics Approved
+                    <div class="card border-light">
+                        <div class="card-title">
+                            <h4 class="change_font">Topics Approved</h4>
+                            <hr>
                         </div>
                         <ol>
                             {% for i in subtopic %}
-
                                 {% if details.user_id.pk == i.subtopic_managed_user %}
-                                    <div class="">
-                                        <li>
-                                            {{ i.subtopic_name }} <small>{{ i.topic_id.internship_id }}
-                                            -> {{ i.topic_id }} -> </small>
-                                            <div class="float-right">
-                                                {{ i.subtopic_modification_date|date:'d F Y' }}
-                                            </div>
-                                        </li>
+                                <div class="card-body">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-8">
+                                            <h5 style="margin-bottom: 0px; " class="change_font"><li>{{ i.subtopic_name }}</h5>
+                                            <small class="text-muted ">
+                                                <b class="change_font">[ {{ i.topic_id.internship_id }} &#8594; {{ i.topic_id }} ] </b>
+                                            </small>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {% if i.subtopic_status == 'WAITING' %}
+                                                In Progress
+                                            {% else %}
+                                                <b class="change_font">{{ i.subtopic_status|title }}</b><br>
+                                                <small class="text-muted change_font">{{ i.subtopic_modification_date|date:'d F Y' }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </li>
                                     </div>
+                                </div>
                                 {% endif %}
-
                             {% endfor %}
                         </ol>
                     </div>
                     <br>
+                    <hr>
+                    
+                    
                     <b style="text-align: center">Topics Mentored</b>
+                    
                     {% for i in messages_send %}
                         {% if details.user_id.pk == i.user_id.pk %}
-                            <div class="bs-callout bs-callout-info">
+                            <div class="">
                                 {{ i.subtopic_id.subtopic_name }} -> {{ i.subtopic_id.topic_id }}
                                 -> {{ i.subtopic_id.topic_id.internship_id }}
                                 <div class="float-right">
-                                    {{ i.subtopic_id.subtopic_status }}
+                                    {% if i.subtopic_status == 'WAITING' %}
+                                        In Progress
+                                    {% else %}
+                                        {{ i.subtopic_id.subtopic_status|title }}
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endif %}
                     {% endfor %}
+
+
+
                 {% endif %}
             {% endif %}
         {% endif %}

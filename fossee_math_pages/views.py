@@ -86,6 +86,7 @@ def manage_internship(request):
                 obj = get_object_or_404(Internship, id=int_id)
                 if obj:
                     obj.internship_status = status
+                    # obj.internship_completed_date = datetime.now()
                     obj.save()
                     messages.success(request, "Changed")
                     return redirect('manage-internship')
