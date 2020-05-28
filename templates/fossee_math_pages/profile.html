@@ -35,11 +35,11 @@
                 for <i>{{ details.user_id.first_name }} {{ details.user_id.last_name }}</i></h3>
             <div class=" bs-callout bs-callout-grey">
                 <p class="change_font">
-                    <b>Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
-                    <b>User Joined: </b> {{ details.user_id.date_joined|date:'d F Y' }} </br>
+                    <b class="change_font">Name:</b> {{ details.user_id.first_name }} {{ details.user_id.last_name }}<br/>
+                    <b class="change_font">User Joined: </b> {{ details.user_id.date_joined|date:'d F Y' }} </br>
                     {% if user.is_authenticated %}
                         {% if user.username == details.user_id.username or user.is_staff %}
-                            <b>Role: </b>
+                            <b class="change_font">Role: </b>
                             {% if details.user_role == "INTERN" %}
                                 Contributor <br/>
                             {% elif details.user_role == "STAFF" %}
@@ -48,11 +48,11 @@
                                 {{ details.user_role }} <br/>
                             {% endif %}
 
-                            <b>College:</b> {{ details.user_college }}<br/>
-                            <b>Email:</b> <a href="mailto:{{ details.user_email }}" class="change_font">{{ details.user_email }}</a><br>
-                            <b>Mobile:</b> {{ details.user_phone }}<br>
-                            <b>Profile Url: </b> <a href="{{ profile_url }}" class="change_font">{{ profile_url }}</a><br>
-                            <b>Last Login: </b>{{ details.user_id.last_login }} <br>
+                            <b class="change_font">College:</b> {{ details.user_college }}<br/>
+                            <b class="change_font">Email:</b> <a href="mailto:{{ details.user_email }}" class="change_font">{{ details.user_email }}</a><br>
+                            <b class="change_font">Mobile:</b> {{ details.user_phone }}<br>
+                            <b class="change_font">Profile Url: </b> <a href="{{ profile_url }}" class="change_font">{{ profile_url }}</a><br>
+                            <b class="change_font">Last Login: </b>{{ details.user_id.last_login }} <br>
                             <div class="float-right">
                                 <a class="nav-link" href="" style="margin-top: -14px" role="tab" data-toggle="modal"
                                    data-target="#modalContactForm"> <img
@@ -89,7 +89,15 @@
                     {% endif %}
 
                 <b class="change_font"></b>
-                <p class="change_font text-secondary"><i>{{ details.user_bio }}</i></p>
+                <p class="change_font text-secondary">
+                        {% if details.user_bio != None %}
+                        <i>
+                            {{ details.user_bio|safe }}
+                        </i>
+                        {% else %}
+                        <i>The user has not provided any bio.</i>
+                        {% endif %}
+                </p>
                 
                 {% if user.is_authenticated %}
                     {% if user.username == details.user_id.username %}
