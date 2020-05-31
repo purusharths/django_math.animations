@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add Users{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Logs" "user-logs" %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %} {% if user.is_superuser %}
+        {% render_breadcrumbs %}
+        <div class="container">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">TimeStamp</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in page_obj %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ obj.timeStamp }}</td>
+                        <td>{{ obj.user_id }}</td>
+                        <td>{{ obj.type }}</td>
+                        <td>{{ obj.action }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <br>
+    {% endif %}
+    {% endif %}
+{% endblock %}

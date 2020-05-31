@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
-# from phonenumber_field.modelfields import PhoneNumberField
-
 # default choices
 INTERN_STATUS = (
     ("ACTIVE", "ACTIVE"),
@@ -33,9 +31,11 @@ class UserDetails(models.Model):
     user_phone = models.CharField(null=True, blank=True, unique=False, max_length=15)
     INTERN = 'INTERN'
     STAFF = 'STAFF'
+    MENTOR = 'MENTOR'
     ROLE_TYPE = (
         (INTERN, 'INTERN'),
         (STAFF, 'STAFF'),
+        (MENTOR, 'MENTOR'),
     )
     user_role = models.CharField(max_length=20,
                                  choices=ROLE_TYPE,
@@ -61,7 +61,7 @@ class Internship(models.Model):
     internship_quote = models.TextField(max_length=255)
     internship_quote_author = models.CharField(max_length=128)
     internship_url = models.CharField(max_length=255)
-    #internship_completed_date = models.DateTimeField(default=None, blank=True, null=True)
+    internship_completed_date = models.DateTimeField(default=None, blank=True, null=True)
 
     def __str__(self):
         return str(self.internship_topic) if self.internship_topic else ''
@@ -155,3 +155,11 @@ class HomeImages(models.Model):
     image1 = models.ImageField(upload_to='home/', blank=True, null=True)
     image2 = models.ImageField(upload_to='home/', blank=True, null=True)
     image3 = models.ImageField(upload_to='home/', blank=True, null=True)
+
+
+# table to store the actions performed
+class LogTable(models.Model):
+    timeStamp = models.DateTimeField(default=datetime.now)  # time
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # user
+    action = models.CharField(max_length=1024)  # detailed description of the action
+    type = models.CharField(max_length=24)  # error or success

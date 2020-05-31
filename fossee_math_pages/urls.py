@@ -18,6 +18,7 @@ urlpatterns = [
                   path('dashboard/messages/<str:s_id>', views.view_messages, name='messages'),
                   path('dashboard/add-internship/', views.add_internship, name='add-internship'),
                   path('dashboard/add-users/', views.add_users, name='add-users'),
+                  path('dashboard/user-logs/', views.loadLogs, name='user-logs'),
                   path('dashboard/update-profile/<str:user_id>', views.update_profile, name='update-profile'),
                   path('dashboard/add-topics/', views.add_topics, name='add-topics'),
                   path('dashboard/add-subtopics/<str:i_id>/<str:t_id>', views.add_subtopics, name='add-subtopics'),

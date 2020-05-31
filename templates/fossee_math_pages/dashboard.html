@@ -77,9 +77,28 @@
                     </div>
                 </div>
                 <br>
+                <div class="bs-callout bs-callout-info">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="col">
+                                <h5 class="card-title" style="font-weight: bold;"><a href="{% url 'manage-interns' %}">Manage
+                                    Mentors </a></h5>
+                                <p class="card-text">Assign the Mentors with the topic and manage the mentors.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col ml-auto">
+                                <h5 class="card-title" style="font-weight: bold;"><a
+                                        href="{% url 'user-logs' %}">View Logs</a></h5>
+                                <p class="card-text">View the server logs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
             </div>
 
-        {% elif user.is_staff %}
+        {% elif user.is_staff and user_details.user_role == 'STAFF' %}
 
             <div class="container" style="margin-top:20px; margin-bottom:100px">
                 <div class="bs-callout bs-callout-info">
@@ -153,6 +172,17 @@
                 </div>
                 <br>
                 <hr>
+            </div>
+        {% elif user.is_staff and user_details.user_role == 'MENTOR' %}
+        <div class="container" style="margin-top:40px;">
+                <div class="bs-callout bs-callout-primary">
+                   Use 1
+                </div>
+                <br>
+                <div class="bs-callout bs-callout-info">
+                    Use 2
+                </div>
+                <br>
             </div>
         {% else %}
             <div class="container" style="margin-top:40px;">

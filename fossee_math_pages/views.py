@@ -33,7 +33,8 @@ from .forms import (AddUserForm1, AddUserForm2, UserLoginForm, AddInternship, ad
                     subtopicOrder, addContributor, sendMessage, change_image, change_video,
                     EditUserForm1, EditUserForm2, EditBio, )
 from .generic_functions import (large_img_size, large_video_size)
-from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages)
+from .models import (UserDetails, Internship, Topic, Subtopic, Contributor, Data, ImageFormatting, HomeImages, Messages,
+                     LogTable)
 from .tokens import account_activation_token
 
 
@@ -216,8 +217,14 @@ def add_users(request):
 
 @login_required
 def dashboard(request):
+    if not request.user.is_superuser:
+        user_details = UserDetails.objects.get(user_id=request.user.id)
+    else:
+        user_details = None
+
     context = {
-        'l_active': 'nav_active'
+        'l_active': 'nav_active',
+        'user_details': user_details,
     }
     return render(request, 'fossee_math_pages/dashboard.html', context)
 
@@ -1225,7 +1232,7 @@ def review_submissions_subtopic(request, s_id):
                                                     message_link)
                 send_mail(subject, email_body, SENDER_EMAIL, [subtopic.assigned_user_id.email], fail_silently=True)
 
-            elif "mentor" in request.POST :
+            elif "mentor" in request.POST:
                 mentor = request.POST['mentor']
                 professor = request.POST['professor']
 
@@ -1763,3 +1770,24 @@ def edit_topics(request, id):
         'subtopics': subtopics,
     }
     return render(request, 'fossee_math_pages/edit-topics.html', context)
+
+
+def loadLogs(request):
+    if request.user.is_superuser:
+        log = LogTable(action='Accessing Log Tables', type='Successful', user_id=request.user)
+        log.save()
+
+        server_logs = LogTable.objects.all()
+
+        paginator = Paginator(server_logs, 25)  # Show 25 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'page_obj': page_obj,
+        }
+        return render(request, 'fossee_math_pages/load-logs.html', context)
+    else:
+        log = LogTable(action='Accessing Log Tables', type='Invalid Access', user_id=request.user)
+        log.save()
+        return redirect('dashboard')
