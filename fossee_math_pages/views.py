@@ -1777,7 +1777,7 @@ def loadLogs(request):
         log = LogTable(action='Accessing Log Tables', type='Successful', user_id=request.user)
         log.save()
 
-        server_logs = LogTable.objects.all()
+        server_logs = LogTable.objects.all().order_by('-timeStamp')
 
         paginator = Paginator(server_logs, 25)  # Show 25 contacts per page.
         page_number = request.GET.get('page')
