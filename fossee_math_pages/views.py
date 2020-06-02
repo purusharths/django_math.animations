@@ -164,7 +164,7 @@ def add_users(request):
                 password = str(uuid.uuid1())[:16]
                 user = User.objects.create_user(username=email, email=email, password=password, first_name=firstname,
                                                 last_name=lastname, is_active=False)
-                if user_role == 'STAFF':
+                if user_role == 'STAFF' or user_role == 'MENTOR':
                     user.is_staff = True
 
                 user.save()
@@ -669,12 +669,20 @@ def moveUpData(request, id):
             t_id = instance.subtopic_id.subtopic_hash
             instance.data_order = instance.data_order - 1
             instance.save()
+            current_order = Data.objects.filter(subtopic_id=instance.subtopic_id,
+                                                data_order=instance.data_order).first()
+            current_order.data_order = current_order.data_order + 1
+            current_order.save()
             return redirect('add-submission-subtopic', t_id)
 
         elif request.user.is_staff:
             t_id = instance.subtopic_id.subtopic_hash
             instance.data_order = instance.data_order - 1
             instance.save()
+            current_order = Data.objects.filter(subtopic_id=instance.subtopic_id,
+                                                data_order=instance.data_order).first()
+            current_order.data_order = current_order.data_order + 1
+            current_order.save()
             return redirect('review-submissions-subtopic', t_id)
 
         else:
@@ -692,12 +700,20 @@ def moveDownData(request, id):
             t_id = instance.subtopic_id.subtopic_hash
             instance.data_order = instance.data_order + 1
             instance.save()
+            current_order = Data.objects.filter(subtopic_id=instance.subtopic_id,
+                                                data_order=instance.data_order).first()
+            current_order.data_order = current_order.data_order - 1
+            current_order.save()
             return redirect('add-submission-subtopic', t_id)
 
         elif request.user.is_staff:
             t_id = instance.subtopic_id.subtopic_hash
             instance.data_order = instance.data_order + 1
             instance.save()
+            current_order = Data.objects.filter(subtopic_id=instance.subtopic_id,
+                                                data_order=instance.data_order).first()
+            current_order.data_order = current_order.data_order - 1
+            current_order.save()
             return redirect('review-submissions-subtopic', t_id)
 
         else:
@@ -800,11 +816,18 @@ def user_login(request):
                 user = form.authenticate_user()
                 login(request, user)
                 if request.user.is_staff:
+                    log = LogTable(action='STAFF Loging in : ' + str(request.user), type='Successful',
+                                   user_id=request.user)
+                    log.save()
                     return redirect(dashboard)
                 else:
                     user = UserDetails.objects.get(user_id=request.user.id)
                     if user.user_status == 'INACTIVE':
                         messages.error(request, "Your login credentials are invalid! Please contact the admin")
+                        log = LogTable(action='User Loging in : ' + str(request.user) + ": INTERN status is inactive",
+                                       type='UnSuccessful',
+                                       user_id=request.user)
+                        log.save()
                         logout(request)
                         form = UserLoginForm()
                         context = {
@@ -812,6 +835,9 @@ def user_login(request):
                         }
                         return render(request, "fossee_math_pages/login.html", context)
                     else:
+                        log = LogTable(action='User Loging in : ' + str(request.user), type='Successful',
+                                       user_id=request.user)
+                        log.save()
                         return redirect(dashboard)
             except:
                 form = UserLoginForm()
@@ -1480,6 +1506,8 @@ def view_messages(request, s_id):
 
 @login_required
 def user_logout(request):
+    log = LogTable(action='User Loging out : ' + str(request.user), type='Successful', user_id=request.user)
+    log.save()
     logout(request)
     return redirect('index')
 
@@ -1772,6 +1800,7 @@ def edit_topics(request, id):
     return render(request, 'fossee_math_pages/edit-topics.html', context)
 
 
+@login_required
 def loadLogs(request):
     if request.user.is_superuser:
         log = LogTable(action='Accessing Log Tables', type='Successful', user_id=request.user)
@@ -1790,4 +1819,18 @@ def loadLogs(request):
     else:
         log = LogTable(action='Accessing Log Tables', type='Invalid Access', user_id=request.user)
         log.save()
+        return redirect('dashboard')
+
+
+@login_required
+def add_mentor(request):
+    if request.user.is_superuser:
+
+        mentors = UserDetails.objects.filter(user_role='MENTOR')
+
+        context = {
+            'mentors': mentors
+        }
+        return render(request, 'fossee_math_pages/add-mentor.html', context)
+    else:
         return redirect('dashboard')

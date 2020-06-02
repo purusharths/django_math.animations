@@ -62,6 +62,7 @@ class Internship(models.Model):
     internship_quote_author = models.CharField(max_length=128)
     internship_url = models.CharField(max_length=255)
     internship_completed_date = models.DateTimeField(default=None, blank=True, null=True)
+    internship_mentor = models.ForeignKey(UserDetails, default=None, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.internship_topic) if self.internship_topic else ''

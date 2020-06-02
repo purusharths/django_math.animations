@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add Internship{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dashboard" "dashboard" %}
+    {% breadcrumb "Manage Mentors" "add-mentors" %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            {% render_breadcrumbs %}
+
+            <div class="container">
+                {% include 'partials/_alerts.html' %}
+
+
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
