@@ -86,12 +86,11 @@
                         <tbody style="font-size: medium;">
                         {% for data in datas %}
                             {% if subtopic.subtopic_status == 'ACCEPTED' and data.subtopic_id_id == subtopic.id and data.subtopic_id.topic_id.internship_id.internship_status == 'COMPLETED' %}
-                                <tr>
+                            <tr>
                                     {% if data.data_content != "NULL" %}
                                         <td style="width:100%" class="cell-breakWord">
-                                            <p></p>
-                                            {{ data.data_content |safe }}
-
+                                            <p>{{ data.data_content |safe }}</p>
+                                            <p class="text-white"><b>{{ data.data_order }}</b></p>
                                         </td>
                                     {% endif %}
                                 </tr>
@@ -104,8 +103,7 @@
                                                     <img src="{{ data.data_image.url }}" width="{{ i.image_width }}"
                                                          style="display:block; margin:0 auto;" alt="Image not loaded">
                                                     {% if data.data_caption != None %}
-                                                        <p align="center"
-                                                           style="font-size: 15px">{{ data.data_caption }}</p>
+                                                        <p align="center" style="font-size: 15px">{{ data.data_caption }}</p>
                                                     {% endif %}
                                                 {% endif %}
                                             {% endfor %}
@@ -178,7 +176,7 @@
             }
 
             const darkmode = new Darkmode(options);
-            darkmode.showWidget();
+            //darkmode.showWidget();
         </script>
     </div>
     

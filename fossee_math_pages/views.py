@@ -246,12 +246,14 @@ def home_details(request, internship, topic, subtopic):
     subtopic_request = Subtopic.objects.filter(topic_id__internship_id_id=selected_internship.pk).filter(
         topic_id__topic_url=topic).get(
         subtopic_url=subtopic)
+    #print(subtopic)
     id = subtopic_request.pk
     subtopic_details = Subtopic.objects.get(id=id)
     contributor = ""
     ver = ""
     try:
-        data = Data.objects.all()
+        data = Data.objects.all().order_by('data_order')
+        #print(data)
         imagesize = ImageFormatting.objects.all()
     except Data.DoesNotExist:
         data = None
