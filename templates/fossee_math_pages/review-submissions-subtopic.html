@@ -103,11 +103,11 @@
                 </div>
             </div>
             <div align="center">
-                Current Status: <b>{{ subtopic.subtopic_status|title }}</b><br> Revieved by : <b>
+                Current Status: <b>{{ subtopic.subtopic_status|title }}</b><br> Reviewed by: <b>
                 {% for i in user_staff %} {% if subtopic.subtopic_managed_user == i.user_id.pk %}
                     {{ i.user_id.first_name }} {{ i.user_id.last_name }} {% endif %} {% endfor %}</b><br>
-                {% if subtopic.subtopic_status == 'REJECTED' %}Make the status to
-                    <a href="{% url 'reset-subtopic-status' subtopic.subtopic_hash %}">Waiting</a> {% endif %}
+                {% if subtopic.subtopic_status == 'REJECTED' %}Change to 
+                    <a href="{% url 'reset-subtopic-status' subtopic.subtopic_hash %}">In Progress</a> {% endif %}
             </div>
             <br>
             <div align="center">
