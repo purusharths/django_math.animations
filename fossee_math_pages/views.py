@@ -455,10 +455,10 @@ def edit_text(request, t_id, id):
 
 @login_required
 def edit_media(request, t_id, id):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+    if request.user.is_authenticated or request.user.is_staff: #and not request.user.is_superuser:
         instance = Data.objects.get(data_hash=id)
         subtopic = Subtopic.objects.get(id=instance.subtopic_id.pk)
-        if request.user.id == subtopic.assigned_user_id_id and subtopic.subtopic_status != 'ACCEPTED':
+        if (request.user.id == subtopic.assigned_user_id_id and subtopic.subtopic_status != 'ACCEPTED') or request.user.is_staff :
             form_text = data()
             form_image = change_image()
             from_video = change_video()
