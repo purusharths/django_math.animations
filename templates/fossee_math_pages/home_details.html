@@ -70,10 +70,11 @@
                 <!--<div class="js-toc-content">-->
                     <table>
                         {% if subtopic.subtopic_status == 'ACCEPTED' %}
-                            <thead class="thread-light">
+                        <thead class="thread-light">
                             <tr>
                                 <th>
                                     <h1>{{ subtopic.subtopic_name }}</h1>
+                                    <hr>
                                 </th>
                             </tr>
                             <tr>
@@ -81,7 +82,7 @@
 
                                 </td>
                             </tr>
-                            </thead>
+                        </thead>
                         {% endif %}
                         <tbody style="font-size: medium;">
                         {% for data in datas %}
@@ -155,7 +156,7 @@
                             </tr>
                         </table>
                         <hr>
-                        <i>The following notes and their corrosponding animations was created by the above-mentioned
+                        <i>The following notes and their corrosponding animations were created by the above-mentioned
                             contributor and is freely avilable under CC licence.</i>
                     </div>
                 {% endif %}
