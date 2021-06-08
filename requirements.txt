@@ -3,7 +3,7 @@ chardet==3.0.4
 Django==2.2.10
 django-simple-history==2.7.0
 idna==2.8
-Pillow==6.2.2
+Pillow==8.2.0
 pytz==2018.9
 requests==2.21.0
 urllib3==1.24.2
